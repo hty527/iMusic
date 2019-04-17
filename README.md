@@ -40,10 +40,8 @@
 ![视频播放器界面](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190417_163330.jpg)
 </br>
 ### 体验APK下载:
-<div style="align: center">
-<img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png"/>
-</div>
-</br>
+<div align=center>![下载地址](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png)
+
 [Fir托管下载](https://fir.im/iMusic)
 </br>
 [或点此下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
