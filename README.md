@@ -4,6 +4,8 @@
 
 [所属组织](https://github.com/feiyouAndroidTeam)
 # 项目介绍
+#### 视频演示:
+![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/video.gif)
 ## 音乐播放器:
 * 完整的音乐播放器功能，包括但不限于：</br>
     • 网络音乐播放</br>
@@ -19,7 +21,7 @@
     • 最近播放记录</br>
 已封装成库，方便集成。
 ## 软件截图：
-![image](https://github.com/Yuye584312311/IMusic/blob/master/ScreenPhoto/%E6%88%AA%E5%B1%8F_20190417_162126.jpg)
+![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190417_162126.jpg)
 
 ## 视频播放器:
 * 完整的视频播放器功能，包括但不限于：</br>
@@ -35,4 +37,7 @@
     • 手势识别调节器</br>
 已封装成库，方便集成。
 ## 软件截图：
-![image](https://github.com/Yuye584312311/IMusic/blob/master/ScreenPhoto/%E6%88%AA%E5%B1%8F_20190417_163330.jpg)
+![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190417_163330.jpg)
+</br>
+#### 体验APK下载:
+[点我下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
