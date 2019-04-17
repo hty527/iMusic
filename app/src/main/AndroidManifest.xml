@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.imusic">
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+        android:name="com.android.imusic.MusicApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_music_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name="com.android.imusic.MainActivity"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--音乐播放器-->
+        <activity android:name="com.android.imusic.music.activity.MusicPlayerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--本地音乐-->
+        <activity android:name="com.android.imusic.music.activity.MusicLocalActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--搜索,默认软键盘不显示-->
+        <activity android:name="com.android.imusic.music.activity.MusicSearchActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <!--专辑-->
+        <activity android:name="com.android.imusic.music.activity.MusicAlbumActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--历史记录-->
+        <activity android:name="com.android.imusic.music.activity.MusicHistroyActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--收藏记录-->
+        <activity android:name="com.android.imusic.music.activity.MusicCollectActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--视频播放-->
+        <activity android:name="com.android.imusic.video.activity.VideoPlayerActviity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+        <activity android:name="com.android.imusic.video.activity.VideoListActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+        <activity android:name=".music.activity.TestActivity"
+            android:screenOrientation="portrait"/>
+    </application>
+</manifest>

@@ -1,0 +1,1 @@
+include ':video-player-lib', ':music-player-lib', ':app'

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--背景图层-->
+   <!--<item>-->
+       <!--<shape>-->
+           <!--<corners android:topRightRadius="20dp" android:bottomRightRadius="20dp"></corners>-->
+           <!--<solid android:color="#00000000"></solid>-->
+           <!--<stroke android:color="#8000ff" android:width="1dp"></stroke>-->
+       <!--</shape>-->
+   <!--</item>-->
+    <!--前景图层-->
+    <item>
+       <selector>
+           <item android:state_selected="true">
+               <shape>
+                   <corners android:topRightRadius="20dp" android:bottomRightRadius="20dp"></corners>
+                   <solid android:color="#8000ff"></solid>
+               </shape>
+           </item>
+           <item android:state_selected="false">
+               <shape>
+                   <corners android:topRightRadius="20dp" android:bottomRightRadius="20dp"></corners>
+                   <solid android:color="#CCFFFFFF"></solid>
+                   <stroke android:color="#8000ff" android:width="1dp"></stroke>
+               </shape>
+           </item>
+       </selector>
+   </item>
+</layer-list>

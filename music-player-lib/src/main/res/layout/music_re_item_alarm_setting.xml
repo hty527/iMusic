@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/view_item_root"
+        android:gravity="center"
+        android:background="@drawable/music_player_alarm_item_selector">
+        <TextView
+            android:id="@+id/view_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="34dp"
+            android:textColor="#FFFFFF"
+            android:text="10"/>
+        <TextView
+            android:id="@+id/view_item_subtitle"
+            android:layout_below="@+id/view_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-8dp"
+            android:textSize="14dp"
+            android:textColor="#FFFFFF"
+            android:text="分钟"/>
+    </RelativeLayout>
+</FrameLayout>

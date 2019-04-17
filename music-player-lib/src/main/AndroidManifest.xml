@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.music.player.lib">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
+        tools:ignore="ProtectedPermissions" />
+    <!--remove lock-->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true">
+        <!--MusicService-->
+        <service
+            android:name=".service.MusicPlayerService"
+            android:exported="true" />
+        <!--锁屏-->
+        <activity android:name="com.music.player.lib.view.activity.MusicLockActivity"
+            android:theme="@style/LockScreenTheme"
+            android:screenOrientation="portrait"
+            android:taskAffinity="imusic.player.lock"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true">
+        </activity>
+    </application>
+</manifest>

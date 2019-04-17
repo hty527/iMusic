@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/view_music_mini_layout"
+	android:layout_width="match_parent"
+	android:layout_height="66dp"
+	android:background="#FF0000"
+	android:orientation="vertical"
+	android:gravity="center">
+	<ImageView
+		android:id="@+id/music_ic_trash"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_music_trash"
+		android:scaleType="center" />
+	<TextView
+		android:id="@+id/music_tv_trash"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="拖动到此处取消悬浮播放"
+		android:gravity="center"
+		android:textSize="12dp"
+		android:layout_marginTop="3dp"
+		android:textColor="#FFFFFF"/>
+</LinearLayout>

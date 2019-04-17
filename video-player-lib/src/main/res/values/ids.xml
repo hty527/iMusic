@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--播放器渲染ID-->
+    <item name="surface_view" type="id"></item>
+    <!--视频播放器控制器ID-->
+    <item name="video_player_controller" type="id"></item>
+    <!--封面控制器ID-->
+    <item name="video_cover_controller" type="id"></item>
+    <!--全屏窗口播放器ID-->
+    <item name="video_full_screen_window" type="id"></item>
+    <!--迷你小窗口播放器ID-->
+    <item name="video_mini_window" type="id"></item>
+</resources>

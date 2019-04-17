@@ -1,5 +1,5 @@
 # **iMusic**
-### `iMusic 集音乐播放器、视频播放器功能的APP
+### iMusic 集音乐播放器、视频播放器功能的APP
 [官方网站](http://v.nq6.com)
 
 [所属组织](https://github.com/Yuye584312311)

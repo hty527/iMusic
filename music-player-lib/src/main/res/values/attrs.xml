@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--自定义圆角ImageView-->
+    <declare-styleable name="MusicRoundImageView">
+        <attr name="image_type" />
+        <attr name="image_scale" />
+        <attr name="image_borderRadius" />
+        <attr name="image_top_left" />
+        <attr name="image_top_right" />
+        <attr name="image_bottom_left" />
+        <attr name="image_bottom_right" />
+    </declare-styleable>
+    <attr name="image_borderRadius" format="dimension" />
+    <attr name="image_type">
+        <enum name="image_circle" value="0" />
+        <enum name="image_round" value="1" />
+    </attr>
+    <attr name="image_scale">
+        <enum name="image_crop" value="0" />
+        <enum name="image_fit" value="1" />
+    </attr>
+    <attr name="image_top_left" format="boolean" />
+    <attr name="image_top_right" format="boolean" />
+    <attr name="image_bottom_left" format="boolean" />
+    <attr name="image_bottom_right" format="boolean" />
+    <!--唱片机-->
+    <declare-styleable name="MusicJukeBoxBackgroundLayout">
+        <attr name="backgroundEnable" format="boolean"/>
+    </declare-styleable>
+    <!--背景虚化-->
+    <declare-styleable name="MusicBackgroungBlurView">
+        <attr name="blurBlurRadius" format="dimension"/>
+        <attr name="blurDownsampleFactor" format="float"/>
+        <attr name="blurOverlayColor" format="color"/>
+        <attr name="blurFramRadius" format="dimension"/>
+        <attr name="blurTopLeft" format="boolean"/>
+        <attr name="blurTopRight" format="boolean"/>
+        <attr name="blurBottomLeft" format="boolean"/>
+        <attr name="blurBottomRight" format="boolean"/>
+    </declare-styleable>
+    <!--唱片机-->
+    <declare-styleable name="MusicJukeBoxCoverPager">
+        <!--旋转一圈耗时,单位秒-->
+        <attr name="musicJukeRotationDurtion" format="integer"/>
+    </declare-styleable>
+    <!--迷你唱片机-->
+    <declare-styleable name="MusicJukeBoxViewSmall">
+        <!--唱片机是否自行获得焦点-->
+        <attr name="musicMiniJukeEnable" format="boolean"/>
+        <attr name="musicMiniJukeRotationDurtion" format="integer"/>
+    </declare-styleable>
+    <!--Title-->
+    <declare-styleable name="MusicCommentTitleView">
+        <attr name="musicCommentTitle" format="string" />
+        <attr name="musicCommentTitleColor" format="color" />
+        <attr name="musicCommentTitleSize" format="dimension"></attr>
+        <attr name="musicCommentSubTitle" format="string" />
+        <attr name="musicCommentSubTitleColor" format="color" />
+        <attr name="musicCommentSubTitleSize" format="dimension"></attr>
+        <attr name="musicCommentBackRes" format="reference" />
+        <attr name="musicCommentMenuRes" format="reference" />
+    </declare-styleable>
+
+    <!--扇形菜单的属性-->
+    <declare-styleable name="MusicArcMenuView">
+        <!--圆形半径-->
+        <attr name="arcMenuRadius" format="dimension"></attr>
+        <!--圆形角度-->
+        <attr name="arcMenuAngle" format="integer"></attr>
+        <!--菜单展开动画时长-->
+        <attr name="arcExpandOpenDurtion" format="integer"></attr>
+        <!--菜单关闭动画时长-->
+        <attr name="arcExpandCloseDurtion" format="integer"></attr>
+        <!--默认的Btn ICON-->
+        <attr name="arcBtnIcon" format="reference"></attr>
+        <!--是否自动创建一个默认的弧形菜单，位于ParentView右下角-->
+        <attr name="arcAutoCreateDefaultMenus" format="boolean"></attr>
+        <!--菜单抛锚位置-->
+        <attr name="arcDropPosition">
+            <enum name="left_top" value="0"></enum>
+            <enum name="left_bottom" value="1"></enum>
+            <enum name="right_bottom" value="2"></enum>
+            <enum name="right_top" value="3"></enum>
+            <enum name="center" value="4"></enum>
+            <enum name="left" value="5"></enum>
+            <enum name="top" value="6"></enum>
+            <enum name="right" value="7"></enum>
+            <enum name="bottom" value="8"></enum>
+        </attr>
+        <!--菜单初始时在View中的位置-->
+        <attr name="arcGravity">
+            <flag name="top" value="48" />
+            <flag name="left" value="3" />
+            <flag name="right" value="5" />
+            <flag name="bottom" value="80" />
+            <flag name="center_horizontal" value="1" />
+            <flag name="center_vertical" value="16" />
+            <flag name="center" value="17" />
+            <flag name="clip_horizontal" value="8" />
+            <flag name="clip_vertical" value="128" />
+            <flag name="start" value="8388611" />
+            <flag name="end" value="8388613" />
+        </attr>
+    </declare-styleable>
+</resources>

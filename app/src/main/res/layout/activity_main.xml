@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/view_pager">
+    </android.support.v4.view.ViewPager>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginBottom="39dp">
+            <TextView
+                android:id="@+id/music_btn_music"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Music"
+                android:textSize="16dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/music_index_tab_color"
+                android:background="@drawable/music_left_tab_selector"/>
+            <TextView
+                android:id="@+id/music_btn_video"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Video"
+                android:textSize="16dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/music_index_tab_color"
+                android:background="@drawable/music_right_tab_selector"/>
+    </LinearLayout>
+</FrameLayout>

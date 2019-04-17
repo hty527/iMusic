@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.music.player.lib.view.MusicJukeBoxView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <!--底盘-->
+    <ImageView
+        android:id="@+id/view_disc_backgound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+    <!--实现切换-->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_disc_viewpager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+    <!--唱针-->
+    <ImageView
+        android:id="@+id/view_disc_hand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_music_cover_hand"/>
+</com.music.player.lib.view.MusicJukeBoxView>
