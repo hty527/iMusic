@@ -20,7 +20,7 @@ import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.adapter.VideoDetailsAdapter;
 import com.android.imusic.video.bean.OpenEyesIndexInfo;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
-import com.android.imusic.video.bean.VideoParams;
+import com.video.player.lib.bean.VideoParams;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.reflect.TypeToken;
@@ -111,7 +111,6 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Logger.d(TAG,"onNewIntent-->");
         getIntentParams(intent,false);
     }
 
@@ -133,6 +132,7 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
             finish();
             return;
         }
+        Logger.d(TAG,"mVideoParams:"+mVideoParams.toString());
         if(TextUtils.isEmpty(mVideoParams.getVideoUrl())){
             Toast.makeText(VideoPlayerActviity.this,"缺少必要参数",Toast.LENGTH_SHORT).show();
             finish();
@@ -148,7 +148,7 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
      */
     private void initVideoParams(boolean isCreate) {
         if(null!=mVideoParams){
-            mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle());
+            mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
             mVideoPlayer.setLoop(true);
             mVideoPlayer.setWorking(true);
             //封面

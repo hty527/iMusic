@@ -14,7 +14,7 @@ import com.android.imusic.R;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.activity.VideoPlayerActviity;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
-import com.android.imusic.video.bean.VideoParams;
+import com.video.player.lib.bean.VideoParams;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.music.player.lib.util.MusicUtils;

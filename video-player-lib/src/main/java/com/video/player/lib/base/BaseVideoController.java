@@ -49,11 +49,11 @@ public abstract class BaseVideoController extends FrameLayout{
     //播放器被重置
     public abstract void reset();
     //切换为竖屏方向
-    public abstract void startHorizontal();
+    protected void startHorizontal(){}
     //切换为小窗口播放
-    public abstract void startTiny();
+    protected void startTiny(){}
     //切换为悬浮窗
-    public abstract void startGlobalWindow();
+    protected void startGlobalWindow(){}
     //移动网络状态下工作
     public abstract void mobileWorkTips();
     //视频总长度、播放进度、缓冲进度
@@ -92,6 +92,8 @@ public abstract class BaseVideoController extends FrameLayout{
         public void onStartGlobalWindown(){}
         //关闭迷你窗口
         public void onQuiteMiniWindow(){}
+        //打开播放器界面
+        public void onStartActivity(){}
         //弹射返回
         public void onBackPressed(){}
     }

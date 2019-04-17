@@ -26,7 +26,7 @@ import com.video.player.lib.utils.VideoUtils;
 
 public class DefaultVideoController extends BaseVideoController implements SeekBar.OnSeekBarChangeListener {
 
-    private View mTopBarLayout,mBottomBarLayout,mErrorLayout,mMobileLayout,mVideoStart,mBtnBackTiny;
+    private View mTopBarLayout,mBottomBarLayout,mErrorLayout,mMobileLayout,mVideoStart,mBtnBackTiny,mBtnFullWindow,mBtnFull;
     private TextView mVideoTitle,mVideoCurrent,mVideoTotal;
     private ProgressBar mBottomProgressBar,mProgressBar;
     private SeekBar mSeekBar;
@@ -35,8 +35,6 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     private boolean isTouchSeekBar=false;
     //实时播放位置
     private long mOldPlayProgress;
-    private View mBtnFullWindow;
-    private View mBtnFull;
 
     public DefaultVideoController(@NonNull Context context) {
         this(context,null);

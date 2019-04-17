@@ -26,9 +26,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.video.player.lib.R;
+import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.controller.DefaultCoverController;
 import com.video.player.lib.controller.DefaultVideoController;
+import com.video.player.lib.controller.WindowVideoController;
 import com.video.player.lib.listener.VideoOrientationListener;
 import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.manager.VideoPlayerManager;
@@ -70,6 +72,8 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     protected G mGestureController;
     //资源地址、视频标题
     private String mDataSource,mTitle;
+    //视频ID，悬浮窗打开Activity用到
+    private long mVideoID;
     //视频帧渲染父容器
     public FrameLayout mSurfaceView;
     //缩放类型
@@ -169,6 +173,21 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         this.mTitle=title;
     }
 
+    /**
+     * 设置播放资源
+     * @param path 暂支持file、http、https等协议
+     * @param title 视频描述
+     * @param videoID 视频ID
+     */
+    public void setDataSource(String path, String title,long videoID) {
+        if(null!= mVideoController){
+            mVideoController.setTitle(title);
+        }
+        this.mDataSource=path;
+        this.mTitle=title;
+        this.mVideoID=videoID;
+    }
+
     public void setLoop(boolean loop) {
         VideoPlayerManager.getInstance().setLoop(loop);
     }
@@ -233,6 +252,12 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         if(SCRREN_ORIENTATION==VideoConstants.SCREEN_ORIENTATION_TINY){
                             backMiniWindow();
                         }
+                    }
+
+                    @Override
+                    public void onStartActivity() {
+                        //悬浮窗打开Activity
+                        startActivity();
                     }
 
                     @Override
@@ -406,6 +431,38 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
             VideoTextureView textureView=new VideoTextureView(getContext());
             VideoPlayerManager.getInstance().initTextureView(textureView);
             videoPlayer.mSurfaceView.addView(textureView,new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT, Gravity.CENTER));
+        }
+    }
+
+    /**
+     * 点击了悬浮窗的开启Activity按钮
+     */
+    private void startActivity() {
+        //先结束悬浮窗播放任务
+        BaseVideoPlayer baseVideoPlayer = backGlobalWindown();
+        Intent startIntent=new Intent();
+        startIntent.setClassName(VideoUtils.getInstance().getPackageName(getContext().getApplicationContext()),VideoPlayerManager.getInstance().getForegroundActivityClassName());
+        startIntent.putExtra(VideoConstants.KEY_VIDEO_PLAYING,true);
+        //如果播放器组件未启用，创建新的实例
+        //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
+        //反之则清除播放器之上的所有栈，让播放器组件显示在最顶层
+        startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        VideoParams videoParams=new VideoParams();
+        Logger.d(TAG,"mTitle:"+mTitle+",mDataSource:"+mDataSource);
+        videoParams.setVideoTitle(mTitle);
+        videoParams.setVideoUrl(mDataSource);
+        videoParams.setVideoiId(mVideoID);
+        startIntent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
+        long startTime = System.currentTimeMillis();
+        getContext().getApplicationContext().startActivity(startIntent);
+        //销毁一下，万不能再界面跳转之前销毁
+        long endTime = System.currentTimeMillis();
+        Logger.d(TAG,"startActivity-->"+(endTime-startTime));
+        if(null!=baseVideoPlayer){
+            baseVideoPlayer.destroy();
+            VideoPlayerManager.getInstance().setWindownPlayer(null);
         }
     }
 
@@ -1083,16 +1140,15 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         });
                         viewGroup.addView(imageView);
                         //设置一个默认的控制器
-                        videoPlayer.setVideoController(null,true);
+                        videoPlayer.setVideoController(new WindowVideoController(videoPlayer.getContext()),false);
                         //更新屏幕方向,这里只更新为窗口模式即可
                         videoPlayer.setScrrenOrientation(VideoConstants.SCREEN_ORIENTATION_WINDOW);
                         //转换为小窗口模式
                         videoPlayer.setWorking(true);
                         //设置基础的配置
-                        videoPlayer.setDataSource(mDataSource,mTitle);
+                        videoPlayer.setDataSource(mDataSource,mTitle,mVideoID);
                         //添加TextrueView至播放控件
                         addTextrueViewToView(videoPlayer);
-
                         if(null!=videoPlayer.mVideoController){
                             videoPlayer.mVideoController.startGlobalWindow();
                         }
@@ -1122,6 +1178,23 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                 getContext().getApplicationContext().startActivity(intent);
             }
         }
+    }
+
+    /**
+     * 退出全局悬浮窗口播放
+     */
+    public BaseVideoPlayer backGlobalWindown(){
+        VideoPlayerManager.getInstance().setContinuePlay(true);
+        if(null!=VideoPlayerManager.getInstance().getWindownPlayer()) {
+            BaseVideoPlayer windownPlayer = VideoPlayerManager.getInstance().getWindownPlayer();
+            if (windownPlayer.isWorking()) {
+                windownPlayer.reset();
+            }
+            VideoWindowManager.getInstance().onDestroy();
+            return windownPlayer;
+        }
+        VideoWindowManager.getInstance().onDestroy();
+        return null;
     }
 
     /**

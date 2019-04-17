@@ -185,7 +185,7 @@ public class VideoIndexVideoAdapter extends BaseAdapter<OpenEyesIndexItemBean,Re
                 }
             }
         });
-        videoViewHolder.trackVideo.setDataSource(indexItemBean.getPlayUrl(),indexItemBean.getTitle());
+        videoViewHolder.trackVideo.setDataSource(indexItemBean.getPlayUrl(),indexItemBean.getTitle(),indexItemBean.getId());
         if(null!=videoViewHolder.trackVideo.getCoverController()){
             //视频时长
             videoViewHolder.trackVideo.getCoverController().mPreDurtion.setText(MusicUtils.getInstance().stringForAudioTime(indexItemBean.getDuration()*1000));

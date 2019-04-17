@@ -1,7 +1,6 @@
 package com.android.imusic.video.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,7 +10,7 @@ import com.android.imusic.R;
 import com.android.imusic.video.adapter.holder.VideoDetailsItemViewHolder;
 import com.android.imusic.video.adapter.holder.VideoTitleViewHolder;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
-import com.android.imusic.video.bean.VideoParams;
+import com.video.player.lib.bean.VideoParams;
 import com.android.imusic.video.view.VideoDetailsHeaderView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;

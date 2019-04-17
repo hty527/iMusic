@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.imusic.R;
-import com.android.imusic.video.bean.VideoParams;
+import com.video.player.lib.bean.VideoParams;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -68,6 +68,10 @@ public class VideoDetailsHeaderView extends LinearLayout {
         mBtnDetails.setOnClickListener(onClickListener);
     }
 
+    /**
+     * 绑定基本信息,如果 getNickName、getHeadTitle、getUserFront 其中一个为空，获取一遍视频详情的接口
+     * @param data
+     */
     public void setVideoDetailsData(VideoParams data) {
         if(null!=data){
             TextView videoTitle = (TextView) findViewById(R.id.header_video_title);

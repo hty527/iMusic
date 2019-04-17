@@ -1,4 +1,4 @@
-package com.android.imusic.video.bean;
+package com.video.player.lib.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -167,5 +167,23 @@ public class VideoParams implements Parcelable{
 
     public void setHeadTitle(String headTitle) {
         this.headTitle = headTitle;
+    }
+
+    @Override
+    public String toString() {
+        return "VideoParams{" +
+                "videoiId=" + videoiId +
+                ", videoTitle='" + videoTitle + '\'' +
+                ", videoCover='" + videoCover + '\'' +
+                ", videoDesp='" + videoDesp + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", userFront='" + userFront + '\'' +
+                ", userSinger='" + userSinger + '\'' +
+                ", previewCount=" + previewCount +
+                ", durtion=" + durtion +
+                ", lastTime=" + lastTime +
+                ", headTitle='" + headTitle + '\'' +
+                '}';
     }
 }

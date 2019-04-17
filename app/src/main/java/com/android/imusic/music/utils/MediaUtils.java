@@ -10,7 +10,7 @@ import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
 import com.android.imusic.music.bean.SearchHistroy;
 import com.android.imusic.music.bean.SearchResultInfo;
-import com.android.imusic.video.bean.VideoParams;
+import com.video.player.lib.bean.VideoParams;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
 import com.music.player.lib.bean.BaseMediaInfo;
 import com.music.player.lib.util.Logger;

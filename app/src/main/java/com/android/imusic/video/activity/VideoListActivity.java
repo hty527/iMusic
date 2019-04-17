@@ -22,7 +22,7 @@ import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.adapter.VideoIndexVideoAdapter;
 import com.android.imusic.video.bean.OpenEyesIndexInfo;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
-import com.android.imusic.video.bean.VideoParams;
+import com.video.player.lib.bean.VideoParams;
 import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.util.Logger;

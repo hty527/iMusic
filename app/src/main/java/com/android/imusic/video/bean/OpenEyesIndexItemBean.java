@@ -2,6 +2,7 @@ package com.android.imusic.video.bean;
 
 import android.text.TextUtils;
 
+import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
 
 import java.util.List;

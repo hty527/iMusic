@@ -12,6 +12,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
 import com.video.player.lib.base.BaseVideoPlayer;
+import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.model.VideoPlayerState;
 import com.video.player.lib.utils.Logger;
@@ -63,6 +64,8 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     //缓冲进度
     private int mBufferPercent;
     private boolean mContinuePlay;
+    //悬浮窗点击展开的目标Activity
+    private static String mActivityClassName = VideoConstants.MUSIC_PLAYER_CLASS_NAME;
 
     public static synchronized VideoPlayerManager getInstance(){
         synchronized (VideoPlayerManager.class){
@@ -249,6 +252,22 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
         this.mVideoWidth=width;
         this.mVideoHeight=height;
+    }
+
+    /**
+     * 指定点击通知栏后打开的Activity对象绝对路径
+     * @param className
+     */
+    public void setForegroundOpenActivityClassName(String className) {
+        mActivityClassName = className;
+    }
+
+    /**
+     * 返回点击通知栏后打开的Activity对象绝对路径
+     * @return
+     */
+    public String getForegroundActivityClassName() {
+        return mActivityClassName;
     }
 
     /**
