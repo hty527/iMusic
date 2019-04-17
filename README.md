@@ -39,7 +39,7 @@
 ## 软件截图：
 ![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190417_163330.jpg)
 </br>
-#### 体验APK下载:
+### 体验APK下载:
 ![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png)
 [Fir托管下载](https://fir.im/iMusic)
 </br>
