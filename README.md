@@ -51,7 +51,7 @@
 ### 集成步骤:
 #### 音乐播放器:
 
-#### 视频播放器:
+#### 视频播放器:只需三步走，即可实现基础的播放能力。
 1.写一个类继承BaseVideoPlayer，给定layout xml文件。或者使用默认的播放器。在你的项目中的.xml中引入播放器布局</br>
 ```
       <com.video.player.lib.view.VideoPlayerTrackView
@@ -96,6 +96,8 @@
         mVideoPlayer.setLoop(true);
         //这个可选的，如在悬浮窗中需要支持切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置
         mVideoPlayer.setParamsTag(mVideoParams);
+        //基本参数设定完毕后即可调用此方法自动开始准备播放
+        mVideoPlayer.starPlaytVideo();
 ```
 3.生命周期方法加入
 ```
@@ -133,7 +135,7 @@
         VideoPlayerManager.getInstance().onDestroy();
     }
 ```
-    至此你的播放器具备了基础的视频播放能力,更多API使用，请阅读下文。
+至此你的播放器具备了基础的视频播放能力,更多API使用，请阅读下文。
 
 
 
