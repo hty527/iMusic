@@ -135,7 +135,6 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
             finish();
             return;
         }
-        Logger.d(TAG,"mVideoParams:"+mVideoParams.toString());
         if(TextUtils.isEmpty(mVideoParams.getVideoUrl())){
             Toast.makeText(VideoPlayerActviity.this,"缺少必要参数",Toast.LENGTH_SHORT).show();
             finish();
@@ -260,7 +259,6 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Logger.d(TAG,"onDestroy");
         VideoPlayerManager.getInstance().onDestroy();
         if(null!=mAdapter){
             mAdapter.onDestroy();

@@ -2,7 +2,6 @@ package com.android.imusic.video.view;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import com.music.player.lib.util.Logger;
 
 /**
  * 2019/4/8
@@ -11,13 +10,11 @@ import com.music.player.lib.util.Logger;
 
 public class TransformerPageAnimation implements ViewPager.PageTransformer {
 
-    private static final String TAG = "TransformerPageAnimation";
     private static final float MAX_SCALE = 1.0f;
     private static final float MIN_SCALE = 0.88f;//0.8f
 
     @Override
     public void transformPage(View view, float position) {
-        Logger.d(TAG,"transformPage,position:"+position);
         if (position < -1){
             view.setScaleX(MIN_SCALE);
             view.setScaleY(MIN_SCALE);

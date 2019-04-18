@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
 
 /**
@@ -16,7 +15,7 @@ import com.video.player.lib.utils.VideoUtils;
 
 public class VideoWindowPlayerGroup extends FrameLayout{
 
-	private static final String TAG = "VideoWindowPlayer";
+	private static final String TAG = "VideoWindowPlayerGroup";
     private WindowManager mWindowManager;
 	private WindowManager.LayoutParams mParams;
 	private int mStatusBarHeight;
@@ -35,7 +34,6 @@ public class VideoWindowPlayerGroup extends FrameLayout{
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		Logger.d(TAG,"onTouchEvent-->"+event.getAction()+",event:"+event.toString());
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				//XY坐标都需要除去状态栏高度

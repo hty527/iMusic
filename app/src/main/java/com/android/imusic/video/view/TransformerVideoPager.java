@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.imusic.R;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
-import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicJukeBoxBackgroundLayout;
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ import java.util.List;
 
 public class TransformerVideoPager extends RelativeLayout{
 
-    private static final String TAG = "TransformerVideoPager";
     private List<OpenEyesIndexItemBean> mDataBeans;
     private MusicJukeBoxBackgroundLayout mBackgroundLayout;
     private ViewPager mViewPager;
@@ -68,9 +66,7 @@ public class TransformerVideoPager extends RelativeLayout{
             @Override
             public void onPageSelected(int position) {
                 //注意这里也需要获取真实的position
-                Logger.d(TAG,"onPageSelected--1--position:"+position);
                 position%=mDataBeans.size();
-                Logger.d(TAG,"onPageSelected--2--position:"+position);
                 setPagerData(position);
             }
             @Override
