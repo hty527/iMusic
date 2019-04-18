@@ -134,8 +134,9 @@
 ```
 至此你的播放器具备了基础的视频播放能力,更多功能和API使用，请参阅读下文。<br/>
 ##### 自定义交互UI的实现
-要实现自定义交互UI，需要继承BaseVideoController类，调用BaseVideoPlayer的setVideoController(V videoController);绑定交互UI，BaseVideoController设计有播放器状态必须的抽象方法需要实现外，还提供了全屏播放、小窗口播放、悬浮窗播放等拓展功能，
-要实现拓展功能，请调用OnFuctionListener的抽象方法实现，拓展的功能和拓展抽象方法如下所示：
+若项目中需要实现自定义交互UI，则需继承BaseVideoController类，初始化完成后调用BaseVideoPlayer的setVideoController(V videoController);绑定交互UI。<br/>
+BaseVideoController是一个抽象类，除了必须实现的抽象方法(播放器的实时状态更新，这些方法都是UI相关的)外，还有如迷你窗口、悬浮窗口、全屏窗口 的特有状态方法，可按照需求实现。
+若在UI交互中需要实现切换至Mini小窗口播放、切换至全局悬浮窗口播放、切换至全屏播放等功能，需要调用父类(BaseVideoController)的setOnFuctionListener(OnFuctionListener listener)按照需求实现抽象方法。
 ```
     /**
      * 这些方法可根据自身的操作交互按照需求实现，非必须实现的的
@@ -184,7 +185,8 @@
         public void onBackPressed(){}
     }
 ```
-除了继承BaseVideoController实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能外，还可以直接调用BaseVideoPlayer的公开方法实现以上功能和交互,BaseVideoPlayer的所有公开方法如下：
+##### 所有功能和公开API介绍
+除了继承BaseVideoController实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能外，还可以直接调用BaseVideoPlayer的公开方法实现以上功能和交互。BaseVideoPlayer的所有公开方法如下:
 ```
     /**
       * 设置播放资源
