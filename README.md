@@ -108,12 +108,13 @@
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        VideoPlayerManager.getInstance().onDestroy();
-        VideoWindowManager.getInstance().onDestroy();
         MusicWindowManager.getInstance().onDestroy();
         MediaUtils.getInstance().onDestroy();
         MusicPlayerManager.getInstance().unBindService(MainActivity.this);
         MusicPlayerManager.getInstance().onDestroy();
+        //若集成视频播放器，需调用以下方法
+        VideoPlayerManager.getInstance().onDestroy();
+        VideoWindowManager.getInstance().onDestroy();
     }
 ```
 2.开始播放任务
