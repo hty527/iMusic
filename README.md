@@ -71,11 +71,9 @@
         <!--循环播放-->
         <attr name="video_loop" format="boolean"/>
 ```
-
-
-    更多自定义属性请阅读video-player-lib模块下的attrs中的BaseVideoPlayer说明。</br>
+更多自定义属性请阅读video-player-lib模块下的attrs中的BaseVideoPlayer说明。</br>
 </br>
-    也可以这样动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>
+也可以这样动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>
 ```
         //frameLayout 你的parent布局
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
@@ -86,7 +84,6 @@
         playerTrackView.setVideoGestureController(gestureController);
         frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
 ```
-<br/>
 2.初始化播放的宽高，默认是LayoutParams.MATCH_PARENT，设置播放器必须的基本数据
 ```
         //播放器控件宽高
@@ -100,7 +97,6 @@
         //这个可选的，如在悬浮窗中需要支持切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置
         mVideoPlayer.setParamsTag(mVideoParams);
 ```
-<br/>
 3.生命周期方法加入
 ```
     @Override
