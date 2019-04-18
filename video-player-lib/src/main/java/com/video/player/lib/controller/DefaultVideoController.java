@@ -22,6 +22,7 @@ import com.video.player.lib.utils.VideoUtils;
  * 2019/4/8
  * Common Controller
  * 默认的视频播放器控制器，需要自定义请参考此组件，继承BaseVideoController 实现自己的UI和逻辑
+ * 此控制器已适配适用于常规、全屏、Mini窗口、悬浮窗窗口 四种场景交互
  */
 
 public class DefaultVideoController extends BaseVideoController implements SeekBar.OnSeekBarChangeListener {
@@ -90,11 +91,11 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
                     VideoPlayerManager.getInstance().playOrPause();
                 }else if(id == R.id.video_full_screen){
                     if(null!=mOnFuctionListener){
-                        mOnFuctionListener.onStartFullScreen();
+                        mOnFuctionListener.onStartFullScreen(null);
                     }
                 }else if(id == R.id.video_full_window){
                     if(null!=mOnFuctionListener){
-                        mOnFuctionListener.onStartGlobalWindown();
+                        mOnFuctionListener.onStartGlobalWindown(new VideoWindowController(getContext()));
                     }
                 }
             }
@@ -179,17 +180,6 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         }
     }
 
-    /**
-     * 设置视频标题
-     * @param videoTitle 视频标题内容
-     */
-    @Override
-    protected void setTitle(String videoTitle) {
-        if(null!=mVideoTitle){
-            mVideoTitle.setText(videoTitle);
-        }
-    }
-
     //=========================================播放状态=============================================
 
     /**
@@ -211,21 +201,6 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         }
     }
 
-    /**
-     * 跳转至某处播放中
-     */
-    public void startSeekLoading(){
-        Logger.d(TAG,"startSeekLoading："+mScrrenOrientation);
-        //小窗口
-        if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
-        }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_WINDOW){
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
-            //常规、全屏
-        }else{
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
-        }
-    }
 
     /**
      * 开始缓冲中
@@ -261,6 +236,26 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
             }else{
                 updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
             }
+        }
+    }
+
+    /**
+     * 已开始
+     */
+    @Override
+    public synchronized void play() {
+        Logger.d(TAG,"play："+mScrrenOrientation);
+        if(null!=mBtnStart){
+            mBtnStart.setImageResource(R.drawable.ic_video_controller_pause);
+        }
+        if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_WINDOW){
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
+        }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_PORTRAIT){
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.VISIBLE);
+        }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
+        }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_FULL){
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         }
     }
 
@@ -310,6 +305,20 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     }
 
     /**
+     * 移动网络环境下工作
+     */
+    @Override
+    public void mobileWorkTips() {
+        Logger.d(TAG,"mobileWorkTips："+mScrrenOrientation);
+        removeCallbacks(View.INVISIBLE);
+        if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
+        }else{
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+        }
+    }
+
+    /**
      * 播放失败
      * tips:播放器组件处理了播放失败时若处在小窗口播放，则停止播放,故此处无需处理小窗口事件
      * @param errorCode
@@ -326,22 +335,24 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     }
 
     /**
-     * 已开始
+     * 还原所有状态
      */
     @Override
-    public synchronized void play() {
-        Logger.d(TAG,"play："+mScrrenOrientation);
-        if(null!=mBtnStart){
-            mBtnStart.setImageResource(R.drawable.ic_video_controller_pause);
+    public void reset() {
+        Logger.d(TAG,"reset："+mScrrenOrientation);
+        removeCallbacks(View.INVISIBLE);
+        updateVideoControllerUI(View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+        if(null!=mVideoTotal){
+            mVideoTotal.setText("00:00");
+            mVideoCurrent.setText("00:00");
         }
-        if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_WINDOW){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
-        }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_PORTRAIT){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.VISIBLE);
-        }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
-        }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_FULL){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+        if(null!=mSeekBar){
+            mSeekBar.setSecondaryProgress(0);
+            mSeekBar.setProgress(0);
+        }
+        if(null!=mBottomProgressBar){
+            mBottomProgressBar.setSecondaryProgress(0);
+            mBottomProgressBar.setProgress(0);
         }
     }
 
@@ -375,41 +386,31 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     }
 
     /**
-     * 移动网络环境下工作
+     * 设置视频标题
+     * @param videoTitle 视频标题内容
      */
     @Override
-    public void mobileWorkTips() {
-        Logger.d(TAG,"mobileWorkTips："+mScrrenOrientation);
-        removeCallbacks(View.INVISIBLE);
-        if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
-        }else{
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+    protected void setTitle(String videoTitle) {
+        if(null!=mVideoTitle){
+            mVideoTitle.setText(videoTitle);
         }
     }
 
     /**
-     * 还原所有状态
+     * 跳转至某处播放中
      */
-    @Override
-    public void reset() {
-        Logger.d(TAG,"reset："+mScrrenOrientation);
-        removeCallbacks(View.INVISIBLE);
-        updateVideoControllerUI(View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
-        if(null!=mVideoTotal){
-            mVideoTotal.setText("00:00");
-            mVideoCurrent.setText("00:00");
-        }
-        if(null!=mSeekBar){
-            mSeekBar.setSecondaryProgress(0);
-            mSeekBar.setProgress(0);
-        }
-        if(null!=mBottomProgressBar){
-            mBottomProgressBar.setSecondaryProgress(0);
-            mBottomProgressBar.setProgress(0);
+    public void startSeekLoading(){
+        Logger.d(TAG,"startSeekLoading："+mScrrenOrientation);
+        //小窗口
+        if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
+        }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_WINDOW){
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
+            //常规、全屏
+        }else{
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         }
     }
-
 
     /**
      * 播放进度

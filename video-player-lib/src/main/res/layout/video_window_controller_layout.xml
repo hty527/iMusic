@@ -17,9 +17,7 @@
             android:id="@+id/video_btn_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:padding="5dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_video_controller_play"/>
         <TextView
@@ -27,8 +25,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:paddingRight="5dp"
-            android:paddingLeft="2dp"
             android:textSize="11dp"
             android:text="00:00"
             android:textColor="#FFFFFF"/>
@@ -52,19 +48,15 @@
             android:layout_height="wrap_content"
             android:text="00:00"
             android:textSize="11dp"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
             android:layout_gravity="center_vertical"
             android:textColor="#FFFFFF"/>
         <ImageView
             android:id="@+id/video_full_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="8dp"
+            android:padding="5dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_video_full_scrrent"
+            android:src="@drawable/ic_video_window_scrrent"
             android:visibility="visible"/>
     </LinearLayout>
     <!--Progress-->

@@ -32,6 +32,9 @@ public abstract class BaseVideoController extends FrameLayout{
         super(context, attrs, defStyleAttr);
     }
 
+    /**
+     * 标准的必须实现关心的方法
+     */
     //准备播放中
     public abstract void readyPlaying();
     //开始缓冲中
@@ -44,35 +47,32 @@ public abstract class BaseVideoController extends FrameLayout{
     public abstract void pause();
     //已回复播放
     public abstract void repeatPlay();
+    //移动网络状态下工作
+    public abstract void mobileWorkTips();
     //播放失败
     public abstract void error(int errorCode,String errorMessage);
     //播放器被重置
     public abstract void reset();
+
+    /**
+     * 非必须的，根据自身业务逻辑实现
+     */
+    //设置视频标题内容
+    protected void setTitle(String videoTitle){}
+    //播放地址为空
+    protected void pathInvalid(){}
     //切换为竖屏方向
     protected void startHorizontal(){}
     //切换为小窗口播放
     protected void startTiny(){}
     //切换为悬浮窗
     protected void startGlobalWindow(){}
-    //移动网络状态下工作
-    public abstract void mobileWorkTips();
     //视频总长度、播放进度、缓冲进度
-    public void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent){}
+    protected void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent){}
     //缓冲百分比
-    public void onBufferingUpdate(int percent){}
+    protected void onBufferingUpdate(int percent){}
     //播放器空白位置单击事件，关注此方法实现控制器的现实和隐藏
-    public abstract void changeControllerState(int scrrenOrientation,boolean isInterceptIntent);
-
-    /**
-     * 视频标题，子类若关心可实现
-     * @param videoTitle 视频标题内容
-     */
-    protected void setTitle(String videoTitle){}
-
-    /**
-     * 播放地址为空
-     */
-    protected void pathInvalid(){}
+    protected void changeControllerState(int scrrenOrientation,boolean isInterceptIntent){}
 
     /**
      * 更新屏幕方向
@@ -84,12 +84,21 @@ public abstract class BaseVideoController extends FrameLayout{
 
     //子类控制器实现扩展功能
     public abstract static class OnFuctionListener{
-        //开启全屏
-        public void onStartFullScreen(){}
-        //开启迷你窗口
-        public void onStartMiniWindow(){}
-        //开启全局悬浮窗
-        public void onStartGlobalWindown(){}
+        /**
+         * 开启全屏
+         * @param videoController 继承自BaseVideoController的自定义控制器
+         */
+        public void onStartFullScreen(BaseVideoController videoController){}
+        /**
+         * 开启迷你窗口
+         * @param miniWindowController 继承自BaseVideoController的自定义控制器
+         */
+        public void onStartMiniWindow(BaseVideoController miniWindowController){}
+        /**
+         * 开启全局悬浮窗
+         * @param windowController 继承自BaseVideoController的自定义控制器
+         */
+        public void onStartGlobalWindown(BaseVideoController windowController){}
         //关闭迷你窗口
         public void onQuiteMiniWindow(){}
         //打开播放器界面

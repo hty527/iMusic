@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.imusic.R;
+import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.adapter.holder.VideoBannerViewHolder;
 import com.android.imusic.video.adapter.holder.VideoCardViewHolder;
 import com.android.imusic.video.adapter.holder.VideoTitleViewHolder;
@@ -19,6 +20,7 @@ import com.music.player.lib.adapter.base.BaseAdapter;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.model.MusicGlideCircleTransform;
 import com.music.player.lib.util.MusicUtils;
+import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.utils.VideoUtils;
 import com.video.player.lib.view.VideoTextrueProvider;
@@ -186,6 +188,8 @@ public class VideoIndexVideoAdapter extends BaseAdapter<OpenEyesIndexItemBean,Re
             }
         });
         videoViewHolder.trackVideo.setDataSource(indexItemBean.getPlayUrl(),indexItemBean.getTitle(),indexItemBean.getId());
+        VideoParams videoParams= MediaUtils.getInstance().formatVideoParams(indexItemBean);
+        videoViewHolder.trackVideo.setParamsTag(videoParams);
         if(null!=videoViewHolder.trackVideo.getCoverController()){
             //视频时长
             videoViewHolder.trackVideo.getCoverController().mPreDurtion.setText(MusicUtils.getInstance().stringForAudioTime(indexItemBean.getDuration()*1000));

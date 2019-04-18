@@ -30,7 +30,8 @@ import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.controller.DefaultCoverController;
 import com.video.player.lib.controller.DefaultVideoController;
-import com.video.player.lib.controller.WindowVideoController;
+import com.video.player.lib.controller.VideoMiniWindowController;
+import com.video.player.lib.controller.VideoWindowController;
 import com.video.player.lib.listener.VideoOrientationListener;
 import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.manager.VideoPlayerManager;
@@ -57,6 +58,7 @@ import java.lang.reflect.InvocationTargetException;
  * 自定义VideoController、CoverController、GestureController
  * 播放器默认不会创建默认的封面、播放器控制器，需在xml文件中指定属性atts.BaseVideoPlayer,详见属性注释说明。
  * 也可以调用BaseVideoPlayer的setVideoController和setVideoCoverController设置控制器
+ * 注意：此播放器在创建全局、迷你小窗口、悬浮窗时，需要区别实例对象，内部已做处理。
  */
 
 public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends BaseCoverController
@@ -188,6 +190,14 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         this.mVideoID=videoID;
     }
 
+    /**
+     * 设置参数TAG，可选的，若支持悬浮窗中打开播放器功能，则必须调用此方法绑定PlayerActivity所需参数
+     * @param params VideoPlayerActivity 组件所需参数
+     */
+    public void setParamsTag(VideoParams params) {
+        this.setTag(params);
+    }
+
     public void setLoop(boolean loop) {
         VideoPlayerManager.getInstance().setLoop(loop);
     }
@@ -228,25 +238,37 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
             //添加控制器到播放器
             if(null!=mVideoController){
                 mVideoController.setOnFuctionListener(new BaseVideoController.OnFuctionListener() {
+                    /**
+                     * 转向全屏播放
+                     */
                     @Override
-                    public void onStartFullScreen() {
+                    public void onStartFullScreen(BaseVideoController videoController) {
                         if(SCRREN_ORIENTATION==VideoConstants.SCREEN_ORIENTATION_PORTRAIT){
-                            startFullScreen();
+                            startFullScreen((V) videoController);
                         }else{
                             backFullScreenWindow();
                         }
                     }
 
+                    /**
+                     * 转向迷你窗口播放
+                     */
                     @Override
-                    public void onStartMiniWindow() {
-                        startMiniWindow();
+                    public void onStartMiniWindow(BaseVideoController miniWindowController) {
+                        startMiniWindow(miniWindowController);
                     }
 
+                    /**
+                     * 转向悬浮窗播放
+                     */
                     @Override
-                    public void onStartGlobalWindown() {
-                        startGlobalWindown();
+                    public void onStartGlobalWindown(BaseVideoController windowController) {
+                        startGlobalWindown(windowController);
                     }
 
+                    /**
+                     * 退出迷你窗口
+                     */
                     @Override
                     public void onQuiteMiniWindow() {
                         if(SCRREN_ORIENTATION==VideoConstants.SCREEN_ORIENTATION_TINY){
@@ -254,12 +276,18 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         }
                     }
 
+                    /**
+                     * 从悬浮窗中打开视频播放器
+                     */
                     @Override
                     public void onStartActivity() {
                         //悬浮窗打开Activity
-                        startActivity();
+                        startWindowToActivity();
                     }
 
+                    /**
+                     * 尝试弹射返回，在Activity onBackPressed方法中调用
+                     */
                     @Override
                     public void onBackPressed() {
                         backPressed();
@@ -353,6 +381,14 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     }
 
     /**
+     * 返回全屏的手势识别控制器
+     * @return
+     */
+    public G getGestureController() {
+        return mGestureController;
+    }
+
+    /**
      * 更新播放器方向
      * @param scrrenOrientation
      */
@@ -403,7 +439,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         //还原可能正在进行的播放任务
         VideoPlayerManager.getInstance().onReset();
         VideoPlayerManager.getInstance().addOnPlayerEventListener(this);
-        isWorking=true;
+        setWorking(true);
         //准备画面渲染图层
         if(null!=mSurfaceView){
             addTextrueViewToView(BaseVideoPlayer.this);
@@ -435,13 +471,13 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     }
 
     /**
-     * 点击了悬浮窗的开启Activity按钮
+     * 从悬浮窗播放器窗口转向VideoPlayerActivity播放
      */
-    private void startActivity() {
+    public void startWindowToActivity() {
         //先结束悬浮窗播放任务
-        BaseVideoPlayer baseVideoPlayer = backGlobalWindown();
+        BaseVideoPlayer baseVideoPlayer = backGlobalWindownToActivity();
         Intent startIntent=new Intent();
-        startIntent.setClassName(VideoUtils.getInstance().getPackageName(getContext().getApplicationContext()),VideoPlayerManager.getInstance().getForegroundActivityClassName());
+        startIntent.setClassName(VideoUtils.getInstance().getPackageName(getContext().getApplicationContext()),VideoPlayerManager.getInstance().getVideoPlayerActivityClassName());
         startIntent.putExtra(VideoConstants.KEY_VIDEO_PLAYING,true);
         //如果播放器组件未启用，创建新的实例
         //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
@@ -449,17 +485,19 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        VideoParams videoParams=new VideoParams();
-        Logger.d(TAG,"mTitle:"+mTitle+",mDataSource:"+mDataSource);
-        videoParams.setVideoTitle(mTitle);
-        videoParams.setVideoUrl(mDataSource);
-        videoParams.setVideoiId(mVideoID);
-        startIntent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
-        long startTime = System.currentTimeMillis();
+        if(null!=this.getTag()&&getTag() instanceof VideoParams){
+            VideoParams videoParams = (VideoParams) this.getTag();
+            startIntent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
+        }else{
+            VideoParams videoParams=new VideoParams();
+            Logger.d(TAG,"mTitle:"+mTitle+",mDataSource:"+mDataSource);
+            videoParams.setVideoTitle(mTitle);
+            videoParams.setVideoUrl(mDataSource);
+            videoParams.setVideoiId(mVideoID);
+            startIntent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
+        }
         getContext().getApplicationContext().startActivity(startIntent);
         //销毁一下，万不能再界面跳转之前销毁
-        long endTime = System.currentTimeMillis();
-        Logger.d(TAG,"startActivity-->"+(endTime-startTime));
         if(null!=baseVideoPlayer){
             baseVideoPlayer.destroy();
             VideoPlayerManager.getInstance().setWindownPlayer(null);
@@ -473,8 +511,9 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * 3：向Windown ViewGroup 添加一个新的VideoPlayer组件,赋值已有的TextrueView到VideoPlayer，设置新的播放器监听，结合TextrueView onSurfaceTextureAvailable 回调事件处理
      * 4：根据自身业务，向新的播放器添加控制器
      * 5：记录全屏窗口播放器，退出全屏恢复常规播放用到
+     * @param fullScreenVideoController 全屏控制器，为空则使用默认控制器
      */
-    public void startFullScreen() {
+    public void startFullScreen(V fullScreenVideoController) {
         AppCompatActivity appCompActivity = VideoUtils.getInstance().getAppCompActivity(getContext());
         if (null != appCompActivity) {
             SCRREN_ORIENTATION = VideoConstants.SCREEN_ORIENTATION_FULL;
@@ -501,8 +540,13 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     VideoPlayerManager.getInstance().setFullScrrenPlayer(videoPlayer);
                     //将新的实例化添加至Window
                     viewGroup.addView(videoPlayer, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                    //这里的全屏播放器强制设置控制器
-                    videoPlayer.setVideoController(null, true);
+                    //设置用户自定义全屏播放器控制器
+                    if(null!=fullScreenVideoController){
+                        videoPlayer.setVideoController(fullScreenVideoController, false);
+                    }else{
+                        //设置内部默认控制器
+                        videoPlayer.setVideoController(null, true);
+                    }
                     //更新屏幕方向
                     videoPlayer.setScrrenOrientation(SCRREN_ORIENTATION);
                     //转换为横屏方向
@@ -858,10 +902,11 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 开启小窗口播放
-     * 默认X：30像素 Y：30像素 位于屏幕左上角
+     * 默认X：30像素 Y：30像素 位于屏幕左上角,使用默认控制器
+     * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
      */
-    public void startMiniWindow(){
-        startMiniWindow(30,30,0,0);
+    public void startMiniWindow(BaseVideoController miniWindowController){
+        startMiniWindow(30,30,0,0, (V) miniWindowController);
     }
 
     /**
@@ -869,16 +914,22 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      *
      * @param startX     起点位于屏幕的X轴像素
      * @param startY     起点位于屏幕的Y轴像素
-     * @param tinyWidth  小窗口的宽 未指定使用默认 屏幕宽/2
-     * @param tinyHeight 小窗口的高 未指定使用默认 屏幕宽/2*9/16
+     * @param tinyWidth  小窗口的宽 未指定使用默认 屏幕宽的 1/2(二分之一)
+     * @param tinyHeight 小窗口的高 未指定使用默认 屏幕宽的 1/2 *9/16
+     * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
      */
-    public void startMiniWindow(int startX, int startY, int tinyWidth, int tinyHeight) {
+    public void startMiniWindow(int startX, int startY, int tinyWidth, int tinyHeight,V miniWindowController) {
+        Logger.d(TAG,"startMiniWindow-->isPlaying():"+isPlaying());
+        if (VideoWindowManager.getInstance().isWindowShowing()) {
+            Toast.makeText(getContext(), "已在悬浮窗播放", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (SCRREN_ORIENTATION == VideoConstants.SCREEN_ORIENTATION_TINY) {
             Toast.makeText(getContext(), "已切换至小窗口", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (VideoWindowManager.getInstance().isWindowShowing()) {
-            Toast.makeText(getContext(), "已在悬浮窗播放", Toast.LENGTH_SHORT).show();
+        if(!isPlaying()){
+            Toast.makeText(getContext(), "只能在正在播放状态下切换小窗口播放", Toast.LENGTH_SHORT).show();
             return;
         }
         AppCompatActivity appCompActivity = VideoUtils.getInstance().getAppCompActivity(getContext());
@@ -901,7 +952,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     //绑定组件ID
                     videoPlayer.setId(R.id.video_mini_window);
                     //保存小窗口实例
-                    VideoPlayerManager.getInstance().setTinyPlayer(videoPlayer);
+                    VideoPlayerManager.getInstance().setMiniWindowPlayer(videoPlayer);
                     //将新的实例化添加至Window
                     int screenWidth = VideoUtils.getInstance().getScreenWidth(appCompActivity);
                     int width = screenWidth / 2;
@@ -912,18 +963,22 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     if (tinyHeight > 0) {
                         height = tinyHeight;
                     }
-                    Logger.d(TAG, "startTinyWindowPlay-->startX:" + startX + ",startY:" + startY + ",tinyWidth:" + tinyWidth + ",tinyHeight:" + tinyHeight);
+                    Logger.d(TAG, "startMiniWindow-->startX:" + startX + ",startY:" + startY + ",tinyWidth:" + tinyWidth + ",tinyHeight:" + tinyHeight);
                     LayoutParams layoutParams = new LayoutParams(width, height);
                     layoutParams.setMargins(startX, startY, 0, 0);
                     viewGroup.addView(videoPlayer, layoutParams);
-                    //设置一个默认的控制器
-                    videoPlayer.setVideoController(null, true);
+                    //设置自定义迷你窗口控制器
+                    if(null!=miniWindowController){
+                        videoPlayer.setVideoController(miniWindowController, false);
+                    }else{
+                        //设置一个默认的控制器
+                        videoPlayer.setVideoController(new VideoMiniWindowController(videoPlayer.getContext()), false);
+                    }
                     //更新屏幕方向,这里只更新为窗口模式即可
                     videoPlayer.setScrrenOrientation(SCRREN_ORIENTATION);
                     //转换为小窗口模式
                     videoPlayer.mVideoController.startTiny();
                     videoPlayer.setWorking(true);
-
                     //清除小窗口播放器的手势事件
                     if (null != videoPlayer.mSurfaceView) {
                         videoPlayer.mSurfaceView.setOnTouchListener(null);
@@ -1034,19 +1089,19 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         AppCompatActivity appCompActivity = VideoUtils.getInstance().getAppCompActivity(getContext());
         if(null!=appCompActivity){
             SCRREN_ORIENTATION=VideoConstants.SCREEN_ORIENTATION_PORTRAIT;
-            BaseVideoPlayer tinyPlayer = VideoPlayerManager.getInstance().getTinyPlayer();
+            BaseVideoPlayer miniWindowPlayer = VideoPlayerManager.getInstance().getMiniWindowPlayer();
             //移除全屏播放器的SurfaceView及屏幕窗口的VideoPlayer
-            if(null!=tinyPlayer){
+            if(null!=miniWindowPlayer){
                 //清除底层手势控制的ViewGroup
                 if(null!=mMiniTouchViewGroup){
                     mMiniTouchViewGroup.setOnTouchListener(null);
-                    tinyPlayer.removeView(mMiniTouchViewGroup);
+                    miniWindowPlayer.removeView(mMiniTouchViewGroup);
                     mMiniTouchViewGroup=null;
                 }
-                if(null!=VideoPlayerManager.getInstance().getTextureView()&&null!=tinyPlayer.mSurfaceView){
-                    tinyPlayer.mSurfaceView.removeView(VideoPlayerManager.getInstance().getTextureView());
+                if(null!=VideoPlayerManager.getInstance().getTextureView()&&null!=miniWindowPlayer.mSurfaceView){
+                    miniWindowPlayer.mSurfaceView.removeView(VideoPlayerManager.getInstance().getTextureView());
                 }
-                tinyPlayer.destroy();
+                miniWindowPlayer.destroy();
                 //从窗口移除ViewPlayer
                 ViewGroup viewGroup = (ViewGroup) appCompActivity.getWindow().getDecorView();
                 View oldTinyVideo = viewGroup.findViewById(R.id.video_mini_window);
@@ -1055,7 +1110,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                 }else{
                     viewGroup.removeView(oldTinyVideo);
                 }
-                VideoPlayerManager.getInstance().setTinyPlayer(null);
+                VideoPlayerManager.getInstance().setMiniWindowPlayer(null);
             }
             BaseVideoPlayer noimalPlayer = VideoPlayerManager.getInstance().getNoimalPlayer();
             if(null!=noimalPlayer){
@@ -1069,37 +1124,42 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     }
 
     /**
-     * 转向全局的悬浮窗播放,默认起点X,Y轴为=播放器Vide的起始X,Y轴，播放器默认居中显示，宽：屏幕宽度2/3，高：16：9高度
+     * 转向全局的悬浮窗播放,默认起点X,Y轴为=播放器Vide的起始X,Y轴，播放器默认居中显示，宽：屏幕宽度3/4(四分之三)，高：16：9高度
+     * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
      */
-    public void startGlobalWindown() {
+    public void startGlobalWindown(BaseVideoController windowController) {
         int screenWidth = VideoUtils.getInstance().getScreenWidth(getContext());
         int screenHeight = VideoUtils.getInstance().getScreenHeight(getContext());
-        int playerWidth = screenWidth/3*2;
+        //playerWidth宽度为屏幕3/4
+        int playerWidth = screenWidth/4*3;
         int playerHeight=playerWidth*9/16;
-        int startX=screenWidth/3/2;
+        //startX位于4/1/2的位置
+        int startX=screenWidth/4/2;
         int startY=screenHeight/2-playerHeight/2;
-        startGlobalWindown(startX,startY,playerWidth,playerHeight);
+        startGlobalWindown(startX,startY,playerWidth,playerHeight, (V) windowController);
     }
 
     /**
      * 转向全局的悬浮窗播放
      * @param startX 屏幕X起始轴
      * @param startY 屏幕Y起始轴
+     * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
      */
-    public void startGlobalWindown(int startX, int startY){
+    public void startGlobalWindown(int startX, int startY,V windowController){
         int screenWidth = VideoUtils.getInstance().getScreenWidth(getContext());
         int playerWidth = screenWidth / 2;
         int playerHeight=playerWidth*9/16;
-        startGlobalWindown(startX,startY,playerWidth,playerHeight);
+        startGlobalWindown(startX,startY,playerWidth,playerHeight,windowController);
     }
 
     /**
      * 转向全局的悬浮窗播放
      * @param width 播放器宽
      * @param height 播放器高
+     * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
      */
-    public void startGlobalWindownPlayerSetWH(int width,int height){
-        startGlobalWindown(10,10,width,height);
+    public void startGlobalWindownPlayerSetWH(int width,int height,V windowController){
+        startGlobalWindown(10,10,width,height,windowController);
     }
 
     /**
@@ -1108,8 +1168,9 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * @param startY 播放器位于屏幕起始Y轴
      * @param width 播放器宽
      * @param height 播放器高
+     * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
      */
-    public void startGlobalWindown(int startX, int startY, int width, int height){
+    public void startGlobalWindown(int startX, int startY, int width, int height,V windowController){
         if(!VideoWindowManager.getInstance().isWindowShowing()){
             if(VideoWindowManager.getInstance().checkAlertWindowsPermission(getContext())){
                 FrameLayout viewGroup = VideoWindowManager.getInstance().addVideoPlayerToWindow(getContext().getApplicationContext(), startX, startY, width, height);
@@ -1139,14 +1200,23 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                             }
                         });
                         viewGroup.addView(imageView);
-                        //设置一个默认的控制器
-                        videoPlayer.setVideoController(new WindowVideoController(videoPlayer.getContext()),false);
+                        //设置自定义悬浮窗窗口控制器
+                        if(null!=windowController){
+                            videoPlayer.setVideoController(windowController,false);
+                        }else{
+                            //设置一个默认的控制器
+                            videoPlayer.setVideoController(new VideoWindowController(videoPlayer.getContext()),false);
+                        }
                         //更新屏幕方向,这里只更新为窗口模式即可
                         videoPlayer.setScrrenOrientation(VideoConstants.SCREEN_ORIENTATION_WINDOW);
                         //转换为小窗口模式
                         videoPlayer.setWorking(true);
                         //设置基础的配置
                         videoPlayer.setDataSource(mDataSource,mTitle,mVideoID);
+                        if(null!=BaseVideoPlayer.this.getTag()){
+                            //绑定打开Activity所需参数
+                            videoPlayer.setParamsTag((VideoParams) BaseVideoPlayer.this.getTag());
+                        }
                         //添加TextrueView至播放控件
                         addTextrueViewToView(videoPlayer);
                         if(null!=videoPlayer.mVideoController){
@@ -1183,7 +1253,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     /**
      * 退出全局悬浮窗口播放
      */
-    public BaseVideoPlayer backGlobalWindown(){
+    public BaseVideoPlayer backGlobalWindownToActivity(){
         VideoPlayerManager.getInstance().setContinuePlay(true);
         if(null!=VideoPlayerManager.getInstance().getWindownPlayer()) {
             BaseVideoPlayer windownPlayer = VideoPlayerManager.getInstance().getWindownPlayer();
@@ -1231,6 +1301,14 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         isWorking = working;
     }
 
+    /**
+     * 播放器状态
+     * @return
+     */
+    private boolean isPlaying() {
+        return VideoPlayerManager.getInstance().isPlaying();
+    }
+
     //======================================播放器内部状态回调========================================
 
     /**
@@ -1268,7 +1346,6 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         break;
                     //缓冲结束、准备结束 后的开始播放
                     case MUSIC_PLAYER_START:
-                        Logger.d(TAG,"MUSIC_PLAYER_START");
                         if(null!=mCoverController&&mCoverController.getVisibility()!=GONE){
                             mCoverController.setVisibility(GONE);
                         }

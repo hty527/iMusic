@@ -16,7 +16,7 @@ public interface MediaPlayerPresenter {
      * 设置循环模式
      * @param loop true:循环播放 false:反之
      */
-    void setLoop(boolean loop);
+    VideoPlayerManager setLoop(boolean loop);
 
     /**
      * 移动网络工作开关
@@ -115,6 +115,13 @@ public interface MediaPlayerPresenter {
      * @return true：可以直接返回 false：存在全屏或小窗口
      */
     boolean isBackPressed();
+
+    /**
+     * 是否可以直接返回
+     * @param destroy 是否直接销毁，比如说MainActivity返回逻辑还有询问用户是否退出，给定destroy为false，则只是尝试弹射，并不会去销毁播放器
+     * @return true：可以直接返回 false：存在全屏或小窗口
+     */
+    boolean isBackPressed(boolean destroy);
 
     /**
      * 返回内部播放器播放状态

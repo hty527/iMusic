@@ -50,7 +50,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     //息屏下WIFI锁
     private static WifiManager.WifiLock mWifiLock;
     //是否循环播放
-    private boolean mLoop;
+    private boolean mLoop=false;
     //进度计时器
     private PlayTimerTask mPlayTimerTask;
     private Timer mTimer;
@@ -58,7 +58,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     private int mPercentIndex;
     //移动网络下是否已经提示用户流量播放
     private static boolean mobileWorkEnable = false;
-    private BaseVideoPlayer mNoimalPlayer,mFullScrrenPlayer,mTinyPlayer,mWindownPlayer;
+    private BaseVideoPlayer mNoimalPlayer,mFullScrrenPlayer, mMiniWindowPlayer,mWindownPlayer;
     //视频宽高
     private int mVideoWidth,mVideoHeight;
     //缓冲进度
@@ -131,8 +131,8 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
      * 保存小窗口播放器实例
      * @param videoPlayer
      */
-    public void setTinyPlayer(BaseVideoPlayer videoPlayer) {
-        this.mTinyPlayer=videoPlayer;
+    public void setMiniWindowPlayer(BaseVideoPlayer videoPlayer) {
+        this.mMiniWindowPlayer =videoPlayer;
     }
 
     /**
@@ -163,8 +163,8 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
      * 返回小窗口实例
      * @return
      */
-    public BaseVideoPlayer getTinyPlayer() {
-        return mTinyPlayer;
+    public BaseVideoPlayer getMiniWindowPlayer() {
+        return mMiniWindowPlayer;
     }
 
     /**
@@ -258,15 +258,16 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
      * 指定点击通知栏后打开的Activity对象绝对路径
      * @param className
      */
-    public void setForegroundOpenActivityClassName(String className) {
+    public VideoPlayerManager setVideoPlayerActivityClassName(String className) {
         mActivityClassName = className;
+        return mInstance;
     }
 
     /**
      * 返回点击通知栏后打开的Activity对象绝对路径
      * @return
      */
-    public String getForegroundActivityClassName() {
+    public String getVideoPlayerActivityClassName() {
         return mActivityClassName;
     }
 
@@ -291,11 +292,12 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
      * @param loop
      */
     @Override
-    public void setLoop(boolean loop) {
+    public VideoPlayerManager setLoop(boolean loop) {
         this.mLoop=loop;
         if(null!=mMediaPlayer){
             mMediaPlayer.setLooping(loop);
         }
+        return mInstance;
     }
 
     /**
@@ -672,8 +674,8 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     }
 
     /**
-     * 尝试弹射退出，若当前播放器处于迷你小窗口、全屏窗口下，则只是退出 小窗口\全屏 播放
-     * 若播放器处于常规状态下，则立即销毁播放器，销毁时内部检测了悬浮窗状态，若正在悬浮窗状态下播放，则不销毁
+     * 尝试弹射退出，若当前播放器处于迷你小窗口、全屏窗口下，则只是退出小窗口\全屏至常规窗口播放
+     * 若播放器处于常规状态下，则立即销毁播放器，销毁时内部检测了悬浮窗状态，若正在悬浮窗状态下播放，则啥也不做
      * @return 是否可以销毁界面
      */
     @Override
@@ -686,6 +688,27 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
             return backPressed;
         }
         onDestroy();
+        return true;
+    }
+
+    /**
+     * 尝试弹射退出，若当前播放器处于迷你小窗口、全屏窗口下，则只是退出小窗口\全屏至常规窗口播放
+     * 若播放器处于常规状态下，则立即销毁播放器，销毁时内部检测了悬浮窗状态，若正在悬浮窗状态下播放，则啥也不做
+     * @param destroy 是否直接销毁，比如说MainActivity返回逻辑还有询问用户是否退出，给定destroy为false，则只是尝试弹射，并不会去销毁播放器
+     * @return
+     */
+    @Override
+    public boolean isBackPressed(boolean destroy) {
+        if(null!=mNoimalPlayer){
+            boolean backPressed = mNoimalPlayer.backPressed();
+            if(backPressed&&destroy){
+                onReset();
+            }
+            return backPressed;
+        }
+        if(destroy){
+            onReset();
+        }
         return true;
     }
 
@@ -776,9 +799,9 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
             mNoimalPlayer.destroy();
             mNoimalPlayer=null;
         }
-        if(null!=mTinyPlayer){
-            mTinyPlayer.destroy();
-            mTinyPlayer=null;
+        if(null!= mMiniWindowPlayer){
+            mMiniWindowPlayer.destroy();
+            mMiniWindowPlayer =null;
         }
         if(null!=mWindownPlayer){
             mWindownPlayer.destroy();

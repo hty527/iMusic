@@ -22,7 +22,7 @@ import com.video.player.lib.utils.VideoUtils;
  * Window Controller
  */
 
-public class WindowVideoController extends BaseVideoController implements SeekBar.OnSeekBarChangeListener {
+public class VideoWindowController extends BaseVideoController implements SeekBar.OnSeekBarChangeListener {
 
     private View mBottomBarLayout,mBtnFull;
     private TextView mVideoCurrent,mVideoTotal;
@@ -32,15 +32,15 @@ public class WindowVideoController extends BaseVideoController implements SeekBa
     //用户是否手指正在持续滚动
     private boolean isTouchSeekBar=false;
 
-    public WindowVideoController(@NonNull Context context) {
+    public VideoWindowController(@NonNull Context context) {
         this(context,null);
     }
 
-    public WindowVideoController(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public VideoWindowController(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs,0);
     }
 
-    public WindowVideoController(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public VideoWindowController(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         View.inflate(context, R.layout.video_window_controller_layout,this);
         mBottomBarLayout = findViewById(R.id.video_bottom_tab);
@@ -147,21 +147,12 @@ public class WindowVideoController extends BaseVideoController implements SeekBa
     }
 
     /**
-     * 跳转至某处播放中
-     */
-    public void startSeekLoading(){
-        Logger.d(TAG,"startSeekLoading："+mScrrenOrientation);
-        //小窗口
-        updateVideoControllerUI(View.VISIBLE,View.INVISIBLE);
-    }
-
-    /**
      * 开始缓冲中
      */
     @Override
     public void startBuffer() {
         Logger.d(TAG,"startBuffer："+mScrrenOrientation);
-        updateVideoControllerUI(View.VISIBLE,View.INVISIBLE);
+        updateVideoControllerUI(View.VISIBLE,View.VISIBLE);
     }
 
     /**
@@ -170,6 +161,18 @@ public class WindowVideoController extends BaseVideoController implements SeekBa
     @Override
     public void endBuffer() {
         Logger.d(TAG,"endBuffer："+mScrrenOrientation);
+        updateVideoControllerUI(View.INVISIBLE,View.VISIBLE);
+    }
+
+    /**
+     * 已开始
+     */
+    @Override
+    public synchronized void play() {
+        Logger.d(TAG,"play："+mScrrenOrientation);
+        if(null!=mBtnStart){
+            mBtnStart.setImageResource(R.drawable.ic_video_controller_pause);
+        }
         updateVideoControllerUI(View.INVISIBLE,View.VISIBLE);
     }
 
@@ -200,6 +203,9 @@ public class WindowVideoController extends BaseVideoController implements SeekBa
         changeControllerState(mScrrenOrientation,false);
     }
 
+    @Override
+    public void mobileWorkTips() {}
+
     /**
      * 播放失败
      * tips:播放器组件处理了播放失败时若处在小窗口播放，则停止播放,故此处无需处理小窗口事件
@@ -215,31 +221,6 @@ public class WindowVideoController extends BaseVideoController implements SeekBa
         removeCallbacks(View.INVISIBLE);
         updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE);
     }
-
-    /**
-     * 已开始
-     */
-    @Override
-    public synchronized void play() {
-        Logger.d(TAG,"play："+mScrrenOrientation);
-        if(null!=mBtnStart){
-            mBtnStart.setImageResource(R.drawable.ic_video_controller_pause);
-        }
-        updateVideoControllerUI(View.INVISIBLE,View.VISIBLE);
-    }
-
-    /**
-     * 开启全局悬浮窗播放
-     */
-    @Override
-    public void startGlobalWindow() {
-        removeCallbacks(View.INVISIBLE);
-        Logger.d(TAG,"startWindow");
-        updateVideoControllerUI(View.INVISIBLE,View.VISIBLE);
-    }
-
-    @Override
-    public void mobileWorkTips() {}
 
     /**
      * 还原所有状态
@@ -261,6 +242,25 @@ public class WindowVideoController extends BaseVideoController implements SeekBa
             mBottomProgressBar.setSecondaryProgress(0);
             mBottomProgressBar.setProgress(0);
         }
+    }
+
+    /**
+     * 跳转至某处播放中
+     */
+    public void startSeekLoading(){
+        Logger.d(TAG,"startSeekLoading："+mScrrenOrientation);
+        //小窗口
+        updateVideoControllerUI(View.VISIBLE,View.INVISIBLE);
+    }
+
+    /**
+     * 开启全局悬浮窗播放
+     */
+    @Override
+    public void startGlobalWindow() {
+        removeCallbacks(View.INVISIBLE);
+        Logger.d(TAG,"startWindow");
+        updateVideoControllerUI(View.INVISIBLE,View.VISIBLE);
     }
 
     /**
@@ -338,7 +338,7 @@ public class WindowVideoController extends BaseVideoController implements SeekBa
      * @param visible 最后的状态
      */
     private void removeCallbacks(int visible) {
-        WindowVideoController.this.removeCallbacks(controllerRunnable);
+        VideoWindowController.this.removeCallbacks(controllerRunnable);
         if(null!=mBottomBarLayout){
             mBottomBarLayout.setVisibility(visible);
         }
@@ -363,14 +363,14 @@ public class WindowVideoController extends BaseVideoController implements SeekBa
             return;
         }
         //移除已post的事件
-        WindowVideoController.this.removeCallbacks(controllerRunnable);
+        VideoWindowController.this.removeCallbacks(controllerRunnable);
         if(mBottomBarLayout.getVisibility()!=View.VISIBLE){
             mBottomBarLayout.setVisibility(View.VISIBLE);
         }
         if(null!=mBottomProgressBar){
             mBottomProgressBar.setVisibility(View.INVISIBLE);
         }
-        WindowVideoController.this.postDelayed(controllerRunnable,5000);
+        VideoWindowController.this.postDelayed(controllerRunnable,5000);
     }
 
     @Override

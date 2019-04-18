@@ -13,6 +13,7 @@ import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
 import com.android.imusic.music.base.MusicBaseActivity;
 import com.android.imusic.music.engin.IndexPersenter;
 import com.android.imusic.music.fragment.IndexMusicFragment;
+import com.android.imusic.video.activity.VideoPlayerActviity;
 import com.android.imusic.video.fragment.IndexVideoFragment;
 import com.android.imusic.music.net.MusicNetUtils;
 import com.android.imusic.music.utils.MediaUtils;
@@ -44,7 +45,15 @@ public class MainActivity extends MusicBaseActivity<IndexPersenter> {
         setContentView(R.layout.activity_main);
         //网络日志
         MusicNetUtils.DEBUG=false;
-        //播放器配置设定,在开启服务组件之前设置
+
+        //视频播放器初始化
+        VideoPlayerManager.getInstance()
+                //循环模式
+                .setLoop(true)
+                //悬浮窗中打开播放器的绝对路径，可选的参数,若需要支持从悬浮窗中还原到APP的播放器界面，则必须设定此参数
+                .setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
+
+        //音乐播放器初始化
         MusicPlayerConfig config=MusicPlayerConfig.Build()
             .setLockForeground(true)//前台服务锁定开关
             .setWindownAutoScrollToEdge(true)//悬浮窗自动吸附开关
@@ -172,15 +181,19 @@ public class MainActivity extends MusicBaseActivity<IndexPersenter> {
 
     @Override
     public void onBackPressed() {
-        if(VideoPlayerManager.getInstance().isBackPressed()){
+        //第一遍只是退出全屏、迷你窗口播放器至常规状态
+        if(VideoPlayerManager.getInstance().isBackPressed(false)){
             long millis = System.currentTimeMillis();
             if(0 == currentMillis | millis-currentMillis > 2000){
-                Toast.makeText(MainActivity.this,"再按一次退出播放器",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,"再按一次退出"+getResources().getString(R.string.app_name),Toast.LENGTH_SHORT).show();
                 currentMillis=millis;
                 return;
             }
             currentMillis=millis;
-            super.onBackPressed();
+            //第二遍才是结束播放
+            if(VideoPlayerManager.getInstance().isBackPressed(true)){
+                super.onBackPressed();
+            }
         }
     }
 

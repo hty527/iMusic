@@ -100,9 +100,12 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
             @Override
             public void onClick(View v) {
                 if(null!=mVideoPlayer){
-                    int startX=VideoUtils.getInstance().getScreenWidth(VideoPlayerActviity.this)/2-VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
+                    int screenWidth = VideoUtils.getInstance().getScreenWidth(VideoPlayerActviity.this);
+                    int width = screenWidth / 2;
+                    int height = width * 9 / 16;
+                    int startX = screenWidth / 2 -VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
                     int startY=mVideoPlayer.getMeasuredHeight()+VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
-                    mVideoPlayer.startMiniWindow(startX,startY,0,0);
+                    mVideoPlayer.startMiniWindow(startX,startY,width,height,null);
                 }
             }
         });
@@ -151,6 +154,7 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
             mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
             mVideoPlayer.setLoop(true);
             mVideoPlayer.setWorking(true);
+            mVideoPlayer.setParamsTag(mVideoParams);
             //封面
             if(null!=mVideoPlayer.getCoverController()){
                 Glide.with(VideoPlayerActviity.this)
