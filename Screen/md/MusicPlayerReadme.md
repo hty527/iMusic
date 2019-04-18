@@ -1,7 +1,7 @@
-## MusicPlayerManager 常用API预览：
+## MusicPlayerManager 常用API及入参介绍：
 ```
     /**
-     * 绑定服务
+     * 绑定服务，Activity初始化后调用
      * @param context
      */
     public void bindService(Context context);
@@ -11,10 +11,6 @@
      * @param context
      */
     public void unBindService(Context context);
-
-    public boolean isReBrowse();
-
-    public void setReBrowse(boolean reBrowse);
 
     /**
      * 返回播放器配置
@@ -405,7 +401,7 @@
 
     /**
      * 添加对播放器状态关心的 内容观察者，轻量级的状态通知，包括但不限于：开始播放、暂停、继续、停止、销毁 等状态
-     * @param observer
+     * @param observer  观察者
      */
     public void addObservable(Observer observer);
 
@@ -422,13 +418,13 @@
 
     /**
      * 播放器内部状态刷新
-     * @param object
+     * @param object 本示例工程主要用于悬浮窗状态更新、主页更新
      */
     public void observerUpdata(Object object);
 
     /**
      * 指定点击通知栏后打开的Activity对象绝对路径
-     * @param className
+     * @param className Activity的绝对路径
      */
     public void setForegroundOpenActivityClassName(String className);
 

@@ -107,6 +107,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         getIntentParams(intent,false);
+
     }
 
     public Handler getHandler() {

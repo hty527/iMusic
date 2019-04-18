@@ -319,8 +319,8 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     }
 
     /**
-     * 向监听池中添加一个监听器
-     * @param listener
+     * 注册播放器工作状态监听器
+     * @param listener 实现VideoPlayerEventListener的对象
      */
     @Override
     public void addOnPlayerEventListener(VideoPlayerEventListener listener) {
@@ -328,7 +328,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     }
 
     /**
-     * 从监听池中移除一个监听器
+     * 移除播放器工作状态监听器
      */
     @Override
     public void removePlayerListener() {

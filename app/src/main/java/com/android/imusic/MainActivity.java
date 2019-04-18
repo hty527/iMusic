@@ -217,10 +217,8 @@ public class MainActivity extends MusicBaseActivity<IndexPersenter> {
         super.onDestroy();
         VideoPlayerManager.getInstance().onDestroy();
         VideoWindowManager.getInstance().onDestroy();
-        MediaUtils.getInstance().onDestroy();
-        MusicPlayerManager.getInstance().removeObservers();
-        MusicPlayerManager.getInstance().removeAllPlayerListener();
         MusicWindowManager.getInstance().onDestroy();
+        MediaUtils.getInstance().onDestroy();
         MusicPlayerManager.getInstance().unBindService(MainActivity.this);
         MusicPlayerManager.getInstance().onDestroy();
         if(null!=mPagerAdapter){

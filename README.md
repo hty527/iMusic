@@ -1,5 +1,5 @@
 # **iMusic**
-### 完整的 音乐播放器 和 视频播放器 封装库
+### 完整的 音乐播放器 和 视频播放器 封装库及工程演示
 [作者简书主页](https://www.jianshu.com/u/6a64162caadd)
 
 [所属组织](https://github.com/feiyouAndroidTeam)
@@ -49,7 +49,7 @@
 </br>
 [或点此下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
 ### 集成步骤:
-#### 音乐播放器:
+#### 音乐播放器集成步骤:
 ##### 播放器内部协调工作说明：<br/>
  * MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作
  * MusicPlayerActivity：播放器容器，监听内部播放器状态，负责处理当前正在播放的任务、刷新进度、处理MusicPlayerService抛出交互事件
@@ -61,224 +61,227 @@
  * MusicPlayerListDialog：默认当前正在播放的列表
 全局初始化：
 ```
-        //初始化首选项，播放器内部的播放模式、定时模式存储，使用的是SharedPreferences
-        MusicUtils.getInstance().initSharedPreferencesConfig(getApplicationContext());
-        //全局迷你悬浮窗单击事件
-        MusicWindowManager.getInstance().setOnMusicWindowClickListener(new MusicWindowClickListener() {
+    //初始化首选项，播放器内部的播放模式、定时模式存储，使用的是SharedPreferences
+    MusicUtils.getInstance().initSharedPreferencesConfig(getApplicationContext());
+    //全局迷你悬浮窗单击事件
+    MusicWindowManager.getInstance().setOnMusicWindowClickListener(new MusicWindowClickListener() {
 
-            @Override
-            public void onWindownClick(View view, long musicID) {
-                if(musicID>0){
-                    Intent intent=new Intent(getApplicationContext(), MusicPlayerActivity.class);
-                    intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplicationContext().startActivity(intent);
-                }
+        @Override
+        public void onWindownClick(View view, long musicID) {
+            if(musicID>0){
+                Intent intent=new Intent(getApplicationContext(), MusicPlayerActivity.class);
+                intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
             }
-
-            @Override
-            public void onWindownCancel(View view) {}
-        });
-        //音乐播放器初始化设置
-        MusicPlayerConfig config=MusicPlayerConfig.Build()
-            //前台服务锁定开关
-            .setLockForeground(true)
-            //悬浮窗自动吸附开关
-            .setWindownAutoScrollToEdge(true)
-            //垃圾桶功能开关
-            .setTrashEnable(true)
-            //锁屏控制器开关
-            .setScreenOffEnable(true)
-            //悬浮窗播放器样式
-            .setWindownStyle(MusicWindowStyle.TRASH);
-        MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
-
-        //若想要点击通知栏跳转至播放器界面，则必须设置点击通知栏打开的Activity绝对路径
-        MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
-```
-1.MainActivity中初始化MusicPlayerService
-```
-        @Override
-        protected void onCreate() {
-            super.onCreate();
-            //绑定MusicService
-            MusicPlayerManager.getInstance().bindService(MainActivity.this);
         }
 
-        /**
-         * 悬浮窗释放
-         */
         @Override
-        protected void onDestroy() {
-            super.onDestroy();
-            MediaUtils.getInstance().onDestroy();
-            MusicPlayerManager.getInstance().removeObservers();
-            MusicPlayerManager.getInstance().removeAllPlayerListener();
-            MusicWindowManager.getInstance().onDestroy();
-            MusicPlayerManager.getInstance().unBindService(MainActivity.this);
-            MusicPlayerManager.getInstance().onDestroy();
-        }
+        public void onWindownCancel(View view) {}
+    });
+    //音乐播放器初始化设置
+    MusicPlayerConfig config=MusicPlayerConfig.Build()
+        //前台服务锁定开关
+        .setLockForeground(true)
+        //悬浮窗自动吸附开关
+        .setWindownAutoScrollToEdge(true)
+        //垃圾桶功能开关
+        .setTrashEnable(true)
+        //锁屏控制器开关
+        .setScreenOffEnable(true)
+        //悬浮窗播放器样式
+        .setWindownStyle(MusicWindowStyle.TRASH);
+    MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
+
+    //若想要点击通知栏跳转至播放器界面，则必须设置点击通知栏打开的Activity绝对路径
+    MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
+```
+1.Activity中初始化MusicPlayerService组件，对应生命周期方法调用
+```
+    @Override
+    protected void onCreate() {
+        super.onCreate();
+        //绑定MusicService
+        MusicPlayerManager.getInstance().bindService(MainActivity.this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VideoPlayerManager.getInstance().onDestroy();
+        VideoWindowManager.getInstance().onDestroy();
+        MusicWindowManager.getInstance().onDestroy();
+        MediaUtils.getInstance().onDestroy();
+        MusicPlayerManager.getInstance().unBindService(MainActivity.this);
+        MusicPlayerManager.getInstance().onDestroy();
+    }
 ```
 2.开始播放任务
 ```
-        //设置播放内部正在处理的数据渠道，可用于主页回显正在“哪个”模块播放音乐，非必须的
-        MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_LOCATION);
-        //开始播放
-        MusicPlayerManager.getInstance().startPlayMusic(mAdapter.getData(),position);
+    //设置播放内部正在处理的数据渠道，可用于主页回显正在“哪个”模块播放音乐，非必须的
+    MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_LOCATION);
+    //开始播放，一个数组，数组元素徐继承BaseMediaInfo类，必须赋值字段请看成员属性注释，入参请看"MusicPlayerManager常用API"
+    MusicPlayerManager.getInstance().startPlayMusic(mAdapter.getData(),position);
 ```
-[MusicPlayerManager类常用API预览](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md)
+ * 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。
 
-#### 视频播放器:此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。
+[MusicPlayerManager常用API](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md)
+
+#### 视频播放器集成步骤:
+ * 此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。
 ##### 全局初始化
 ```
-      VideoPlayerManager.getInstance()
-              //循环模式
-              .setLoop(true)
-              //全局悬浮窗播放器中打开APP的播放器界面的绝对路径，可选的参数,若需要支持从悬浮窗中跳转到APP的播放器界面，则必须设定此参数
-              .setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
+    VideoPlayerManager.getInstance()
+          //循环模式
+          .setLoop(true)
+          //全局悬浮窗播放器中打开APP的播放器界面的绝对路径，可选的参数,若需要支持从悬浮窗中跳转到APP的播放器界面，则必须设定此参数
+          .setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
 ```
 1.在你的项目中的.xml中引入播放器布局</br>
 ```
-      <com.video.player.lib.view.VideoPlayerTrackView
-            android:id="@+id/video_track"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:video_autoSetCoverController="true"
-            app:video_autoSetVideoController="true"/>
+    <com.video.player.lib.view.VideoPlayerTrackView
+        android:id="@+id/video_track"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:video_autoSetCoverController="true"
+        app:video_autoSetVideoController="true"/>
 ```
 支持的自定义属性说明：
 ```
-        <!--是否自动设置默认控制器-->
-        <attr name="video_autoSetVideoController" format="boolean"/>
-        <!--是否自动设置封面控制器-->
-        <attr name="video_autoSetCoverController" format="boolean"/>
-        <!--循环播放-->
-        <attr name="video_loop" format="boolean"/>
+    <!--是否自动设置默认控制器-->
+    <attr name="video_autoSetVideoController" format="boolean"/>
+    <!--是否自动设置封面控制器-->
+    <attr name="video_autoSetCoverController" format="boolean"/>
+    <!--循环播放-->
+    <attr name="video_loop" format="boolean"/>
 ```
 也可以这样动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>
 ```
-        //frameLayout 你的parent布局
-        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
-        VideoPlayerTrackView playerTrackView=new VideoPlayerTrackView(context);
-        playerTrackView.setLoop(true);
-        playerTrackView.setVideoController(videoController);
-        playerTrackView.setVideoCoverController(coverController);
-        playerTrackView.setVideoGestureController(gestureController);
-        frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
+    //frameLayout 你的parent布局
+    FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
+    VideoPlayerTrackView playerTrackView=new VideoPlayerTrackView(context);
+    playerTrackView.setLoop(true);
+    playerTrackView.setVideoController(videoController);
+    playerTrackView.setVideoCoverController(coverController);
+    playerTrackView.setVideoGestureController(gestureController);
+    frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
 ```
 2.初始化播放的宽高，默认是LayoutParams.MATCH_PARENT，设置播放器必须的基本数据
 ```
-        //播放器控件宽高
-        mVideoPlayer = (VideoDetailsPlayerTrackView) findViewById(R.id.video_player);
-        int itemHeight = MusicUtils.getInstance().getScreenWidth(this) * 9 / 16;
-        mVideoPlayer.getLayoutParams().height=itemHeight;
-        //设置播放资源
-        mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
-        //是否循环播放
-        mVideoPlayer.setLoop(true);
-        //这个可选的，如在悬浮窗中需要支持切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置
-        mVideoPlayer.setParamsTag(mVideoParams);
-        //基本参数设定完毕后即可调用此方法自动开始准备播放
-        mVideoPlayer.starPlaytVideo();
+    //播放器控件宽高
+    mVideoPlayer = (VideoDetailsPlayerTrackView) findViewById(R.id.video_player);
+    int itemHeight = MusicUtils.getInstance().getScreenWidth(this) * 9 / 16;
+    mVideoPlayer.getLayoutParams().height=itemHeight;
+    //设置播放资源
+    mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
+    //是否循环播放
+    mVideoPlayer.setLoop(true);
+    //这个可选的，如在悬浮窗中需要支持切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置
+    mVideoPlayer.setParamsTag(mVideoParams);
+    //基本参数设定完毕后即可调用此方法自动开始准备播放
+    mVideoPlayer.starPlaytVideo();
 ```
 3.生命周期方法加入
 ```
-        @Override
-        protected void onResume() {
-            super.onResume();
-            VideoPlayerManager.getInstance().onResume();
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        VideoPlayerManager.getInstance().onResume();
+    }
 
-        @Override
-        protected void onPause() {
-            super.onPause();
-            VideoPlayerManager.getInstance().onPause();
-        }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        VideoPlayerManager.getInstance().onPause();
+    }
 
-        @Override
-        public boolean onKeyDown(int keyCode, KeyEvent event) {
-            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-                onBackPressed();
-                return true;
-            }
-            return super.onKeyDown(keyCode, event);
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            onBackPressed();
+            return true;
         }
+        return super.onKeyDown(keyCode, event);
+    }
 
-        @Override
-        public void onBackPressed() {
-            if(VideoPlayerManager.getInstance().isBackPressed()){
-                super.onBackPressed();
-            }
+    @Override
+    public void onBackPressed() {
+        if(VideoPlayerManager.getInstance().isBackPressed()){
+            super.onBackPressed();
         }
+    }
 
-        @Override
-        protected void onDestroy() {
-            super.onDestroy();
-            VideoPlayerManager.getInstance().onDestroy();
-            //若你的Activity是MainActivity，则还需要调用这两个方法
-            VideoPlayerManager.getInstance().onDestroy();
-            VideoWindowManager.getInstance().onDestroy();
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VideoPlayerManager.getInstance().onDestroy();
+        //若你的Activity是MainActivity，则还需要调用这两个方法
+        VideoPlayerManager.getInstance().onDestroy();
+        VideoWindowManager.getInstance().onDestroy();
+    }
 ```
 至此你的播放器具备了基础的视频播放能力,更多功能和API使用，请参阅读下文。<br/>
 ##### 自定义交互UI的实现
 支持的自定义控制器一览：
 ```
-        BaseVideoController 自定义交互控制器基类，需继承此抽象类并关心此类的抽象方法、一般方法和拓展的抽象方法。一般用处，播放过程中的缓冲、暂停、开始、全屏的UI交互。<br/>
-        BaseCoverController 自定义封面控制器基类，需继承此抽象类。一般用处：播放器开始播放前的封面图层，自定义封面样式、时间显示、播放次数等元素展示。<br/>
-        BaseGestureController 自定义手势调节控制器基类，需继承此抽象类并实现抽象方法。一般用处：播放器打开全屏播放后，识别用户手势调节快进、快退、音量、屏幕亮度等功能UI回显。
+    自定义交互控制器基类，需继承此抽象类并关心此类的抽象方法、一般方法和拓展的抽象方法。一般用处，播放过程中的缓冲、暂停、开始、全屏的UI交互。<br/>
+    BaseVideoController
+    自定义封面控制器基类，需继承此抽象类。一般用处：播放器开始播放前的封面图层，自定义封面样式、时间显示、播放次数等元素展示。<br/>
+    BaseCoverController
+    自定义手势调节控制器基类，需继承此抽象类并实现抽象方法。一般用处：播放器打开全屏播放后，识别用户手势调节快进、快退、音量、屏幕亮度等功能UI回显。
+    BaseGestureController
 ```
 <label style="color:red">• 重点：</label>实现自定义交互UI，需继承BaseVideoController抽象类，初始化完成后调用BaseVideoPlayer的setVideoController(V videoController);绑定交互UI。<br/>
 除了关心必须实现的抽象方法外，还有诸如迷你窗口、悬浮窗口、全屏窗口 的特有状态方法，可按照需求实现。
 BaseVideoController设计成了可以直接通过此控制器来实现 切换至Mini小窗口播放、切换至全局悬浮窗口播放、切换至全屏播放等功能，需要调用setOnFuctionListener(OnFuctionListener listener)按照需求实现抽象方法。
 ```
-        /**
-         * 这些方法可根据自身的操作交互按照需求实现，非必须实现的的
-         */
-        //设置视频标题内容
-        protected void setTitle(String videoTitle){}
-        //播放地址为空
-        protected void pathInvalid(){}
-        //切换为竖屏方向
-        protected void startHorizontal(){}
-        //切换为小窗口播放
-        protected void startTiny(){}
-        //切换为悬浮窗
-        protected void startGlobalWindow(){}
-        //视频总长度、播放进度、缓冲进度
-        protected void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent){}
-        //缓冲百分比
-        protected void onBufferingUpdate(int percent){}
-        //播放器空白位置单击事件，关注此方法实现控制器的现实和隐藏
-        protected void changeControllerState(int scrrenOrientation,boolean isInterceptIntent){}
+    /**
+     * 这些方法可根据自身的操作交互按照需求实现，非必须实现的的
+     */
+    //设置视频标题内容
+    protected void setTitle(String videoTitle){}
+    //播放地址为空
+    protected void pathInvalid(){}
+    //切换为竖屏方向
+    protected void startHorizontal(){}
+    //切换为小窗口播放
+    protected void startTiny(){}
+    //切换为悬浮窗
+    protected void startGlobalWindow(){}
+    //视频总长度、播放进度、缓冲进度
+    protected void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent){}
+    //缓冲百分比
+    protected void onBufferingUpdate(int percent){}
+    //播放器空白位置单击事件，关注此方法实现控制器的现实和隐藏
+    protected void changeControllerState(int scrrenOrientation,boolean isInterceptIntent){}
 
-       /**
-        * 自定义控制器若需要在交互布局中实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能，请使用父类BaseVideoController的mOnFuctionListener调用对应的抽象方法。
-        */
-        public abstract static class OnFuctionListener{
-            /**
-             * 开启全屏
-             * @param videoController 继承自BaseVideoController的自定义控制器
-             */
-            public void onStartFullScreen(BaseVideoController videoController){}
-            /**
-             * 开启迷你窗口
-             * @param miniWindowController 继承自BaseVideoController的自定义控制器
-             */
-            public void onStartMiniWindow(BaseVideoController miniWindowController){}
-            /**
-             * 开启全局悬浮窗
-             * @param windowController 继承自BaseVideoController的自定义控制器
-             */
-            public void onStartGlobalWindown(BaseVideoController windowController){}
-            //关闭迷你窗口
-            public void onQuiteMiniWindow(){}
-            //打开播放器界面
-            public void onStartActivity(){}
-            //弹射返回
-            public void onBackPressed(){}
-        }
+   /**
+    * 自定义控制器若需要在交互布局中实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能，请使用父类BaseVideoController的mOnFuctionListener调用对应的抽象方法。
+    */
+    public abstract static class OnFuctionListener{
+        /**
+         * 开启全屏
+         * @param videoController 继承自BaseVideoController的自定义控制器
+         */
+        public void onStartFullScreen(BaseVideoController videoController){}
+        /**
+         * 开启迷你窗口
+         * @param miniWindowController 继承自BaseVideoController的自定义控制器
+         */
+        public void onStartMiniWindow(BaseVideoController miniWindowController){}
+        /**
+         * 开启全局悬浮窗
+         * @param windowController 继承自BaseVideoController的自定义控制器
+         */
+        public void onStartGlobalWindown(BaseVideoController windowController){}
+        //关闭迷你窗口
+        public void onQuiteMiniWindow(){}
+        //打开播放器界面
+        public void onStartActivity(){}
+        //弹射返回
+        public void onBackPressed(){}
+    }
 ```
-##### 所有功能和公开API介绍
+##### 视频播放所有功能和公开API介绍
 除了继承BaseVideoController实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能外，还可以直接调用BaseVideoPlayer的公开方法实现以上功能和交互。BaseVideoPlayer的主要公开方法如下:
-[BaseVideoPlayer及VideoPlayerManager常用API预览](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/VideoPlayerReadme.md)
+[BaseVideoPlayer及VideoPlayerManager常用API介绍](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/VideoPlayerReadme.md)

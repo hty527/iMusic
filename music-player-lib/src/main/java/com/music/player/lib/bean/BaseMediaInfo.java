@@ -6,25 +6,38 @@ import java.io.Serializable;
  * hty_Yuye@Outlook.com
  * 2019/3/5
  * Music Data
+ * 除标记必须赋值的字段外，其他字段为非必须赋值的字段，非赋值字段取决于你的业务功能逻辑
  */
 
 public class BaseMediaInfo implements Serializable {
 
     private long id;//文件ID
-    //第三方网络歌曲唯一标识
+    //第三方网络歌曲唯一标识，这个标识只适用于本Demo，由于没有合适的ID字段，故使用这个字段作为一标识
     private String hashKey="";
-    private long file_size;//文件大小
-    private long video_durtion;//多媒体时长
-    private int file_type;//多媒体类型  0：图片 1：视频  3：音频
-    private String mediaAlbum;//专辑名称
-    private String mediaType;//音频类型
-    private String img_path;//多媒体封面
-    private String nickname;//作者昵称
-    private String userid;//作者ID
-    private String avatar;//作者头像
-    private String file_path;//真实文件地址
-    private String video_desp;//多媒体描述
-    private int price;//单价
+    //文件大小
+    private long file_size;
+    //多媒体时长 *必须
+    private long video_durtion;
+    //多媒体类型  0：图片 1：视频  3：音频
+    private int file_type;
+    //专辑名称
+    private String mediaAlbum;
+    //音频类型
+    private String mediaType;
+    //多媒体封面 *必须
+    private String img_path;
+    //作者昵称 *必须
+    private String nickname;
+    //作者ID
+    private String userid;
+    //作者头像
+    private String avatar;
+    //真实文件地址 *必须
+    private String file_path;
+    //多媒体描述 *必须
+    private String video_desp;//这个字段由于我司项目的原因，使用的是这个字段名称。
+    //单价
+    private int price;
     //交互
     protected boolean isSelected;
     //最近播放时间

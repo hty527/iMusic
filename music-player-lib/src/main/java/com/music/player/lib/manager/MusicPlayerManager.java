@@ -829,6 +829,8 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
      * APP销毁时同步销毁
      */
     public void onDestroy(){
+        removeObservers();
+        removeAllPlayerListener();
         mConnection=null;mBinder=null;cMMusicSubjectObservable=null;mInstance=null;reBrowse=false;
         mActivityClassName=null;mMusicPlayerConfig=null;
     }
