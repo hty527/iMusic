@@ -84,8 +84,6 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     private boolean isWorking=false;
     //屏幕方向、手势调节，默认未知
     private int SCRREN_ORIENTATION = 0,GESTURE_SCENE=0;
-    //用户是否打开重力感应开关,暂时重力感应功能忽略
-    private static boolean mOrientationEnable = false;
     //屏幕的方向,竖屏、横屏、窗口
     private SensorManager mSensorManager;
     //屏幕方向监听器
@@ -118,7 +116,6 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
             autoSetVideoController = typedArray.getBoolean(R.styleable.BaseVideoPlayer_video_autoSetVideoController, false);
             autoSetCoverController = typedArray.getBoolean(R.styleable.BaseVideoPlayer_video_autoSetCoverController, false);
             boolean loop = typedArray.getBoolean(R.styleable.BaseVideoPlayer_video_loop, false);
-            this.mOrientationEnable= typedArray.getBoolean(R.styleable.BaseVideoPlayer_video_orientantionEnable, false);
             VideoPlayerManager.getInstance().setLoop(loop);
             typedArray.recycle();
         }
@@ -404,7 +401,6 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * @param enable
      */
     public void setOrientantionEnable(boolean enable){
-        this.mOrientationEnable=enable;
         if(enable){
             AppCompatActivity appCompActivity = VideoUtils.getInstance().getAppCompActivity(getContext());
             if(null!=appCompActivity){
@@ -554,8 +550,6 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     videoPlayer.setWorking(true);
                     //设置基础的配置
                     videoPlayer.setDataSource(mDataSource, mTitle);
-                    //更新重力感应开关
-                    videoPlayer.setOrientantionEnable(mOrientationEnable);
                     //清除全屏控件的手势事件
                     if (null != videoPlayer.mSurfaceView) {
                         videoPlayer.mSurfaceView.setOnTouchListener(null);

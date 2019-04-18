@@ -61,10 +61,21 @@
             app:video_autoSetCoverController="true"
             app:video_autoSetVideoController="true"/>
 ```
-自定义属性 video_autoSetCoverController 和 video_autoSetVideoController可选，表示是否创建默认的封面控制器和视频播放器控制器。</br>
-更多自定义属性请参考video-player-lib模块下的attrs中的BaseVideoPlayer说明。</br>
+    自定义属性 video_autoSetCoverController 和 video_autoSetVideoController可选，表示是否创建默认的封面控制器和视频播放器控制器。</br>
+    支持的自定义属性：
+```
+        <!--是否自动设置默认控制器-->
+        <attr name="video_autoSetVideoController" format="boolean"/>
+        <!--是否自动设置封面控制器-->
+        <attr name="video_autoSetCoverController" format="boolean"/>
+        <!--循环播放-->
+        <attr name="video_loop" format="boolean"/>
+```
+
+
+    更多自定义属性请阅读video-player-lib模块下的attrs中的BaseVideoPlayer说明。</br>
 </br>
-也可以这样动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>
+    也可以这样动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>
 ```
         //frameLayout 你的parent布局
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
@@ -75,8 +86,7 @@
         playerTrackView.setVideoGestureController(gestureController);
         frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
 ```
-
-也可以动态设置视频控制器、封面控制器、手势识别器，按照参数要求继承基类即可,</br>
+<br/>
 2.初始化播放的宽高，默认是LayoutParams.MATCH_PARENT，设置播放器必须的基本数据
 ```
         //播放器控件宽高
@@ -90,9 +100,9 @@
         //这个可选的，如在悬浮窗中需要支持切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置
         mVideoPlayer.setParamsTag(mVideoParams);
 ```
+<br/>
 3.生命周期方法加入
 ```
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -127,7 +137,7 @@
         VideoPlayerManager.getInstance().onDestroy();
     }
 ```
-至此你的播放器具备了基础的视频播放能力。
+    至此你的播放器具备了基础的视频播放能力,更多API使用，请阅读下文。
 
 
 

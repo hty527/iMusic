@@ -31,7 +31,5 @@
         <attr name="video_autoSetCoverController" format="boolean"/>
         <!--循环播放-->
         <attr name="video_loop" format="boolean"/>
-        <!--重力感应监听开关,打开后自动根据方向切换播放器视图方向,只在全屏模式下生效-->
-        <attr name="video_orientantionEnable" format="boolean"/>
     </declare-styleable>
 </resources>
