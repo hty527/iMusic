@@ -52,6 +52,14 @@
 #### 音乐播放器:
 
 #### 视频播放器:此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。
+##### 全局初始化
+```
+      VideoPlayerManager.getInstance()
+              //循环模式
+              .setLoop(true)
+              //全局悬浮窗播放器中打开APP的播放器界面的绝对路径，可选的参数,若需要支持从悬浮窗中跳转到APP的播放器界面，则必须设定此参数
+              .setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
+```
 1.在你的项目中的.xml中引入播放器布局</br>
 ```
       <com.video.player.lib.view.VideoPlayerTrackView
@@ -98,39 +106,39 @@
 ```
 3.生命周期方法加入
 ```
-    @Override
-    protected void onResume() {
-        super.onResume();
-        VideoPlayerManager.getInstance().onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        VideoPlayerManager.getInstance().onPause();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            onBackPressed();
-            return true;
+        @Override
+        protected void onResume() {
+            super.onResume();
+            VideoPlayerManager.getInstance().onResume();
         }
-        return super.onKeyDown(keyCode, event);
-    }
 
-    @Override
-    public void onBackPressed() {
-        if(VideoPlayerManager.getInstance().isBackPressed()){
-            super.onBackPressed();
+        @Override
+        protected void onPause() {
+            super.onPause();
+            VideoPlayerManager.getInstance().onPause();
         }
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        VideoPlayerManager.getInstance().onDestroy();
-    }
+        @Override
+        public boolean onKeyDown(int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+                onBackPressed();
+                return true;
+            }
+            return super.onKeyDown(keyCode, event);
+        }
+
+        @Override
+        public void onBackPressed() {
+            if(VideoPlayerManager.getInstance().isBackPressed()){
+                super.onBackPressed();
+            }
+        }
+
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            VideoPlayerManager.getInstance().onDestroy();
+        }
 ```
 至此你的播放器具备了基础的视频播放能力,更多功能和API使用，请参阅读下文。<br/>
 ##### 自定义交互UI的实现
@@ -138,236 +146,231 @@
 BaseVideoController是一个抽象类，除了必须实现的抽象方法(播放器的实时状态更新，这些方法都是UI相关的)外，还有如迷你窗口、悬浮窗口、全屏窗口 的特有状态方法，可按照需求实现。
 若在UI交互中需要实现切换至Mini小窗口播放、切换至全局悬浮窗口播放、切换至全屏播放等功能，需要调用父类(BaseVideoController)的setOnFuctionListener(OnFuctionListener listener)按照需求实现抽象方法。
 ```
-    /**
-     * 这些方法可根据自身的操作交互按照需求实现，非必须实现的的
-     */
-    //设置视频标题内容
-    protected void setTitle(String videoTitle){}
-    //播放地址为空
-    protected void pathInvalid(){}
-    //切换为竖屏方向
-    protected void startHorizontal(){}
-    //切换为小窗口播放
-    protected void startTiny(){}
-    //切换为悬浮窗
-    protected void startGlobalWindow(){}
-    //视频总长度、播放进度、缓冲进度
-    protected void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent){}
-    //缓冲百分比
-    protected void onBufferingUpdate(int percent){}
-    //播放器空白位置单击事件，关注此方法实现控制器的现实和隐藏
-    protected void changeControllerState(int scrrenOrientation,boolean isInterceptIntent){}
+        /**
+         * 这些方法可根据自身的操作交互按照需求实现，非必须实现的的
+         */
+        //设置视频标题内容
+        protected void setTitle(String videoTitle){}
+        //播放地址为空
+        protected void pathInvalid(){}
+        //切换为竖屏方向
+        protected void startHorizontal(){}
+        //切换为小窗口播放
+        protected void startTiny(){}
+        //切换为悬浮窗
+        protected void startGlobalWindow(){}
+        //视频总长度、播放进度、缓冲进度
+        protected void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent){}
+        //缓冲百分比
+        protected void onBufferingUpdate(int percent){}
+        //播放器空白位置单击事件，关注此方法实现控制器的现实和隐藏
+        protected void changeControllerState(int scrrenOrientation,boolean isInterceptIntent){}
 
-   /**
-    * 自定义控制器若需要在交互布局中实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能，请调用BaseVideoController的setOnFuctionListener方法，按照需求实现抽象对应的抽象功能。
-    */
-    public abstract static class OnFuctionListener{
-        /**
-         * 开启全屏
-         * @param videoController 继承自BaseVideoController的自定义控制器
-         */
-        public void onStartFullScreen(BaseVideoController videoController){}
-        /**
-         * 开启迷你窗口
-         * @param miniWindowController 继承自BaseVideoController的自定义控制器
-         */
-        public void onStartMiniWindow(BaseVideoController miniWindowController){}
-        /**
-         * 开启全局悬浮窗
-         * @param windowController 继承自BaseVideoController的自定义控制器
-         */
-        public void onStartGlobalWindown(BaseVideoController windowController){}
-        //关闭迷你窗口
-        public void onQuiteMiniWindow(){}
-        //打开播放器界面
-        public void onStartActivity(){}
-        //弹射返回
-        public void onBackPressed(){}
-    }
+       /**
+        * 自定义控制器若需要在交互布局中实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能，请调用BaseVideoController的setOnFuctionListener方法，按照需求实现抽象对应的抽象功能。
+        */
+        public abstract static class OnFuctionListener{
+            /**
+             * 开启全屏
+             * @param videoController 继承自BaseVideoController的自定义控制器
+             */
+            public void onStartFullScreen(BaseVideoController videoController){}
+            /**
+             * 开启迷你窗口
+             * @param miniWindowController 继承自BaseVideoController的自定义控制器
+             */
+            public void onStartMiniWindow(BaseVideoController miniWindowController){}
+            /**
+             * 开启全局悬浮窗
+             * @param windowController 继承自BaseVideoController的自定义控制器
+             */
+            public void onStartGlobalWindown(BaseVideoController windowController){}
+            //关闭迷你窗口
+            public void onQuiteMiniWindow(){}
+            //打开播放器界面
+            public void onStartActivity(){}
+            //弹射返回
+            public void onBackPressed(){}
+        }
 ```
 ##### 所有功能和公开API介绍
-除了继承BaseVideoController实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能外，还可以直接调用BaseVideoPlayer的公开方法实现以上功能和交互。BaseVideoPlayer的所有公开方法如下:
+除了继承BaseVideoController实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能外，还可以直接调用BaseVideoPlayer的公开方法实现以上功能和交互。BaseVideoPlayer的主要公开方法如下:
 ```
-    /**
-      * 设置播放资源
-      * @param path 暂支持file、http、https等协议
-      * @param title 视频描述
-      */
-     public void setDataSource(String path, String title);
+        /**
+          * 设置播放资源
+          * @param path 暂支持file、http、https等协议
+          * @param title 视频描述
+          */
+         public void setDataSource(String path, String title);
 
-    /**
-     * 设置播放资源
-     * @param path 暂支持file、http、https等协议
-     * @param title 视频描述
-     * @param videoID 视频ID
-     */
-    public void setDataSource(String path, String title,long videoID);
+        /**
+         * 设置播放资源
+         * @param path 暂支持file、http、https等协议
+         * @param title 视频描述
+         * @param videoID 视频ID
+         */
+        public void setDataSource(String path, String title,long videoID);
 
-   /**
-     * 设置参数TAG，可选的，若支持悬浮窗中打开播放器功能，则必须调用此方法绑定PlayerActivity所需参数
-     * @param params VideoPlayerActivity 组件所需参数
-     */
-    public void setParamsTag(VideoParams params);
+       /**
+         * 设置参数TAG，可选的，若支持悬浮窗中打开播放器功能，则必须调用此方法绑定PlayerActivity所需参数
+         * @param params VideoPlayerActivity 组件所需参数
+         */
+        public void setParamsTag(VideoParams params);
 
-    /**
-     * 设置循环模式，也可调用VideoWindowManager的setLoop(boolean loop);方法设置
-     * @param loop
-     */
-    public void setLoop(boolean loop);
+        /**
+         * 设置循环模式，也可调用VideoWindowManager的setLoop(boolean loop);方法设置
+         * @param loop
+         */
+        public void setLoop(boolean loop);
 
-    /**
-     * 设置缩放类型
-     * @param displayType 详见VideoConstants常量定义
-     */
-    public void setVideoDisplayType(int displayType);
+        /**
+         * 设置缩放类型
+         * @param displayType 详见VideoConstants常量定义
+         */
+        public void setVideoDisplayType(int displayType);
 
-    /**
-     * 设置视频控制器
-     * @param videoController 自定义VideoPlayer控制器
-     * @param autoCreateDefault 当 controller 为空，是否自动创建默认的控制器
-     */
-    public void setVideoController(V videoController, boolean autoCreateDefault);
+        /**
+         * 设置视频控制器
+         * @param videoController 自定义VideoPlayer控制器
+         * @param autoCreateDefault 当 controller 为空，是否自动创建默认的控制器
+         */
+        public void setVideoController(V videoController, boolean autoCreateDefault);
 
-    /**
-     * 设置封面控制器
-     * @param coverController 自定义VideoPlayerCover控制器
-     * @param autoCreateDefault 当 controller 为空，是否自动创建默认的控制器
-     */
-    public void setVideoCoverController(C coverController, boolean autoCreateDefault);
+        /**
+         * 设置封面控制器
+         * @param coverController 自定义VideoPlayerCover控制器
+         * @param autoCreateDefault 当 controller 为空，是否自动创建默认的控制器
+         */
+        public void setVideoCoverController(C coverController, boolean autoCreateDefault);
 
-    /**
-     * 设置自定义的手势识别器
-     * @param gestureController
-     */
-    public void setVideoGestureController(G gestureController);
+        /**
+         * 设置自定义的手势识别器
+         * @param gestureController
+         */
+        public void setVideoGestureController(G gestureController);
 
-    /**
-     * 移动网络工作开关
-     * @param mobileWorkEnable
-     */
-    public void setMobileWorkEnable(boolean mobileWorkEnable);
+        /**
+         * 移动网络工作开关
+         * @param mobileWorkEnable
+         */
+        public void setMobileWorkEnable(boolean mobileWorkEnable);
 
-    /**
-     * 返回封面控制器
-     * @return
-     */
-    public C getCoverController();
+        /**
+         * 返回封面控制器
+         * @return
+         */
+        public C getCoverController();
 
-    /**
-     * 返回视频控制器
-     * @return
-     */
-    public V getVideoController();
+        /**
+         * 返回视频控制器
+         * @return
+         */
+        public V getVideoController();
 
-    /**
-     * 返回全屏的手势识别控制器
-     * @return
-     */
-    public G getGestureController();
+        /**
+         * 返回全屏的手势识别控制器
+         * @return
+         */
+        public G getGestureController();
 
-    /**
-     * 开始播放的入口开始播放、准备入口
-     */
-    public void starPlaytVideo();
+        /**
+         * 开始播放的入口开始播放、准备入口
+         */
+        public void starPlaytVideo();
 
-    /**
-     * 从悬浮窗播放器窗口转向VideoPlayerActivity播放
-     */
-    public void startWindowToActivity();
+        /**
+         * 从悬浮窗播放器窗口转向VideoPlayerActivity播放
+         */
+        public void startWindowToActivity();
 
-    /**
-     * 开启全屏播放的原理：
-     * 1：改变屏幕方向，Activity 属性必须设置为android:configChanges="orientation|screenSize"，避免Activity销毁重建
-     * 2：移除常规播放器已有的TextureView组件
-     * 3：向Windown ViewGroup 添加一个新的VideoPlayer组件,赋值已有的TextrueView到VideoPlayer，设置新的播放器监听，结合TextrueView onSurfaceTextureAvailable 回调事件处理
-     * 4：根据自身业务，向新的播放器添加控制器
-     * 5：记录全屏窗口播放器，退出全屏恢复常规播放用到
-     * @param fullScreenVideoController 全屏控制器，为空则使用默认控制器
-     */
-    public void startFullScreen(V fullScreenVideoController);
+        /**
+         * 开启全屏播放的原理：
+         * 1：改变屏幕方向，Activity 属性必须设置为android:configChanges="orientation|screenSize"，避免Activity销毁重建
+         * 2：移除常规播放器已有的TextureView组件
+         * 3：向Windown ViewGroup 添加一个新的VideoPlayer组件,赋值已有的TextrueView到VideoPlayer，设置新的播放器监听，结合TextrueView onSurfaceTextureAvailable 回调事件处理
+         * 4：根据自身业务，向新的播放器添加控制器
+         * 5：记录全屏窗口播放器，退出全屏恢复常规播放用到
+         * @param fullScreenVideoController 全屏控制器，为空则使用默认控制器
+         */
+        public void startFullScreen(V fullScreenVideoController);
 
-    /**
-     * 退出全屏播放
-     * 退出全屏播放的原理：和开启全屏反过来
-     */
-    public void backFullScreenWindow();
+        /**
+         * 退出全屏播放
+         * 退出全屏播放的原理：和开启全屏反过来
+         */
+        public void backFullScreenWindow();
 
-    /**
-     * 开启小窗口播放
-     * 默认X：30像素 Y：30像素 位于屏幕左上角,使用默认控制器
-     * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
-     */
-    public void startMiniWindow(BaseVideoController miniWindowController);
+        /**
+         * 开启小窗口播放
+         * 默认X：30像素 Y：30像素 位于屏幕左上角,使用默认控制器
+         * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
+         */
+        public void startMiniWindow(BaseVideoController miniWindowController);
 
-    /**
-     * 开启小窗口播放
-     *
-     * @param startX     起点位于屏幕的X轴像素
-     * @param startY     起点位于屏幕的Y轴像素
-     * @param tinyWidth  小窗口的宽 未指定使用默认 屏幕宽的 1/2(二分之一)
-     * @param tinyHeight 小窗口的高 未指定使用默认 屏幕宽的 1/2 *9/16
-     * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
-     */
-    public void startMiniWindow(int startX, int startY, int tinyWidth, int tinyHeight,V miniWindowController);
+        /**
+         * 开启小窗口播放
+         *
+         * @param startX     起点位于屏幕的X轴像素
+         * @param startY     起点位于屏幕的Y轴像素
+         * @param tinyWidth  小窗口的宽 未指定使用默认 屏幕宽的 1/2(二分之一)
+         * @param tinyHeight 小窗口的高 未指定使用默认 屏幕宽的 1/2 *9/16
+         * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
+         */
+        public void startMiniWindow(int startX, int startY, int tinyWidth, int tinyHeight,V miniWindowController);
 
-    /**
-     * 退出迷你小窗口播放
-     */
-    public void backMiniWindow();
+        /**
+         * 退出迷你小窗口播放
+         */
+        public void backMiniWindow();
 
-    /**
-     * 转向全局的悬浮窗播放,默认起点X,Y轴为=播放器Vide的起始X,Y轴，播放器默认居中显示，宽：屏幕宽度3/4(四分之三)，高：16：9高度
-     * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
-     */
-    public void startGlobalWindown(BaseVideoController windowController) ;
+        /**
+         * 转向全局的悬浮窗播放,默认起点X,Y轴为=播放器Vide的起始X,Y轴，播放器默认居中显示，宽：屏幕宽度3/4(四分之三)，高：16：9高度
+         * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+         */
+        public void startGlobalWindown(BaseVideoController windowController) ;
 
-    /**
-     * 转向全局的悬浮窗播放
-     * @param startX 屏幕X起始轴
-     * @param startY 屏幕Y起始轴
-     * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
-     */
-    public void startGlobalWindown(int startX, int startY,V windowController);
+        /**
+         * 转向全局的悬浮窗播放
+         * @param startX 屏幕X起始轴
+         * @param startY 屏幕Y起始轴
+         * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+         */
+        public void startGlobalWindown(int startX, int startY,V windowController);
 
-    /**
-     * 转向全局的悬浮窗播放
-     * @param width 播放器宽
-     * @param height 播放器高
-     * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
-     */
-    public void startGlobalWindownPlayerSetWH(int width,int height,V windowController);
+        /**
+         * 转向全局的悬浮窗播放
+         * @param width 播放器宽
+         * @param height 播放器高
+         * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+         */
+        public void startGlobalWindownPlayerSetWH(int width,int height,V windowController);
 
-    /**
-     * 转向全局的悬浮窗播放
-     * @param startX 播放器位于屏幕起始X轴
-     * @param startY 播放器位于屏幕起始Y轴
-     * @param width 播放器宽
-     * @param height 播放器高
-     * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
-     */
-    public void startGlobalWindown(int startX, int startY, int width, int height,V windowController);
+        /**
+         * 转向全局的悬浮窗播放
+         * @param startX 播放器位于屏幕起始X轴
+         * @param startY 播放器位于屏幕起始Y轴
+         * @param width 播放器宽
+         * @param height 播放器高
+         * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+         */
+        public void startGlobalWindown(int startX, int startY, int width, int height,V windowController);
 
-    /**
-     * 弹射返回
-     */
-    public boolean backPressed();
+        /**
+         * 弹射返回
+         */
+        public boolean backPressed();
 
-    /**
-     * 此处返回此组件绑定的工作状态
-     * @return
-     */
-    public boolean isWorking();
+        /**
+         * 此处返回此组件绑定的工作状态
+         * @return
+         */
+        public boolean isWorking();
 
-    public void setWorking(boolean working);
+        public void setWorking(boolean working);
 
-    /**
-     * 销毁
-     */
-    public void onReset();
+        /**
+         * 销毁
+         */
+        public void onReset();
 
-    /**
-     * 仅仅内部销毁，外部组件调用VideoPlayerManager 的 onDestroy()方法销毁播放器
-     */
-    @Override
-    public void destroy();
 ```
