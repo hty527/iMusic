@@ -37,7 +37,7 @@
     • 手势识别调节器</br>
 已封装成库，方便集成。
 ## 软件截图：
-![视频播放器界面](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190417_163330.jpg)
+![视频播放器界面](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190418_135654.jpg)
 </br>
 ### 体验APK下载:
 ![扫描二维码下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png)
