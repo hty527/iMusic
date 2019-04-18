@@ -1508,22 +1508,9 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      */
     @Override
     public void destroy() {
-        if(null!= mVideoController){
-            mVideoController.onDestroy();
-            mVideoController =null;
-        }
-        if(null!=mCoverController){
-            mCoverController.onDestroy();
-            mCoverController=null;
-        }
-        if(null!=mGestureController){
-            mGestureController.onDestroy();
-            mGestureController=null;
-        }
         if(null!=mSensorManager&&null!=mOrientationListener){
             mSensorManager.unregisterListener(mOrientationListener);
             mSensorManager=null;mOrientationListener=null;
         }
-        mDataSource=null;mTitle=null;mSurfaceView=null;
     }
 }
