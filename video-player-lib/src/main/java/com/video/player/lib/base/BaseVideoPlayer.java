@@ -195,6 +195,10 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         this.setTag(params);
     }
 
+    /**
+     * 设置循环模式，也可调用VideoWindowManager的setLoop(boolean loop);方法设置
+     * @param loop
+     */
     public void setLoop(boolean loop) {
         VideoPlayerManager.getInstance().setLoop(loop);
     }
@@ -1247,7 +1251,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     /**
      * 退出全局悬浮窗口播放
      */
-    public BaseVideoPlayer backGlobalWindownToActivity(){
+    private BaseVideoPlayer backGlobalWindownToActivity(){
         VideoPlayerManager.getInstance().setContinuePlay(true);
         if(null!=VideoPlayerManager.getInstance().getWindownPlayer()) {
             BaseVideoPlayer windownPlayer = VideoPlayerManager.getInstance().getWindownPlayer();
