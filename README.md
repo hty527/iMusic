@@ -144,11 +144,11 @@
 ##### 自定义交互UI的实现
 支持的自定义控制器一览：
 ```
-        BaseVideoController 自定义交互控制器基类，需继承此抽象类并关心此类的抽象方法、一般方法和拓展的抽象方法。一般用处，播放过程中的缓冲、暂停、开始、全屏的UI交互。
-        BaseCoverController 自定义封面控制器基类，需继承此抽象类。一般用处：播放器开始播放前的封面图层，自定义封面样式、时间显示、播放次数等元素展示。
+        BaseVideoController 自定义交互控制器基类，需继承此抽象类并关心此类的抽象方法、一般方法和拓展的抽象方法。一般用处，播放过程中的缓冲、暂停、开始、全屏的UI交互。<br/>
+        BaseCoverController 自定义封面控制器基类，需继承此抽象类。一般用处：播放器开始播放前的封面图层，自定义封面样式、时间显示、播放次数等元素展示。<br/>
         BaseGestureController 自定义手势调节控制器基类，需继承此抽象类并实现抽象方法。一般用处：播放器打开全屏播放后，识别用户手势调节快进、快退、音量、屏幕亮度等功能UI回显。
 ```
-<label style="color:red">重点：</label>实现自定义交互UI，需继承BaseVideoController抽象类，初始化完成后调用BaseVideoPlayer的setVideoController(V videoController);绑定交互UI。<br/>
+<label style="color:red">• 重点：</label>实现自定义交互UI，需继承BaseVideoController抽象类，初始化完成后调用BaseVideoPlayer的setVideoController(V videoController);绑定交互UI。<br/>
 除了关心必须实现的抽象方法外，还有诸如迷你窗口、悬浮窗口、全屏窗口 的特有状态方法，可按照需求实现。
 BaseVideoController设计成了可以直接通过此控制器来实现 切换至Mini小窗口播放、切换至全局悬浮窗口播放、切换至全屏播放等功能，需要调用setOnFuctionListener(OnFuctionListener listener)按照需求实现抽象方法。
 ```
