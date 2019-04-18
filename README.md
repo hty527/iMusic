@@ -50,15 +50,84 @@
 [或点此下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
 ### 集成步骤:
 #### 音乐播放器:
+
 #### 视频播放器:
-1:.xml中引入播放器布局</br>
+1.写一个类继承BaseVideoPlayer，给定layout xml文件。或者使用默认的播放器。在你的项目中的.xml中引入播放器布局</br>
 ```
       <com.video.player.lib.view.VideoPlayerTrackView
             android:id="@+id/video_track"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:video_autoSetCoverController="true"
-            app:video_autoSetVideoController="true"
-            app:video_loop="true"
-            app:video_orientantionEnable="true"/>
+            app:video_autoSetVideoController="true"/>
 ```
+自定义属性 video_autoSetCoverController 和 video_autoSetVideoController可选，表示是否创建默认的封面控制器和视频播放器控制器。</br>
+更多自定义属性请参考video-player-lib模块下的attrs中的BaseVideoPlayer说明。</br>
+</br>
+也可以这样动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>
+```
+        //frameLayout 你的parent布局
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
+        VideoPlayerTrackView playerTrackView=new VideoPlayerTrackView(context);
+        playerTrackView.setLoop(true);
+        playerTrackView.setVideoController(videoController);
+        playerTrackView.setVideoCoverController(coverController);
+        playerTrackView.setVideoGestureController(gestureController);
+        frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
+```
+
+也可以动态设置视频控制器、封面控制器、手势识别器，按照参数要求继承基类即可,</br>
+2.初始化播放的宽高，默认是LayoutParams.MATCH_PARENT，设置播放器必须的基本数据
+```
+        //播放器控件宽高
+        mVideoPlayer = (VideoDetailsPlayerTrackView) findViewById(R.id.video_player);
+        int itemHeight = MusicUtils.getInstance().getScreenWidth(this) * 9 / 16;
+        mVideoPlayer.getLayoutParams().height=itemHeight;
+        //设置播放资源
+        mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
+        //是否循环播放
+        mVideoPlayer.setLoop(true);
+        //这个可选的，如在悬浮窗中需要支持切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置
+        mVideoPlayer.setParamsTag(mVideoParams);
+```
+3.生命周期方法加入
+```
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        VideoPlayerManager.getInstance().onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        VideoPlayerManager.getInstance().onPause();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            onBackPressed();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(VideoPlayerManager.getInstance().isBackPressed()){
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VideoPlayerManager.getInstance().onDestroy();
+    }
+```
+至此你的播放器具备了基础的视频播放能力。
+
+
+
