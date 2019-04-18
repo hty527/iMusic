@@ -50,6 +50,83 @@
 [或点此下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
 ### 集成步骤:
 #### 音乐播放器:
+##### 播放器内部协调工作说明：<br/>
+ * MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作
+ * MusicPlayerActivity：播放器容器，监听内部播放器状态，负责处理当前正在播放的任务、刷新进度、处理MusicPlayerService抛出交互事件
+ * MusicPlayerManager：内部播放器代理人，所有组件与播放器交互或指派任务给播放器，需经此代理人进行
+ * MusicJukeBoxView：默认唱片机
+ * MusicJukeBoxBackgroundLayout：默认播放器UI背景协调工作者
+ * MusicJukeBoxCoverPager：默认唱片机封面
+ * MusicAlarmSettingDialog：默认定制闹钟设置
+ * MusicPlayerListDialog：默认当前正在播放的列表
+全局初始化：
+```
+        //初始化首选项，播放器内部的播放模式、定时模式存储，使用的是SharedPreferences
+        MusicUtils.getInstance().initSharedPreferencesConfig(getApplicationContext());
+        //全局迷你悬浮窗单击事件
+        MusicWindowManager.getInstance().setOnMusicWindowClickListener(new MusicWindowClickListener() {
+
+            @Override
+            public void onWindownClick(View view, long musicID) {
+                if(musicID>0){
+                    Intent intent=new Intent(getApplicationContext(), MusicPlayerActivity.class);
+                    intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onWindownCancel(View view) {}
+        });
+        //音乐播放器初始化设置
+        MusicPlayerConfig config=MusicPlayerConfig.Build()
+            //前台服务锁定开关
+            .setLockForeground(true)
+            //悬浮窗自动吸附开关
+            .setWindownAutoScrollToEdge(true)
+            //垃圾桶功能开关
+            .setTrashEnable(true)
+            //锁屏控制器开关
+            .setScreenOffEnable(true)
+            //悬浮窗播放器样式
+            .setWindownStyle(MusicWindowStyle.TRASH);
+        MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
+
+        //若想要点击通知栏跳转至播放器界面，则必须设置点击通知栏打开的Activity绝对路径
+        MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
+```
+1.MainActivity中初始化MusicPlayerService
+```
+        @Override
+        protected void onCreate() {
+            super.onCreate();
+            //绑定MusicService
+            MusicPlayerManager.getInstance().bindService(MainActivity.this);
+        }
+
+        /**
+         * 悬浮窗释放
+         */
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            MediaUtils.getInstance().onDestroy();
+            MusicPlayerManager.getInstance().removeObservers();
+            MusicPlayerManager.getInstance().removeAllPlayerListener();
+            MusicWindowManager.getInstance().onDestroy();
+            MusicPlayerManager.getInstance().unBindService(MainActivity.this);
+            MusicPlayerManager.getInstance().onDestroy();
+        }
+```
+2.开始播放任务
+```
+        //设置播放内部正在处理的数据渠道，可用于主页回显正在“哪个”模块播放音乐，非必须的
+        MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_LOCATION);
+        //开始播放
+        MusicPlayerManager.getInstance().startPlayMusic(mAdapter.getData(),position);
+```
+[MusicPlayerManager类常用API预览](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md)
 
 #### 视频播放器:此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。
 ##### 全局初始化
@@ -138,6 +215,9 @@
         protected void onDestroy() {
             super.onDestroy();
             VideoPlayerManager.getInstance().onDestroy();
+            //若你的Activity是MainActivity，则还需要调用这两个方法
+            VideoPlayerManager.getInstance().onDestroy();
+            VideoWindowManager.getInstance().onDestroy();
         }
 ```
 至此你的播放器具备了基础的视频播放能力,更多功能和API使用，请参阅读下文。<br/>
@@ -173,7 +253,7 @@ BaseVideoController设计成了可以直接通过此控制器来实现 切换至
         protected void changeControllerState(int scrrenOrientation,boolean isInterceptIntent){}
 
        /**
-        * 自定义控制器若需要在交互布局中实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能，请调用BaseVideoController的setOnFuctionListener方法，按照需求实现抽象对应的抽象功能。
+        * 自定义控制器若需要在交互布局中实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能，请使用父类BaseVideoController的mOnFuctionListener调用对应的抽象方法。
         */
         public abstract static class OnFuctionListener{
             /**
