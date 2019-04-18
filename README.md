@@ -35,8 +35,8 @@
     • 支持可切换至全局悬浮窗播放，支持屏幕全局拖拽</br>
     • 全屏播放下手势识别调节音量、屏幕亮度、快进、快退</br>
     • 支持完全自定义视频控制器</br>
-    • 支持完全封面控制器</br>
-    • 支持完全手势识别调节器</br>
+    • 支持完全自定义封面控制器</br>
+    • 支持完全自定义手势识别调节器</br>
     • 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
 已封装成库，音频焦点等细节已处理，简单集成即可使用所有功能。
 ## 软件截图：
@@ -48,3 +48,17 @@
 [Fir托管下载](https://fir.im/iMusic)
 </br>
 [或点此下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
+### 集成步骤:
+#### 音乐播放器:
+#### 视频播放器:
+1:.xml中引入播放器布局</br>
+```
+      <com.video.player.lib.view.VideoPlayerTrackView
+            android:id="@+id/video_track"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:video_autoSetCoverController="true"
+            app:video_autoSetVideoController="true"
+            app:video_loop="true"
+            app:video_orientantionEnable="true"/>
+```
