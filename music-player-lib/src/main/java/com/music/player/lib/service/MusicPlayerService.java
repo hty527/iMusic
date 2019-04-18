@@ -1640,16 +1640,18 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             //前台进程-通知栏根点击事件
             }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW)){
                 if(intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0)>0){
-                    Intent startIntent=new Intent();
-                    startIntent.setClassName(getPackageName(),MusicPlayerManager.getInstance().getForegroundActivityClassName());
-                    startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0));
-                    //如果播放器组件未启用，创建新的实例
-                    //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
-                    //反之则清除播放器之上的所有栈，让播放器组件显示在最顶层
-                    startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(startIntent);
+                    if(!TextUtils.isEmpty(MusicPlayerManager.getInstance().getForegroundActivityClassName())){
+                        Intent startIntent=new Intent();
+                        startIntent.setClassName(getPackageName(),MusicPlayerManager.getInstance().getForegroundActivityClassName());
+                        startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0));
+                        //如果播放器组件未启用，创建新的实例
+                        //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
+                        //反之则清除播放器之上的所有栈，让播放器组件显示在最顶层
+                        startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(startIntent);
+                    }
                 }
             //前台进程-上一首
             }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_LAST)){

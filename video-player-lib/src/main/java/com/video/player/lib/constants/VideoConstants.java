@@ -42,6 +42,4 @@ public interface VideoConstants {
     String ITEM_TITLE_FOOTER = "footer2";
     //热门所有排行
     String HOST_TOP_ALL = "ranklist";
-    //播放器界面路径
-    String MUSIC_PLAYER_CLASS_NAME = "com.android.imusic.video.activity.VideoPlayerActviity";
 }

@@ -7,8 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+
 import com.music.player.lib.bean.BaseMediaInfo;
-import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerPresenter;
 import com.music.player.lib.model.MusicAlarmModel;
@@ -20,6 +20,7 @@ import com.music.player.lib.model.MusicWindowStyle;
 import com.music.player.lib.service.MusicPlayerBinder;
 import com.music.player.lib.service.MusicPlayerService;
 import com.music.player.lib.util.Logger;
+
 import java.util.List;
 import java.util.Observer;
 
@@ -41,7 +42,7 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
     private boolean reBrowse = false;
     //播放器配置
     private static MusicPlayerConfig mMusicPlayerConfig;
-    private static String mActivityClassName = MusicConstants.MUSIC_PLAYER_CLASS_NAME;
+    private static String mActivityClassName = null;
 
     public static synchronized MusicPlayerManager getInstance() {
         synchronized (MusicPlayerManager.class) {

@@ -474,33 +474,35 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * 从悬浮窗播放器窗口转向VideoPlayerActivity播放
      */
     public void startWindowToActivity() {
-        //先结束悬浮窗播放任务
-        BaseVideoPlayer baseVideoPlayer = backGlobalWindownToActivity();
-        Intent startIntent=new Intent();
-        startIntent.setClassName(VideoUtils.getInstance().getPackageName(getContext().getApplicationContext()),VideoPlayerManager.getInstance().getVideoPlayerActivityClassName());
-        startIntent.putExtra(VideoConstants.KEY_VIDEO_PLAYING,true);
-        //如果播放器组件未启用，创建新的实例
-        //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
-        //反之则清除播放器之上的所有栈，让播放器组件显示在最顶层
-        startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if(null!=this.getTag()&&getTag() instanceof VideoParams){
-            VideoParams videoParams = (VideoParams) this.getTag();
-            startIntent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
-        }else{
-            VideoParams videoParams=new VideoParams();
-            Logger.d(TAG,"mTitle:"+mTitle+",mDataSource:"+mDataSource);
-            videoParams.setVideoTitle(mTitle);
-            videoParams.setVideoUrl(mDataSource);
-            videoParams.setVideoiId(mVideoID);
-            startIntent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
-        }
-        getContext().getApplicationContext().startActivity(startIntent);
-        //销毁一下，万不能再界面跳转之前销毁
-        if(null!=baseVideoPlayer){
-            baseVideoPlayer.destroy();
-            VideoPlayerManager.getInstance().setWindownPlayer(null);
+        if(!TextUtils.isEmpty(VideoPlayerManager.getInstance().getVideoPlayerActivityClassName())){
+            //先结束悬浮窗播放任务
+            BaseVideoPlayer baseVideoPlayer = backGlobalWindownToActivity();
+            Intent startIntent=new Intent();
+            startIntent.setClassName(VideoUtils.getInstance().getPackageName(getContext().getApplicationContext()),VideoPlayerManager.getInstance().getVideoPlayerActivityClassName());
+            startIntent.putExtra(VideoConstants.KEY_VIDEO_PLAYING,true);
+            //如果播放器组件未启用，创建新的实例
+            //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
+            //反之则清除播放器之上的所有栈，让播放器组件显示在最顶层
+            startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if(null!=this.getTag()&&getTag() instanceof VideoParams){
+                VideoParams videoParams = (VideoParams) this.getTag();
+                startIntent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
+            }else{
+                VideoParams videoParams=new VideoParams();
+                Logger.d(TAG,"mTitle:"+mTitle+",mDataSource:"+mDataSource);
+                videoParams.setVideoTitle(mTitle);
+                videoParams.setVideoUrl(mDataSource);
+                videoParams.setVideoiId(mVideoID);
+                startIntent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
+            }
+            getContext().getApplicationContext().startActivity(startIntent);
+            //销毁一下，万不能再界面跳转之前销毁
+            if(null!=baseVideoPlayer){
+                baseVideoPlayer.destroy();
+                VideoPlayerManager.getInstance().setWindownPlayer(null);
+            }
         }
     }
 
