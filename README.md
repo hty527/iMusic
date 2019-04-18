@@ -51,8 +51,8 @@
 ### 集成步骤:
 #### 音乐播放器:
 
-#### 视频播放器:只需三步走，即可实现基础的播放能力。
-1.写一个类继承BaseVideoPlayer，给定layout xml文件。或者使用默认的播放器。在你的项目中的.xml中引入播放器布局</br>
+#### 视频播放器:此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤
+1.在你的项目中的.xml中引入播放器布局</br>
 ```
       <com.video.player.lib.view.VideoPlayerTrackView
             android:id="@+id/video_track"
@@ -61,8 +61,7 @@
             app:video_autoSetCoverController="true"
             app:video_autoSetVideoController="true"/>
 ```
-    自定义属性 video_autoSetCoverController 和 video_autoSetVideoController可选，表示是否创建默认的封面控制器和视频播放器控制器。</br>
-    支持的自定义属性：
+支持的自定义属性说明：
 ```
         <!--是否自动设置默认控制器-->
         <attr name="video_autoSetVideoController" format="boolean"/>
@@ -71,8 +70,6 @@
         <!--循环播放-->
         <attr name="video_loop" format="boolean"/>
 ```
-更多自定义属性请阅读video-player-lib模块下的attrs中的BaseVideoPlayer说明。</br>
-</br>
 也可以这样动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>
 ```
         //frameLayout 你的parent布局
