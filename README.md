@@ -58,7 +58,7 @@
  * MusicJukeBoxBackgroundLayout：默认播放器UI背景协调工作者
  * MusicJukeBoxCoverPager：默认唱片机封面
  * MusicAlarmSettingDialog：默认定制闹钟设置
- * MusicPlayerListDialog：默认当前正在播放的列表
+ * MusicPlayerListDialog：默认当前正在播放的列表<br/>
 全局初始化：
 ```
     //初始化首选项，播放器内部的播放模式、定时模式存储，使用的是SharedPreferences
@@ -125,7 +125,7 @@
 ```
  * 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。
 
-[MusicPlayerManager常用API](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md)
+[查看MusicPlayerManager常用API](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md)
 
 #### 视频播放器集成步骤:
  * 此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。
@@ -283,5 +283,5 @@ BaseVideoController设计成了可以直接通过此控制器来实现 切换至
     }
 ```
 ##### 视频播放所有功能和公开API介绍
-除了继承BaseVideoController实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能外，还可以直接调用BaseVideoPlayer的公开方法实现以上功能和交互。BaseVideoPlayer的主要公开方法如下:
-[BaseVideoPlayer及VideoPlayerManager常用API介绍](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/VideoPlayerReadme.md)
+除了继承BaseVideoController实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能外，还可以直接调用BaseVideoPlayer的公开方法实现以上功能和交互。BaseVideoPlayer的主要公开方法如下:<br/>
+[查看BaseVideoPlayer及VideoPlayerManager常用API介绍](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/VideoPlayerReadme.md)
