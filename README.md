@@ -240,6 +240,19 @@ ___
     <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162033.jpg" height="480" width="270">
     <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162121.jpg" height="480" width="270">
     <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162126.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162126.jpg" height="480" width="270">
+</div>
+
+<div align="center">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162237.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190418_135644.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190418_135654.jpg" height="480" width="270">
+</div>
+
+<div align="center">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190418_134651.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162345.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162453.jpg" height="480" width="270">
 </div>
 
 #### 下载地址:
@@ -251,5 +264,5 @@ ___
 **APK下载：**[从此项目下载APK]
 或者扫描二维码下载<br/>
 <div align="center">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png" height="500" width="500">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png" height="350" width="350">
 </div>
