@@ -1,10 +1,10 @@
 # **iMusic**
 
-[Android音频播放器开发历程]: https://www.jianshu.com/p/9051b96c02f9 "简书音频播放器"
-**音乐播放器博文:**[Android音频播放器开发历程]
+[Android音频播放器开发记录]: https://www.jianshu.com/p/9051b96c02f9 "简书音频播放器"
+**音乐播放器博文:**[Android音频播放器开发记录]
 
-[Android视频播放器开发历程]: https://www.jianshu.com/p/39d8f824c2fb "简书视频播放器"
-**视频播放器博文:**[Android视频播放器开发历程]
+[Android视频播放器开发记录]: https://www.jianshu.com/p/39d8f824c2fb "简书视频播放器"
+**视频播放器博文:**[Android视频播放器开发记录]
 
 完整的 网络音乐播放器 和 网络视频播放器 封装库及工程演示
 ___
