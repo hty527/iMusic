@@ -9,7 +9,7 @@ ___
 #### 功能演示:
 ![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/video.gif)
 #### 功能概述:
-1.音乐播放器<br/>
+**1.音乐播放器**
 * 完整的音乐播放器功能，包括但不限于：**</br>
 * 网络音乐播放</br>
 * 本地音乐检索播放</br>
@@ -24,8 +24,7 @@ ___
 * 对音乐收藏至本地</br>
 * 最近播放记录浏览</br>
 * 已对音频输入焦点管理作处理<br/>
-<br/>
-2.视频播放器<br/>
+**2.视频播放器**
 * 完整的视频播放器功能，包括但不限于：</br>
 * 列表单例播放</br>
 * 列表横竖屏切换</br>
@@ -119,7 +118,7 @@ ___
 
 [音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md "MusicPlayerManager API 介绍"
 **Wiki文档介绍**[音乐播放器Wiki]<br/>
-___
+
 ### 视频播放器集成步骤:
 
  * 此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。
