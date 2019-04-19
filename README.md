@@ -1,14 +1,16 @@
 # **iMusic**
 [BaseMediaPlayer]: https://www.jianshu.com/u/6a64162caadd "简书主页"
 **博文地址**[BaseMediaPlayer]<br/>
-完整的 网络音乐播放器 和 网络视频播放器 封装库及工程演示<br/>
+<br/>
+    完整的 网络音乐播放器 和 网络视频播放器 封装库及工程演示
+<br/>
 ___
 ## 功能演示及概述:
 #### 功能演示:
 ![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/video.gif)
 #### 功能概述:
 1.音乐播放器<br/>
-** • 完整的音乐播放器功能，包括但不限于：**
+* 完整的音乐播放器功能，包括但不限于：**</br>
 * 网络音乐播放</br>
 * 本地音乐检索播放</br>
 * 搜索(歌手、专辑、歌曲名)播放</br>
@@ -22,24 +24,22 @@ ___
 * 对音乐收藏至本地</br>
 * 最近播放记录浏览</br>
 * 已对音频输入焦点管理作处理</br>
+2.视频播放器<br/>
+* 完整的视频播放器功能，包括但不限于：</br>
+* 列表单例播放</br>
+* 列表横竖屏切换</br>
+* 常规横竖屏切换</br>
+* A activity 跳转至B activity无缝衔接播放</br>
+* 支持可切换至迷你小窗口播放，支持Activity内拖拽</br>
+* 支持可切换至全局悬浮窗播放，支持屏幕全局拖拽</br>
+* 全屏播放下手势识别调节音量、屏幕亮度、快进、快退</br>
+* 支持完全自定义视频控制器</br>
+* 支持完全自定义封面控制器</br>
+* 支持完全自定义手势识别调节器</br>
+* 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
 ## 集成步骤:
-
-
-
-
-### 体验APK下载:
-![扫描二维码下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png)
-
-[Fir托管下载](https://fir.im/iMusic)
-</br>
-[或点此下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
-# 功能介绍及集成方式:
-## 音乐播放器:
-
-已封装成库，集成请参照com.android.imusic.music.activity.MusicPlayerActivity中的使用示例。
-## 软件截图：
-![音乐播放器界面](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190417_162126.jpg)
 ### 音乐播放器集成步骤:
+![音乐播放器界面](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190417_162126.jpg)
 ##### 播放器内部协调工作说明：<br/>
  * MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作
  * MusicPlayerActivity：播放器容器，监听内部播放器状态，负责处理当前正在播放的任务、刷新进度、处理MusicPlayerService抛出交互事件
@@ -117,27 +117,9 @@ ___
  * 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。
 
 [查看MusicPlayerManager常用API](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md)
-
-## 视频播放器:
-* 完整的视频播放器功能，包括但不限于：</br>
-    • 列表单例播放</br>
-    • 列表横竖屏切换</br>
-    • 常规横竖屏切换</br>
-    • A activity 跳转至B activity无缝衔接播放</br>
-    • 支持可切换至迷你小窗口播放，支持Activity内拖拽</br>
-    • 支持可切换至全局悬浮窗播放，支持屏幕全局拖拽</br>
-    • 全屏播放下手势识别调节音量、屏幕亮度、快进、快退</br>
-    • 支持完全自定义视频控制器</br>
-    • 支持完全自定义封面控制器</br>
-    • 支持完全自定义手势识别调节器</br>
-    • 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
-已封装成库，音频焦点等细节已处理，简单集成即可使用所有功能。
-## 软件截图：
-![视频播放器界面](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190418_135654.jpg)
-</br>
-
-
+___
 ### 视频播放器集成步骤:
+![视频播放器界面](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190418_135654.jpg)
  * 此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。
 ##### 全局初始化
 ```
@@ -230,7 +212,7 @@ ___
         VideoWindowManager.getInstance().onDestroy();
     }
 ```
-至此你的播放器具备了基础的视频播放能力,更多功能和API使用，请参阅读下文。<br/>
+至此你的播放器具备了基础的视频播放能力,自定义UI和API使用，请参阅读下文。<br/>
 ##### 自定义交互UI的实现
 支持的自定义控制器一览：
 ```
@@ -246,3 +228,10 @@ ___
 ##### 视频播放所有功能和公开API介绍
 除了继承BaseVideoController实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能外，还可以直接调用BaseVideoPlayer的公开方法实现以上功能和交互。BaseVideoPlayer的主要公开方法如下:<br/>
 [查看BaseVideoPlayer及VideoPlayerManager常用API介绍](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/VideoPlayerReadme.md)
+---
+### 体验APK下载:
+![扫描二维码下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png)
+
+[Fir托管下载](https://fir.im/iMusic)
+</br>
+[或点此下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
