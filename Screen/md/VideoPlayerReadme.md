@@ -88,12 +88,6 @@
     public void startWindowToActivity();
 
     /**
-     * 开启全屏播放的原理：
-     * 1：改变屏幕方向，Activity 属性必须设置为android:configChanges="orientation|screenSize"，避免Activity销毁重建
-     * 2：移除常规播放器已有的TextureView组件
-     * 3：向Windown ViewGroup 添加一个新的VideoPlayer组件,赋值已有的TextrueView到VideoPlayer，设置新的播放器监听，结合TextrueView onSurfaceTextureAvailable 回调事件处理
-     * 4：根据自身业务，向新的播放器添加控制器
-     * 5：记录全屏窗口播放器，退出全屏恢复常规播放用到
      * @param fullScreenVideoController 全屏控制器，为空则使用默认控制器
      */
     public void startFullScreen(V fullScreenVideoController);
