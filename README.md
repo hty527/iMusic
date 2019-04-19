@@ -234,7 +234,7 @@ ___
 **Wiki文档：**[视频播放器Wiki]
 ___
 ## iMusic下载体验:
-**强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！**
+**强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
 ![扫描二维码下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png)
 
 #### 下载地址:
