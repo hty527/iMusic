@@ -6,7 +6,7 @@
 <br/>
 ___
 ## 功能演示及概述:
-#### 功能演示:
+**功能演示:**(部分功能快照预览在最下面)
 ![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/video.gif)
 #### 功能概述:
 **1.音乐播放器**
