@@ -225,7 +225,7 @@ ___
     播放器手势调节控制器基类 作用：播放器打开全屏播放后，识别用户手势调节快进、快退、音量、屏幕亮度等功能UI回显。
     BaseGestureController
 ```
-**• 重点：实现自定义交互UI，需继承BaseVideoController抽象类，初始化完成后调用BaseVideoPlayer的setVideoController(V videoController);绑定交互UI控制器。<br/>**
+**<font color=red>• 重点：实现自定义交互UI，需继承BaseVideoController抽象类，初始化完成后调用BaseVideoPlayer的setVideoController(V videoController);绑定交互UI控制器。</font><br/>**
 除了实现必须的抽象方法外，还有诸如迷你窗口、悬浮窗口、全屏窗口 的特有状态方法，可按照需求实现，详见BaseVideoController成员方法。
 ##### 视频播放所有功能和公开API介绍
 除了继承BaseVideoController实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能外，还可以直接调用BaseVideoPlayer的公开方法实现以上功能和交互。BaseVideoPlayer的主要公开方法如下:<br/>
