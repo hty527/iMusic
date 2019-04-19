@@ -26,7 +26,7 @@ import java.util.Observer;
 
 /**
  * TinyHung@Outlook.com
- * 2018/1/18.
+ * 2019/3/5.
  * MusicPlayer Manager
  * 此 MusicPlayerManager 持有 MusicPlayerService 的中间代理人 MusicPlayerBinder，通过此管理者达到与
  * MusicPlayerService 交互的目的

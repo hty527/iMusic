@@ -2,7 +2,7 @@ package com.music.player.lib.constants;
 
 /**
  * TinyHung@Outlook.com
- * 2018/1/18.
+ * 2019/3/5.
  * Constants
  */
 

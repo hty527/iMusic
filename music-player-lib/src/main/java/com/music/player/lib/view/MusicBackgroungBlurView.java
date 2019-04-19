@@ -25,7 +25,7 @@ import com.music.player.lib.R;
 
 /**
  * TinyHung@Outlook.com
- * 2018/1/18.
+ * 2019/3/10.
  * MusicBackgroungBlurView
  * buildToolsVersion >= 24.0.2
  */

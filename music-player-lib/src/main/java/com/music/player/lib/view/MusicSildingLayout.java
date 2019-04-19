@@ -15,7 +15,7 @@ import android.widget.Scroller;
 
 /**
  * TinyHung@Outlook.com
- * 2019/1/19
+ * 2019/3/19
  * SildingLayou
  * 锁频向右滑动手势Layout
  */

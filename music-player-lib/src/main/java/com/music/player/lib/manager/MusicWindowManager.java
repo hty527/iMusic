@@ -77,10 +77,10 @@ public class MusicWindowManager {
 	}
 
     /**
-     * 添加一个View到窗口
+     * 添加一个View到窗口,默认位置是位于屏幕左上角，自行指定X、Y轴偏移量
      * @param context
-     * @param offsetPixelX
-     * @param offsetPixelY
+     * @param offsetPixelX X轴偏移量 单位像素 -1:使用默认
+     * @param offsetPixelY Y轴偏移量 单位像素 -1:使用默认
      */
     private synchronized void addMiniJukeBoxToWindown(Context context, int offsetPixelX, int offsetPixelY) {
         if (null== mMusicWindowMiniJukebox) {
@@ -105,7 +105,7 @@ public class MusicWindowManager {
                     | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
             //背景透明
             miniJukeBoxLayoutParams.format = PixelFormat.RGBA_8888;
-            //坑：需要默认位于屏幕的左上角，不然手指托动会有问题，具体定位用x,y轴
+            //默认位于屏幕的左上角，具体位置定位定传X、Y偏移量
             miniJukeBoxLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
             miniJukeBoxLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
             miniJukeBoxLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;

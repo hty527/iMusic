@@ -28,7 +28,7 @@ import com.music.player.lib.util.MusicUtils;
 
 /**
  * TinyHung@Outlook.com
- * 2018/1/18.
+ * 2019/3/6
  * PlayerJukeBox BG
  * 要开启渐变，需指定backgroundEnable属性为true， 渐变特效只支持 >=23 API
  */

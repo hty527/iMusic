@@ -7,7 +7,7 @@ import com.music.player.lib.model.MusicPlayerState;
 
 /**
  * TinyHung@Outlook.com
- * 2018/1/18.
+ * 2019/3/5.
  * MusicPlayer Event Listener
  */
 
