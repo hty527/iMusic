@@ -261,7 +261,8 @@ ___
 
 [从此项目下载APK]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk "apk下载"
 **APK下载：**[从此项目下载APK]<br/>
+<br/>
 **或者扫描二维码下载<br/>**
 <div align="center">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png" height="350" width="350">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png" height="300" width="300">
 </div>
