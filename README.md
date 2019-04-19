@@ -124,7 +124,7 @@ ___
     //mediaInfos:待播放的数组集，交给内部播放器，position：从这个数组集中的哪个位置开始播放
     MusicPlayerManager.getInstance().startPlayMusic(List<BaseMediaInfo> mediaInfos,int position);
 ```
-* 全局悬浮窗播放器按钮：以下是开启悬浮窗示例代码
+**4.若你想开启播放器内部悬浮窗功能：调用createMiniJukeboxWindow();**
 ```
    /**
      * 尝试创建一个迷你的唱片机(悬浮窗)
