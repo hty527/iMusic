@@ -1,14 +1,14 @@
 # **iMusic**
 [BaseMediaPlayer]: https://www.jianshu.com/u/6a64162caadd "简书主页"
 **博文地址**[BaseMediaPlayer]<br/>
-#### 完整的 网络音乐播放器 和 网络视频播放器 封装库及工程演示
+完整的 网络音乐播放器 和 网络视频播放器 封装库及工程演示<br/>
 ___
 ## 功能演示及概述:
 #### 功能演示:
 ![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/video.gif)
 #### 功能概述:
 1.音乐播放器
-** * 完整的音乐播放器功能，包括但不限于：**</br>
+** • 完整的音乐播放器功能，包括但不限于：**</br>
 * 网络音乐播放</br>
 * 本地音乐检索播放</br>
 * 搜索(歌手、专辑、歌曲名)播放</br>
