@@ -1,14 +1,30 @@
 # **iMusic**
+[BaseMediaPlayer]: https://www.jianshu.com/u/6a64162caadd "简书主页"
+**博文地址**[BaseMediaPlayer]<br/>
 ### 完整的 网络音乐播放器 和 网络视频播放器 封装库及工程演示
-[MusicPlayer And VideoPlayer]: https://www.jianshu.com/u/6a64162caadd "简书主页"
-[Family]: https://github.com/feiyouAndroidTeam "大家庭"
-**博文地址**[MusicPlayer And VideoPlayer]
-**所属组织**[Family]
-
-[所属组织](https://github.com/feiyouAndroidTeam)
-# 项目介绍
-#### 视频演示:
+___
+# 功能演示及概述:
+#### 功能演示:
 ![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/video.gif)
+#### 功能概述:
+1.音乐播放器
+* 完整的音乐播放器功能，包括但不限于：</br>
+* 网络音乐播放</br>
+* 本地音乐检索播放</br>
+* 搜索(歌手、专辑、歌曲名)播放</br>
+* 基本常规操作示例播放器</br>
+* 锁屏播放控制</br>
+* 自定义唱片机</br>
+* 悬浮窗播放</br>
+* 状态栏通知控制</br>
+* 定时关闭播放</br>
+* 播放模式设置</br>
+* 对音乐收藏至本地</br>
+* 最近播放记录浏览</br>
+* 已对音频输入焦点管理作处理</br>
+# 集成步骤:
+
+
 
 
 ### 体验APK下载:
@@ -19,20 +35,7 @@
 [或点此下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
 # 功能介绍及集成方式:
 ## 音乐播放器:
-* 完整的音乐播放器功能，包括但不限于：</br>
-    • 网络音乐播放</br>
-    • 本地音乐检索播放</br>
-    • 搜索(歌手、专辑、歌曲名)播放</br>
-    • 基本常规操作示例播放器</br>
-    • 锁屏播放控制</br>
-    • 自定义唱片机</br>
-    • 悬浮窗播放</br>
-    • 状态栏通知控制</br>
-    • 定时关闭播放</br>
-    • 播放模式设置</br>
-    • 对音乐收藏至本地</br>
-    • 最近播放记录浏览</br>
-    • 已对音频输入焦点管理作处理</br>
+
 已封装成库，集成请参照com.android.imusic.music.activity.MusicPlayerActivity中的使用示例。
 ## 软件截图：
 ![音乐播放器界面](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190417_162126.jpg)
