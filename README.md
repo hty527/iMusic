@@ -51,6 +51,23 @@ ___
  * MusicAlarmSettingDialog：默认定制闹钟设置
  * MusicPlayerListDialog：默认当前正在播放的列表<br/>
 
+权限声明：
+```
+    //网络状态
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    //震动，悬浮窗按钮拖动至垃圾桶删除时使用到了震动权限
+    <uses-permission android:name="android.permission.VIBRATE" />
+    //锁屏下继续缓冲，防止CPU休眠
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    //自定义广播
+    <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
+    //悬浮窗权限
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    //音乐播放器前台服务权限，挂到后台播放时防止进程被杀，起到常驻进程作用
+    <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
+```
+
 **1.全局初始化**
 ```
     //初始化首选项，播放器内部的播放模式、定时模式存储，使用的是SharedPreferences
@@ -122,6 +139,15 @@ ___
 **Wiki文档：**[音乐播放器Wiki]
 
 ### 视频播放器集成步骤:
+权限声明：
+```
+    //网络状态
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    //锁屏工作，防止休眠
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    //悬浮窗
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+```
 • 此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。
 ##### 全局初始化
 ```
