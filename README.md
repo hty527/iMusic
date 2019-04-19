@@ -124,12 +124,13 @@ ___
     //mediaInfos:待播放的数组集，交给内部播放器，position：从这个数组集中的哪个位置开始播放
     MusicPlayerManager.getInstance().startPlayMusic(List<BaseMediaInfo> mediaInfos,int position);
 ```
-**4.若你想开启播放器内部悬浮窗功能：调用createMiniJukeboxWindow();**
+**4.若你想开启播放器内部悬浮窗功能：复制下面两个方法后调用createMiniJukeboxWindow();**
 ```
    /**
      * 尝试创建一个迷你的唱片机(悬浮窗)
      */
     protected void createMiniJukeboxWindow() {
+        //检测设备是否拥有悬浮窗权限
         if(!MusicWindowManager.getInstance().checkAlertWindowsPermission(MusicBaseActivity.this)){
             new android.support.v7.app.AlertDialog.Builder(MusicBaseActivity.this)
                     .setTitle("播放提示")
@@ -144,6 +145,7 @@ ___
                     .setPositiveButton("去开启", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            //前往系统设置开启悬浮窗权限
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -174,8 +176,8 @@ ___
             if(null!= MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                 BaseMediaInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
                 //关键代码，创建一个ViewGroup至Window,参数请阅读参数说明
-                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(MusicBaseActivity.this.getApplicationContext(), MusicUtils.getInstance().dpToPxInt(MusicBaseActivity.this,80f)
-                        ,MusicUtils.getInstance().dpToPxInt(MusicBaseActivity.this,170f));
+                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext(), MusicUtils.getInstance().dpToPxInt(getApplicationContext(),80f)
+                        ,MusicUtils.getInstance().dpToPxInt(getApplicationContext(),170f));
                 //紧接着更新悬浮窗
                 MusicStatus musicStatus=new MusicStatus();
                 musicStatus.setId(musicInfo.getId());
@@ -192,6 +194,18 @@ ___
             }
         }
     }
+
+    /**
+     * 悬浮窗权限申请回执
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode== MusicConstants.REQUST_WINDOWN_PERMISSION&& MusicWindowManager.getInstance().checkAlertWindowsPermission(context)){
+            createMiniJukeBoxToWindown();
+        }
+    }
+
 ```
 * 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。<br/>
 
