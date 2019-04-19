@@ -90,12 +90,12 @@ ___
         .setScreenOffEnable(true)
         //悬浮窗播放器样式
         .setWindownStyle(MusicWindowStyle.TRASH);
+    //设置给媒体播放管理者
     MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
-
     //若想要点击通知栏跳转至播放器界面，则必须设置点击通知栏打开的Activity绝对路径
     MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
 ```
-**2.Activity中初始化MusicPlayerService组件，对应生命周期方法调用**
+**2.MainActivity中初始化MusicPlayerService组件，对应生命周期方法调用**
 ```
     @Override
     protected void onCreate() {
@@ -108,21 +108,23 @@ ___
     protected void onDestroy() {
         super.onDestroy();
         MusicWindowManager.getInstance().onDestroy();
+        //若使用Demo中的本地音乐功能，需要调用此方法
         MediaUtils.getInstance().onDestroy();
+        //解绑服务
         MusicPlayerManager.getInstance().unBindService(MainActivity.this);
         MusicPlayerManager.getInstance().onDestroy();
         //若集成视频播放器，需调用以下方法
         VideoPlayerManager.getInstance().onDestroy();
+        //悬浮窗销毁
         VideoWindowManager.getInstance().onDestroy();
     }
 ```
 **3.开始播放任务**
 ```
-    //设置播放内部正在处理的数据渠道，可用于主页回显正在“哪个”模块播放音乐，非必须的
-    MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_LOCATION);
-    //开始播放，一个数组，数组元素徐继承BaseMediaInfo类，必须赋值字段请看成员属性注释，入参请看"MusicPlayerManager常用API"
-    MusicPlayerManager.getInstance().startPlayMusic(mAdapter.getData(),position);
+    //mediaInfos:待播放的数组集，交给内部播放器，position：从这个数组集中的哪个位置开始播放
+    MusicPlayerManager.getInstance().startPlayMusic(List<BaseMediaInfo> mediaInfos,int position);
 ```
+
 * 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。<br/>
 
 ##### 播放器内部协调工作说明：<br/>
