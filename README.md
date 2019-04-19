@@ -240,7 +240,6 @@ ___
     <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162033.jpg" height="480" width="270">
     <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162121.jpg" height="480" width="270">
     <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162126.jpg" height="480" width="270">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162126.jpg" height="480" width="270">
 </div>
 
 <div align="center">
@@ -261,8 +260,8 @@ ___
 **fir托管下载：**[前往fir下载]
 
 [从此项目下载APK]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk "apk下载"
-**APK下载：**[从此项目下载APK]
-或者扫描二维码下载<br/>
+**APK下载：**[从此项目下载APK]<br/>
+**或者扫描二维码下载<br/>**
 <div align="center">
     <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png" height="350" width="350">
 </div>
