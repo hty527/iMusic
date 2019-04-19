@@ -127,27 +127,31 @@
      */
     public void backMiniWindow();
 
+
     /**
      * 转向全局的悬浮窗播放,默认起点X,Y轴为=播放器Vide的起始X,Y轴，播放器默认居中显示，宽：屏幕宽度3/4(四分之三)，高：16：9高度
      * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+     * @param defaultCreatCloseIcon 是否创建一个默认的关闭按钮，位于悬浮窗右上角，若允许创建，则播放器内部消化关闭时间
      */
-    public void startGlobalWindown(BaseVideoController windowController) ;
+    public void startGlobalWindown(BaseVideoController windowController,boolean defaultCreatCloseIcon);
 
     /**
      * 转向全局的悬浮窗播放
      * @param startX 屏幕X起始轴
      * @param startY 屏幕Y起始轴
      * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+     * @param defaultCreatCloseIcon 是否创建一个默认的关闭按钮，位于悬浮窗右上角，若允许创建，则播放器内部消化关闭时间
      */
-    public void startGlobalWindown(int startX, int startY,V windowController);
+    public void startGlobalWindown(int startX, int startY,V windowController,boolean defaultCreatCloseIcon);
 
     /**
      * 转向全局的悬浮窗播放
      * @param width 播放器宽
      * @param height 播放器高
      * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+     * @param defaultCreatCloseIcon 是否创建一个默认的关闭按钮，位于悬浮窗右上角，若允许创建，则播放器内部消化关闭时间
      */
-    public void startGlobalWindownPlayerSetWH(int width,int height,V windowController);
+    public void startGlobalWindownPlayerSetWH(int width,int height,V windowController,boolean defaultCreatCloseIcon);
 
     /**
      * 转向全局的悬浮窗播放
@@ -156,8 +160,10 @@
      * @param width 播放器宽
      * @param height 播放器高
      * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+     * @param defaultCreatCloseIcon 是否创建一个默认的关闭按钮，位于悬浮窗右上角，若允许创建，则播放器内部消化关闭时间
      */
-    public void startGlobalWindown(int startX, int startY, int width, int height,V windowController);
+    public void startGlobalWindown(int startX, int startY, int width, int height,V windowController,boolean defaultCreatCloseIcon);
+
 
     /**
      * 弹射返回
