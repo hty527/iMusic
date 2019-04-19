@@ -17,7 +17,7 @@
             android:id="@+id/video_btn_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:padding="8dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_video_controller_play"/>
         <TextView
@@ -34,8 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:background="@null"
             android:max="100"
             android:maxHeight="2dp"
@@ -54,7 +54,7 @@
             android:id="@+id/video_full_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:padding="8dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_video_window_scrrent"
             android:visibility="visible"/>

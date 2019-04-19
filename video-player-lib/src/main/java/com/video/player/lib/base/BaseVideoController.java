@@ -97,8 +97,9 @@ public abstract class BaseVideoController extends FrameLayout{
         /**
          * 开启全局悬浮窗
          * @param windowController 继承自BaseVideoController的自定义控制器
+         * @param defaultCreatCloseIcon 是否创建一个默认的关闭按钮，位于悬浮窗右上角，若允许创建，则播放器内部消化关闭时间
          */
-        public void onStartGlobalWindown(BaseVideoController windowController){}
+        public void onStartGlobalWindown(BaseVideoController windowController,boolean defaultCreatCloseIcon){}
         //关闭迷你窗口
         public void onQuiteMiniWindow(){}
         //打开播放器界面

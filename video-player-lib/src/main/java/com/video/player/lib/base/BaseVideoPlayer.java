@@ -263,8 +263,8 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                      * 转向悬浮窗播放
                      */
                     @Override
-                    public void onStartGlobalWindown(BaseVideoController windowController) {
-                        startGlobalWindown(windowController);
+                    public void onStartGlobalWindown(BaseVideoController windowController,boolean defaultCreatCloseIcon) {
+                        startGlobalWindown(windowController,defaultCreatCloseIcon);
                     }
 
                     /**
@@ -1126,8 +1126,9 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     /**
      * 转向全局的悬浮窗播放,默认起点X,Y轴为=播放器Vide的起始X,Y轴，播放器默认居中显示，宽：屏幕宽度3/4(四分之三)，高：16：9高度
      * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+     * @param defaultCreatCloseIcon 是否创建一个默认的关闭按钮，位于悬浮窗右上角，若允许创建，则播放器内部消化关闭时间
      */
-    public void startGlobalWindown(BaseVideoController windowController) {
+    public void startGlobalWindown(BaseVideoController windowController,boolean defaultCreatCloseIcon) {
         int screenWidth = VideoUtils.getInstance().getScreenWidth(getContext());
         int screenHeight = VideoUtils.getInstance().getScreenHeight(getContext());
         //playerWidth宽度为屏幕3/4
@@ -1136,7 +1137,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         //startX位于4/1/2的位置
         int startX=screenWidth/4/2;
         int startY=screenHeight/2-playerHeight/2;
-        startGlobalWindown(startX,startY,playerWidth,playerHeight, (V) windowController);
+        startGlobalWindown(startX,startY,playerWidth,playerHeight, (V) windowController,defaultCreatCloseIcon);
     }
 
     /**
@@ -1144,12 +1145,13 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * @param startX 屏幕X起始轴
      * @param startY 屏幕Y起始轴
      * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+     * @param defaultCreatCloseIcon 是否创建一个默认的关闭按钮，位于悬浮窗右上角，若允许创建，则播放器内部消化关闭时间
      */
-    public void startGlobalWindown(int startX, int startY,V windowController){
+    public void startGlobalWindown(int startX, int startY,V windowController,boolean defaultCreatCloseIcon){
         int screenWidth = VideoUtils.getInstance().getScreenWidth(getContext());
         int playerWidth = screenWidth / 2;
         int playerHeight=playerWidth*9/16;
-        startGlobalWindown(startX,startY,playerWidth,playerHeight,windowController);
+        startGlobalWindown(startX,startY,playerWidth,playerHeight,windowController,defaultCreatCloseIcon);
     }
 
     /**
@@ -1157,9 +1159,10 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * @param width 播放器宽
      * @param height 播放器高
      * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+     * @param defaultCreatCloseIcon 是否创建一个默认的关闭按钮，位于悬浮窗右上角，若允许创建，则播放器内部消化关闭时间
      */
-    public void startGlobalWindownPlayerSetWH(int width,int height,V windowController){
-        startGlobalWindown(10,10,width,height,windowController);
+    public void startGlobalWindownPlayerSetWH(int width,int height,V windowController,boolean defaultCreatCloseIcon){
+        startGlobalWindown(10,10,width,height,windowController,defaultCreatCloseIcon);
     }
 
     /**
@@ -1169,8 +1172,9 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * @param width 播放器宽
      * @param height 播放器高
      * @param windowController 适用于悬浮窗的控制器，若传空，则使用内部默认的交互控制器
+     * @param defaultCreatCloseIcon 是否创建一个默认的关闭按钮，位于悬浮窗右上角，若允许创建，则播放器内部消化关闭时间
      */
-    public void startGlobalWindown(int startX, int startY, int width, int height,V windowController){
+    public void startGlobalWindown(int startX, int startY, int width, int height,V windowController,boolean defaultCreatCloseIcon){
         if(!VideoWindowManager.getInstance().isWindowShowing()){
             if(VideoWindowManager.getInstance().checkAlertWindowsPermission(getContext())){
                 FrameLayout viewGroup = VideoWindowManager.getInstance().addVideoPlayerToWindow(getContext().getApplicationContext(), startX, startY, width, height);
@@ -1185,21 +1189,24 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         VideoPlayerManager.getInstance().setWindownPlayer(videoPlayer);
                         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT,Gravity.CENTER);
                         viewGroup.addView(videoPlayer,layoutParams);
-                        //添加一个关闭按钮位于播放器右上角
-                        ImageView imageView=new ImageView(getContext());
-                        imageView.setImageResource(R.drawable.ic_video_tiny_close);
-                        FrameLayout.LayoutParams closeParams=new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-                        closeParams.gravity=Gravity.RIGHT;
-                        int toPxInt = VideoUtils.getInstance().dpToPxInt(getContext(), 8f);
-                        closeParams.setMargins(toPxInt,toPxInt,toPxInt,toPxInt);
-                        imageView.setLayoutParams(closeParams);
-                        imageView.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                VideoPlayerManager.getInstance().onReset();
-                            }
-                        });
-                        viewGroup.addView(imageView);
+                        //如果允许创建一个默认的按钮位于悬浮窗右上角，则创建
+                        if(defaultCreatCloseIcon){
+                            //添加一个关闭按钮位于播放器右上角
+                            ImageView imageView=new ImageView(getContext());
+                            imageView.setImageResource(R.drawable.ic_video_tiny_close);
+                            FrameLayout.LayoutParams closeParams=new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+                            closeParams.gravity=Gravity.RIGHT;
+                            int toPxInt = VideoUtils.getInstance().dpToPxInt(getContext(), 8f);
+                            closeParams.setMargins(toPxInt,toPxInt,toPxInt,toPxInt);
+                            imageView.setLayoutParams(closeParams);
+                            imageView.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    VideoPlayerManager.getInstance().onReset();
+                                }
+                            });
+                            viewGroup.addView(imageView);
+                        }
                         //设置自定义悬浮窗窗口控制器
                         if(null!=windowController){
                             videoPlayer.setVideoController(windowController,false);

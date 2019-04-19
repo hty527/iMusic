@@ -95,7 +95,7 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
                     }
                 }else if(id == R.id.video_full_window){
                     if(null!=mOnFuctionListener){
-                        mOnFuctionListener.onStartGlobalWindown(new VideoWindowController(getContext()));
+                        mOnFuctionListener.onStartGlobalWindown(new VideoWindowController(getContext()),true);
                     }
                 }
             }
