@@ -1,5 +1,5 @@
 # **iMusic**
-[BaseMediaPlayer]: https://www.jianshu.com/u/6a64162caadd "简书主页"
+[BaseMediaPlayer]: https://www.jianshu.com/p/9051b96c02f9 "简书主页"
 **简书博文**[BaseMediaPlayer]<br/>
 <br/>
     完整的 网络音乐播放器 和 网络视频播放器 封装库及工程演示
