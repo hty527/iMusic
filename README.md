@@ -237,9 +237,9 @@ ___
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
 #### 功能快照预览:
 <div align="center">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162033.jpg" height="640" width="360">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162121.jpg" height="640" width="360">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162126.jpg" height="640" width="360">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162033.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162121.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162126.jpg" height="480" width="270">
 </div>
 
 #### 下载地址:
