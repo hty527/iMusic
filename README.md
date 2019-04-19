@@ -1,6 +1,6 @@
 # **iMusic**
 [BaseMediaPlayer]: https://www.jianshu.com/u/6a64162caadd "简书主页"
-**博文地址**[BaseMediaPlayer]<br/>
+**简书博文**[BaseMediaPlayer]<br/>
 <br/>
     完整的 网络音乐播放器 和 网络视频播放器 封装库及工程演示
 <br/>
@@ -38,17 +38,6 @@ ___
 * 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
 ## 集成步骤:
 ### 音乐播放器集成步骤:
-
-##### 播放器内部协调工作说明：<br/>
- * MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作
- * MusicPlayerActivity：播放器容器，监听内部播放器状态，负责处理当前正在播放的任务、刷新进度、处理MusicPlayerService抛出交互事件
- * MusicPlayerManager：内部播放器代理人，所有组件与播放器交互或指派任务给播放器，需经此代理人进行
- * MusicJukeBoxView：默认唱片机
- * MusicJukeBoxBackgroundLayout：默认播放器UI背景协调工作者
- * MusicJukeBoxCoverPager：默认唱片机封面
- * MusicAlarmSettingDialog：默认定制闹钟设置
- * MusicPlayerListDialog：默认当前正在播放的列表<br/>
-
 **权限声明：**
 ```
     //网络状态
@@ -133,8 +122,19 @@ ___
 ```
 * 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。<br/>
 
+##### 播放器内部协调工作说明：<br/>
+ * MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作
+ * MusicPlayerActivity：播放器容器，监听内部播放器状态，负责处理当前正在播放的任务、刷新进度、处理MusicPlayerService抛出交互事件
+ * MusicPlayerManager：内部播放器代理人，所有组件与播放器交互或指派任务给播放器，需经此代理人进行
+ * MusicJukeBoxView：默认唱片机
+ * MusicJukeBoxBackgroundLayout：默认播放器UI背景协调工作者
+ * MusicJukeBoxCoverPager：默认唱片机封面
+ * MusicAlarmSettingDialog：默认定制闹钟设置
+ * MusicPlayerListDialog：默认当前正在播放的列表<br/>
+
 [音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md "MusicPlayerManagerAPI介绍"
 **Wiki文档：**[音乐播放器Wiki]
+___
 
 ### 视频播放器集成步骤:
 **权限声明：**
