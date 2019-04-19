@@ -304,4 +304,19 @@ public class VideoUtils {
         }
         return null;
     }
+
+    /**
+     * 检测资源地址是否是直播流
+     * @param dataSource
+     * @return
+     */
+    public boolean isLiveStream(String dataSource) {
+        if(dataSource.isEmpty()) return false;
+        if(dataSource.startsWith("htpp")||dataSource.startsWith("htpps")){
+            if(dataSource.endsWith(".m3u8")||dataSource.endsWith(".hks")||dataSource.endsWith(".rtmp")){
+                return true;
+            }
+        }
+        return false;
+    }
 }

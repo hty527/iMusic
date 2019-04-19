@@ -693,6 +693,10 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                 }
                 Logger.d(TAG,"FIRST-->mMaxVolume:"+mMaxVolume+",mCurrentVolume:"+mCurrentVolume+",mBrightness:"+mBrightness+",GESTURE_SCENE:"+GESTURE_SCENE);
             }
+            //如果是直播类型的，且是快进快退动作，则啥也不做
+            if(GESTURE_SCENE==BaseGestureController.SCENE_PROGRESS&&VideoUtils.getInstance().isLiveStream(mDataSource)){
+                return false;
+            }
             //更新手势控制器UI显示
             mGestureController.updataGestureScene(GESTURE_SCENE);
             //定性为调节进度事件
