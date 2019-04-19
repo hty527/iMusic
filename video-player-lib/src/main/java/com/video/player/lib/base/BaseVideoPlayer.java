@@ -706,12 +706,12 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     if (distanceX >= VideoUtils.getInstance().dpToPxInt(videoController.getContext(), STEP_PROGRESS)) {
                         // 快退，用步长控制改变速度，可微调
                         //5000毫秒一格
-                        mSpeedTime=(mSpeedTime-3000);
+                        mSpeedTime=(mSpeedTime-1000);
                         if(mSpeedTime<1){
                             mSpeedTime=1;
                         }
                     } else if (distanceX <= -VideoUtils.getInstance().dpToPxInt(videoController.getContext(), STEP_PROGRESS)) {
-                        mSpeedTime=(mSpeedTime+3000);
+                        mSpeedTime=(mSpeedTime+1000);
                         if(mSpeedTime>mTotalTime){
                             mSpeedTime=mTotalTime;
                         }
