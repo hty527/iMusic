@@ -140,7 +140,7 @@ ___
         app:video_autoSetCoverController="true"
         app:video_autoSetVideoController="true"/>
 ```
-**支持的自定义属性说明：**
+支持的自定义属性说明：
 ```
     <!--是否自动设置默认控制器-->
     <attr name="video_autoSetVideoController" format="boolean"/>
@@ -149,7 +149,7 @@ ___
     <!--循环播放-->
     <attr name="video_loop" format="boolean"/>
 ```
-**也可以在java代码中动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>**
+也可以在java代码中动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>
 ```
     //frameLayout 你的parent布局
     FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
@@ -216,13 +216,13 @@ ___
 ```
 至此你的播放器具备了基础的视频播放能力,自定义UI和API使用，请参阅读下文。<br/>
 ##### 自定义交互UI的实现
-**支持可自定义的控制器说明：**
+**• 支持可自定义的控制器说明：**
 ```
-    播放器交互控制器基类 作用：播放过程中的缓冲、暂停、开始、全屏、悬浮窗等功能UI交互。<br/>
+    播放器交互控制器基类 作用：播放过程中的缓冲、暂停、开始、全屏、悬浮窗等功能UI交互。
     BaseVideoController
-    播放器封面控制器基类 作用：播放器开始播放前的上层封面图层，如视频的封面样式、时间显示、播放次数等。<br/>
+    播放器封面控制器基类 作用：播放器开始播放前的上层封面图层，如视频的封面样式、时间显示、播放次数等。
     BaseCoverController
-    播放器手势调节控制器基类 作用：播放器打开全屏播放后，识别用户手势调节快进、快退、音量、屏幕亮度等功能UI回显。<br/>
+    播放器手势调节控制器基类 作用：播放器打开全屏播放后，识别用户手势调节快进、快退、音量、屏幕亮度等功能UI回显。
     BaseGestureController
 ```
 **• 重点：实现自定义交互UI，需继承BaseVideoController抽象类，初始化完成后调用BaseVideoPlayer的setVideoController(V videoController);绑定交互UI控制器。<br/>**
@@ -231,11 +231,16 @@ ___
 除了继承BaseVideoController实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能外，还可以直接调用BaseVideoPlayer的公开方法实现以上功能和交互。BaseVideoPlayer的主要公开方法如下:<br/>
 
 [视频播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/VideoPlayerReadme.md "BaseVideoPlayer API 介绍"
-**Wiki文档介绍**[视频播放器Wiki]
+**Wiki文档：**[视频播放器Wiki]
 ___
-### 体验APK下载:
+## iMusic下载体验:
+**强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！**
 ![扫描二维码下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png)
 
-[Fir托管下载](https://fir.im/iMusic)
-</br>
-[或点此下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
+#### 下载地址:
+
+[前往fir下载]: https://fir.im/iMusic "fir下载"
+**fir托管下载：**[前往fir下载]
+
+[从此项目下载APK]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk "apk下载"
+**APK下载：**[从此项目下载APK]
