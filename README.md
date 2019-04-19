@@ -116,12 +116,12 @@ ___
     //开始播放，一个数组，数组元素徐继承BaseMediaInfo类，必须赋值字段请看成员属性注释，入参请看"MusicPlayerManager常用API"
     MusicPlayerManager.getInstance().startPlayMusic(mAdapter.getData(),position);
 ```
-**• 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。**<br/>
+• 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。<br/>
 [音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md "MusicPlayerManager API 介绍"
 **Wiki文档**[音乐播放器Wiki]<br/>
 
 ### 视频播放器集成步骤:
-**• 此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。**
+• 此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。
 ##### 全局初始化
 ```
     VideoPlayerManager.getInstance()
