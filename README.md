@@ -6,6 +6,13 @@
 # 项目介绍
 #### 视频演示:
 ![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/video.gif)
+### 体验APK下载:
+![扫描二维码下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png)
+
+[Fir托管下载](https://fir.im/iMusic)
+</br>
+[或点此下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
+# 功能介绍及集成方式:
 ## 音乐播放器:
 * 完整的音乐播放器功能，包括但不限于：</br>
     • 网络音乐播放</br>
@@ -24,32 +31,7 @@
 已封装成库，集成请参照com.android.imusic.music.activity.MusicPlayerActivity中的使用示例。
 ## 软件截图：
 ![音乐播放器界面](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190417_162126.jpg)
-
-## 视频播放器:
-* 完整的视频播放器功能，包括但不限于：</br>
-    • 列表单例播放</br>
-    • 列表横竖屏切换</br>
-    • 常规横竖屏切换</br>
-    • A activity 跳转至B activity无缝衔接播放</br>
-    • 支持可切换至迷你小窗口播放，支持Activity内拖拽</br>
-    • 支持可切换至全局悬浮窗播放，支持屏幕全局拖拽</br>
-    • 全屏播放下手势识别调节音量、屏幕亮度、快进、快退</br>
-    • 支持完全自定义视频控制器</br>
-    • 支持完全自定义封面控制器</br>
-    • 支持完全自定义手势识别调节器</br>
-    • 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
-已封装成库，音频焦点等细节已处理，简单集成即可使用所有功能。
-## 软件截图：
-![视频播放器界面](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190418_135654.jpg)
-</br>
-### 体验APK下载:
-![扫描二维码下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png)
-
-[Fir托管下载](https://fir.im/iMusic)
-</br>
-[或点此下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk)
-### 集成步骤:
-#### 音乐播放器集成步骤:
+### 音乐播放器集成步骤:
 ##### 播放器内部协调工作说明：<br/>
  * MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作
  * MusicPlayerActivity：播放器容器，监听内部播放器状态，负责处理当前正在播放的任务、刷新进度、处理MusicPlayerService抛出交互事件
@@ -128,7 +110,26 @@
 
 [查看MusicPlayerManager常用API](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md)
 
-#### 视频播放器集成步骤:
+## 视频播放器:
+* 完整的视频播放器功能，包括但不限于：</br>
+    • 列表单例播放</br>
+    • 列表横竖屏切换</br>
+    • 常规横竖屏切换</br>
+    • A activity 跳转至B activity无缝衔接播放</br>
+    • 支持可切换至迷你小窗口播放，支持Activity内拖拽</br>
+    • 支持可切换至全局悬浮窗播放，支持屏幕全局拖拽</br>
+    • 全屏播放下手势识别调节音量、屏幕亮度、快进、快退</br>
+    • 支持完全自定义视频控制器</br>
+    • 支持完全自定义封面控制器</br>
+    • 支持完全自定义手势识别调节器</br>
+    • 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
+已封装成库，音频焦点等细节已处理，简单集成即可使用所有功能。
+## 软件截图：
+![视频播放器界面](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/%E6%88%AA%E5%B1%8F_20190418_135654.jpg)
+</br>
+
+
+### 视频播放器集成步骤:
  * 此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。
 ##### 全局初始化
 ```
@@ -232,57 +233,8 @@
     自定义手势调节控制器基类，需继承此抽象类并实现抽象方法。一般用处：播放器打开全屏播放后，识别用户手势调节快进、快退、音量、屏幕亮度等功能UI回显。
     BaseGestureController
 ```
-<label style="color:red">• 重点：</label>实现自定义交互UI，需继承BaseVideoController抽象类，初始化完成后调用BaseVideoPlayer的setVideoController(V videoController);绑定交互UI。<br/>
-除了关心必须实现的抽象方法外，还有诸如迷你窗口、悬浮窗口、全屏窗口 的特有状态方法，可按照需求实现。
-BaseVideoController设计成了可以直接通过此控制器来实现 切换至Mini小窗口播放、切换至全局悬浮窗口播放、切换至全屏播放等功能，需要调用setOnFuctionListener(OnFuctionListener listener)按照需求实现抽象方法。
-```
-    /**
-     * 这些方法可根据自身的操作交互按照需求实现，非必须实现的的
-     */
-    //设置视频标题内容
-    protected void setTitle(String videoTitle){}
-    //播放地址为空
-    protected void pathInvalid(){}
-    //切换为竖屏方向
-    protected void startHorizontal(){}
-    //切换为小窗口播放
-    protected void startTiny(){}
-    //切换为悬浮窗
-    protected void startGlobalWindow(){}
-    //视频总长度、播放进度、缓冲进度
-    protected void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent){}
-    //缓冲百分比
-    protected void onBufferingUpdate(int percent){}
-    //播放器空白位置单击事件，关注此方法实现控制器的现实和隐藏
-    protected void changeControllerState(int scrrenOrientation,boolean isInterceptIntent){}
-
-   /**
-    * 自定义控制器若需要在交互布局中实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能，请使用父类BaseVideoController的mOnFuctionListener调用对应的抽象方法。
-    */
-    public abstract static class OnFuctionListener{
-        /**
-         * 开启全屏
-         * @param videoController 继承自BaseVideoController的自定义控制器
-         */
-        public void onStartFullScreen(BaseVideoController videoController){}
-        /**
-         * 开启迷你窗口
-         * @param miniWindowController 继承自BaseVideoController的自定义控制器
-         */
-        public void onStartMiniWindow(BaseVideoController miniWindowController){}
-        /**
-         * 开启全局悬浮窗
-         * @param windowController 继承自BaseVideoController的自定义控制器
-         */
-        public void onStartGlobalWindown(BaseVideoController windowController){}
-        //关闭迷你窗口
-        public void onQuiteMiniWindow(){}
-        //打开播放器界面
-        public void onStartActivity(){}
-        //弹射返回
-        public void onBackPressed(){}
-    }
-```
+<label style="color:red">• 重点：</label>实现自定义交互UI，需继承BaseVideoController抽象类，初始化完成后调用BaseVideoPlayer的setVideoController(V videoController);绑定交互UI控制器。<br/>
+除了实现必须的抽象方法外，还有诸如迷你窗口、悬浮窗口、全屏窗口 的特有状态方法，可按照需求实现，详见BaseVideoController成员方法。
 ##### 视频播放所有功能和公开API介绍
 除了继承BaseVideoController实现全屏、迷你窗口、全局悬浮窗、悬浮窗切换至播放器界面、弹射返回等功能外，还可以直接调用BaseVideoPlayer的公开方法实现以上功能和交互。BaseVideoPlayer的主要公开方法如下:<br/>
 [查看BaseVideoPlayer及VideoPlayerManager常用API介绍](https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/VideoPlayerReadme.md)
