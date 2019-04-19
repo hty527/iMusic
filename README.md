@@ -10,7 +10,6 @@ ___
 ![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/video.gif)
 #### 功能概述:
 **1.音乐播放器**
-* 完整的音乐播放器功能，包括但不限于：**</br>
 * 网络音乐播放</br>
 * 本地音乐检索播放</br>
 * 搜索(歌手、专辑、歌曲名)播放</br>
@@ -26,7 +25,6 @@ ___
 * 已对音频输入焦点管理作处理<br/>
 ***
 **2.视频播放器**
-* 完整的视频播放器功能，包括但不限于：</br>
 * 列表单例播放</br>
 * 列表横竖屏切换</br>
 * 常规横竖屏切换</br>
@@ -51,7 +49,7 @@ ___
  * MusicAlarmSettingDialog：默认定制闹钟设置
  * MusicPlayerListDialog：默认当前正在播放的列表<br/>
 
-权限声明：
+**权限声明：**
 ```
     //网络状态
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -139,7 +137,7 @@ ___
 **Wiki文档：**[音乐播放器Wiki]
 
 ### 视频播放器集成步骤:
-权限声明：
+**权限声明：**
 ```
     //网络状态
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
