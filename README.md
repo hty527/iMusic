@@ -50,7 +50,8 @@ ___
  * MusicJukeBoxCoverPager：默认唱片机封面
  * MusicAlarmSettingDialog：默认定制闹钟设置
  * MusicPlayerListDialog：默认当前正在播放的列表<br/>
-**全局初始化：**
+
+**1.全局初始化**
 ```
     //初始化首选项，播放器内部的播放模式、定时模式存储，使用的是SharedPreferences
     MusicUtils.getInstance().initSharedPreferencesConfig(getApplicationContext());
@@ -87,7 +88,7 @@ ___
     //若想要点击通知栏跳转至播放器界面，则必须设置点击通知栏打开的Activity绝对路径
     MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
 ```
-**1.Activity中初始化MusicPlayerService组件，对应生命周期方法调用**
+**2.Activity中初始化MusicPlayerService组件，对应生命周期方法调用**
 ```
     @Override
     protected void onCreate() {
@@ -108,14 +109,14 @@ ___
         VideoWindowManager.getInstance().onDestroy();
     }
 ```
-**2.开始播放任务**
+**3.开始播放任务**
 ```
     //设置播放内部正在处理的数据渠道，可用于主页回显正在“哪个”模块播放音乐，非必须的
     MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_LOCATION);
     //开始播放，一个数组，数组元素徐继承BaseMediaInfo类，必须赋值字段请看成员属性注释，入参请看"MusicPlayerManager常用API"
     MusicPlayerManager.getInstance().startPlayMusic(mAdapter.getData(),position);
 ```
-**• 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。**
+**• 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。<br/>**
 [音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md "MusicPlayerManager API 介绍"
 **Wiki文档**[音乐播放器Wiki]<br/>
 
