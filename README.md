@@ -1,11 +1,16 @@
 # **iMusic**
-### 完整的 音乐播放器 和 视频播放器 封装库及工程演示
-[作者简书主页](https://www.jianshu.com/u/6a64162caadd)
+### 完整的 网络音乐播放器 和 网络视频播放器 封装库及工程演示
+[MusicPlayer And VideoPlayer]: https://www.jianshu.com/u/6a64162caadd "简书主页"
+[Family]: https://github.com/feiyouAndroidTeam "大家庭"
+**博文地址**[MusicPlayer And VideoPlayer]
+**所属组织**[Family]
 
 [所属组织](https://github.com/feiyouAndroidTeam)
 # 项目介绍
 #### 视频演示:
 ![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/video.gif)
+
+
 ### 体验APK下载:
 ![扫描二维码下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png)
 
