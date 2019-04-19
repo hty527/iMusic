@@ -1,4 +1,5 @@
-## MusicPlayerManager 常用API及入参介绍：
+# **音乐播放器Wiki**
+### MusicPlayerManager 常用API及入参介绍：
 ```
     /**
      * 绑定服务，Activity初始化后调用

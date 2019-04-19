@@ -1,4 +1,5 @@
-## BaseVideoPlayer 常用API预览及介绍：
+# **视频播放器Wiki**
+### BaseVideoPlayer 常用API预览及介绍：
 ```
     /**
       * 设置播放资源
@@ -178,7 +179,7 @@
     public void onReset();
 
 ```
-## VideoPlayerManager 常用API预览：
+### VideoPlayerManager 常用API预览：
 
 ```
     /**

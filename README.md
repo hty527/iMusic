@@ -146,7 +146,7 @@ ___
     //悬浮窗
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 ```
-• 此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。
+
 ##### 全局初始化
 ```
     VideoPlayerManager.getInstance()
@@ -238,7 +238,10 @@ ___
         VideoWindowManager.getInstance().onDestroy();
     }
 ```
+• 此库提供了一套默认的播放器和UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController，此处演示默认的播放器继承步骤，更多自定义组件和功能请阅下文。<br/>
+
 至此你的播放器具备了基础的视频播放能力,自定义UI和API使用，请参阅读下文。<br/>
+
 ##### 自定义交互UI的实现
 **• 支持可自定义的控制器说明：**
 ```
@@ -283,7 +286,7 @@ ___
 [前往fir下载]: https://fir.im/iMusic "fir下载"
 **fir托管下载：**[前往fir下载]
 
-[从此项目下载APK]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk "apk下载"
+[仓库下载APK]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk "apk下载"
 **APK下载：**[仓库下载APK]<br/>
 <br/>
 **或者扫描二维码下载<br/>**
