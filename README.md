@@ -24,6 +24,7 @@ ___
 * 对音乐收藏至本地</br>
 * 最近播放记录浏览</br>
 * 已对音频输入焦点管理作处理<br/>
+***
 **2.视频播放器**
 * 完整的视频播放器功能，包括但不限于：</br>
 * 列表单例播放</br>
@@ -49,7 +50,7 @@ ___
  * MusicJukeBoxCoverPager：默认唱片机封面
  * MusicAlarmSettingDialog：默认定制闹钟设置
  * MusicPlayerListDialog：默认当前正在播放的列表<br/>
-全局初始化：
+**全局初始化：**
 ```
     //初始化首选项，播放器内部的播放模式、定时模式存储，使用的是SharedPreferences
     MusicUtils.getInstance().initSharedPreferencesConfig(getApplicationContext());
@@ -86,7 +87,7 @@ ___
     //若想要点击通知栏跳转至播放器界面，则必须设置点击通知栏打开的Activity绝对路径
     MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
 ```
-1.Activity中初始化MusicPlayerService组件，对应生命周期方法调用
+**1.Activity中初始化MusicPlayerService组件，对应生命周期方法调用**
 ```
     @Override
     protected void onCreate() {
@@ -107,7 +108,7 @@ ___
         VideoWindowManager.getInstance().onDestroy();
     }
 ```
-2.开始播放任务
+**2.开始播放任务**
 ```
     //设置播放内部正在处理的数据渠道，可用于主页回显正在“哪个”模块播放音乐，非必须的
     MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_LOCATION);
@@ -117,7 +118,7 @@ ___
  * 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。
 
 [音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md "MusicPlayerManager API 介绍"
-**Wiki文档介绍**[音乐播放器Wiki]<br/>
+**Wiki文档**[音乐播放器Wiki]<br/>
 
 ### 视频播放器集成步骤:
 
@@ -130,7 +131,7 @@ ___
           //全局悬浮窗播放器中打开APP的播放器界面的绝对路径，可选的参数,若需要支持从悬浮窗中跳转到APP的播放器界面，则必须设定此参数
           .setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
 ```
-1.在你的项目中的.xml中引入播放器布局</br>
+**1.在你的项目中的.xml中引入播放器布局</br>**
 ```
     <com.video.player.lib.view.VideoPlayerTrackView
         android:id="@+id/video_track"
@@ -139,7 +140,7 @@ ___
         app:video_autoSetCoverController="true"
         app:video_autoSetVideoController="true"/>
 ```
-支持的自定义属性说明：
+**支持的自定义属性说明：**
 ```
     <!--是否自动设置默认控制器-->
     <attr name="video_autoSetVideoController" format="boolean"/>
@@ -148,7 +149,7 @@ ___
     <!--循环播放-->
     <attr name="video_loop" format="boolean"/>
 ```
-也可以在java代码中动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>
+**也可以在java代码中动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>**
 ```
     //frameLayout 你的parent布局
     FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
@@ -159,7 +160,7 @@ ___
     playerTrackView.setVideoGestureController(gestureController);
     frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
 ```
-2.设置播放器控件的宽高及基本数据设置
+**2.设置播放器控件的宽高及基本数据设置**
 ```
     //播放器控件宽高
     mVideoPlayer = (VideoDetailsPlayerTrackView) findViewById(R.id.video_player);
@@ -174,7 +175,7 @@ ___
     //基本参数设定完毕后即可调用此方法自动开始准备播放
     mVideoPlayer.starPlaytVideo();
 ```
-3.Activity生命周期方法加入
+**3.Activity生命周期方法加入**
 ```
     @Override
     protected void onResume() {
