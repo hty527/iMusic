@@ -237,12 +237,10 @@ ___
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
 #### 功能快照预览:
 <div align="center">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png" height="330" width="190">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png" height="330" width="190">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png" height="330" width="190">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162033.jpg" height="640" width="360">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162121.jpg" height="640" width="360">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162126.jpg" height="640" width="360">
 </div>
-
-![扫描二维码下载](https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png)
 
 #### 下载地址:
 
@@ -251,3 +249,7 @@ ___
 
 [从此项目下载APK]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk "apk下载"
 **APK下载：**[从此项目下载APK]
+或者扫描二维码下载<br/>
+<div align="center">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png" height="500" width="500">
+</div>
