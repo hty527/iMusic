@@ -284,7 +284,7 @@ ___
 **fir托管下载：**[前往fir下载]
 
 [从此项目下载APK]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/apk/iMusic.apk "apk下载"
-**APK下载：**[从此项目下载APK]<br/>
+**APK下载：**[仓库下载APK]<br/>
 <br/>
 **或者扫描二维码下载<br/>**
 <div align="center">
