@@ -103,6 +103,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     private static MusicPlayingChannel mPlayChannel=MusicPlayingChannel.CHANNEL_NET;
     //MediaPlayer的缓冲进度走到100%就不再回调，此变量只纪录当前播放的对象缓冲的进度，方便播放器UI回显时还原缓冲进度
     private int mBufferProgress;
+    //秒针计时器换算
+    private long RUN_TAG=0;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -924,6 +926,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     @Override
     public void onStop() {
         mBufferProgress=0;
+        RUN_TAG=0;
         //还原播放渠道
         setPlayingChannel(MusicPlayingChannel.CHANNEL_NET);
         onSeekTo(0);
@@ -1227,7 +1230,11 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     }
                 }
             }
-            TIMER_DURTION--;
+            //注意这里的秒数，TASK是每个500毫秒执行一次，此处的秒数应当换算为与秒针等同计时
+            if(0==RUN_TAG%2){
+                TIMER_DURTION--;
+            }
+            RUN_TAG++;
         }
     }
 
