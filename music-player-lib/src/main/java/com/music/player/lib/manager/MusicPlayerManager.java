@@ -44,10 +44,12 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
     private static MusicPlayerConfig mMusicPlayerConfig;
     private static String mActivityClassName = null;
 
-    public static synchronized MusicPlayerManager getInstance() {
-        synchronized (MusicPlayerManager.class) {
-            if (null == mInstance) {
-                mInstance = new MusicPlayerManager();
+    public static MusicPlayerManager getInstance() {
+        if(null==mInstance){
+            synchronized (MusicPlayerManager.class) {
+                if (null == mInstance) {
+                    mInstance = new MusicPlayerManager();
+                }
             }
         }
         return mInstance;

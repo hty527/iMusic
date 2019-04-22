@@ -68,10 +68,12 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     //悬浮窗点击展开的目标Activity
     private static String mActivityClassName=null;
 
-    public static synchronized VideoPlayerManager getInstance(){
-        synchronized (VideoPlayerManager.class){
-            if(null==mInstance){
-                mInstance=new VideoPlayerManager();
+    public static VideoPlayerManager getInstance(){
+        if(null==mInstance){
+            synchronized (VideoPlayerManager.class){
+                if(null==mInstance){
+                    mInstance=new VideoPlayerManager();
+                }
             }
         }
         return mInstance;

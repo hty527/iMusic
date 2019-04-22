@@ -35,10 +35,12 @@ public class MediaUtils {
     private List<BaseMediaInfo> mLocationMusic;
     private static boolean mLocalImageEnable;//本地音乐图片获取开关,默认关闭
 
-    public static synchronized MediaUtils getInstance() {
-        synchronized (MediaUtils.class) {
-            if (null == mInstance) {
-                mInstance = new MediaUtils();
+    public static MediaUtils getInstance() {
+        if(null==mInstance){
+            synchronized (MediaUtils.class) {
+                if (null == mInstance) {
+                    mInstance = new MediaUtils();
+                }
             }
         }
         return mInstance;

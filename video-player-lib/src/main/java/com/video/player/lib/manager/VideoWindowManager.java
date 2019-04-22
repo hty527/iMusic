@@ -31,12 +31,14 @@ public class VideoWindowManager {
 	private VideoWindowPlayerGroup mVideoWindowPlayerGroup;
 	private static WindowManager mWindowManager;
 
-    public static synchronized VideoWindowManager getInstance() {
-		synchronized (VideoWindowManager.class) {
-			if (null == mInstance) {
-				mInstance = new VideoWindowManager();
-			}
-		}
+    public static VideoWindowManager getInstance() {
+        if(null==mInstance){
+            synchronized (VideoWindowManager.class) {
+                if (null == mInstance) {
+                    mInstance = new VideoWindowManager();
+                }
+            }
+        }
 		return mInstance;
 	}
 

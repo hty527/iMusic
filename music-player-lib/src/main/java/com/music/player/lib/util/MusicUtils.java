@@ -87,10 +87,12 @@ public class MusicUtils {
     private static SharedPreferences.Editor mEditor;
     private static MusicACache mACache;
 
-    public static synchronized MusicUtils getInstance() {
-        synchronized (MusicUtils.class) {
-            if (null == mInstance) {
-                mInstance = new MusicUtils();
+    public static MusicUtils getInstance() {
+        if(null==mInstance){
+            synchronized (MusicUtils.class) {
+                if (null == mInstance) {
+                    mInstance = new MusicUtils();
+                }
             }
         }
         return mInstance;

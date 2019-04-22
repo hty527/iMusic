@@ -35,12 +35,14 @@ public class MusicWindowManager {
 	private static WindowManager mWindowManager;
     private MusicWindowClickListener mListener;
 
-    public static synchronized MusicWindowManager getInstance() {
-		synchronized (MusicWindowManager.class) {
-			if (null == mInstance) {
-				mInstance = new MusicWindowManager();
-			}
-		}
+    public static MusicWindowManager getInstance() {
+        if(null==mInstance){
+            synchronized (MusicWindowManager.class) {
+                if (null == mInstance) {
+                    mInstance = new MusicWindowManager();
+                }
+            }
+        }
 		return mInstance;
 	}
 

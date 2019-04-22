@@ -35,11 +35,14 @@ public class VideoUtils {
     private static VideoUtils mInstance;
 
     public static synchronized VideoUtils getInstance() {
-        synchronized (VideoUtils.class) {
-            if (null == mInstance) {
-                mInstance = new VideoUtils();
+        if(null==mInstance){
+            synchronized (VideoUtils.class) {
+                if (null == mInstance) {
+                    mInstance = new VideoUtils();
+                }
             }
         }
+
         return mInstance;
     }
 

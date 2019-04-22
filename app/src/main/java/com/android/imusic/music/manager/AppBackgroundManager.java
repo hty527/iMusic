@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AppBackgroundManager {
 
+    private static AppBackgroundManager mInstance;
     private boolean isAppForeground = false;
     private int mActivityStated;
     private final int STATE_OPEN = 0;
@@ -22,11 +23,15 @@ public class AppBackgroundManager {
     private AtomicInteger mMultiStart = new AtomicInteger(0);
     //上一次触发resume的页面
     private String mLastStartActivityName;
-    static final AppBackgroundManager mInstance = new AppBackgroundManager();
-
-    private AppBackgroundManager() {}
 
     public static AppBackgroundManager getInstance() {
+        if(null==mInstance){
+            synchronized (AppBackgroundManager.class) {
+                if (null == mInstance) {
+                    mInstance = new AppBackgroundManager();
+                }
+            }
+        }
         return mInstance;
     }
 

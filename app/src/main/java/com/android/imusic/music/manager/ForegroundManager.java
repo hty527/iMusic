@@ -19,13 +19,15 @@ public class ForegroundManager implements Application.ActivityLifecycleCallbacks
     private int activityAount = 0;
     private boolean isForeground;//是否进入后台
 
-    public static synchronized ForegroundManager getInstance(){
-        synchronized (ForegroundManager.class){
-            if(null==mInstance){
-                mInstance=new ForegroundManager();
+    public static ForegroundManager getInstance(){
+        if(null==mInstance){
+            synchronized (ForegroundManager.class){
+                if(null==mInstance){
+                    mInstance=new ForegroundManager();
+                }
             }
-            return mInstance;
         }
+        return mInstance;
     }
 
     public void init(Application application){
