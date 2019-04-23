@@ -45,24 +45,25 @@ ___
 ```
     //网络状态
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    //震动，悬浮窗按钮拖动至垃圾桶删除时使用到了震动权限
-    <uses-permission android:name="android.permission.VIBRATE" />
-    //锁屏下继续缓冲，防止CPU休眠
+    //锁屏防止CPU休眠。锁屏下继续缓冲，
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    //自定义广播
+
+    /** 以下权限非必须，若开启垃圾桶回收、悬浮窗播放、常驻内存、状态栏控制、锁屏播放控制 等功能，请开启已下权限 */
+    //震动。对应功能：垃圾桶回收播放器使用到了震动权限
+    <uses-permission android:name="android.permission.VIBRATE" />
+    //广播接收。对应功能：锁屏控制器、状态控制播放器、耳机拔出处理
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
-    //悬浮窗权限
+    //悬浮窗。对应功能：悬浮窗迷你播放器
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    //音乐播放器前台服务权限，挂到后台播放时防止进程被杀，起到常驻进程作用
+    //常驻进程。通知栏常驻进程，可防止APP被意外回收
     <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
 ```
 
 **1.全局初始化**
 ```
-    //初始化首选项，播放器内部的播放模式、定时模式存储，使用的是SharedPreferences
+    //初始化首选项
     MusicUtils.getInstance().initSharedPreferencesConfig(getApplicationContext());
-    //全局迷你悬浮窗单击事件
+    //全局悬浮窗播放器单击事件
     MusicWindowManager.getInstance().setOnMusicWindowClickListener(new MusicWindowClickListener() {
 
         @Override
@@ -78,17 +79,19 @@ ___
         @Override
         public void onWindownCancel(View view) {}
     });
-    //音乐播放器初始化设置
+    /**
+     * 音乐播放器初始化设置
+     */
     MusicPlayerConfig config=MusicPlayerConfig.Build()
-        //前台服务锁定开关
+        //是否启用前台服务、常驻进程
         .setLockForeground(true)
-        //悬浮窗自动吸附开关
+        //是否启用悬浮窗自动靠边吸附
         .setWindownAutoScrollToEdge(true)
-        //垃圾桶功能开关
+        //是否启用垃圾桶回收播放器
         .setTrashEnable(true)
-        //锁屏控制器开关
+        //是否启用锁屏控制播放
         .setScreenOffEnable(true)
-        //悬浮窗播放器样式
+        //悬浮窗样式：垃圾桶回收样式，默认时点击悬浮窗右上角X按钮回收
         .setWindownStyle(MusicWindowStyle.TRASH);
     //设置给媒体播放管理者
     MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
@@ -192,7 +195,7 @@ ___
 **2.设置播放器控件的宽高及基本数据设置**
 ```
     //播放器控件宽高
-    mVideoPlayer = (VideoDetailsPlayerTrackView) findViewById(R.id.video_player);
+    mVideoPlayer = (VideoPlayerTrackView) findViewById(R.id.video_player);
     int itemHeight = MusicUtils.getInstance().getScreenWidth(this) * 9 / 16;
     mVideoPlayer.getLayoutParams().height=itemHeight;
     //设置播放资源,setDataSource方法为重载方法，请参阅内部方法说明
@@ -229,6 +232,7 @@ ___
 
     @Override
     public void onBackPressed() {
+        //尝试弹射返回
         if(VideoPlayerManager.getInstance().isBackPressed()){
             super.onBackPressed();
         }
@@ -238,7 +242,7 @@ ___
     protected void onDestroy() {
         super.onDestroy();
         VideoPlayerManager.getInstance().onDestroy();
-        //若你的Activity是MainActivity，则还需要调用这两个方法,其他Activity在销毁时若支持悬浮窗口播放，则勿需调用！
+        //若你的Activity是MainActivity，则需要调用下面这两个方法，其他Activity在销毁时若需支持悬浮窗口播放，则勿需调用下面方法！！！
         VideoPlayerManager.getInstance().onDestroy();
         VideoWindowManager.getInstance().onDestroy();
     }
