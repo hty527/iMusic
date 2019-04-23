@@ -32,6 +32,7 @@ import com.video.player.lib.controller.DefaultCoverController;
 import com.video.player.lib.controller.DefaultVideoController;
 import com.video.player.lib.controller.VideoMiniWindowController;
 import com.video.player.lib.controller.VideoWindowController;
+import com.video.player.lib.listener.VideoEventListener;
 import com.video.player.lib.listener.VideoOrientationListener;
 import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.manager.VideoPlayerManager;
@@ -88,6 +89,8 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     private SensorManager mSensorManager;
     //屏幕方向监听器
     private VideoOrientationListener mOrientationListener;
+    //播放器内部事件监听器
+    private VideoEventListener mEventListener;
     //常规播放器手势代理，配合悬浮窗使用、全屏手势代理，配合手势调节功能使用
     private GestureDetector mGestureDetector,mFullScreenGestureDetector;
     //全屏的手势触摸、迷你小窗口的手势触摸
@@ -425,6 +428,14 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                 mSensorManager=null;mOrientationListener=null;
             }
         }
+    }
+
+    /**
+     * 主播监听播放器内部事件
+     * @param eventListener
+     */
+    public void setVideoEventListener(VideoEventListener eventListener){
+        this.mEventListener=eventListener;
     }
 
     /**
@@ -1423,6 +1434,10 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         }
                         break;
                 }
+                //回调至调用方
+                if(null!=mEventListener){
+                    mEventListener.onPlayerStatus(playerState);
+                }
             }
         });
     }
@@ -1480,6 +1495,10 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     if(null!=mVideoController){
                         mVideoController.onTaskRuntime(totalDurtion,currentDurtion,bufferPercent);
                     }
+                    //回调至调用方
+                    if(null!=mEventListener){
+                        mEventListener.onPlayingPresent(currentDurtion,totalDurtion,bufferPercent);
+                    }
                 }
             });
         }
@@ -1523,5 +1542,6 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
             mSensorManager.unregisterListener(mOrientationListener);
             mSensorManager=null;mOrientationListener=null;
         }
+        mEventListener=null;
     }
 }

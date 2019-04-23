@@ -11,14 +11,12 @@ import android.text.TextUtils;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
-
 import com.video.player.lib.base.BaseVideoPlayer;
 import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.model.VideoPlayerState;
 import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
 import com.video.player.lib.view.VideoTextureView;
-
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Timer;
@@ -27,7 +25,7 @@ import java.util.TimerTask;
 /**
  * TinyHung@Outlook.com
  * 2019/4/8
- * MediaPlayer
+ * VideoPlayerManager 与播放器直接交互代理者
  */
 
 public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.SurfaceTextureListener,
@@ -39,10 +37,13 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     private static VideoPlayerManager mInstance;
     private static Context mContext;
     private MediaPlayer mMediaPlayer;
+    //画面渲染
     private VideoTextureView mTextureView;
     private Surface mSurface;
     private SurfaceTexture mSurfaceTexture;
+    //播放源
     private String mDataSource;
+    //音频焦点管理者
     private static VideoAudioFocusManager mAudioFocusManager;
     //播放器组件监听器
     private static VideoPlayerEventListener mOnPlayerEventListeners;
@@ -222,10 +223,8 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
      */
     private void startTimer() {
         if(null==mPlayTimerTask){
-            Logger.d(TAG,"startTimer");
             mTimer = new Timer();
             mPlayTimerTask = new PlayTimerTask();
-            //立即执行，1000毫秒循环一次
             mTimer.schedule(mPlayTimerTask, 0, 500);
         }
     }
@@ -234,7 +233,6 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
      * 结束计时任务
      */
     private void stopTimer() {
-        Logger.d(TAG,"stopTimer");
         if (null != mPlayTimerTask) {
             mPlayTimerTask.cancel();
             mPlayTimerTask = null;
