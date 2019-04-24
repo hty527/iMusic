@@ -40,7 +40,7 @@ ___
 * 支持完全自定义手势识别调节器</br>
 * 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
 ## 集成步骤:
-### 音乐播放器集成步骤:
+### 1.音乐播放器集成步骤:
 **权限声明：**
 ```
     //网络状态
@@ -48,20 +48,17 @@ ___
     //锁屏防止CPU休眠。锁屏下继续缓冲，
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-    /** 以下权限非必须，若开启垃圾桶回收、悬浮窗播放、常驻内存、状态栏控制、锁屏播放控制 等功能，请开启已下权限 */
-    //震动。对应功能：垃圾桶回收播放器使用到了震动权限
+    /** 以下权限非必须，若开启垃圾桶回收播放器、悬浮窗口播放、常驻内存、状态栏控制、锁屏播放控制、耳机监控 等功能，请开启已下权限 */
+    //垃圾桶回收播放器使用到了震动权限
     <uses-permission android:name="android.permission.VIBRATE" />
-    //广播接收。对应功能：锁屏控制器、状态控制播放器、耳机拔出处理
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
-    //悬浮窗。对应功能：悬浮窗迷你播放器
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    //常驻进程。通知栏常驻进程，可防止APP被意外回收
     <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
 ```
 
 **1.全局初始化**
 ```
-    //初始化首选项
+    //初始化首选项，用以播放器内部保存播放模式设置和定时关闭设置参数
     MusicUtils.getInstance().initSharedPreferencesConfig(getApplicationContext());
     //全局悬浮窗播放器单击事件
     MusicWindowManager.getInstance().setOnMusicWindowClickListener(new MusicWindowClickListener() {
@@ -83,22 +80,29 @@ ___
      * 音乐播放器初始化设置
      */
     MusicPlayerConfig config=MusicPlayerConfig.Build()
+
         //是否启用前台服务、常驻进程
         .setLockForeground(true)
+
         //是否启用悬浮窗自动靠边吸附
         .setWindownAutoScrollToEdge(true)
+
         //是否启用垃圾桶回收播放器
         .setTrashEnable(true)
+
         //是否启用锁屏控制播放
         .setScreenOffEnable(true)
+
         //悬浮窗样式：垃圾桶回收样式，默认时点击悬浮窗右上角X按钮回收
         .setWindownStyle(MusicWindowStyle.TRASH);
+
     //设置给媒体播放管理者
     MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
-    //若想要点击通知栏跳转至播放器界面，则必须设置点击通知栏打开的Activity绝对路径
+
+    //配置点击通知栏跳转至Activity的绝对路径，若支持此功能，则必须设置！
     MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
 ```
-**2.MainActivity中初始化MusicPlayerService组件，对应生命周期方法调用**
+**2.MainActivity中初始化播放器服务组件**
 ```
     @Override
     protected void onCreate() {
@@ -116,7 +120,7 @@ ___
         //解绑服务
         MusicPlayerManager.getInstance().unBindService(MainActivity.this);
         MusicPlayerManager.getInstance().onDestroy();
-        //若集成视频播放器，需调用以下方法
+        //若集成视频播放器，还需要调用以下方法，仅在MainActivity中调用即可
         VideoPlayerManager.getInstance().onDestroy();
         //悬浮窗销毁
         VideoWindowManager.getInstance().onDestroy();
@@ -124,16 +128,23 @@ ___
 ```
 **3.开始播放任务**
 ```
-    //mediaInfos:待播放的数组集，交给内部播放器，position：从这个数组集中的哪个位置开始播放
-    MusicPlayerManager.getInstance().startPlayMusic(List<BaseMediaInfo> mediaInfos,int position);
+    /**
+     * mediaInfos:待播放的数组集，交给内部播放器
+     * position：从这个数组集中的哪个位置开始播放
+     * ? : 你的数据实体必须继承BaseMediaInfo
+     */
+    MusicPlayerManager.getInstance().startPlayMusic(List<?> mediaInfos,int position);
 ```
 
 * 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。如需自定义，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);实现自己的逻辑。<br/>
-
+##### 添加混淆
+```
+-keep class com.music.player.lib.bean.**{*;}
+```
 ##### 播放器内部协调工作说明：<br/>
  * MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作
- * MusicPlayerActivity：播放器容器，监听内部播放器状态，负责处理当前正在播放的任务、刷新进度、处理MusicPlayerService抛出交互事件
- * MusicPlayerManager：内部播放器代理人，所有组件与播放器交互或指派任务给播放器，需经此代理人进行
+ * MusicPlayerActivity：播放器容器，处理MusicPlayerService抛出交互事件,负责用户交互。
+ * MusicPlayerManager：内部播放器代理人，组件与播放器交互需经此代理人访问播放器内部功能。
  * MusicJukeBoxView：默认唱片机
  * MusicJukeBoxBackgroundLayout：默认播放器UI背景协调工作者
  * MusicJukeBoxCoverPager：默认唱片机封面
@@ -144,7 +155,7 @@ ___
 **Wiki文档：**[音乐播放器Wiki]
 ___
 
-### 视频播放器集成步骤:
+### 2.视频播放器集成步骤:
 **权限声明：**
 ```
     //网络状态
@@ -158,9 +169,9 @@ ___
 ##### 全局初始化
 ```
     VideoPlayerManager.getInstance()
-          //循环模式
+          //循环模式开关，在这里配置的循环模式，只是临时的，开始播放时，会被BaseVideoPlayer的属性覆盖！！！，这个循环设置适合在播放过程中调用
           .setLoop(true)
-          //全局悬浮窗播放器中打开APP的播放器界面的绝对路径，可选的参数,若需要支持从悬浮窗中跳转到APP的播放器界面，则必须设定此参数
+          //悬浮窗播放器中跳转到Activity的绝对路径，若需要支持从悬浮窗中跳转到APP的播放器界面，则必须设定此路径
           .setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
 ```
 **1.在你的项目中的.xml中引入播放器布局</br>**
@@ -200,11 +211,11 @@ ___
     mVideoPlayer.getLayoutParams().height=itemHeight;
     //设置播放资源,setDataSource方法为重载方法，请参阅内部方法说明
     mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
-    //是否循环播放，和VideoPlayerManager的setLoop是等效作用
+    //是否循环播放，会覆盖VideoPlayerManager的循环设置
     mVideoPlayer.setLoop(true);
     //可选的设置，如在悬浮窗中需要支持切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置并调用setDataSource的三参方法
     mVideoPlayer.setParamsTag(mVideoParams);
-    //基本参数设定完毕后即可调用此方法自动开始准备播放
+    //开始准备播放
     mVideoPlayer.starPlaytVideo();
 ```
 **3.Activity生命周期方法加入**

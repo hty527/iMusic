@@ -225,7 +225,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
         if(null==mPlayTimerTask){
             mTimer = new Timer();
             mPlayTimerTask = new PlayTimerTask();
-            mTimer.schedule(mPlayTimerTask, 0, 500);
+            mTimer.schedule(mPlayTimerTask, 0, 1000);
         }
     }
 
@@ -280,7 +280,8 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
         public void run() {
             if(null!=mOnPlayerEventListeners){
                 if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
-                    mOnPlayerEventListeners.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition(),mBufferPercent);
+                    //至于为什么在CurrentPosition上+500毫秒，是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
+                    mOnPlayerEventListeners.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition()+500,mBufferPercent);
                 }else{
                     mOnPlayerEventListeners.onTaskRuntime(-1,-1,mBufferPercent);
                 }

@@ -858,7 +858,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     onPlayerEventListener.onPlayMusiconInfo(musicInfo,mCurrentPlayIndex);
                     if(null!=mMediaPlayer){
                         try {
-                            onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition(),TIMER_DURTION,mBufferProgress);
+                            //至于为什么在CurrentPosition上+500毫秒，是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
+                            onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition()+500,TIMER_DURTION,mBufferProgress);
                         }catch (RuntimeException e){
                             e.printStackTrace();
                             onPlayerEventListener.onTaskRuntime(0,0,TIMER_DURTION,mBufferProgress);
@@ -1183,7 +1184,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             mTimer = new Timer();
             mPlayTimerTask = new PlayTimerTask();
             //立即执行，1000毫秒循环一次
-            mTimer.schedule(mPlayTimerTask, 0, 500);
+            mTimer.schedule(mPlayTimerTask, 0, 1000);
         }
     }
 
@@ -1213,7 +1214,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             if(TIMER_DURTION<=0){
                 for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
                     if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
-                        onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition(),TIMER_DURTION,mBufferProgress);
+                        //至于为什么在CurrentPosition上+500毫秒，是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
+                        onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition()+500,TIMER_DURTION,mBufferProgress);
                     }else{
                         onPlayerEventListener.onTaskRuntime(-1,-1,TIMER_DURTION,mBufferProgress);
                     }
@@ -1224,7 +1226,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             if(null!= mOnPlayerEventListeners){
                 for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
                     if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
-                        onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition(),TIMER_DURTION,mBufferProgress);
+                        onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition()+500,TIMER_DURTION,mBufferProgress);
                     }else{
                         onPlayerEventListener.onTaskRuntime(-1,-1,TIMER_DURTION,mBufferProgress);
                     }
