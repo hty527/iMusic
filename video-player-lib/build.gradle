@@ -18,16 +18,31 @@ android {
     }
 }
 
+//打包main目录下代码和资源的 task
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+//配置需要上传到maven仓库的文件
+artifacts {
+    archives androidSourcesJar
+}
+
 uploadArchives{
-    repositories.mavenDeployer{
-        // 配置本地仓库路径，这里是项目的根目录下的maven目录中
-        repository(url: uri('../maven'))
-        // 唯一标识 一般为模块包名 也可其他
-        pom.groupId = "com.android.imusic.lib"
-        // 项目名称（一般为模块名称 也可其他
-        pom.artifactId = "video-player-lib"
-        // 发布的版本号
-        pom.version = "1.0.0"
+    repositories {
+        mavenDeployer {
+            //指定maven的仓库url，IP+端口+目录
+            repository(url: "http://localhost:8081/nexus/content/repositories/releases/") {
+                //填写你的Nexus的账号密码
+                authentication(userName: "admin", password: "123456")
+            }
+            // 唯一标识 一般为模块包名 也可其他
+            pom.groupId = "com.android.imusic.lib"
+            // 项目名称（一般为模块名称 也可其他
+            pom.artifactId = "video-player-lib"
+            // 发布的版本号
+            pom.version = "1.0.0"
+        }
     }
 }
 

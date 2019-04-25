@@ -70,11 +70,11 @@ android {
             keyPassword "123456"
         }
     }
-//    repositories {
-//        flatDir {
-//            dirs 'libs'
-//        }
-//    }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 dependencies {
@@ -90,9 +90,6 @@ dependencies {
     implementation 'com.tencent.bugly:crashreport:latest.release'
     //包名+库名
     implementation 'com.android.imusic.lib:music-player-lib:1.0.0'
-    //包名+库名
+    ///包名+库名
     implementation 'com.android.imusic.lib:video-player-lib:1.0.0'
-    //是用下面依赖方式，需开启上面repositories注释的内容
-//    implementation(name: 'music-player-lib-1.0.0', ext: 'aar')
-//    implementation(name: 'video-player-lib-1.0.0', ext: 'aar')
 }

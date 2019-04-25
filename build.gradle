@@ -19,9 +19,9 @@ allprojects {
         google()
         jcenter()
         //本地Maven仓库地址,取决于你的磁盘目录
-        maven {
-            url 'file://D://AndroidStudioProjects//IMusic//maven'
-        }
+        maven { url 'file://D://AndroidStudioProjects//IMusic//maven' }
+        //本地局域网仓库地址
+        maven { url 'http://localhost:8081/nexus/content/repositories/releases/' }
     }
 }
 
