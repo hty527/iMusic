@@ -1,14 +1,17 @@
 apply plugin: 'com.android.application'
 
+def minSdk = android.defaultConfig.minSdkVersion
+
 android {
-    compileSdkVersion 26
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.android.imusic"
-        minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 10000
-        versionName "1.0.0"
+        applicationId rootProject.ext.imusic.applicationId
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.imusic.versionCode
+        versionName rootProject.ext.imusic.versionName
     }
 
     buildTypes {
@@ -26,6 +29,33 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    //打包渠道【配置
+    flavorDimensions "app", "type"
+    productFlavors {
+        //iMusic
+        imusic {
+            manifestPlaceholders = [
+                    scheme  : "imusic"
+            ]
+            applicationId rootProject.ext.imusic.applicationId
+            signingConfig signingConfigs.debug
+            versionCode rootProject.ext.imusic.versionCode
+            versionName rootProject.ext.imusic.versionName
+            dimension "app"
+        }
+        //开发版
+        flavorDevelop {
+            dimension "type"
+            minSdkVersion minSdk
+        }
+
+        //正式版
+        flavorPublish{
+            dimension "type"
+            minSdkVersion minSdk
+        }
+    }
+
     signingConfigs {
         debug {
             storeFile file('music.keystore')
@@ -40,6 +70,11 @@ android {
             keyPassword "123456"
         }
     }
+//    repositories {
+//        flatDir {
+//            dirs 'libs'
+//        }
+//    }
 }
 
 dependencies {
@@ -52,7 +87,12 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
     implementation 'com.google.android:flexbox:0.3.1'
-    compile 'com.tencent.bugly:crashreport:latest.release'
-    implementation project(':music-player-lib')
-    implementation project(':video-player-lib')
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    //包名+库名
+    implementation 'com.android.imusic.lib:music-player-lib:1.0.0'
+    //包名+库名
+    implementation 'com.android.imusic.lib:video-player-lib:1.0.0'
+    //是用下面依赖方式，需开启上面repositories注释的内容
+//    implementation(name: 'music-player-lib-1.0.0', ext: 'aar')
+//    implementation(name: 'video-player-lib-1.0.0', ext: 'aar')
 }
