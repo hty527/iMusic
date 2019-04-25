@@ -1,0 +1,181 @@
+2019-04-25 16:47:10,687+0800 INFO  [jetty-main-1]  org.sonatype.nexus.events.EventSubscriberHost - Initialized
+2019-04-25 16:47:10,689+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - 
+-------------------------------------------------
+
+Initializing Nexus Repository Manager OSS 2.14.8-01
+
+-------------------------------------------------
+2019-04-25 16:47:10,690+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Activating locally installed plugins...
+2019-04-25 16:47:11,277+0800 INFO  [jetty-main-1]  com.sun.jersey.server.impl.application.WebApplicationImpl - Initiating Jersey application, version 'Jersey: 1.17.1 02/28/2013 12:47 PM'
+2019-04-25 16:47:13,024+0800 INFO  [jetty-main-1]  org.sonatype.nexus.kazuki.KazukiPlugin - Kazuki version: 0.1.8
+2019-04-25 16:47:14,652+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryTypeRegistry - Registered Repository type RepositoryType=(org.sonatype.nexus.proxy.repository.ShadowRepository:nuget-shadow).
+2019-04-25 16:47:14,652+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryTypeRegistry - Registered Repository type RepositoryType=(org.sonatype.nexus.proxy.repository.GroupRepository:nuget-group).
+2019-04-25 16:47:14,652+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryTypeRegistry - Registered Repository type RepositoryType=(org.sonatype.nexus.proxy.repository.Repository:nuget-proxy).
+2019-04-25 16:47:14,754+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryTypeRegistry - Registered Repository type RepositoryType=(org.sonatype.nexus.proxy.repository.GroupRepository:npm-group).
+2019-04-25 16:47:14,755+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryTypeRegistry - Registered Repository type RepositoryType=(org.sonatype.nexus.proxy.repository.Repository:npm-proxy).
+2019-04-25 16:47:14,755+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryTypeRegistry - Registered Repository type RepositoryType=(org.sonatype.nexus.proxy.repository.Repository:npm-hosted).
+2019-04-25 16:47:15,384+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryTypeRegistry - Registered Repository type RepositoryType=(org.sonatype.nexus.proxy.repository.GroupRepository:rubygems-group).
+2019-04-25 16:47:15,384+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryTypeRegistry - Registered Repository type RepositoryType=(org.sonatype.nexus.proxy.repository.Repository:rubygems-proxy).
+2019-04-25 16:47:15,384+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryTypeRegistry - Registered Repository type RepositoryType=(org.sonatype.nexus.proxy.repository.Repository:rubygems-hosted).
+2019-04-25 16:47:16,421+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryTypeRegistry - Registered Repository type RepositoryType=(org.sonatype.nexus.proxy.repository.WebSiteRepository:site).
+2019-04-25 16:47:16,951+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-rutauth-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,951+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-restlet1x-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,951+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-webresources-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,951+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-groovy-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,951+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-maven-bridge-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,951+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-wonderland-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-yum-repository-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-orient-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "com.sonatype.nexus.plugins:nexus-nuget-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-capabilities-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-npm-repository-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "com.sonatype.nexus.plugins:nexus-iq-repository-oss-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "com.sonatype.nexus.plugins:nexus-migrationagent-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-indexer-lucene-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-kazuki-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-site-repository-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-ldap-realm-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-plugin-console-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "com.sonatype.nexus.plugins:nexus-analytics-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,952+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-timeline-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,999+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-ui-extjs3-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,999+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-siesta-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:16,999+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-rrb-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:17,000+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-archetype-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:17,001+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-atlas-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:17,002+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-ruby-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:17,003+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "com.sonatype.nexus.plugins:nexus-outreach-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:17,004+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-logging-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:17,005+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-crypto-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:17,006+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-h2-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:17,007+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-content-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:17,008+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Plugin manager request "ACTIVATE" on plugin "org.sonatype.nexus.plugins:nexus-lvo-plugin:2.14.8-01" was successful.
+2019-04-25 16:47:17,009+0800 INFO  [jetty-main-1]  org.sonatype.nexus.events.EventSubscriberHost - Starting
+2019-04-25 16:47:17,043+0800 INFO  [jetty-main-1]  org.sonatype.nexus.timeline.DefaultNexusTimeline - Initializing Nexus Timeline...
+2019-04-25 16:47:17,045+0800 INFO  [jetty-main-1]  org.sonatype.nexus.timeline.DefaultNexusTimeline - Starting Nexus Timeline...
+2019-04-25 16:47:17,197+0800 INFO  [jetty-main-1]  org.sonatype.timeline.internal.DefaultTimeline - Started Timeline...
+2019-04-25 16:47:17,646+0800 INFO  [jetty-main-1]  org.sonatype.nexus.apachehttpclient.Hc4ProviderImpl - Started (connectionPoolMaxSize 200, connectionPoolSize 20, connectionPoolIdleTime 30000 ms, connectionPoolTimeout 30000 ms, keepAliveMaxDuration 30000 ms)
+2019-04-25 16:47:17,868+0800 INFO  [jetty-main-1]  org.sonatype.nexus.orient.DatabaseServerImpl - OrientDB version: 2.1.14
+2019-04-25 16:47:17,880+0800 INFO  [jetty-main-1]  com.orientechnologies.orient.server.OServer - OrientDB Server v2.1.14 is starting up...
+2019-04-25 16:47:17,885+0800 INFO  [jetty-main-1]  com.orientechnologies.orient.server.OServer - Databases directory: E:\Maven²Ö¿â´î½¨\Nexus\nexus-2.14.8-01-bundle\sonatype-work\nexus\db
+2019-04-25 16:47:17,892+0800 INFO  [jetty-main-1]  com.orientechnologies.orient.server.handler.OJMXPlugin - JMX plugin installed and active: profilerManaged=true
+2019-04-25 16:47:17,893+0800 INFO  [jetty-main-1]  com.orientechnologies.orient.server.OServer - OrientDB Server v2.1.14 is active.
+2019-04-25 16:47:17,893+0800 INFO  [jetty-main-1]  org.sonatype.nexus.orient.DatabaseServerImpl - Activated
+2019-04-25 16:47:17,893+0800 INFO  [jetty-main-1]  org.sonatype.nexus.configuration.application.DefaultNexusConfiguration - Loading Nexus Configuration...
+2019-04-25 16:47:17,903+0800 INFO  [jetty-main-1]  org.sonatype.nexus.configuration.source.StaticConfigurationSource - Configuration loaded successfully.
+2019-04-25 16:47:17,903+0800 WARN  [jetty-main-1]  org.sonatype.nexus.configuration.source.FileConfigurationSource - No configuration file in place, copying the default one and continuing with it.
+2019-04-25 16:47:17,969+0800 INFO  [jetty-main-1]  org.sonatype.nexus.configuration.source.FileConfigurationSource - Configuration loaded successfully.
+2019-04-25 16:47:17,983+0800 INFO  [jetty-main-1]  org.sonatype.nexus.configuration.source.FileConfigurationSource - Nexus configuration validated successfully.
+2019-04-25 16:47:18,007+0800 INFO  [jetty-main-1]  org.sonatype.nexus.configuration.application.DefaultNexusConfiguration - Applying Nexus Configuration...
+2019-04-25 16:47:18,011+0800 INFO  [jetty-main-1]  org.sonatype.security.configuration.source.FileSecurityConfigurationSource - Loading Security configuration from E:\Maven²Ö¿â´î½¨\Nexus\nexus-2.14.8-01-bundle\nexus-2.14.8-01\..\sonatype-work\nexus\conf\security-configuration.xml
+2019-04-25 16:47:18,015+0800 INFO  [jetty-main-1]  org.apache.shiro.cache.ehcache.EhCacheManager - Cache with name 'XmlAuthenticatingRealm.authorizationCache' does not yet exist.  Creating now.
+2019-04-25 16:47:18,016+0800 INFO  [jetty-main-1]  org.apache.shiro.cache.ehcache.EhCacheManager - Added EhCache named [XmlAuthenticatingRealm.authorizationCache]
+2019-04-25 16:47:18,016+0800 INFO  [jetty-main-1]  org.apache.shiro.cache.ehcache.EhCacheManager - Cache with name 'XmlAuthorizingRealm.authorizationCache' does not yet exist.  Creating now.
+2019-04-25 16:47:18,016+0800 INFO  [jetty-main-1]  org.apache.shiro.cache.ehcache.EhCacheManager - Added EhCache named [XmlAuthorizingRealm.authorizationCache]
+2019-04-25 16:47:18,033+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.attributes.DefaultLSAttributeStorage - Default FS AttributeStorage in place, using JacksonJSON marshaller. 
+2019-04-25 16:47:18,372+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryRegistry - Added repository "Central" [id=central][contentClass=Maven2][mainFacet=org.sonatype.nexus.proxy.maven.MavenProxyRepository]
+2019-04-25 16:47:18,541+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryRegistry - Added repository "Apache Snapshots" [id=apache-snapshots][contentClass=Maven2][mainFacet=org.sonatype.nexus.proxy.maven.MavenProxyRepository]
+2019-04-25 16:47:18,689+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryRegistry - Added repository "Releases" [id=releases][contentClass=Maven2][mainFacet=org.sonatype.nexus.proxy.maven.MavenHostedRepository]
+2019-04-25 16:47:18,847+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryRegistry - Added repository "Snapshots" [id=snapshots][contentClass=Maven2][mainFacet=org.sonatype.nexus.proxy.maven.MavenHostedRepository]
+2019-04-25 16:47:19,000+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryRegistry - Added repository "3rd party" [id=thirdparty][contentClass=Maven2][mainFacet=org.sonatype.nexus.proxy.maven.MavenHostedRepository]
+2019-04-25 16:47:19,011+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryRegistry - Added repository "Central M1 shadow" [id=central-m1][contentClass=Maven1][mainFacet=org.sonatype.nexus.proxy.maven.MavenShadowRepository]
+2019-04-25 16:47:19,042+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.registry.DefaultRepositoryRegistry - Added repository "Public Repositories" [id=public][contentClass=Maven2][mainFacet=org.sonatype.nexus.proxy.repository.GroupRepository]
+2019-04-25 16:47:19,043+0800 INFO  [jetty-main-1]  org.sonatype.scheduling.DefaultScheduler - Initializing Scheduler...
+2019-04-25 16:47:19,043+0800 INFO  [jetty-main-1]  org.sonatype.nexus.scheduling.internal.DefaultTaskConfigManager - 0 task(s) to load.
+2019-04-25 16:47:19,043+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - This is 1st start of new Nexus instance.
+2019-04-25 16:47:19,043+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Nexus Work Directory : E:\Maven²Ö¿â´î½¨\Nexus\nexus-2.14.8-01-bundle\sonatype-work\nexus
+2019-04-25 16:47:19,043+0800 INFO  [jetty-main-1]  org.sonatype.nexus.NxApplication - Started Nexus Repository Manager OSS 2.14.8-01
+2019-04-25 16:47:19,358+0800 INFO  [ar-7-thread-2] *TASK org.sonatype.nexus.proxy.maven.routing.internal.ManagerImpl - Updated and published prefix file of "Snapshots" [id=snapshots]
+2019-04-25 16:47:19,360+0800 INFO  [ar-7-thread-1] *TASK org.sonatype.nexus.proxy.maven.routing.internal.ManagerImpl - Updated and published prefix file of "3rd party" [id=thirdparty]
+2019-04-25 16:47:19,358+0800 INFO  [ar-7-thread-4] *TASK org.sonatype.nexus.proxy.maven.routing.internal.ManagerImpl - Updated and published prefix file of "Releases" [id=releases]
+2019-04-25 16:47:19,825+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Starting Nuget DB migration.
+2019-04-25 16:47:19,826+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Starting Nuget DB migration to version 1
+2019-04-25 16:47:19,840+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Completed Nuget DB migration to version 1
+2019-04-25 16:47:19,840+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Starting Nuget DB migration to version 2
+2019-04-25 16:47:19,842+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Completed Nuget DB migration to version 2
+2019-04-25 16:47:19,842+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Starting Nuget DB migration to version 3
+2019-04-25 16:47:19,843+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Completed Nuget DB migration to version 3
+2019-04-25 16:47:19,843+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Starting Nuget DB migration to version 4
+2019-04-25 16:47:19,848+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Completed Nuget DB migration to version 4
+2019-04-25 16:47:19,849+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Starting Nuget DB migration to version 5
+2019-04-25 16:47:19,851+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Completed Nuget DB migration to version 5
+2019-04-25 16:47:19,851+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Starting Nuget DB migration to version 6
+2019-04-25 16:47:19,853+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Completed Nuget DB migration to version 6
+2019-04-25 16:47:19,853+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Starting Nuget DB migration to version 7
+2019-04-25 16:47:19,854+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Completed Nuget DB migration to version 7
+2019-04-25 16:47:19,854+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Starting Nuget DB migration to version 8
+2019-04-25 16:47:19,855+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Completed Nuget DB migration to version 8
+2019-04-25 16:47:19,855+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Starting Nuget DB migration to version 9
+2019-04-25 16:47:19,856+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Completed Nuget DB migration to version 9
+2019-04-25 16:47:19,856+0800 INFO  [jetty-main-1]  com.sonatype.nexus.plugins.nuget.odata.NugetODataGalleryMigrator - Completed Nuget DB migration.
+2019-04-25 16:47:19,860+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.targets.DefaultTargetRegistryEventInspector - Adding default target for site content class
+2019-04-25 16:47:19,860+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.targets.DefaultTargetRegistryEventInspector - Adding default target for npm content class
+2019-04-25 16:47:19,860+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.targets.DefaultTargetRegistryEventInspector - Adding default target for nuget content class
+2019-04-25 16:47:19,860+0800 INFO  [jetty-main-1]  org.sonatype.nexus.proxy.targets.DefaultTargetRegistryEventInspector - Adding default target for rubygems content class
+2019-04-25 16:47:19,861+0800 INFO  [jetty-main-1]  org.sonatype.nexus.configuration.application.DefaultNexusConfiguration - Applying Nexus Configuration due to changes in [Repository Target Registry]...
+2019-04-25 16:47:20,053+0800 INFO  [jetty-main-1]  org.sonatype.nexus.webapp.WebappBootstrap - Initialized
+2019-04-25 16:47:20,274+0800 INFO  [jetty-main-1]  org.sonatype.nexus.rest.NexusApplication_UriMatching - Strict URI matching: true
+2019-04-25 16:47:20,350+0800 INFO  [jetty-main-1]  org.sonatype.nexus.configuration.ModelUtils - Loading model E:\Maven²Ö¿â´î½¨\Nexus\nexus-2.14.8-01-bundle\sonatype-work\nexus\conf\lvo-plugin.xml
+2019-04-25 16:47:20,370+0800 INFO  [jetty-main-1]  org.sonatype.nexus.configuration.ModelUtils - Loading model E:\Maven²Ö¿â´î½¨\Nexus\nexus-2.14.8-01-bundle\sonatype-work\nexus\conf\ldap.xml
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule - Resources:
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/analytics/events
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/analytics/settings
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/atlas/security-diagnostic
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/atlas/support-zip
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/atlas/system-information
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/capabilities
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/capabilities/stores
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/capabilities/types
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/clm
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/clm/applications
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/clm/firewall
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/healthcheck/gaDetails
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/healthcheck/gavDetails
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/healthcheck/healthCheckEula
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/healthcheck/healthCheckInfo
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/healthcheck/healthCheckStatus
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/healthcheck/healthCheckSummary/{repositoryId}/{path:.*}
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/logging/log
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/logging/loggers
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/migrationagent/configuration
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/migrationagent/repository
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/migrationagent/repository-changelog
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/migrationagent/repository-content
+2019-04-25 16:47:20,504+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/migrationagent/repository-migration
+2019-04-25 16:47:20,505+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/migrationagent/status
+2019-04-25 16:47:20,505+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/wonderland/authenticate
+2019-04-25 16:47:20,505+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/wonderland/download
+2019-04-25 16:47:20,505+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   /service/siesta/wonderland/settings
+2019-04-25 16:47:20,518+0800 INFO  [ar-7-thread-5] *TASK org.sonatype.nexus.proxy.storage.remote.httpclient.HttpClientRemoteStorage - Initializing remote transport for proxy repository "Apache Snapshots" [id=apache-snapshots]...
+2019-04-25 16:47:20,566+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule - Components:
+2019-04-25 16:47:20,566+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.nexus.plugins.capabilities.internal.rest.CapabilityNotFoundExceptionMapper
+2019-04-25 16:47:20,566+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.nexus.plugins.siesta.AuthorizationExceptionMapper
+2019-04-25 16:47:20,566+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.nexus.plugins.siesta.ErrorStatusRuntimeExceptionMapper
+2019-04-25 16:47:20,567+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.nexus.plugins.siesta.InvalidConfigurationExceptionMapper
+2019-04-25 16:47:20,567+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.nexus.plugins.siesta.NoSuchRepositoryExceptionMapper
+2019-04-25 16:47:20,567+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.sisu.siesta.jackson.JacksonProvider
+2019-04-25 16:47:20,567+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.sisu.siesta.server.internal.mappers.BadRequestExceptionMapper
+2019-04-25 16:47:20,567+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.sisu.siesta.server.internal.mappers.ConstraintViolationExceptionMapper
+2019-04-25 16:47:20,568+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.sisu.siesta.server.internal.mappers.InvalidObjectExceptionMapper
+2019-04-25 16:47:20,568+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.sisu.siesta.server.internal.mappers.ObjectNotFoundExceptionMapper
+2019-04-25 16:47:20,568+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.sisu.siesta.server.internal.mappers.ThrowableExceptionMapper
+2019-04-25 16:47:20,568+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.sisu.siesta.server.internal.mappers.ValidationErrorsExceptionMapper
+2019-04-25 16:47:20,568+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.sisu.siesta.server.internal.mappers.WebApplicationExceptionMapper
+2019-04-25 16:47:20,569+0800 INFO  [jetty-main-1]  org.sonatype.nexus.plugins.siesta.SiestaModule -   org.sonatype.sisu.siesta.server.internal.mappers.WebApplicationMessageExceptionMapper
+2019-04-25 16:47:20,746+0800 INFO  [ar-7-thread-3] *TASK org.sonatype.nexus.proxy.storage.remote.httpclient.HttpClientRemoteStorage - Initializing remote transport for proxy repository "Central" [id=central]...
+2019-04-25 16:47:21,057+0800 INFO  [jetty-main-1]  org.sonatype.nexus.webresources.internal.WebResourceServiceImpl - Discovered 1978 resources
+2019-04-25 16:47:21,057+0800 INFO  [jetty-main-1]  org.sonatype.nexus.webresources.internal.WebResourceServlet - Max-age: 30 days (2592000 seconds)
+2019-04-25 16:47:21,076+0800 INFO  [jetty-main-1]  org.sonatype.nexus.bootstrap.jetty.InstrumentedSelectChannelConnector - Metrics enabled
+2019-04-25 16:47:21,098+0800 INFO  [jetty-main-1]  org.eclipse.jetty.server.AbstractConnector - Started InstrumentedSelectChannelConnector@0.0.0.0:8081
+2019-04-25 16:47:21,098+0800 INFO  [jetty-main-1]  org.sonatype.nexus.bootstrap.jetty.JettyServer - Running
+2019-04-25 16:47:21,098+0800 INFO  [WrapperListener_start_runner]  org.sonatype.nexus.bootstrap.jetty.JettyServer - Started
+2019-04-25 16:47:21,447+0800 INFO  [ar-7-thread-3] *TASK org.sonatype.nexus.proxy.maven.routing.internal.ManagerImpl - Updated and published prefix file of "Public Repositories" [id=public]
+2019-04-25 17:00:17,752+0800 INFO  [qtp1975791417-53]  org.apache.shiro.nexus5727.FixedDefaultWebSessionManager - Global session timeout: 1800000 ms
+2019-04-25 17:00:17,752+0800 INFO  [qtp1975791417-53]  org.apache.shiro.session.mgt.AbstractValidatingSessionManager - Enabling session validation scheduler...
+2019-04-25 17:00:17,776+0800 INFO  [qtp1975791417-53] *UNKNOWN org.sonatype.nexus.velocity.VelocityEngineProvider - Creating Nexus VelocityEngine
+2019-04-25 17:00:18,243+0800 WARN  [qtp1975791417-54] *UNKNOWN org.sonatype.security.model.source.FileModelConfigurationSource - No configuration file in place, copying the default one and continuing with it.
+2019-04-25 17:00:18,245+0800 INFO  [qtp1975791417-54] *UNKNOWN org.sonatype.security.model.source.FileModelConfigurationSource - Loading security configuration from: E:\Maven²Ö¿â´î½¨\Nexus\nexus-2.14.8-01-bundle\nexus-2.14.8-01\..\sonatype-work\nexus\conf\security.xml
+2019-04-25 17:00:18,317+0800 INFO  [qtp1975791417-48] *UNKNOWN /nexus - nexus: [Noelios Restlet Engine] - Attaching application: org.sonatype.nexus.rest.NexusApplication@d8528c8 to URI: /nexus/service/local
+2019-04-25 17:10:52,887+0800 INFO  [qtp1975791417-48] *UNKNOWN org.apache.shiro.cache.ehcache.EhCacheManager - Using existing EHCache named [shiro-activeSessionCache]
+2019-04-25 18:00:17,780+0800 INFO  [SessionValidationThread-1]  org.apache.shiro.session.mgt.AbstractValidatingSessionManager - Validating all active sessions...
+2019-04-25 18:00:17,782+0800 INFO  [SessionValidationThread-1]  org.apache.shiro.session.mgt.AbstractValidatingSessionManager - Finished session validation.  No sessions were stopped.

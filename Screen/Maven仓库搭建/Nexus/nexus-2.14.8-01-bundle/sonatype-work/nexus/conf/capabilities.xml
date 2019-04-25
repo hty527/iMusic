@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<capabilitiesConfiguration>
+  <version>2.0.0</version>
+  <capabilities>
+    <capability>
+      <version>1</version>
+      <id>00001b72bf6677a2</id>
+      <notes>Automatically added on Thu Apr 25 16:47:17 CST 2019</notes>
+      <enabled>false</enabled>
+      <typeId>analytics.collection</typeId>
+      <properties>
+        <property>
+          <key>hostId</key>
+          <value>d3851282-0dd4-4df3-aaf8-4c3eaafebe4e</value>
+        </property>
+        <property>
+          <key>salt</key>
+          <value>kE4TQ1WeuATvP4o8bEaGwFKJBG3U3dn00vPqytr9p3nD</value>
+        </property>
+      </properties>
+    </capability>
+    <capability>
+      <version>1</version>
+      <id>00001b72bf6677a3</id>
+      <notes>Automatically added on Thu Apr 25 16:47:17 CST 2019</notes>
+      <enabled>false</enabled>
+      <typeId>analytics.autosubmit</typeId>
+    </capability>
+    <capability>
+      <version>1</version>
+      <id>00001b72bf6677a4</id>
+      <notes>Automatically added on Thu Apr 25 16:47:17 CST 2019</notes>
+      <typeId>OutreachManagementCapability</typeId>
+      <properties>
+        <property>
+          <key>baseUrl</key>
+          <value>http://links.sonatype.com/products/nexus/outreach</value>
+        </property>
+      </properties>
+    </capability>
+    <capability>
+      <version>1</version>
+      <id>00001b72bf6677a5</id>
+      <notes>Automatically added on Thu Apr 25 16:47:17 CST 2019</notes>
+      <typeId>OutreachMarkerCapability</typeId>
+    </capability>
+    <capability>
+      <version>1</version>
+      <id>00001b72bf6677a6</id>
+      <notes>Automatically added on Thu Apr 25 16:47:17 CST 2019</notes>
+      <typeId>yum</typeId>
+      <properties>
+        <property>
+          <key>maxNumberParallelThreads</key>
+          <value>10</value>
+        </property>
+        <property>
+          <key>createrepoPath</key>
+          <value>createrepo</value>
+        </property>
+        <property>
+          <key>mergerepoPath</key>
+          <value>mergerepo</value>
+        </property>
+      </properties>
+    </capability>
+  </capabilities>
+</capabilitiesConfiguration>

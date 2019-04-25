@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    DO NOT EDIT - This file aggregates log configuration from Nexus and its plugins, and is automatically generated.
+-->
+
+<configuration scan='true'>
+  <property file='${nexus.log-config-dir}/logback.properties'/>
+  <include file='${nexus.log-config-dir}/logback-nexus.xml'/>
+</configuration>
