@@ -26,7 +26,7 @@
             android:textColor="#000000"
             android:textStyle="bold"
             android:layout_marginLeft="6dp"
-            android:textSize="17dp"/>
+            android:textSize="16dp"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/item_root_view1"
