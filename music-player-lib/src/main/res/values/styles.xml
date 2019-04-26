@@ -2,7 +2,7 @@
 <resources>
 
     <!--从下而上Dialog出场动画主题样式-->
-    <style name="ButtomAnimationStyle" parent="android:style/Theme.Dialog">
+    <style name="MusicButtomAnimationStyle" parent="android:style/Theme.Dialog">
         <!-- 是否有标题-->
         <item name="android:windowNoTitle">true</item>
         <!--背景颜色及透明程度-->
@@ -12,17 +12,17 @@
         <!--是否模糊-->
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
-        <item name="android:windowAnimationStyle">@style/ButtomAnimation</item>
+        <item name="android:windowAnimationStyle">@style/MusicButtomAnimation</item>
     </style>
     <!--从下而上动画-->
-    <style name="ButtomAnimation">
+    <style name="MusicButtomAnimation">
         <!-- 入场动画 -->
         <item name="android:windowEnterAnimation">@anim/music_bottom_menu_enter</item>
         <!-- 出厂动画 -->
         <item name="android:windowExitAnimation">@anim/music_bottom_menu_exit</item>
     </style>
     <!--锁屏Theme-->
-    <style name="LockScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="MusicLockScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>

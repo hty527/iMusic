@@ -42,7 +42,7 @@ public class MusicAlarmSettingDialog extends BottomSheetDialog {
     }
 
     public MusicAlarmSettingDialog(@NonNull Context context) {
-        this(context, R.style.ButtomAnimationStyle);
+        this(context, R.style.MusicButtomAnimationStyle);
     }
 
     public MusicAlarmSettingDialog(@NonNull Context context, int theme) {

@@ -72,7 +72,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }
-        setContentView(R.layout.activity_music_lock);
+        setContentView(R.layout.music_activity_lock);
         MusicSildingLayout sildingLayout = (MusicSildingLayout) findViewById(R.id.music_silding_root);
         sildingLayout.setOnSildingFinishListener(new MusicSildingLayout.OnSildingFinishListener() {
 

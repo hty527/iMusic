@@ -49,7 +49,7 @@ public class MusicPlayerListDialog extends BottomSheetDialog implements Observer
     }
 
     public MusicPlayerListDialog(@NonNull Context context) {
-        this(context, R.style.ButtomAnimationStyle);
+        this(context, R.style.MusicButtomAnimationStyle);
     }
 
     public MusicPlayerListDialog(@NonNull Context context, int theme) {

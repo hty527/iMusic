@@ -84,7 +84,7 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
     }
 
     public MusicMusicDetailsDialog(@NonNull Context context,BaseMediaInfo mediaInfo,DialogScene sceneMode,String albumName) {
-        this(context, R.style.ButtomAnimationStyle,mediaInfo,sceneMode,albumName);
+        this(context, R.style.MusicButtomAnimationStyle,mediaInfo,sceneMode,albumName);
     }
 
     public MusicMusicDetailsDialog(@NonNull Context context, int theme,BaseMediaInfo mediaInfo,DialogScene sceneMode,String albumName) {

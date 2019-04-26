@@ -1723,7 +1723,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     .setTicker("正在播放")
                     .setOngoing(true)//禁止滑动删除
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setSmallIcon(R.drawable.push);
+                    .setSmallIcon(R.drawable.ic_music_push);
             if(MusicRomUtil.getInstance().isMiui()){
                 builder.setFullScreenIntent(pendClickIntent,false);//禁用悬挂
             }else{
