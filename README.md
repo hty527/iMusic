@@ -41,19 +41,6 @@ ___
 * 全屏播放下手势识别调节音量、屏幕亮度、快进、快退</br>
 * 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
 ## 一.音乐播放器集成步骤:
-**权限声明：**
-```
-    <!--网络状态-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--锁屏防止CPU休眠，锁屏下继续缓冲。-->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <!--以下权限非必须，若开启垃圾桶回收播放器、悬浮窗口播放、常驻内存、状态栏控制、锁屏播放控制、耳机监控 等功能，请开启已下权限-->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
-```
-
 **1.全局初始化**
 ```
     //初始化首选项，用以播放器内部保存播放模式设置和定时关闭设置参数
@@ -104,9 +91,20 @@ ___
      */
     MusicPlayerManager.getInstance().startPlayMusic(List<?> mediaInfos,int position);
 ```
-
 * 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。实现自己的UI请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);<br/>
-##### 添加混淆
+**权限声明**
+```
+    <!--网络状态-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--锁屏防止CPU休眠，锁屏下继续缓冲。-->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!--以下权限非必须，若开启垃圾桶回收播放器、悬浮窗口播放、常驻内存、状态栏控制、锁屏播放控制、耳机监控 等功能，请开启已下权限-->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
+```
+**添加混淆**
 ```
 -keep class com.music.player.lib.bean.**{*;}
 ```
@@ -115,23 +113,6 @@ ___
 ___
 
 ## 2.视频播放器集成步骤:
-**权限声明：**
-```
-    <!--网络状态-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--锁屏工作，防止休眠-->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <!--悬浮窗-->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-```
-**全局初始化**
-```
-    VideoPlayerManager.getInstance()
-          //循环模式开关，在这里配置的循环模式，只是临时的,适合在播放过程中调用
-          .setLoop(true)
-          //悬浮窗播放器中跳转到Activity的绝对路径，若需要支持从悬浮窗中跳转到APP的播放器界面，则必须设置此路径
-          .setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
-```
 **1.在你的项目中的.xml中引入播放器布局</br>**
 ```
     <com.video.player.lib.view.VideoPlayerTrackView
@@ -213,6 +194,24 @@ ___
         VideoPlayerManager.getInstance().onDestroy();
         VideoWindowManager.getInstance().onDestroy();
     }
+```
+**权限声明：**
+```
+    <!--网络状态-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--锁屏工作，防止休眠-->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!--悬浮窗-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+```
+**拓展功能初始化**
+```
+    //根据需求初始化
+    VideoPlayerManager.getInstance()
+          //循环模式开关，在这里配置的循环模式，只是临时的,适合在播放过程中调用
+          .setLoop(true)
+          //悬浮窗播放器中跳转到Activity的绝对路径，若需要支持从悬浮窗中跳转到APP的播放器界面，则必须设置此路径
+          .setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
 ```
 至此你的播放器具备了基础的视频播放能力。<br/>
 
