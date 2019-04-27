@@ -91,7 +91,8 @@ ___
      */
     MusicPlayerManager.getInstance().startPlayMusic(List<?> mediaInfos,int position);
 ```
-* 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。实现自己的UI请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);
+* 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。实现自己的UI请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);<br/>
+<br/>
 **权限声明**
 ```
     <!--网络状态-->
