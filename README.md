@@ -143,8 +143,7 @@ ___
     <!--悬浮窗-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 ```
-
-##### 全局初始化
+**全局初始化**
 ```
     VideoPlayerManager.getInstance()
           //循环模式开关，在这里配置的循环模式，只是临时的,适合在播放过程中调用
@@ -190,7 +189,6 @@ ___
     //开始准备播放
     mVideoPlayer.startPlayVideo(dataSource,title);
     //或者分两步开始播放
-    //设置资源和准备播放
     //mVideoPlayer.setDataSource(dataSource,title,);
     //mVideoPlayer.startPlayVideo();
 
@@ -235,10 +233,9 @@ ___
         VideoWindowManager.getInstance().onDestroy();
     }
 ```
-至此你的播放器具备了基础的视频播放能力,自定义UI和API使用，请参阅读下文。<br/>
-• 此库提供了一套默认的控制器UI，如需自定义播放器交互UI，请继承BaseVideoPlayer、BaseVideoController、BaseCoverController实现自己的交互。<br/>
+至此你的播放器具备了基础的视频播放能力。<br/>
 [视频播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/VideoPlayerReadme.md "BaseVideoPlayer API 介绍"
-**更多高级功能和自定义Wiki文档：**[视频播放器Wiki]
+**更多自定义和其他功能详见此Wiki文档：**[视频播放器Wiki]
 ___
 ## iMusic预览及下载:
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
