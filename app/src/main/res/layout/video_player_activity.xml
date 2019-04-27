@@ -12,6 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:video_autoSetVideoController="true"
+            android:background="#000000"
             android:id="@+id/video_player"/>
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"

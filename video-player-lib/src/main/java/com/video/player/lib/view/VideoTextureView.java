@@ -6,38 +6,49 @@ import android.view.TextureView;
 import android.view.View;
 import com.video.player.lib.base.BaseVideoPlayer;
 import com.video.player.lib.constants.VideoConstants;
+import com.video.player.lib.utils.Logger;
 
 /**
  * TinyHung@Outlook.com
  * 2019/4/9
- * Video TextureView
+ * Video TextureView 画面渲染
  */
 
 public class VideoTextureView extends TextureView {
 
-    public int currentVideoWidth = 0;
-    public int currentVideoHeight = 0;
+    private static final String TAG = "VideoTextureView";
+    public int mVideoWidth,mVideoHeight;
 
     public VideoTextureView(Context context) {
-        super(context);
-        currentVideoWidth = 0;
-        currentVideoHeight = 0;
+        this(context,null);
     }
 
     public VideoTextureView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        currentVideoWidth = 0;
-        currentVideoHeight = 0;
+        this(context, attrs,0);
     }
 
-    public void setVideoSize(int currentVideoWidth, int currentVideoHeight) {
-        if (this.currentVideoWidth != currentVideoWidth || this.currentVideoHeight != currentVideoHeight) {
-            this.currentVideoWidth = currentVideoWidth;
-            this.currentVideoHeight = currentVideoHeight;
+    public VideoTextureView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    /**
+     * 更新视频的实际宽高，根据缩放模式自适应显示
+     * @param videoWidth
+     * @param videoHeight
+     */
+    public void setVideoSize(int videoWidth, int videoHeight) {
+        Logger.d(TAG,"setVideoSize-->videoWidth:"+videoWidth+",videoHeight:"+videoHeight);
+        if(videoWidth!=mVideoWidth||videoHeight!=mVideoHeight){
+            this.mVideoWidth =videoWidth;
+            this.mVideoHeight =videoHeight;
             requestLayout();
         }
     }
 
+    /**
+     * 设置旋转角度
+     * @param rotation
+     */
     @Override
     public void setRotation(float rotation) {
         if (rotation != getRotation()) {
@@ -49,8 +60,9 @@ public class VideoTextureView extends TextureView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int viewRotation = (int) getRotation();
-        int videoWidth = currentVideoWidth;
-        int videoHeight = currentVideoHeight;
+        int videoWidth = mVideoWidth;
+        int videoHeight = mVideoHeight;
+        //获取控件当前宽高
         int parentHeight = ((View) getParent()).getMeasuredHeight();
         int parentWidth = ((View) getParent()).getMeasuredWidth();
         if (parentWidth != 0 && parentHeight != 0 && videoWidth != 0 && videoHeight != 0) {
@@ -60,18 +72,16 @@ public class VideoTextureView extends TextureView {
                     parentWidth = parentHeight;
                     parentHeight = tempSize;
                 }
-                /**强制充满**/
+                Logger.d(TAG,"全屏铺满");
                 videoHeight = videoWidth * parentHeight / parentWidth;
             }
         }
-
         // 如果判断成立，则说明显示的TextureView和本身的位置是有90度的旋转的，所以需要交换宽高参数。
         if (viewRotation == 90 || viewRotation == 270) {
             int tempMeasureSpec = widthMeasureSpec;
             widthMeasureSpec = heightMeasureSpec;
             heightMeasureSpec = tempMeasureSpec;
         }
-
         int width = getDefaultSize(videoWidth, widthMeasureSpec);
         int height = getDefaultSize(videoHeight, heightMeasureSpec);
         if (videoWidth > 0 && videoHeight > 0) {
@@ -127,16 +137,16 @@ public class VideoTextureView extends TextureView {
         }
         if (parentWidth != 0 && parentHeight != 0 && videoWidth != 0 && videoHeight != 0) {
             if (BaseVideoPlayer.VIDEO_DISPLAY_TYPE == VideoConstants.VIDEO_DISPLAY_TYPE_ORIGINAL) {
-                /**原图**/
+                Logger.d(TAG,"原始大小");
                 height = videoHeight;
                 width = videoWidth;
-            } else if (BaseVideoPlayer.VIDEO_DISPLAY_TYPE == VideoConstants.VIDEO_DISPLAY_TYPE_FILL_SCROP) {
+            } else if (BaseVideoPlayer.VIDEO_DISPLAY_TYPE == VideoConstants.VIDEO_DISPLAY_TYPE_SCALE_ZOOM) {
                 if (viewRotation == 90 || viewRotation == 270) {
                     int tempSize = parentWidth;
                     parentWidth = parentHeight;
                     parentHeight = tempSize;
                 }
-                /**充满剪切**/
+                Logger.d(TAG,"缩放控件宽等比高度");
                 if (videoHeight / videoWidth > parentHeight / parentWidth) {
                     height = parentWidth / width * height;
                     width = parentWidth;
