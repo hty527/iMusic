@@ -113,7 +113,7 @@ ___
 **更多功能及使用详见Wiki文档：**[音乐播放器Wiki]
 ___
 
-## 2.视频播放器集成步骤:
+## 二.视频播放器集成步骤:
 **1.在你的项目中的.xml中引入播放器布局</br>**
 ```
     <com.video.player.lib.view.VideoPlayerTrackView
