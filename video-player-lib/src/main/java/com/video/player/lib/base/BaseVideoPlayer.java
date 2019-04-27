@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
@@ -79,8 +80,8 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     private long mVideoID;
     //视频帧渲染父容器
     public FrameLayout mSurfaceView;
-    //缩放类型
-    public static int VIDEO_DISPLAY_TYPE = VideoConstants.VIDEO_DISPLAY_TYPE_ORIGINAL;
+    //缩放类型,默认是等比缩放
+    public static int VIDEO_DISPLAY_TYPE = VideoConstants.VIDEO_DISPLAY_TYPE_SCALE_ZOOM;
     //此播放器是否正在工作,配合列表滚动时，检测工作状态
     private boolean isWorking=false;
     //屏幕方向、手势调节，默认未知
@@ -354,7 +355,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                 mCoverController.setOnStartListener(new BaseCoverController.OnStartListener() {
                     @Override
                     public void onStartPlay() {
-                        starPlaytVideo();
+                        startPlayVideo();
                     }
                 });
                 conntrollerView.addView(mCoverController,new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
@@ -451,7 +452,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     /**
      * 开始播放的入口开始播放、准备入口
      */
-    public void starPlaytVideo(){
+    public void startPlayVideo(){
         if(TextUtils.isEmpty(mDataSource)){
             Toast.makeText(getContext(),"播放地址为空",Toast.LENGTH_SHORT).show();
              return;
@@ -467,6 +468,30 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
             //开始准备播放
             VideoPlayerManager.getInstance().startVideoPlayer(mDataSource,getContext());
         }
+    }
+
+    /**
+     * 开始播放的入口开始播放、准备入口,调用此方法，可省去setDataSource()方法的调用
+     * @param dataSource 播放资源地址
+     * @param title 视频标题
+     */
+    public void startPlayVideo(String dataSource,String title){
+        this.mDataSource=dataSource;
+        this.mTitle=title;
+        startPlayVideo();
+    }
+
+    /**
+     * 开始播放的入口开始播放、准备入口,调用此方法，可省去setDataSource()方法的调用
+     * @param dataSource 播放资源地址
+     * @param title 视频标题
+     * @param videoID 视频ID
+     */
+    public void startPlayVideo(String dataSource,String title,long videoID){
+        this.mDataSource=dataSource;
+        this.mTitle=title;
+        this.mVideoID=videoID;
+        startPlayVideo();
     }
 
     /**
@@ -557,6 +582,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     Constructor<? extends BaseVideoPlayer> constructor = BaseVideoPlayer.this.getClass().getConstructor(Context.class);
                     //新实例化自己
                     BaseVideoPlayer videoPlayer = constructor.newInstance(getContext());
+                    videoPlayer.setBackgroundColor(Color.parseColor("#000000"));
                     //绑定组件ID
                     videoPlayer.setId(R.id.video_full_screen_window);
                     //保存全屏窗口实例

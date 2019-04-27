@@ -29,8 +29,8 @@
     public void setLoop(boolean loop);
 
     /**
-     * 设置缩放类型
-     * @param displayType 详见VideoConstants常量定义
+     * 设置画面缩放类型
+     * @param displayType 详见VideoConstants常量定义释义说明
      */
     public void setVideoDisplayType(int displayType);
 

@@ -69,7 +69,11 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
         mVideoPlayer.getLayoutParams().height=itemHeight;
         DetailsCoverController coverController = new DetailsCoverController(VideoPlayerActviity.this);
         mVideoPlayer.setVideoCoverController(coverController,false);
+<<<<<<< HEAD
         mVideoPlayer.setGlobaEnable(true);
+=======
+        mVideoPlayer.setVideoDisplayType(VideoConstants.VIDEO_DISPLAY_TYPE_SCALE_ZOOM);
+>>>>>>> aefc4dc8659dd18ab79f45418b057018c5d30de3
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -174,7 +178,7 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
                 VideoPlayerManager.getInstance().checkedVidepPlayerState();
             }else{
                 //开始全新播放任务
-                mVideoPlayer.starPlaytVideo();
+                mVideoPlayer.startPlayVideo();
             }
             if(null!=mPresenter){
                 //获取推荐视频

@@ -31,6 +31,7 @@ ___
 * 列表单例播放</br>
 * 列表横竖屏切换</br>
 * 常规横竖屏切换</br>
+* 支持画面缩放模式设置</br>
 * A activity 跳转至B activity无缝衔接播放</br>
 * 支持可切换至迷你小窗口播放，支持Activity内拖拽</br>
 * 支持可切换至全局悬浮窗播放，支持屏幕全局拖拽</br>
@@ -185,12 +186,14 @@ ___
 ```
 支持的自定义属性说明：
 ```
-    <!--是否自动设置默认控制器-->
-    <attr name="video_autoSetVideoController" format="boolean"/>
-    <!--是否自动设置封面控制器-->
-    <attr name="video_autoSetCoverController" format="boolean"/>
-    <!--循环播放-->
-    <attr name="video_loop" format="boolean"/>
+    <declare-styleable name="BaseVideoPlayer">
+            <!--是否自动设置默认控制器-->
+            <attr name="video_autoSetVideoController" format="boolean"/>
+            <!--是否自动设置封面控制器-->
+            <attr name="video_autoSetCoverController" format="boolean"/>
+            <!--循环播放-->
+            <attr name="video_loop" format="boolean"/>
+    </declare-styleable>
 ```
 也可以在java代码中动态初始化：其他BaseVideoPlayer相关的API后面统一介绍。<br/>
 ```
@@ -209,14 +212,18 @@ ___
     mVideoPlayer = (VideoPlayerTrackView) findViewById(R.id.video_player);
     int itemHeight = MusicUtils.getInstance().getScreenWidth(this) * 9 / 16;
     mVideoPlayer.getLayoutParams().height=itemHeight;
-    //设置播放资源,setDataSource方法为重载方法，请参阅内部方法说明
-    mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
     //是否循环播放，会覆盖VideoPlayerManager的循环设置
     mVideoPlayer.setLoop(true);
     //可选的设置，如在悬浮窗中需要支持切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置并调用setDataSource的三参方法
     mVideoPlayer.setParamsTag(mVideoParams);
-    //开始准备播放
-    mVideoPlayer.starPlaytVideo();
+    //设置画面渲染缩放模式,详见VideoConstants常量定义
+    mVideoPlayer.setVideoDisplayType(mode);
+    //设置资源和准备播放
+    mVideoPlayer.setDataSource(dataSource,title,);
+    mVideoPlayer.startPlayVideo();
+    //或者直接调用startPlayVideo准备播放
+    //mVideoPlayer.startPlayVideo(dataSource,title);
+
     //如果使用默认的VideoControler并且需要支持悬浮窗播放功能，需提前设置
     mVideoPlayer.setGlobaEnable(true); 或 mVideoPlayer.getVideoController().setGlobaEnable(true);
 ```

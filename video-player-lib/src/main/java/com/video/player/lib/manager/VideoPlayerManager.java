@@ -253,6 +253,9 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
         this.mVideoWidth=width;
         this.mVideoHeight=height;
+        if(null!=mTextureView){
+            mTextureView.setVideoSize(width,height);
+        }
     }
 
     /**
@@ -824,6 +827,12 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
         }
     }
 
+    /**
+     * 视频画面发生了变化
+     * @param surface
+     * @param width
+     * @param height
+     */
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         Logger.d(TAG,"onSurfaceTextureSizeChanged-->width:"+width+",height:"+height);
