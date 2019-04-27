@@ -40,8 +40,7 @@ ___
 * 支持可切换至全局悬浮窗播放，支持屏幕全局拖拽</br>
 * 全屏播放下手势识别调节音量、屏幕亮度、快进、快退</br>
 * 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
-## 集成步骤:
-### 1.音乐播放器集成步骤:
+## 1.音乐播放器集成步骤:
 **权限声明：**
 ```
     <!--网络状态-->
@@ -129,11 +128,11 @@ ___
 ```
 -keep class com.music.player.lib.bean.**{*;}
 ```
-[音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md "MusicPlayerManagerAPI介绍"
+[音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md "音乐播放器API介绍"
 **更多功能及使用详见Wiki文档：**[音乐播放器Wiki]
 ___
 
-### 2.视频播放器集成步骤:
+## 2.视频播放器集成步骤:
 **权限声明：**
 ```
     <!--网络状态-->
@@ -234,9 +233,9 @@ ___
     }
 ```
 至此你的播放器具备了基础的视频播放能力。<br/>
-[视频播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/VideoPlayerReadme.md "BaseVideoPlayer API 介绍"
+
+[视频播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/VideoPlayerReadme.md "视频播放器API介绍"
 **更多自定义和其他功能详见此Wiki文档：**[视频播放器Wiki]
-___
 ## iMusic预览及下载:
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
 * 此示例工程音乐搜索API取自酷狗音乐，视频资源API取自开眼视频<br/>
