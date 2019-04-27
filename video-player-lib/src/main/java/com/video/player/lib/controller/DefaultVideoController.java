@@ -36,6 +36,8 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     private boolean isTouchSeekBar=false;
     //实时播放位置
     private long mOldPlayProgress;
+    //悬浮窗播放功能开关,仅针对按钮入口有效
+    private boolean mEnable;
 
     public DefaultVideoController(@NonNull Context context) {
         this(context,null);
@@ -60,7 +62,6 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         mBtnStart = (ImageView) findViewById(R.id.video_btn_start);
         mBtnFull = findViewById(R.id.video_full_screen);
         mBtnFullWindow = findViewById(R.id.video_full_window);
-
         mVideoTitle = (TextView) findViewById(R.id.video_title);
         mVideoCurrent = (TextView) findViewById(R.id.video_current);
         mVideoTotal = (TextView) findViewById(R.id.video_total);
@@ -111,6 +112,15 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
             mBtnFullWindow.setOnClickListener(onClickListener);
         }
         mSeekBar.setOnSeekBarChangeListener(this);
+    }
+
+    /**
+     * 悬浮窗播放开关
+     * @param enable true:启用 false:禁用
+     */
+    @Override
+    public void setGlobaEnable(boolean enable) {
+        this.mEnable=enable;
     }
 
     /**
@@ -483,8 +493,15 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         if(null!=mBtnBackTiny){
             mBtnBackTiny.setVisibility(tinyLayout);
         }
+        //悬浮窗显示按钮根据用户设置是否生效
         if(null!=mBtnFullWindow){
-            mBtnFullWindow.setVisibility(windownBtn);
+            if(windownBtn==View.VISIBLE){
+                if(mEnable){
+                    mBtnFullWindow.setVisibility(windownBtn);
+                }
+            }else{
+                mBtnFullWindow.setVisibility(windownBtn);
+            }
         }
         if(null!=mBtnFull){
             mBtnFull.setVisibility(fullBtn);

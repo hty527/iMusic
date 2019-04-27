@@ -59,6 +59,8 @@ public abstract class BaseVideoController extends FrameLayout{
      */
     //设置视频标题内容
     protected void setTitle(String videoTitle){}
+    //悬浮窗功能开关,只针对入口
+    protected void setGlobaEnable(boolean enable){};
     //播放地址为空
     protected void pathInvalid(){}
     //切换为竖屏方向

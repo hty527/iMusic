@@ -94,5 +94,6 @@ dependencies {
     ///包名+库名
     //implementation 'com.android.imusic.lib:video-player-lib:1.0.0'
     implementation(name: 'music-player-lib-1.0.0', ext: 'aar')
-    implementation(name: 'video-player-lib-1.0.0', ext: 'aar')
+//    implementation(name: 'video-player-lib-1.0.0', ext: 'aar')
+    implementation project(':video-player-lib')
 }

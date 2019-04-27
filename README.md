@@ -217,6 +217,8 @@ ___
     mVideoPlayer.setParamsTag(mVideoParams);
     //开始准备播放
     mVideoPlayer.starPlaytVideo();
+    //如果使用默认的VideoControler并且需要支持悬浮窗播放功能，需提前设置
+    mVideoPlayer.setGlobaEnable(true); 或 mVideoPlayer.getVideoController().setGlobaEnable(true);
 ```
 **3.Activity生命周期方法加入**
 ```

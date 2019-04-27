@@ -35,6 +35,12 @@
     public void setVideoDisplayType(int displayType);
 
     /**
+     * 悬浮窗功能入口开关，需要在C不为空下调用
+     * @param enable true:允许 false:禁用
+     */
+    public void setGlobaEnable(boolean enable);
+
+    /**
      * 设置视频控制器
      * @param videoController 自定义VideoPlayer控制器
      * @param autoCreateDefault 当 controller 为空，是否自动创建默认的控制器

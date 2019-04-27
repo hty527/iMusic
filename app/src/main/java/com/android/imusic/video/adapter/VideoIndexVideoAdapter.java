@@ -174,6 +174,7 @@ public class VideoIndexVideoAdapter extends BaseAdapter<OpenEyesIndexItemBean,Re
         videoViewHolder.trackVideo.setWorking(false);
         videoViewHolder.trackVideo.setScrrenOrientation(VideoConstants.SCREEN_ORIENTATION_PORTRAIT);
         videoViewHolder.trackVideo.getLayoutParams().height=itemHeight;
+        videoViewHolder.trackVideo.setGlobaEnable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             videoViewHolder.itemRoomItem.setOutlineProvider(new VideoTextrueProvider(VideoUtils.getInstance().dpToPxInt(getContext(),8f)));
         }
