@@ -1,20 +1,19 @@
 # **视频播放器Wiki**
 
-#### 自定义交互UI的实现
-##### 1.自定义控制器实现
+### 自定义交互UI的实现
+**1.自定义控制器实现**
 控制器是用户与播放器交互的控制器，如需自定义请继承BaseVideoController类并实现其抽象方法，调用BaseVideoPlayer的setVideoController(V controller);绑定控制器。</br>
 如在播放过程中开启小窗口、悬浮窗播放器时，可指定控制器小窗口、悬浮窗专用的交互控制器。悬浮窗口的关闭按钮不支持自定义。
-##### 2.自定义封面控制器实现
+**2.自定义封面控制器实现**
 封面控制器是指视频在开始播放前的封面显示图层，如需自定义请继承BaseCoverController类，调用BaseVideoPlayer的setVideoCoverController(C controller);绑定控制器。BaseCoverController中默认实现了点击开始播放能力。若需自定义点击自己的View开始播放，请实现点击事件后
 调用BaseVideoPlayer的mOnStartListener.onStartPlay();方法开始播放。
-##### 3.自定义手势识别器实现
+**3.自定义手势识别器实现**
 手势识别器是播放器在全屏状态下播放时，播放器内部检测用户手势滑动行为对播放器功能做出改变时的UI交互提示，如快进、快退、音量、亮度等调节后的UI显示交互，如需自定义
 请继承BaseGestureController类，实现其抽象方法，调用调用BaseVideoPlayer的setVideoGestureController(G controller);绑定控制器。
-
-##### 特别注意
-** 播放器是支持播放器窗口切换无缝衔接播放、悬浮窗中点击全屏打开播放器界面功能的，在使用转场播放前，必须调用VideoPlayerManager.getInstance().setContinuePlay(true); <br/> **
+####特别注意
+** 播放器是支持播放器窗口切换无缝衔接播放、悬浮窗中点击全屏打开播放器界面功能的，在使用转场播放前，必须调用VideoPlayerManager.getInstance().setContinuePlay(true); **<br/>
 #### 部分功能交互处理
-##### 1.转场衔接播放处理
+**1.转场衔接播放处理**
 示例代码如下：(这里示意从A 界面列表跳转至B Activity衔接播放)<br/>
 跳转之前：<br/>
 ```
@@ -81,20 +80,20 @@
     }
 ```
 到此即可实现画面无闪烁、无卡顿的衔接播放任务了。</br>
-##### 2.悬浮窗口中打开APP播放器界面处理
-2.1：首先在全局初始化中设置要跳转的Activity绝对路径:
+**2.悬浮窗口中打开APP播放器界面处理**
+##### 2.1：首先在全局初始化中设置要跳转的Activity绝对路径:
 ```
     //设置跳转的Activity的绝对路径
     VideoPlayerManager.getInstance().setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
 ```
-2.2：开始播放前的TAG设置：
+##### 2.2：开始播放前的TAG设置：
 ```
     //VideoParams中的字段根据自己需求填写，基本的ID、播放地址等不能为空。这个参数最红会在跳转至播放器Activity时传递过去。
     VideoPlayerTrackView.setParamsTag(VideoParams params);
 ```
-3.3：设置TAG后，在悬浮窗中点击全屏按钮即可正确打开播放器Activity并传递参数了。
-#### 视频播放器功能API介绍
+##### 2.3：设置TAG后，在悬浮窗中点击全屏按钮即可正确打开播放器Activity并传递参数了。
 
+#### 视频播放器功能API介绍
 ### BaseVideoPlayer 常用API预览及说明：
 ```
     /**
