@@ -69,11 +69,8 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
         mVideoPlayer.getLayoutParams().height=itemHeight;
         DetailsCoverController coverController = new DetailsCoverController(VideoPlayerActviity.this);
         mVideoPlayer.setVideoCoverController(coverController,false);
-<<<<<<< HEAD
         mVideoPlayer.setGlobaEnable(true);
-=======
         mVideoPlayer.setVideoDisplayType(VideoConstants.VIDEO_DISPLAY_TYPE_SCALE_ZOOM);
->>>>>>> aefc4dc8659dd18ab79f45418b057018c5d30de3
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(mLayoutManager);
