@@ -22,12 +22,14 @@ public interface VideoConstants {
     /**
      * 缩放类型
      */
-    //缩放宽度至控件最大宽度，高度按比例缩放
-    int VIDEO_DISPLAY_TYPE_SCALE_ZOOM = 0;
     //缩放至控件宽高，会裁剪超出比例的画面
-    int VIDEO_DISPLAY_TYPE_FILL_PARENT = 1;
+    int VIDEO_DISPLAY_TYPE_CUT = 0;
+    //铺满延申至全屏，可能会有画面变形
+    int VIDEO_DISPLAY_TYPE_PARENT = 1;
     //原始大小居中显示，不做任何裁剪和缩放
     int VIDEO_DISPLAY_TYPE_ORIGINAL = 2;
+    //缩放宽度至控件最大宽度，高度按比例缩放
+    int VIDEO_DISPLAY_TYPE_ZOOM = 3;
 
     /**
      * 视频入参KEY

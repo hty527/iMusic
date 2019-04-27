@@ -81,7 +81,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     //视频帧渲染父容器
     public FrameLayout mSurfaceView;
     //缩放类型,默认是等比缩放
-    public static int VIDEO_DISPLAY_TYPE = VideoConstants.VIDEO_DISPLAY_TYPE_SCALE_ZOOM;
+    public static int VIDEO_DISPLAY_TYPE = VideoConstants.VIDEO_DISPLAY_TYPE_CUT;
     //此播放器是否正在工作,配合列表滚动时，检测工作状态
     private boolean isWorking=false;
     //屏幕方向、手势调节，默认未知
