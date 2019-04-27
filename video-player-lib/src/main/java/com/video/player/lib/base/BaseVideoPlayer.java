@@ -33,7 +33,7 @@ import com.video.player.lib.controller.DefaultCoverController;
 import com.video.player.lib.controller.DefaultVideoController;
 import com.video.player.lib.controller.VideoMiniWindowController;
 import com.video.player.lib.controller.VideoWindowController;
-import com.video.player.lib.listener.VideoEventListener;
+import com.video.player.lib.listener.OnVideoEventListener;
 import com.video.player.lib.listener.VideoOrientationListener;
 import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.manager.VideoPlayerManager;
@@ -91,7 +91,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     //屏幕方向监听器
     private VideoOrientationListener mOrientationListener;
     //播放器内部事件监听器
-    private VideoEventListener mEventListener;
+    private OnVideoEventListener mEventListener;
     //常规播放器手势代理，配合悬浮窗使用、全屏手势代理，配合手势调节功能使用
     private GestureDetector mGestureDetector,mFullScreenGestureDetector;
     //全屏的手势触摸、迷你小窗口的手势触摸
@@ -445,7 +445,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * 主播监听播放器内部事件
      * @param eventListener
      */
-    public void setVideoEventListener(VideoEventListener eventListener){
+    public void setOnVideoEventListener(OnVideoEventListener eventListener){
         this.mEventListener=eventListener;
     }
 
@@ -457,7 +457,6 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
             Toast.makeText(getContext(),"播放地址为空",Toast.LENGTH_SHORT).show();
              return;
         }
-        Logger.d(TAG,"startVideo-->");
         //还原可能正在进行的播放任务
         VideoPlayerManager.getInstance().onReset();
         VideoPlayerManager.getInstance().addOnPlayerEventListener(this);

@@ -10,7 +10,7 @@ import com.video.player.lib.model.VideoPlayerState;
  * 请注意不要在此方法内耗时操作
  */
 
-public abstract class VideoEventListener {
+public abstract class OnVideoEventListener {
 
     /**
      * 播放中各种状态，开始、暂停、恢复、停止、完成、失败 等
