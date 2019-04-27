@@ -17,10 +17,11 @@
 请继承BaseGestureController类，实现其抽象方法，调用调用BaseVideoPlayer的setVideoGestureController(G controller);绑定控制器。<br/>
 
 #### 特别注意
-** 播放器是支持播放器窗口切换无缝衔接播放、悬浮窗中点击全屏打开播放器界面功能的，在使用转场播放前，必须调用VideoPlayerManager.getInstance().setContinuePlay(true); **<br/>
+*播放器是支持播放器窗口切换无缝衔接播放、悬浮窗中点击全屏打开播放器界面功能的，在使用转场播放前，必须调用VideoPlayerManager.getInstance().setContinuePlay(true); <br/>
 
 #### 部分功能交互处理
 **1.转场衔接播放处理**<br/>
+
 示例代码如下：(这里示意从A 界面列表跳转至B Activity衔接播放)<br/>
 跳转之前：<br/>
 ```
@@ -87,6 +88,7 @@
     }
 ```
 到此即可实现画面无闪烁、无卡顿的衔接播放任务了。</br>
+
 **2.悬浮窗口中打开APP播放器界面处理**<br/>
 ##### 2.1：首先在全局初始化中设置要跳转的Activity绝对路径:
 ```
