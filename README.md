@@ -261,5 +261,6 @@ ___
 <div align="center">
     <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/code.png" height="300" width="300">
 </div>
+<br/>
 
 * 继承过程请参考Wiki,有BUG欢迎issues。如有其他问题，欢迎邮箱：TinyHung@Outlook.com
