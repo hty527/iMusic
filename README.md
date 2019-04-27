@@ -10,8 +10,11 @@
 ___
 ## 功能演示及概述:
 #### 功能演示:(部分功能快照预览在最下面)
-![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/Music.gif)
-![image](https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/Video.gif)
+<div align="center">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/Music.gif" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/Video.gif" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162453.jpg" height="480" width="270">
+</div>
 #### 功能概述:
 **1.音乐播放器**
 * 网络音乐播放</br>
