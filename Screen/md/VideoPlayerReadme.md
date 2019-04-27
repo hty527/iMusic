@@ -85,9 +85,30 @@
     public G getGestureController();
 
     /**
+     * 主播监听播放器内部事件
+     * @param eventListener
+     */
+    public void setOnVideoEventListener(OnVideoEventListener eventListener);
+
+    /**
      * 开始播放的入口开始播放、准备入口
      */
-    public void starPlaytVideo();
+    public void startPlayVideo();
+
+    /**
+     * 开始播放的入口开始播放、准备入口,调用此方法，可省去setDataSource()方法的调用
+     * @param dataSource 播放资源地址
+     * @param title 视频标题
+     */
+    public void startPlayVideo(String dataSource,String title);
+
+    /**
+     * 开始播放的入口开始播放、准备入口,调用此方法，可省去setDataSource()方法的调用
+     * @param dataSource 播放资源地址
+     * @param title 视频标题
+     * @param videoID 视频ID
+     */
+    public void startPlayVideo(String dataSource,String title,long videoID);
 
     /**
      * 从悬浮窗播放器窗口转向VideoPlayerActivity播放
