@@ -6,7 +6,7 @@
 [Android视频播放器开发记录]: https://www.jianshu.com/p/39d8f824c2fb "简书视频播放器"
 **视频播放器博文:**[Android视频播放器开发记录]
 
-基于MediaPlayer解码器封装的完整音乐播放器和视频播放器功能库，集成简单、功能比较全面、体积小、涵盖基本功能需求。欢迎Star和下载体验！
+基于系统MediaPlayer解码器封装的完整音乐播放器和视频播放器功能库，集成极简、功能较全面、体积小。欢迎Star和下载体验！
 ___
 ## 功能演示及概述:
 #### 功能演示:(部分功能快照预览在最下面)
@@ -104,7 +104,7 @@ ___
 
 **权限声明**
 ```
-    <!--网络状态-->
+    <!--网络状态检查-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--锁屏防止CPU休眠，锁屏下继续缓冲。-->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
