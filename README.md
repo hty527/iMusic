@@ -10,14 +10,14 @@
 ___
 ## 功能演示及概述:
 #### 功能演示:(部分功能快照预览在最下面)
-* 音乐播放器预览(如播放不流畅，请点击图片查看)</br>
+* 音乐播放器预览(如播放不流畅请点击图片查看)</br>
 <div>
-    <img src="https://upload-images.jianshu.io/upload_images/16585967-7cabd10801209f25.gif" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/Music.gif" height="480" width="270">
 </div>
 
 * 视频播放器预览</br>
 <div>
-    <img src="https://upload-images.jianshu.io/upload_images/16585967-ae62ba6440406fc4.gif" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/Video.gif" height="480" width="270">
 </div>
 
 #### 功能概述:
