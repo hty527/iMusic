@@ -1,4 +1,14 @@
 # **音乐播放器Wiki**
+#### 播放器内部协调工作说明：<br/>
+ * MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作
+ * MusicPlayerActivity：播放器容器，处理MusicPlayerService抛出交互事件,负责用户交互。
+ * MusicPlayerManager：内部播放器代理人，组件与播放器交互需经此代理人访问播放器内部功能。
+ * MusicJukeBoxView：默认唱片机
+ * MusicJukeBoxBackgroundLayout：默认播放器UI背景协调工作者
+ * MusicJukeBoxCoverPager：默认唱片机封面
+ * MusicAlarmSettingDialog：默认定制闹钟设置
+ * MusicPlayerListDialog：默认当前正在播放的列表<br/>
+ ___
 ### MusicPlayerManager 常用API预览及说明：
 ```
     /**

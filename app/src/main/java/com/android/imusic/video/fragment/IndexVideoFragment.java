@@ -146,7 +146,7 @@ public class IndexVideoFragment extends MusicBaseFragment<IndexPersenter> implem
                     Intent intent=new Intent(getActivity(), VideoPlayerActviity.class);
                     intent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
                     if(null!=trackView&&trackView.isWorking()){
-                        //界面切换播放，一定要设置此标记
+                        //界面衔接播放前，一定要设置此标记，用来区分Activity的onResume();事件
                         VideoPlayerManager.getInstance().setContinuePlay(true);
                         trackView.reset();
                         intent.putExtra(VideoConstants.KEY_VIDEO_PLAYING,true);
