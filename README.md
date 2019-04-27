@@ -215,6 +215,8 @@ ___
     mVideoPlayer.setLoop(true);
     //可选的设置，如在悬浮窗中需要支持切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置并调用setDataSource的三参方法
     mVideoPlayer.setParamsTag(mVideoParams);
+    //设置画面渲染缩放模式,详见VideoConstants常量定义
+    mVideoPlayer.setVideoDisplayType(mode);
     //设置资源和准备播放
     mVideoPlayer.setDataSource(dataSource,title,);
     mVideoPlayer.startPlayVideo();
