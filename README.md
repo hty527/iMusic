@@ -40,7 +40,7 @@ ___
 * 支持可切换至全局悬浮窗播放，支持屏幕全局拖拽</br>
 * 全屏播放下手势识别调节音量、屏幕亮度、快进、快退</br>
 * 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
-## 1.音乐播放器集成步骤:
+## 一.音乐播放器集成步骤:
 **权限声明：**
 ```
     <!--网络状态-->
@@ -74,24 +74,6 @@ ___
         @Override
         public void onWindownCancel(View view) {}
     });
-    /**
-     * 音乐播放器初始化设置
-     */
-    MusicPlayerConfig config=MusicPlayerConfig.Build()
-        //是否启用前台服务、常驻进程
-        .setLockForeground(true)
-        //是否启用悬浮窗自动靠边吸附
-        .setWindownAutoScrollToEdge(true)
-        //是否启用垃圾桶回收播放器
-        .setTrashEnable(true)
-        //是否启用锁屏控制播放
-        .setScreenOffEnable(true)
-        //悬浮窗样式：垃圾桶回收样式，默认时点击悬浮窗右上角X按钮回收
-        .setWindownStyle(MusicWindowStyle.TRASH);
-    //设置给媒体播放管理者
-    MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
-    //配置点击通知栏跳转至Activity的绝对路径，若支持此功能，则必须设置！
-    MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
 ```
 **2.MainActivity中初始化播放器服务组件**
 ```

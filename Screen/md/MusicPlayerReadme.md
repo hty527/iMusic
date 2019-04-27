@@ -1,13 +1,34 @@
 # **音乐播放器Wiki**
-#### 播放器内部协调工作说明：<br/>
- * MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作
- * MusicPlayerActivity：播放器容器，处理MusicPlayerService抛出交互事件,负责用户交互。
+#### 音乐播放器更多功能初始化设置：
+```
+    /**
+     * 音乐播放器初始化设置
+     */
+    MusicPlayerConfig config=MusicPlayerConfig.Build()
+        //是否启用前台服务、常驻进程
+        .setLockForeground(true)
+        //是否启用手指拖动悬浮窗松手时悬浮窗自动靠边悬浮吸附
+        .setWindownAutoScrollToEdge(true)
+        //是否启用垃圾桶回收播放器
+        .setTrashEnable(true)
+        //是否启用锁屏控制播放
+        .setScreenOffEnable(true)
+        //悬浮窗样式：垃圾桶回收样式，默认时点击悬浮窗右上角X按钮回收
+        .setWindownStyle(MusicWindowStyle.TRASH);
+    //设置给媒体播放管理者
+    MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
+    //配置点击通知栏跳转至Activity的绝对路径，若支持此功能，则必须设置！
+    MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
+```
+#### 播放器内部协调工作说明：
+ * MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作。
+ * MusicPlayerActivity：音乐播放器交互示例容器，负责用户交互。
  * MusicPlayerManager：内部播放器代理人，组件与播放器交互需经此代理人访问播放器内部功能。
- * MusicJukeBoxView：默认唱片机
- * MusicJukeBoxBackgroundLayout：默认播放器UI背景协调工作者
- * MusicJukeBoxCoverPager：默认唱片机封面
- * MusicAlarmSettingDialog：默认定制闹钟设置
- * MusicPlayerListDialog：默认当前正在播放的列表<br/>
+ * MusicJukeBoxView：默认自定义唱片机。
+ * MusicJukeBoxBackgroundLayout：默认自定义唱片机背景Layout。
+ * MusicJukeBoxCoverPager：默认唱片机封面。
+ * MusicAlarmSettingDialog：默认定制闹钟设置。
+ * MusicPlayerListDialog：默认当前正在播放的列表
  ___
 ### MusicPlayerManager 常用API预览及说明：
 ```
