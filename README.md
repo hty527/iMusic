@@ -10,7 +10,7 @@
 ___
 ## 功能演示及概述:
 #### 功能演示:(部分功能快照预览在最下面)
-* 音乐播放器预览</br>
+* 音乐播放器预览(如播放不流畅，请点击图片查看)</br>
 <div>
     <img src="https://upload-images.jianshu.io/upload_images/16585967-7cabd10801209f25.gif" height="480" width="270">
 </div>
