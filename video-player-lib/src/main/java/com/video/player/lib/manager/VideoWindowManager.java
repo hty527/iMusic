@@ -128,8 +128,8 @@ public class VideoWindowManager {
 
     /**
      * 此应用是否拥有悬浮窗权限
-     * @param context
-     * @return
+     * @param context 上下文
+     * @return 是否拥有悬浮窗权限？
      */
 	public boolean haveWindownPermission(Context context){
 	    if(Build.VERSION.SDK_INT>=23){
@@ -182,7 +182,7 @@ public class VideoWindowManager {
 
 	/**
 	 * 窗口是否已被添加悬浮播放器
-	 * @return
+	 * @return 当前窗口是否已经存在悬浮窗
 	 */
 	public boolean isWindowShowing() {
 		return null!= mVideoWindowPlayerGroup;

@@ -48,8 +48,8 @@ public class VideoUtils {
 
     /**
      * 时长格式化
-     * @param timeMs
-     * @return
+     * @param timeMs 毫秒时间戳
+     * @return 格式化后的String时间
      */
     public String stringForAudioTime(long timeMs) {
         if (timeMs <= 0 || timeMs >= 24 * 60 * 60 * 1000) {
@@ -81,7 +81,7 @@ public class VideoUtils {
 
     /**
      * 检查设备是否已连接至可用网络
-     * @return
+     * @return 是否连接网络
      */
     public boolean isCheckNetwork(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -129,20 +129,28 @@ public class VideoUtils {
         return null;
     }
 
-    //设备屏幕宽度
+    /**
+     * 获取屏幕宽度
+     * @param context 上下文
+     * @return 屏幕宽度 px
+     */
     public int getScreenWidth(Context context) {
         return context.getResources().getDisplayMetrics().widthPixels;
     }
 
-    //设备屏幕高度
+    /**
+     * 设备屏幕高度
+     * @param context 上下文
+     * @return 屏幕高度 px
+     */
     public int getScreenHeight(Context context) {
         return context.getResources().getDisplayMetrics().heightPixels;
     }
 
     /**
      * 将dp转换成px
-     * @param dp
-     * @return
+     * @param dp 即将要转换的大小
+     * @return 像素px
      */
     public float dpToPx(Context context,float dp) {
         return dp * context.getApplicationContext().getResources().getDisplayMetrics().density;
@@ -153,50 +161,9 @@ public class VideoUtils {
     }
 
     /**
-     * 格式化URL eyepetizer://ranklist/
-     * @param actionUrl
-     * @return
-     */
-    public String formatActionUrl(String actionUrl) {
-        if(TextUtils.isEmpty(actionUrl)){
-            return actionUrl;
-        }
-        Uri uri = Uri.parse(actionUrl);
-        String scheme = uri.getScheme();
-        String host = uri.getHost();
-        String path = uri.getPath();
-        Logger.d(TAG,"scheme:"+scheme+",host:"+host+",path:"+path);
-        return host;
-    }
-
-    /**
-     * 根据URL格式化标题
-     * @param url
-     * @return
-     */
-    public String formatTitleByUrl(String url) {
-        if(VideoConstants.HOST_TOP_ALL.equals(url)){
-            return "热门排行";
-        }
-        return "所有视频";
-    }
-
-    /**
-     * 根据标题格式化标题
-     * @param title
-     * @return
-     */
-    public String formatTitleByTitle(String title) {
-        if(TextUtils.isEmpty(title)){
-            return "全部";
-        }
-        return title.replace("查看","");
-    }
-
-    /**
      * 获取应用的包名
-     * @param context
-     * @return
+     * @param context 上下文
+     * @return 应用包名
      */
     public String getPackageName(Context context) {
         //当前应用pid
@@ -214,8 +181,8 @@ public class VideoUtils {
 
     /**
      * 获取状态栏高度
-     * @param context
-     * @return
+     * @param context 上下文
+     * @return 状态栏高度,单位px
      */
     public int getStatusBarHeight(Context context) {
         try {
@@ -232,8 +199,8 @@ public class VideoUtils {
 
     /**
      * 获取底部虚拟按键的高度
-     * @param context
-     * @return
+     * @param context 上下文
+     * @return 虚拟导航栏高度,单位px
      */
     public int getNavigationHeight(Context context){
         int result = 0;
@@ -249,8 +216,8 @@ public class VideoUtils {
 
     /**
      * 检查是否存在虚拟按键
-     * @param context
-     * @return
+     * @param context 上下文
+     * @return 为true则表示存在虚拟导航栏
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public boolean hasNavBar(Context context) {
@@ -272,7 +239,7 @@ public class VideoUtils {
 
     /**
      * 检查虚拟按键是否被重写
-     * @return
+     * @return 是否被改写
      */
     private static String getNavBarOverride() {
         String sNavBarOverride = null;
@@ -290,7 +257,7 @@ public class VideoUtils {
 
     /**
      * 反射获取Context
-     * @return
+     * @return APP的全局上下文
      */
     public Context getContext() {
         try {
@@ -310,8 +277,8 @@ public class VideoUtils {
 
     /**
      * 检测资源地址是否是直播流
-     * @param dataSource
-     * @return
+     * @param dataSource 资源地址
+     * @return 是否时直播流协议的
      */
     public boolean isLiveStream(String dataSource) {
         if(dataSource.isEmpty()) return false;

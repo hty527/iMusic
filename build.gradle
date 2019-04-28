@@ -26,7 +26,9 @@ allprojects {
     }
     //编译时报注释GBK编码错误解决
     tasks.withType(Javadoc) {
+        //方法上忽略@return和@param注解未添加说明注释
         options.addStringOption('Xdoclint:none', '-quiet')
+        //解决GBK编码错误提示
         options.addStringOption('encoding', 'UTF-8')
         options.addStringOption('charSet', 'UTF-8')
     }

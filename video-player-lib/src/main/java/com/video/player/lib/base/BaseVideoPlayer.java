@@ -201,7 +201,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 设置循环模式，也可调用VideoWindowManager的setLoop(boolean loop);方法设置
-     * @param loop
+     * @param loop true: 循环 false:不循环
      */
     public void setLoop(boolean loop) {
         VideoPlayerManager.getInstance().setLoop(loop);
@@ -315,7 +315,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 将自己从父Parent中移除
-     * @param viewGroup
+     * @param viewGroup view
      */
     private void removeGroupView(ViewGroup viewGroup) {
         if(null!=viewGroup&&null!=viewGroup.getParent()){
@@ -365,7 +365,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 设置自定义的手势识别器
-     * @param gestureController
+     * @param gestureController 手势识别器
      */
     public void setVideoGestureController(G gestureController){
         this.mGestureController=gestureController;
@@ -373,7 +373,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 移动网络工作开关
-     * @param mobileWorkEnable
+     * @param mobileWorkEnable true:允许工作不再询问用户 false:如果未询问过就在即将播放时询问用户
      */
     public void setMobileWorkEnable(boolean mobileWorkEnable){
         VideoPlayerManager.getInstance().setMobileWorkEnable(mobileWorkEnable);
@@ -381,7 +381,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 返回封面控制器
-     * @return
+     * @return 返回用户设置的或默认的封面控制器
      */
     public C getCoverController() {
         return mCoverController;
@@ -389,7 +389,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 返回视频控制器
-     * @return
+     * @return 返回用户设置的或默认的视频控制器
      */
     public V getVideoController() {
         return mVideoController;
@@ -397,7 +397,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 返回全屏的手势识别控制器
-     * @return
+     * @return 返回用户设置的或默认的手势识别控制器
      */
     public G getGestureController() {
         return mGestureController;
@@ -405,7 +405,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 更新播放器方向
-     * @param scrrenOrientation
+     * @param scrrenOrientation 详见 VideoConstants 常量定义
      */
     public void setScrrenOrientation(int scrrenOrientation) {
         this.SCRREN_ORIENTATION=scrrenOrientation;
@@ -416,7 +416,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 方向重力感应开关
-     * @param enable
+     * @param enable true:监听设备方向变化，false:不监听
      */
     public void setOrientantionEnable(boolean enable){
         if(enable){
@@ -443,7 +443,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 主播监听播放器内部事件
-     * @param eventListener
+     * @param eventListener 监听器
      */
     public void setOnVideoEventListener(OnVideoEventListener eventListener){
         this.mEventListener=eventListener;
@@ -495,7 +495,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 添加一个视频渲染组件至VideoPlayer
-     * @param videoPlayer
+     * @param videoPlayer 播放器实例
      */
     private void addTextrueViewToView(BaseVideoPlayer videoPlayer) {
         //先移除存在的TextrueView
@@ -1309,6 +1309,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 退出全局悬浮窗口播放
+     * @return 返回悬浮窗口播放器实例
      */
     private BaseVideoPlayer backGlobalWindownToActivity(){
         VideoPlayerManager.getInstance().setContinuePlay(true);
@@ -1348,7 +1349,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 此处返回此组件绑定的工作状态
-     * @return
+     * @return true:正在工作 false反之
      */
     public boolean isWorking() {
         return isWorking;
@@ -1360,7 +1361,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 播放器状态
-     * @return
+     * @return 播放器内部播放状态
      */
     private boolean isPlaying() {
         return VideoPlayerManager.getInstance().isPlaying();
@@ -1371,7 +1372,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     /**
      * 播放器内部状态变化
      * @param playerState 播放器内部状态
-     * @param message
+     * @param message 状态描述
      */
     @Override
     public void onVideoPlayerState(final VideoPlayerState playerState, final String message) {

@@ -1,0 +1,9 @@
+ext{
+    userOrg = 'yuyedevelopment'
+    groupId = 'com.video.player.lib'
+    uploadName = 'video-player-lib'
+    publishVersion = '1.0.0'
+    desc = 'Android VideoPlayer Library'
+    website = 'https://github.com/Yuye584312311/IMusic'
+    licences = ['Apache-2.0']
+}

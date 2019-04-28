@@ -80,19 +80,19 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
         return mInstance;
     }
 
-    public VideoPlayerManager(){
-
-    }
-
     /**
      * 画面渲染图层初始化
-     * @param textureView
+     * @param textureView 自定义画面渲染器
      */
     public void initTextureView(VideoTextureView textureView) {
         this.mTextureView=textureView;
         textureView.setSurfaceTextureListener(this);
     }
 
+    /**
+     * 返回承载画面渲染器
+     * @return textureView
+     */
     public VideoTextureView getTextureView() {
         return mTextureView;
     }
@@ -117,7 +117,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 保存常规播放器
-     * @param videoPlayer
+     * @param videoPlayer 播放器实例
      */
     public void setNoimalPlayer(BaseVideoPlayer videoPlayer) {
         this.mNoimalPlayer=videoPlayer;
@@ -125,7 +125,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 保存全屏窗口播放器
-     * @param videoPlayer
+     * @param videoPlayer 播放器实例
      */
     public void setFullScrrenPlayer(BaseVideoPlayer videoPlayer) {
         this.mFullScrrenPlayer=videoPlayer;
@@ -133,7 +133,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 保存小窗口播放器实例
-     * @param videoPlayer
+     * @param videoPlayer 播放器实例
      */
     public void setMiniWindowPlayer(BaseVideoPlayer videoPlayer) {
         this.mMiniWindowPlayer =videoPlayer;
@@ -141,7 +141,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 保存悬浮窗窗口实例
-     * @param windownPlayer
+     * @param windownPlayer 播放器实例
      */
     public void setWindownPlayer(BaseVideoPlayer windownPlayer) {
         mWindownPlayer = windownPlayer;
@@ -149,7 +149,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 返回常规播放器实例
-     * @return
+     * @return 播放器实例
      */
     public BaseVideoPlayer getNoimalPlayer() {
         return mNoimalPlayer;
@@ -157,7 +157,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 返回全屏播放器实例
-     * @return
+     * @return 播放器实例
      */
     public BaseVideoPlayer getFullScrrenPlayer() {
         return mFullScrrenPlayer;
@@ -165,7 +165,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 返回小窗口实例
-     * @return
+     * @return 播放器实例
      */
     public BaseVideoPlayer getMiniWindowPlayer() {
         return mMiniWindowPlayer;
@@ -173,7 +173,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 返回悬浮窗窗口实例
-     * @return
+     * @return 播放器实例
      */
     public BaseVideoPlayer getWindownPlayer() {
         return mWindownPlayer;
@@ -181,7 +181,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 返回当前视频宽
-     * @return
+     * @return 播放器实例
      */
     public int getVideoWidth() {
         return mVideoWidth;
@@ -189,7 +189,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 返回当前视频高
-     * @return
+     * @return 播放器实例
      */
     public int getVideoHeight() {
         return mVideoHeight;
@@ -245,9 +245,9 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 视频宽高
-     * @param mp
-     * @param width
-     * @param height
+     * @param mp 播放器实例
+     * @param width 视频宽 单位：分辨率
+     * @param height 视频高 单位：分辨率
      */
     @Override
     public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
@@ -260,7 +260,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 指定点击通知栏后打开的Activity对象绝对路径
-     * @param className
+     * @param className Activity绝对路径
      */
     public VideoPlayerManager setVideoPlayerActivityClassName(String className) {
         mActivityClassName = className;
@@ -269,7 +269,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 返回点击通知栏后打开的Activity对象绝对路径
-     * @return
+     * @return VideoPlayerActivity绝对路径
      */
     public String getVideoPlayerActivityClassName() {
         return mActivityClassName;
@@ -294,7 +294,8 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 设置循环模式
-     * @param loop
+     * @param loop true:循环播放 false:反之
+     * @return 自身实例
      */
     @Override
     public VideoPlayerManager setLoop(boolean loop) {
@@ -316,7 +317,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 是否允许移动网络环境下工作
-     * @return
+     * @return 是否允许在移动网络下工作
      */
     public boolean isMobileWorkEnable() {
         return mobileWorkEnable;
@@ -342,7 +343,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     /**
      * 开始异步准备缓冲播放
      * @param dataSource 播放资源地址，支持file、https、http 等协议
-     * @param context
+     * @param context 全局上下文
      */
     @Override
     public void startVideoPlayer(String dataSource, Context context) {
@@ -352,7 +353,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     /**
      * 开始异步准备缓冲播放
      * @param dataSource 播放资源地址，支持file、https、http 等协议
-     * @param context
+     * @param context 全局上下文
      * @param percentIndex 尝试从指定位置开始播放
      */
     @Override
@@ -467,7 +468,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 返回播放器内部播放状态
-     * @return
+     * @return 播放器内部播放状态
      */
     @Override
     public boolean isPlaying() {
@@ -648,7 +649,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 返回正在播放的对象时长
-     * @return
+     * @return 视频总时长，单位毫秒
      */
     @Override
     public long getDurtion() {
@@ -664,7 +665,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 返回已播放时长
-     * @return
+     * @return 已播放的视频长度，单位毫秒
      */
     @Override
     public long getCurrentDurtion() {
@@ -700,7 +701,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
      * 尝试弹射退出，若当前播放器处于迷你小窗口、全屏窗口下，则只是退出小窗口\全屏至常规窗口播放
      * 若播放器处于常规状态下，则立即销毁播放器，销毁时内部检测了悬浮窗状态，若正在悬浮窗状态下播放，则啥也不做
      * @param destroy 是否直接销毁，比如说MainActivity返回逻辑还有询问用户是否退出，给定destroy为false，则只是尝试弹射，并不会去销毁播放器
-     * @return
+     * @return 是否可以销毁界面
      */
     @Override
     public boolean isBackPressed(boolean destroy) {
@@ -719,7 +720,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     /**
      * 返回播放器内部播放状态
-     * @return
+     * @return 内部播放状态
      */
     @Override
     public VideoPlayerState getVideoPlayerState() {
@@ -827,12 +828,6 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
         }
     }
 
-    /**
-     * 视频画面发生了变化
-     * @param surface
-     * @param width
-     * @param height
-     */
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         Logger.d(TAG,"onSurfaceTextureSizeChanged-->width:"+width+",height:"+height);

@@ -22,7 +22,7 @@ android {
 //推送到Bintray配置
 publish {
     //你的账户bintray下某个组织id
-    userOrg = 'yuyedevelopment '
+    userOrg = '18186950091'
     //Maven仓库下库的包名,一本与包名相同
     groupId = 'com.video.player.lib'
     //项目名称

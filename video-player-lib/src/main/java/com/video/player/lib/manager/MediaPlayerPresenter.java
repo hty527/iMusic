@@ -15,6 +15,7 @@ public interface MediaPlayerPresenter {
     /**
      * 设置循环模式
      * @param loop true:循环播放 false:反之
+     * @return 代理人
      */
     VideoPlayerManager setLoop(boolean loop);
 
@@ -26,7 +27,7 @@ public interface MediaPlayerPresenter {
 
     /**
      * 添加监听器
-     * @param listener
+     * @param listener 监听器
      */
     void addOnPlayerEventListener(VideoPlayerEventListener listener);
 
@@ -89,6 +90,7 @@ public interface MediaPlayerPresenter {
 
     /**
      * 停止播放
+     * @param isReset 是否内部释放播放器
      */
     void onStop(boolean isReset);
 
@@ -100,13 +102,13 @@ public interface MediaPlayerPresenter {
 
     /**
      * 返回当前播放对象的总时长
-     * @return
+     * @return 视频总时长，单位毫秒
      */
     long getDurtion();
 
     /**
      * 返回当前已播放的时长
-     * @return
+     * @return 已播放的视频长度，单位毫秒
      */
     long getCurrentDurtion();
 
@@ -125,7 +127,7 @@ public interface MediaPlayerPresenter {
 
     /**
      * 返回内部播放器播放状态
-     * @return
+     * @return 内部播放状态
      */
     VideoPlayerState getVideoPlayerState();
 

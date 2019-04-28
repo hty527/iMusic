@@ -105,8 +105,3 @@ dependencies {
     implementation(name: 'video-player-lib-1.0.0', ext: 'aar')
 //    implementation project(':video-player-lib')
 }
-
-//编译发布至Bintray时指定编译的编码
-tasks.withType(JavaCompile){
-    options.encoding = "UTF-8"
-}
