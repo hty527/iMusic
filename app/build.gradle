@@ -12,6 +12,7 @@ android {
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.imusic.versionCode
         versionName rootProject.ext.imusic.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -78,8 +79,15 @@ android {
     }
 }
 
+configurations.all {
+    resolutionStrategy.force 'com.android.support:support-annotations:27.1.1'
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
@@ -96,4 +104,9 @@ dependencies {
     implementation(name: 'music-player-lib-1.0.0', ext: 'aar')
     implementation(name: 'video-player-lib-1.0.0', ext: 'aar')
 //    implementation project(':video-player-lib')
+}
+
+//编译发布至Bintray时指定编译的编码
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
 }
