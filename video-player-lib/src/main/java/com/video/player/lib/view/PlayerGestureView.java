@@ -7,6 +7,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
@@ -135,6 +136,19 @@ public class PlayerGestureView extends BaseGestureController {
         if(null!=mSoundProgressBar){
             mSoundProgressBar.setProgress(progress);
         }
+    }
+
+    /**
+     * 这个默认手势识别器不需要内部处理onTouchEnevt事件，这里不关心
+     * @param e1
+     * @param e2
+     * @param distanceX
+     * @param distanceY
+     * @return 为true即拦截触摸事件向BaseVideoPlayer传递
+     */
+    @Override
+    public boolean onTouchEnevt(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
     }
 
     /**

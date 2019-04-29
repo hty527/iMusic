@@ -701,6 +701,10 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 //            Logger.d(TAG,"onScroll-->distanceX:"+distanceX+",distanceY:"+distanceY+",e1X:"+e1.getX()+",e1Y:"+e1.getY()+",e2X:"+e2.getX()+",e2Y:"+e2.getY());
             if(null==videoController||null==mGestureController) return false;
+            if(mGestureController.onTouchEnevt(e1, e2, distanceX, distanceY)){
+                //用户拦截了触摸事件，交给手势识别器自己处理
+                return false;
+            }
             float oldX = e1.getX(), oldY = e1.getY();
             int y = (int) e2.getRawY();
             if (mFirstScroll) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 /**
@@ -75,6 +76,17 @@ public abstract class BaseGestureController extends FrameLayout{
      * @param progress 百分比
      */
     public abstract void setBrightnessProgress(int progress);
+
+    /**
+     * 手势事件，当其他四个主要更新UI方法无法满足你的场景时，你应该关心这个方法，如果不允许BaseVideoPlayer
+     * 处理手势事件，则返回true：即拦截事件向BaseVideoPlayer传递
+     * @param e1
+     * @param e2
+     * @param distanceX
+     * @param distanceY
+     * @return 为true则表示消费触摸事件并拦截事件继续向BaseVideoPlayer传递
+     */
+    public abstract boolean onTouchEnevt(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY);
 
     /**
      * 复原
