@@ -1,5 +1,5 @@
-* 转载请注明出处，谢谢！
-###写在前面：
+* 转载请注明出处，谢谢！<br/>
+**写在前面：**<br/>
 &emsp; &emsp; 之前写项目时，喜欢将重复的功能或者自定义控件封装到公用的模块中。当多个项目都依赖这个公共模块时，其中某一个项目中对模块中的代码做了修改，此时其他依赖该模块的项目不得不做出修改或者同步代码，相当麻烦。而此时有没有什么办法能避免一处改动，四方同步呢？答案肯定是有的。这里我们就跟随着前辈们的脚步来学习如何将项目模块发布至Maven仓库。真正做到只需一处修改，四处升级即可。本文将介绍发布到Maven的三种途径。教程开始前，先了解下Maven是干嘛的。
 ###1：Maven是啥？
 简单来说Maven是项目管理工具，其内部工作机制是通过解析pom.xml文件中的配置获取jar包下载地址自动将jar到Peoject中，省去了手动下载到本地的繁琐过程。
@@ -26,7 +26,7 @@ uploadArchives{
     }
 }
 ```
-![uploadArchives配置截图图示](https://upload-images.jianshu.io/upload_images/16585967-7058b314d9fda540.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![uploadArchives配置截图图示](https://upload-images.jianshu.io/upload_images/16585967-7058b314d9fda540.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)<br/>
 配置后Sync Now一把，Studio编辑器右上角Gradle中你要发布的模块下会多出一个upload目录，目录中有个uploadArchives任务脚本，这个脚本就是将库发布到Maven仓库的Task。
 #### 2：执行uploadArchives任务
 点击如图所示的uploadArchives
