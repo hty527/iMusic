@@ -1,4 +1,6 @@
+//Bintray配置
 ext{
     userOrg = 'htyopen'
     groupId = 'com.android.player.lib'
+    licences = ['Apache-2.0']
 }

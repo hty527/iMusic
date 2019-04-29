@@ -25,6 +25,8 @@ publish {
     userOrg = rootProject.ext.userOrg
     //Maven仓库下库的包名,一本与包名相同
     groupId = rootProject.ext.groupId
+    //开源协议
+    licences = rootProject.ext.licences
     //项目名称
     artifactId = 'video-player-lib'
     //版本号
