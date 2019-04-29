@@ -51,7 +51,22 @@ ___
 * 全屏播放下手势识别调节音量、屏幕亮度、快进、快退</br>
 * 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
 ## 一.音乐播放器集成步骤:
-**1.全局初始化**
+**1.build.gradle中添加库依赖**
+```
+dependencies {
+    implementation 'com.imusic.player:msuic-player:1.0.0'
+}
+```
+若拉取失败，请检查你的项目根build.gradle中是否启用支持jcenter仓库
+```
+buildscript {
+    repositories {
+        //添加对jcenter仓库支持
+        jcenter()
+    }
+}
+```
+**2.全局初始化**
 ```
     //初始化首选项，用以播放器内部保存播放模式设置和定时关闭设置参数
     MusicUtils.getInstance().initSharedPreferencesConfig(getApplicationContext());
@@ -72,7 +87,7 @@ ___
         public void onWindownCancel(View view) {}
     });
 ```
-**2.MainActivity中初始化播放器服务组件**
+**3.MainActivity中初始化播放器服务组件**
 ```
     @Override
     protected void onCreate() {
@@ -92,7 +107,7 @@ ___
         MusicPlayerManager.getInstance().onDestroy();
     }
 ```
-**3.开始播放任务**
+**4.开始播放任务**
 ```
     /**
      * mediaInfos:待播放的歌单列表
@@ -124,7 +139,14 @@ ___
 ___
 
 ## 二.视频播放器集成步骤:
-**1.在你的项目中的.xml中引入播放器布局</br>**
+**1.项目build.gradle中添加**
+```
+dependencies {
+    implementation 'com.imusic.player:video-player:1.0.0'
+}
+```
+若拉取失败，请检查你的项目根build.gradle中是否启用了jcenter仓库<br/>
+**2.在你的项目中的.xml中引入播放器布局</br>**
 ```
     <com.video.player.lib.view.VideoPlayerTrackView
         android:id="@+id/video_track"
@@ -153,7 +175,7 @@ ___
     playerTrackView.setVideoGestureController(gestureController);
     frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
 ```
-**2.播放器初始化及基本数据设置**
+**3.播放器初始化及基本数据设置**
 ```
     mVideoPlayer = (VideoPlayerTrackView) findViewById(R.id.video_player);
      //播放器控件宽高
@@ -175,7 +197,7 @@ ___
     //是否支持悬浮窗播放功能，这个开关只针对入口有效，不会限制对startGlobalWindown();的调用
     mVideoPlayer.setGlobaEnable(true); 或 mVideoPlayer.getVideoController().setGlobaEnable(true);
 ```
-**3.Activity生命周期方法加入**
+**4.Activity生命周期方法加入**
 ```
     @Override
     protected void onResume() {
