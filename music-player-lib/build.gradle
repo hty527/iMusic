@@ -27,7 +27,7 @@ publish {
     //开源协议
     licences = rootProject.ext.licences
     //项目名称
-    artifactId = 'msuic-player'
+    artifactId = 'music-player'
     //版本号
     publishVersion = '1.0.0'
     //项目介绍，可以不写
