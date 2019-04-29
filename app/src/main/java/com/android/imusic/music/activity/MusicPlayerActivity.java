@@ -334,7 +334,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
                 long durtion = MusicPlayerManager.getInstance().getDurtion();
                 if(durtion>0){
                     long currentTime = seekBar.getProgress() * durtion / 100;
-                    MusicPlayerManager.getInstance().onSeekTo(currentTime);
+                    MusicPlayerManager.getInstance().seekTo(currentTime);
                 }
             }
         });
