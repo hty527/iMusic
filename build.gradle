@@ -27,7 +27,7 @@ allprojects {
         //Bintray插件仓库支持
         maven { url 'https://dl.bintray.com/novoda-oss/snapshots/' }
         //自己的bintray仓库地址
-        maven { url 'https://dl.bintray.com/htyopen/maven' }
+//        maven { url 'https://dl.bintray.com/htyopen/maven' }
     }
     //编译时报注释GBK编码错误解决
     tasks.withType(Javadoc) {

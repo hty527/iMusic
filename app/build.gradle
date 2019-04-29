@@ -72,11 +72,11 @@ android {
         }
     }
     //依赖.aar文件需要用到
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
+//    repositories {
+//        flatDir {
+//            dirs 'libs'
+//        }
+//    }
 }
 
 configurations.all {
