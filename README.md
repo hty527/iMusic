@@ -51,7 +51,7 @@ ___
 * 全屏播放下手势识别调节音量、屏幕亮度、快进、快退</br>
 * 支持全局悬浮窗播放器中无缝切换至播放器界面</br>
 ## 一.音乐播放器集成步骤:
-**1.build.gradle中添加库依赖**
+**1.项目build.gradle中添加**
 ```
 dependencies {
     implementation 'com.imusic.player:msuic-player:1.0.0'
