@@ -53,18 +53,18 @@ ___
 ## 一.音乐播放器集成步骤:
 **1.项目build.gradle中添加**
 ```
-dependencies {
-    implementation 'com.imusic.player:msuic-player:1.0.0'
-}
+    dependencies {
+        implementation 'com.imusic.player:msuic-player:1.0.0'
+    }
 ```
 若拉取失败，请检查你的项目根build.gradle中是否启用支持jcenter仓库
 ```
-buildscript {
-    repositories {
-        //添加对jcenter仓库支持
-        jcenter()
+    buildscript {
+        repositories {
+            //添加对jcenter仓库支持
+            jcenter()
+        }
     }
-}
 ```
 **2.全局初始化**
 ```
@@ -132,7 +132,7 @@ buildscript {
 ```
 **添加混淆**
 ```
--keep class com.music.player.lib.bean.**{*;}
+    -keep class com.music.player.lib.bean.**{*;}
 ```
 [音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Screen/md/MusicPlayerReadme.md "音乐播放器API介绍"
 **更多功能及使用详见Wiki文档：**[音乐播放器Wiki]
@@ -141,9 +141,9 @@ ___
 ## 二.视频播放器集成步骤:
 **1.项目build.gradle中添加**
 ```
-dependencies {
-    implementation 'com.imusic.player:video-player:1.0.0'
-}
+    dependencies {
+        implementation 'com.imusic.player:video-player:1.0.0'
+    }
 ```
 若拉取失败，请检查你的项目根build.gradle中是否启用了jcenter仓库<br/>
 **2.在你的项目中的.xml中引入播放器布局</br>**
