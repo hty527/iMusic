@@ -311,7 +311,6 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
 
     /**
      * 开始、暂停播放
-     * @return
      */
     @Override
     public void playOrPause() {
@@ -804,7 +803,7 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
 
     /**
      * 返回点击通知栏后打开的Activity对象绝对路径
-     * @return
+     * @return Anctivity绝对路径
      */
     public String getForegroundActivityClassName() {
         return mActivityClassName;

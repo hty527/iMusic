@@ -1435,7 +1435,6 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 缓冲完成后调用,只有在缓冲成功，才是正在播放状态
-     * @param mediaPlayer
      */
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
@@ -1463,7 +1462,6 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 播放完成调用
-     * @param mediaPlayer
      */
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
@@ -1481,8 +1479,6 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 缓冲进度，MediaPlayer的onBufferingUpdate到了100%就不再回调
-     * @param mediaPlayer
-     * @param progress
      */
     @Override
     public void onBufferingUpdate(MediaPlayer mediaPlayer, int progress) {
@@ -1516,10 +1512,6 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 播放失败
-     * @param mediaPlayer
-     * @param event
-     * @param extra
-     * @return 内部定义
      */
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int event, int extra) {
@@ -1579,10 +1571,6 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 获取音频信息
-     * @param mediaPlayer
-     * @param event
-     * @param extra
-     * @return 内部定义
      */
     @Override
     public boolean onInfo(MediaPlayer mediaPlayer,int event, int extra) {
