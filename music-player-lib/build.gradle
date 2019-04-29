@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 26
@@ -17,7 +18,27 @@ android {
     }
 }
 
-//上传到Maven仓库的task
+//推送到Bintray配置
+publish {
+    //你的账户bintray下某个组织id
+    userOrg = rootProject.ext.userOrg
+    //Maven仓库下库的包名,一本与包名相同
+    groupId = rootProject.ext.groupId
+    //开源协议
+    licences = rootProject.ext.licences
+    //项目名称
+    artifactId = 'msuic-player-lib'
+    //版本号
+    publishVersion = '1.0.0'
+    //项目介绍，可以不写
+    desc = 'Android MusicPlayer Library'
+    //项目主页，可以不写
+    website = 'https://github.com/Yuye584312311/IMusic'
+    //编译并推送到Bintray命令
+    //gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false
+}
+
+//生成到本地Maven仓库的task
 uploadArchives{
     repositories.mavenDeployer{
         // 配置本地仓库路径，这里是项目的根目录下的maven目录中

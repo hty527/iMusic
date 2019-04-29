@@ -116,7 +116,7 @@ public class MusicPlayerBinder extends Binder{
     }
 
     public void onSeekTo(long currentTime){
-        if(null!=mPresenter) mPresenter.onSeekTo(currentTime);
+        if(null!=mPresenter) mPresenter.seekTo(currentTime);
     }
 
 

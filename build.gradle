@@ -1,6 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 //应用Config配置文件
 apply from: "config.gradle"
+apply from: "bintray.gradle"
 
 buildscript {
     repositories {
@@ -23,6 +24,7 @@ allprojects {
         //本地局域网仓库地址
 //        maven { url 'http://localhost:8081/nexus/content/repositories/releases/' }
         maven { url 'https://dl.bintray.com/novoda-oss/snapshots/' }
+        maven { url 'https://dl.bintray.com/htyopen/maven' }
     }
     //编译时报注释GBK编码错误解决
     tasks.withType(Javadoc) {

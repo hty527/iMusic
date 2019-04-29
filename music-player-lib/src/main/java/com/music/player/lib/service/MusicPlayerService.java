@@ -178,7 +178,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     /**
      * 根据配置文件转换设定的闹钟模式
      * @param value
-     * @return
+     * @return 当前播放模式
      */
     private MusicAlarmModel getPlayerAlarmModel(String value) {
         if(value.equals(MusicConstants.SP_VALUE_ALARM_MODE_0)){
@@ -204,8 +204,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 播放全新的音频列表任务
-     * @param musicList 歌单任务池
-     * @param index 要播放的位置
+     * @param musicList 待播放的数据集，对象需要继承BaseMediaInfo
+     * @param index 指定要播放的位置 0-data.size()
      */
     @Override
     public void startPlayMusic(List<?> musicList, int index) {
@@ -218,7 +218,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 播放指定位置的音乐
-     * @param index 要播放的位置
+     * @param index 指定的位置 0-data.size()
      */
     @Override
     public void startPlayMusic(int index) {
@@ -236,7 +236,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 开始一个新的播放，将其加入正在播放的队列顶部
-     * @param mediaInfo
+     * @param mediaInfo 音频对象
      */
     @Override
     public void addPlayMusicToTop(BaseMediaInfo mediaInfo) {
@@ -302,7 +302,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
-     * 暂停
+     * 暂停播放
      */
     @Override
     public void pause() {
@@ -358,7 +358,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 设置循环模式
-     * @param loop true:循环 false:不循环
+     * @param loop 为true循环播放
      */
     @Override
     public void setLoop(boolean loop) {
@@ -374,7 +374,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 特殊场景调用，如播放对象URL为空，购买或鉴权成功后，再次恢复上一次的播放任务
-     * @param sourcePath 新的播放地址
+     * @param sourcePath 音频文件的绝对地址，支持本地、网络、两种协议
      */
     @Override
     public void continuePlay(String sourcePath) {
@@ -389,8 +389,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 特殊场景调用，如播放对象URL为空，购买或鉴权成功后，再次恢复上一次的播放任务
-     * @param sourcePath 新的播放地址
-     * @param index 指定恢复播放的位置
+     * @param sourcePath 音频文件的绝对地址，支持本地、网络、两种协议
+     * @param index 期望重试播放的具体位置
      */
     @Override
     public void continuePlay(String sourcePath,int index) {
@@ -405,8 +405,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 设置播放器播放模式
-     * @param model 参考 MusicPlayModel 定义
-     * @return
+     * @param model 播放模式，参考MusicPlayModel定义
+     * @return 成功设置的播放模式
      */
     @Override
     public MusicPlayModel setPlayerModel(MusicPlayModel model) {
@@ -433,7 +433,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 返回播放器播放模式
-     * @return
+     * @return 播放模式
      */
     @Override
     public MusicPlayModel getPlayerModel() {
@@ -442,8 +442,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 定时关闭音乐的闹钟档次设置
-     * @param model 参考 MusicAlarmModel 定义
-     * @return
+     * @param model 定时关闭模式，参考MusicAlarmModel定义
+     * @return 成功设置的定时关闭模式
      */
     @Override
     public MusicAlarmModel setPlayerAlarmModel(MusicAlarmModel model) {
@@ -487,7 +487,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 返回闹钟设定模式
-     * @return
+     * @return 闹钟模式
      */
     @Override
     public MusicAlarmModel getPlayerAlarmModel() {
@@ -496,10 +496,10 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 跳转到某个位置播放
-     * @param currentTime 毫秒值，0-MediaPlayer.getDurtion()之间的一个值，包含0和MediaPlayer.getDurtion()
+     * @param currentTime 时间位置，单位毫秒
      */
     @Override
-    public void onSeekTo(long currentTime) {
+    public void seekTo(long currentTime) {
         try {
             if(null!=mMediaPlayer){
                 mMediaPlayer.seekTo((int) currentTime);
@@ -509,7 +509,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
-     * 播放上一首，被动触发
+     * 播放上一首，内部维持上一首逻辑
      */
     @Override
     public synchronized void playLastMusic() {
@@ -566,7 +566,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
-     * 播放下一首，被动触发
+     * 播放下一首，内部维持下一首逻辑
      */
     @Override
     public synchronized void playNextMusic() {
@@ -625,8 +625,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
-     * 获取上一首角标位置
-     * @return
+     * 试探上一首的位置，不会启动播放任务
+     * @return 上一首的位置
      */
     @Override
     public int playLastIndex() {
@@ -671,8 +671,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
-     * 获取下一首角标位置
-     * @return
+     * 试探下一首的位置，不会启动播放任务
+     * @return 下一首的位置
      */
     @Override
     public int playNextIndex() {
@@ -720,7 +720,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 播放器内部播放状态
-     * @return
+     * @return 为true正在播放
      */
     @Override
     public boolean isPlaying() {
@@ -736,7 +736,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 返回播放器处理的对象的总时长
-     * @return 总毫秒数
+     * @return 单位毫秒
      */
     @Override
     public long getDurtion() {
@@ -752,7 +752,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 返回播放器正在播放的对象，通知播放状态下，当做未开始播放处理
-     * @return
+     * @return 音频ID
      */
     @Override
     public long getCurrentPlayerID() {
@@ -767,7 +767,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 返回正在播放的对象，若播放器停止，为空
-     * @return
+     * @return 音频对象
      */
     @Override
     public BaseMediaInfo getCurrentPlayerMusic() {
@@ -782,7 +782,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 返回正在播放的第三方网络歌曲HASH KEY
-     * @return
+     * @return 音频文件HASH KEY
      */
     @Override
     public String getCurrentPlayerHashKey() {
@@ -797,7 +797,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 获取播放器正在处理的待播放队列
-     * @return
+     * @return 播放器内部持有的播放队列
      */
     @Override
     public List<?> getCurrentPlayList() {
@@ -814,8 +814,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
-     * 返回播放器正在处理的数据渠道
-     * @return
+     * 返回放器内部正在处理的播放数据来源CHANNEL
+     * @return 数据来源CHANNEL,详见MusicPlayingChannel定义
      */
     @Override
     public MusicPlayingChannel getPlayingChannel() {
@@ -824,7 +824,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 返回播放器工作状态
-     * @return
+     * @return 播放状态，详见MusicPlayerState定义
      */
     @Override
     public MusicPlayerState getPlayerState() {
@@ -874,7 +874,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 向监听池中添加一个监听器
-     * @param listener
+     * @param listener 实现监听器的对象
      */
     @Override
     public void addOnPlayerEventListener(MusicPlayerEventListener listener) {
@@ -885,7 +885,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 从监听池中移除一个监听器
-     * @param listener
+     * @param listener 实现监听器的对象
      */
     @Override
     public void removePlayerListener(MusicPlayerEventListener listener) {
@@ -930,7 +930,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         RUN_TAG=0;
         //还原播放渠道
         setPlayingChannel(MusicPlayingChannel.CHANNEL_NET);
-        onSeekTo(0);
+        seekTo(0);
         stopTimer();
         stopServiceForeground();
         //如果用户设定了播放完当前歌曲后自动关闭，停止播放后自动切换闹钟模式至设置的默认状态
@@ -966,8 +966,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 播放器内部数据刷新
-     * @param musicLists
-     * @param index
+     * @param musicLists 数据集
+     * @param index 位置
      */
     @Override
     public void updateMusicPlayerData(List<?> musicLists, int index) {
@@ -1336,6 +1336,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     onPlayerEventListener.onMusicPathInvalid(musicInfo,mCurrentPlayIndex);
                 }
             } else {
+                //这里是我项目中业务逻辑用到，请忽略
                 MusicPlayerManager.getInstance().setReBrowse(true);
             }
             stopServiceForeground();
@@ -1346,7 +1347,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     /**
      * 转换播放地址
      * @param filePath
-     * @return
+     * @return 真实的播放地址
      */
     private String getPlayPath(String filePath) {
         if(!TextUtils.isEmpty(filePath)){
@@ -1518,7 +1519,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      * @param mediaPlayer
      * @param event
      * @param extra
-     * @return
+     * @return 内部定义
      */
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int event, int extra) {
@@ -1581,7 +1582,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      * @param mediaPlayer
      * @param event
      * @param extra
-     * @return
+     * @return 内部定义
      */
     @Override
     public boolean onInfo(MediaPlayer mediaPlayer,int event, int extra) {
@@ -1607,7 +1608,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 获取当前设备是否有网
-     * @return
+     * @return 为true标识已联网
      */
     public boolean isCheckNetwork(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -1684,7 +1685,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      * 构建一个前台进程通知
      * @param mediaInfo 播放器正在处理的多媒体对象
      * @param resource 封面
-     * @return
+     * @return 通知对象
      */
     private Notification buildNotifyInstance(BaseMediaInfo mediaInfo, Bitmap resource) {
         if(null==mediaInfo){
@@ -1736,8 +1737,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 生成待处理广播意图
-     * @param action
-     * @return
+     * @param action 事件
+     * @return 点击意图
      */
     private PendingIntent getClickPending(String action) {
         Intent lastIntent = new Intent(action);

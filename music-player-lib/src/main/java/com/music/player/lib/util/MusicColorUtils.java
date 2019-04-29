@@ -60,7 +60,7 @@ public class MusicColorUtils {
      * 取差值
      * @param maxVar
      * @param var
-     * @return
+     * @return maxVar-var之间的差值
      */
     public float absVakue(float maxVar, float var) {
         return maxVar-var;

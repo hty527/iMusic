@@ -15,8 +15,6 @@ import android.support.v7.view.ContextThemeWrapper;
 import android.text.TextUtils;
 import android.view.ViewConfiguration;
 
-import com.video.player.lib.constants.VideoConstants;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Formatter;
@@ -158,6 +156,35 @@ public class VideoUtils {
 
     public int dpToPxInt(Context context,float dp) {
         return (int) (dpToPx(context,dp) + 0.5f);
+    }
+
+    /**
+     * 格式化URL eyepetizer://ranklist/
+     * @param actionUrl
+     * @return 真实URL
+     */
+    public String formatActionUrl(String actionUrl) {
+        if(TextUtils.isEmpty(actionUrl)){
+            return actionUrl;
+        }
+        Uri uri = Uri.parse(actionUrl);
+        String scheme = uri.getScheme();
+        String host = uri.getHost();
+        String path = uri.getPath();
+        Logger.d(TAG,"scheme:"+scheme+",host:"+host+",path:"+path);
+        return host;
+    }
+
+    /**
+     * 根据标题格式化标题
+     * @param title 源标题
+     * @return 格式化后的标题
+     */
+    public String formatTitleByTitle(String title) {
+        if(TextUtils.isEmpty(title)){
+            return "全部";
+        }
+        return title.replace("查看","");
     }
 
     /**

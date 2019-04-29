@@ -42,7 +42,7 @@ public class MusicImageCache {
 	 * 讲Bitmap缓存起来
 	 * @param key
 	 * @param value
-	 * @return
+	 * @return BITMAP
 	 */
 	public Bitmap put(String key, Bitmap value){
 		if(null==cache){
@@ -59,7 +59,7 @@ public class MusicImageCache {
 	/**
 	 * 根据路径获取Bitmap
 	 * @param key
-	 * @return
+	 * @return bitmap
 	 */
 	public Bitmap getBitmap(String key){
 		if(TextUtils.isEmpty(key)) return null;
@@ -83,7 +83,7 @@ public class MusicImageCache {
     /**
      * 根据文件路径获取Bitmap
      * @param filePath
-     * @return
+     * @return bitmap
      */
     public Bitmap createBitmap(String filePath) {
         Bitmap bitmap = null;

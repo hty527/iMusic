@@ -242,7 +242,7 @@ public class MusicWindowManager {
     /**
      * 此应用是否拥有悬浮窗权限
      * @param context
-     * @return
+     * @return 为true表示拥有悬浮窗权限
      */
 	public boolean haveWindownPermission(Context context){
 	    if(Build.VERSION.SDK_INT>=23){
@@ -304,7 +304,7 @@ public class MusicWindowManager {
 
 	/**
 	 * 窗口是否有唱片机悬浮窗口显示
-	 * @return
+	 * @return 为true标识当前窗口已经存在悬浮窗
 	 */
 	public boolean isWindowShowing() {
 		return null!= mMusicWindowMiniJukebox;
@@ -312,7 +312,7 @@ public class MusicWindowManager {
 
     /**
      * 窗口是否有垃圾桶
-     * @return
+     * @return 为true表示当前窗口拥有垃圾桶
      */
     public boolean isTrashShowing() {
         return null!= mMusicWindowTrash;

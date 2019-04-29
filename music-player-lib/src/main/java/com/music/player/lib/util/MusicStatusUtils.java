@@ -51,7 +51,7 @@ public class MusicStatusUtils {
     /**
      * 获取底部导航栏高度
      *
-     * @return
+     * @return 虚拟导航栏高度
      */
     public static int getNavigationBarHeight(Context context) {
         Resources resources = context.getResources();
@@ -165,7 +165,7 @@ public class MusicStatusUtils {
 
     /**
      * 判断手机是否是小米
-     * @return
+     * @return 为true表示是小米
      */
     public boolean isMIUI() {
         return MusicRomUtil.getInstance().isMiui();
@@ -173,7 +173,7 @@ public class MusicStatusUtils {
 
     /**
      * 判断手机是否是魅族
-     * @return
+     * @return 为true表示是魅族
      */
     public static boolean isFlyme() {
         try {

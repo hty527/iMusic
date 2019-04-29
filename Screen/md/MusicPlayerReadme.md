@@ -34,21 +34,22 @@
 ```
     /**
      * 绑定服务，Activity初始化后调用
-     * @param context
+     * @param context Activity上下文
      */
     public void bindService(Context context);
 
     /**
      * 解绑服务
-     * @param context
+     * @param context Activity上下文
      */
     public void unBindService(Context context);
 
     /**
      * 返回播放器配置
-     * @return
+     * @return 播放器当前配置
      */
     public MusicPlayerConfig getMusicPlayerConfig();
+
     /**
      * 设定播放器配置
      * @param musicPlayerConfig
@@ -57,108 +58,108 @@
 
     /**
      * 获取默认的闹钟模式
-     * @return
+     * @return 播放器闹钟模式
      */
     public MusicAlarmModel getDefaultAlarmModel();
 
     /**
      * 设置默认的闹钟模式
      * @param alarmModel
-     * @return
+     * @return 已设置的闹钟模式
      */
     public MusicPlayerManager setDefaultAlarmModel(MusicAlarmModel alarmModel);
 
     /**
      * 获取播放模式
-     * @return
+     * @return 播放器默认的闹钟模式
      */
     public MusicPlayModel getDefaultPlayModel();
 
     /**
      * 设置默认的播放模式
      * @param playModel
-     * @return
+     * @return 自身
      */
     public MusicPlayerManager setDefaultPlayModel(MusicPlayModel playModel);
 
     /**
      * 是否启用前台进程
-     * @return
+     * @return 返回场常驻进程开启状态
      */
     public boolean isLockForeground();
 
     /**
      * 是否开启前台进程
-     * @param enable
+     * @param enable true:开启
      */
     public MusicPlayerManager setLockForeground(boolean enable);
 
     /**
      * 是否启用悬浮窗自动吸附悬停
-     * @return
+     * @return 返回是否启用自动吸附悬停
      */
     public boolean isWindownAutoScrollToEdge();
 
     /**
      * 设置悬浮窗是否自动吸附至屏幕边缘
-     * @param enable
+     * @param enable true:开启
      */
     public MusicPlayerManager setWindownAutoScrollToEdge(boolean enable);
 
     /**
      * 是否启用垃圾桶手势取消悬浮窗
-     * @return
+     * @return 返回是否启用垃圾桶
      */
     public boolean isTrashEnable();
 
     /**
      * 设置垃圾桶手势取消悬浮窗
-     * @param enable
+     * @param enable true:开启
      */
     public MusicPlayerManager setTrashEnable(boolean enable);
 
     /**
      * 是否启用锁屏控制器
-     * @return
+     * @return 返回是否启锁屏控制器
      */
     public boolean isScreenOffEnable();
 
     /**
      * 锁屏控制器开关
-     * @param enable
+     * @param enable true:开启
      */
     public MusicPlayerManager setScreenOffEnable(boolean enable);
 
     /**
      * 返回悬浮窗播放器样式
-     * @return
+     * @return 返回悬浮窗播放器样式
      */
     public MusicWindowStyle getWindownStyle();
 
     /**
      * 设置悬浮窗播放器样式
-     * @param musicWindowStyle
+     * @param musicWindowStyle 新的样式，参考MusicWindowStyle定义
      */
     public MusicPlayerManager setWindownStyle(MusicWindowStyle musicWindowStyle);
 
     /**
      * 开始播放新的音频队列，播放器会替换全新音乐列表
-     * @param musicList 新的音乐列表
-     * @param index 期待播放的位置
+     * @param musicList 待播放的数据集，对象需要继承BaseMediaInfo
+     * @param index 指定要播放的位置 0-data.size()
      */
     @Override
     public void startPlayMusic(List<?> musicList, int index);
 
     /**
      * 开始播放指定位置音频文件，如果播放列表存在
-     * @param index 期望播放的具体位置
+     * @param index 指定的位置 0-data.size()
      */
     @Override
     public void startPlayMusic(int index);
 
     /**
      * 开始一个新的播放任务，播放器内部自动将其添加至队列顶部,即插队播放
-     * @param mediaInfo 新的音频对象
+     * @param mediaInfo 音频对象
      */
     @Override
     public void addPlayMusicToTop(BaseMediaInfo mediaInfo);
@@ -184,22 +185,22 @@
 
     /**
      * 是否循环
-     * @param loop
+     * @param loop true:循环
      */
     @Override
     public void setLoop(boolean loop);
 
     /**
      * 继续上次播放，此方法在特殊场景下调用，如播放的地址为空后组件端购买、鉴权后需要自动重新播放
-     * @param sourcePath 安全的播放地址
+     * @param sourcePath 音频文件的绝对地址，支持本地、网络、两种协议
      */
     @Override
     public void continuePlay(String sourcePath);
 
     /**
      * 继续上次播放，此方法在特殊场景下调用，如播放的地址为空后组件端购买、鉴权后需要自动重新播放
-     * @param sourcePath 安全的播放地址
-     * @param index 指定需要继续播放的位置
+     * @param sourcePath 音频文件的绝对地址，支持本地、网络、两种协议
+     * @param index 期望重试播放的具体位置
      */
     @Override
     public void continuePlay(String sourcePath,int index);
@@ -218,44 +219,48 @@
 
     /**
      * 替换播放器内部待播放列表
-     * @param musicLists 全新的音频列表
-     * @param index 需要强制矫正的播放器正在处理的对象位置
+     * @param musicLists 数据集
+     * @param index 位置
      */
     @Override
     public void updateMusicPlayerData(List<?> musicLists, int index);
 
     /**
      * 设置播放模式
-     * @param model 新的播放模式
+     * @param model 播放模式，参考MusicPlayModel定义
+     * @return 成功设置的播放模式
      */
     @Override
     public MusicPlayModel setPlayerModel(MusicPlayModel model);
 
     /**
      * 获取播放模式
-     * @return
+     * @return 播放器播放模式
      */
     @Override
     public MusicPlayModel getPlayerModel();
 
     /**
      * 设置定时模式
-     * @param model 新的定时模式
+     * @param model 定时关闭模式，参考MusicAlarmModel定义
+     * @return 成功设置的播放模式
      */
     @Override
     public MusicAlarmModel setPlayerAlarmModel(MusicAlarmModel model);
 
     /**
      * 获取定时模式
+     * @return 定时关闭模式
      */
     @Override
     public MusicAlarmModel getPlayerAlarmModel();
+
     /**
      * 尝试跳转至某处缓冲播放
-     * @param currentTime 此值不能大于MediaPlayer的durtion
+     * @param currentTime 时间位置，单位毫秒
      */
     @Override
-    public void onSeekTo(long currentTime);
+    public void seekTo(long currentTime);
 
     /**
      * 播放上一首，播放器内部根据用户设置的播放模式自动处理
@@ -268,7 +273,6 @@
      */
     @Override
     public void playNextMusic();
-
     /**
      * 探测上一首的播放位置，播放器内部根据用户设置的播放模式返回合法的播放位置，内部播放器并不会自动开始播放
      * @return 合法的可播放位置
@@ -292,7 +296,7 @@
 
     /**
      * 返回媒体音频对象的总时长
-     * @return
+     * @return 单位:毫秒
      */
     @Override
     public long getDurtion();
@@ -324,6 +328,7 @@
      */
     @Override
     public List<?> getCurrentPlayList();
+
     /**
      * 更新播放器内部正在处理的对象来源属性
      * @param channel 详见 MusicPlayingChannel 定义
@@ -333,7 +338,7 @@
 
     /**
      * 返回播放器内部正在处理的对象来源属性,详见 MusicPlayingChannel 描述
-     * @return
+     * @return 播放器内部处理数据集的CHANNEL
      */
     @Override
     public MusicPlayingChannel getPlayingChannel();
@@ -433,7 +438,7 @@
 
     /**
      * 添加对播放器状态关心的 内容观察者，轻量级的状态通知，包括但不限于：开始播放、暂停、继续、停止、销毁 等状态
-     * @param observer  观察者
+     * @param observer
      */
     public void addObservable(Observer observer);
 
@@ -441,7 +446,7 @@
      * 移除对播放器状态关心的 内容观察者
      * @param observer
      */
-    public void removeObserver(Observer observer);;
+    public void removeObserver(Observer observer);
 
     /**
      * 移除所有对播放器状态关心的 内容观察者
@@ -450,13 +455,13 @@
 
     /**
      * 播放器内部状态刷新
-     * @param object 本示例工程主要用于悬浮窗状态更新、主页更新
+     * @param object
      */
     public void observerUpdata(Object object);
 
     /**
      * 指定点击通知栏后打开的Activity对象绝对路径
-     * @param className Activity的绝对路径
+     * @param className
      */
     public void setForegroundOpenActivityClassName(String className);
 

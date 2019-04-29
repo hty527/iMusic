@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.Toast;
+
 import com.android.imusic.R;
 import com.android.imusic.music.base.MusicBaseActivity;
 import com.android.imusic.music.engin.IndexPersenter;
@@ -22,12 +23,12 @@ import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.adapter.VideoIndexVideoAdapter;
 import com.android.imusic.video.bean.OpenEyesIndexInfo;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
-import com.video.player.lib.bean.VideoParams;
 import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicCommentTitleView;
+import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.utils.VideoUtils;
@@ -62,6 +63,7 @@ public class VideoListActivity extends MusicBaseActivity<IndexPersenter> impleme
             return;
         }
         mTitleView.setTitle(VideoUtils.getInstance().formatTitleByTitle(getIntent().getStringExtra(VideoConstants.KEY_VIDEO_TITLE)));
+        mTitleView.setTitle(getIntent().getStringExtra(VideoConstants.KEY_VIDEO_TITLE));
         mPresenter=new IndexPersenter();
         loadData();
     }

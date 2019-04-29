@@ -532,7 +532,7 @@ public class MusicJukeBoxView extends RelativeLayout{
 
     /**
      * 唱片是否正在播放状态
-     * @return
+     * @return 为true正在播放动画
      */
     public boolean isPlaying() {
         return mDiscStatus == DiscStatus.PLAY;
@@ -540,7 +540,7 @@ public class MusicJukeBoxView extends RelativeLayout{
 
     /**
      * 放回当前正在显示的INDEX
-     * @return
+     * @return 正在处理的位置
      */
     public int getCurrentItem() {
         return null==mViewPager?0:mViewPager.getCurrentItem();
@@ -548,7 +548,7 @@ public class MusicJukeBoxView extends RelativeLayout{
 
     /**
      * 放回当前正在显示Media对象
-     * @return
+     * @return 唱片机正在处理的对象
      */
     public BaseMediaInfo getCurrentMedia() {
         if(null!=mViewPager){
@@ -569,7 +569,7 @@ public class MusicJukeBoxView extends RelativeLayout{
 
     /**
      * 得到唱盘背后半透明的圆形背景
-     * @return
+     * @return 图形
      */
     private Drawable getDiscBlackgroundDrawable() {
         int discSize = (int) (mScreenWidth * MusicConstants.SCALE_DISC_SIZE);

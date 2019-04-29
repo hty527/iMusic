@@ -71,7 +71,7 @@ public class MusicAlbumCoverTask extends AsyncTask<String,Void,Bitmap> {
      * @param whidth 图片宽
      * @param height 图片高
      * @param kind 图片类型 略图图
-     * @return
+     * @return 视频缩略图
      */
     public static Bitmap getVideoThumbnail(String path, int whidth, int height, int kind) {
         if(TextUtils.isEmpty(path)) return null;

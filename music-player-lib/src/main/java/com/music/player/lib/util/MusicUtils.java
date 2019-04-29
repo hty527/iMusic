@@ -287,9 +287,9 @@ public class MusicUtils {
 
     /**
      * 生成 min 到 max之间的随机数,包含 min max
-     * @param min
-     * @param max
-     * @return
+     * @param min 最小数
+     * @param max 最大数
+     * @return 从min-max的随机数，包含两者
      */
     public int getRandomNum(int min,int max) {
         return min + (int)(Math.random() * max);
@@ -298,7 +298,7 @@ public class MusicUtils {
     /**
      * 格式化时间
      * @param seconds 单位秒
-     * @return
+     * @return 格式化后的String类型时间
      * 当时间小于半个小时
      */
     public String stringForTime(long seconds) {
@@ -319,8 +319,8 @@ public class MusicUtils {
 
     /**
      * 时长格式化
-     * @param timeMs
-     * @return
+     * @param timeMs 单位毫秒
+     * @return 格式化后的String类型时间
      */
     public String stringForAudioTime(long timeMs) {
         if (timeMs <= 0 || timeMs >= 24 * 60 * 60 * 1000) {
@@ -341,8 +341,8 @@ public class MusicUtils {
 
     /**
      * 将秒格式化为小时分钟
-     * @param timeMs
-     * @return
+     * @param timeMs 单位毫秒
+     * @return 格式化后的String类型时间
      */
     public String stringHoursForTime(long timeMs) {
         if(timeMs<=0) return "无限制";
@@ -363,8 +363,8 @@ public class MusicUtils {
     /**
      * 将dp转换成px
      *
-     * @param dp
-     * @return
+     * @param dp dp单位数值
+     * @return px数值
      */
     public float dpToPx(Context context,float dp) {
         return dp * context.getApplicationContext().getResources().getDisplayMetrics().density;
@@ -381,7 +381,7 @@ public class MusicUtils {
      * @param screenHeight
      * @param radius 半径>=1 越大越模糊
      * @param filterColor 遮罩层颜色
-     * @return
+     * @return Drawable
      */
     public Drawable getForegroundDrawable(Bitmap bitmap,int screenWidth,int screenHeight,int radius,int filterColor) {
         if(radius<=0) radius=8;
@@ -414,7 +414,7 @@ public class MusicUtils {
      * 资源文件转换高斯模糊图片
      * @param context
      * @param musicPicRes
-     * @return
+     * @return Bitmap
      */
     private Bitmap getForegroundBitmap(Context context,int musicPicRes) {
         int screenWidth = MusicUtils.getInstance().getScreenWidth(context);
@@ -633,6 +633,7 @@ public class MusicUtils {
 
     /**
      * 创建闹钟列表
+     * @return 闹钟数据集
      */
     public List<MusicAlarmSetting> createAlarmSettings() {
         List<MusicAlarmSetting> alarmSettings=new ArrayList<>();
@@ -648,9 +649,10 @@ public class MusicUtils {
     }
 
     /**
-     * 截图字段
-     * @param content
-     * @return
+     * 截取字段
+     * @param content 源文字
+     * @param maxLength 最大长度
+     * @return 截取后的文字内容
      */
 
     public String subString(String content, int maxLength) {
@@ -665,9 +667,9 @@ public class MusicUtils {
 
     /**
      * 返回正在播放的位置
-     * @param mediaInfos
-     * @param musicID
-     * @return
+     * @param mediaInfos 数据集
+     * @param musicID 音频ID
+     * @return 角标
      */
     public int getCurrentPlayIndex(List<?> mediaInfos, long musicID) {
         if(null==mediaInfos){
@@ -685,30 +687,9 @@ public class MusicUtils {
     }
 
     /**
-     * 返回相对于此数组正在播放的位置
-     * @param mediaInfos
-     * @param musicID
-     * @return
-     */
-    public int getCurrentPlayIndexInThis(List<?> mediaInfos, long musicID) {
-        if(musicID<=0){
-            return 0;
-        }
-        if(null!=mediaInfos&&mediaInfos.size()>0){
-            List<BaseMediaInfo> mediaInfoList= (List<BaseMediaInfo>) mediaInfos;
-            for (int i = 0; i < mediaInfoList.size(); i++) {
-                if(mediaInfoList.get(i).getId()==musicID){
-                    return i;
-                }
-            }
-        }
-        return 0;
-    }
-
-    /**
      * 获取应用的包名
-     * @param context
-     * @return
+     * @param context 上下文
+     * @return 应用包名
      */
     public String getPackageName(Context context) {
         //当前应用pid
@@ -731,8 +712,8 @@ public class MusicUtils {
 
     /**
      * 获取状态栏高度
-     * @param context
-     * @return
+     * @param context 上下文
+     * @return 状态栏高度
      */
     public int getStatusBarHeight(Context context) {
         try {
@@ -749,8 +730,8 @@ public class MusicUtils {
 
     /**
      * 获取底部虚拟按键的高度
-     * @param context
-     * @return
+     * @param context 上下文
+     * @return 虚拟导航栏高度
      */
     public int getNavigationHeight(Context context){
         int result = 0;
@@ -766,8 +747,8 @@ public class MusicUtils {
 
     /**
      * 检查是否存在虚拟按键
-     * @param context
-     * @return
+     * @param context 上下文
+     * @return 是否存在虚拟导航栏
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public boolean hasNavBar(Context context) {
@@ -789,7 +770,7 @@ public class MusicUtils {
 
     /**
      * 检查虚拟按键是否被重写
-     * @return
+     * @return 为true标识被重写
      */
     private static String getNavBarOverride() {
         String sNavBarOverride = null;
@@ -855,7 +836,7 @@ public class MusicUtils {
      * 从控件的底部移动到控件所在位置
      * 从下往上进场
      * @param animationMillis
-     * @return
+     * @return TranslateAnimation
      */
     public TranslateAnimation animationFromBottomToLocation(long animationMillis) {
         TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
@@ -870,7 +851,7 @@ public class MusicUtils {
      * 从控件所在位置移动到控件的底部
      * 从上往下出场
      * @param animationMillis
-     * @return
+     * @return TranslateAnimation
      */
     public TranslateAnimation animationFromLocationToBottom(long animationMillis) {
         TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
@@ -882,8 +863,9 @@ public class MusicUtils {
     }
 
     /**
-     * 获取SD卡所有音频文件
-     * @return
+     * 查询设备所有音频文件
+     * @param context
+     * @return 设备所有音频文件
      */
     public ArrayList<BaseMediaInfo> queryLocationMusics(Context context) {
         ArrayList<BaseMediaInfo> mediaInfos=null;
@@ -939,7 +921,7 @@ public class MusicUtils {
     /**
      * 获取音频文件的封面地址
      * @param mediaInfo
-     * @return
+     * @return 封面绝对路径
      */
     public String getMusicFrontPath(BaseMediaInfo mediaInfo) {
         if(null==mediaInfo){
@@ -1066,7 +1048,7 @@ public class MusicUtils {
      * @param frontJukeBoxScale 封面底盘大小比例
      * @param frontCoverScale 封面大小比例
      * @param jukeBoxBgCover 唱片背景封面
-     * @return
+     * @return LayerDrawable
      */
     public LayerDrawable composeJukeBoxDrawable(Context context, Bitmap bitmap, float frontJukeBoxScale, float frontCoverScale, int jukeBoxBgCover) {
         if(frontJukeBoxScale<=0||frontCoverScale<=0){
@@ -1100,7 +1082,7 @@ public class MusicUtils {
      * 缩放封面大小，适配唱盘
      * @param musicPicSize
      * @param bitmap
-     * @return
+     * @return Bitmap
      */
     private Bitmap scalePicSize(int musicPicSize, Bitmap bitmap) {
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -1122,7 +1104,7 @@ public class MusicUtils {
     /**
      * 矩形转换为圆形
      * @param bitmap
-     * @return
+     * @return Bitmap
      */
     public Bitmap drawRoundBitmap(Bitmap bitmap) {
         int width = bitmap.getWidth();
@@ -1174,7 +1156,7 @@ public class MusicUtils {
      * 格式化搜索名词
      * @param filename
      * @param currentKey
-     * @return
+     * @return 格式化后的
      */
     public String formatSearchContent(String filename, String currentKey) {
         if(TextUtils.isEmpty(currentKey)||TextUtils.isEmpty(filename)){
@@ -1183,7 +1165,7 @@ public class MusicUtils {
         return filename.replace(currentKey, "<font color='#8000ff'>" + currentKey + "</font>");
     }
     /**
-     * 打卡软键盘
+     * 打开软键盘
      *
      * @param context
      * @param mEditText
@@ -1207,7 +1189,7 @@ public class MusicUtils {
 
     /**
      * 创建根缓存目录
-     * @return
+     * @return 绝对路径
      */
     public String createRootPath(Context context) {
         String cacheRootPath = "";
@@ -1235,7 +1217,7 @@ public class MusicUtils {
     /**
      * 获取临时数据缓存目录
      * @param context
-     * @return
+     * @return 绝对路径
      */
     public String getCacheDir(Context context) {
         String cacheRootPath = null;
@@ -1265,7 +1247,7 @@ public class MusicUtils {
      * 递归创建文件夹
      *
      * @param file
-     * @return 创建失败返回""
+     * @return 绝对路径，创建失败返回""
      */
     public String createFile(File file) {
         try {
@@ -1288,7 +1270,7 @@ public class MusicUtils {
      * 递归创建文件夹
      *
      * @param dirPath
-     * @return 创建失败返回""
+     * @return 绝对路径，创建失败返回""
      */
     public String createDir(String dirPath) {
         try {
@@ -1394,7 +1376,7 @@ public class MusicUtils {
 
     /**
      * 保存播放记录到历史记录中，使用默认最大个数
-     * @param mediaInfo
+     * @param mediaInfo 播放对象
      */
     public void putMusicToHistory(BaseMediaInfo mediaInfo){
         putMusicToHistory(mediaInfo, MAX_PLAY_HISTROY_COUNT);
@@ -1457,7 +1439,7 @@ public class MusicUtils {
 
     /**
      * 获取历史播放记录
-     * @return
+     * @return 所有历史播放记录
      */
     public List<BaseMediaInfo> getMusicsByHistroy(){
         if(null==getACache()){
@@ -1469,7 +1451,8 @@ public class MusicUtils {
 
     /**
      * 删除指定ID的历史记录
-     * @param musicID
+     * @param musicID 音频ID
+     * @return true:成功删除
      */
     public boolean removeMusicHistroyById(long musicID) {
         if(null==getACache()){
@@ -1497,7 +1480,7 @@ public class MusicUtils {
 
     /**
      * 清空所有最近播放记录
-     * @return
+     * @return true:成功删除
      */
     public boolean removeMusicHistroys(){
         if(null==getACache()){
@@ -1510,7 +1493,7 @@ public class MusicUtils {
 
     /**
      * 保存音乐到收藏记录，使用默认最大个数
-     * @param mediaInfo
+     * @param mediaInfo 音频对象
      */
     public boolean putMusicToCollect(BaseMediaInfo mediaInfo){
         return putMusicToCollect(mediaInfo, MAX_COLLECT_COUNT);
@@ -1571,7 +1554,7 @@ public class MusicUtils {
 
     /**
      * 删除指定ID的收藏记录
-     * @param musicID
+     * @param musicID 音频ID
      */
     public boolean removeMusicCollectById(long musicID) {
         if(null==getACache()){
@@ -1599,7 +1582,7 @@ public class MusicUtils {
 
     /**
      * 获取收藏记录
-     * @return
+     * @return 所有收藏记录
      */
     public List<BaseMediaInfo> getMusicsByCollect(){
         if(null==getACache()){
@@ -1612,7 +1595,7 @@ public class MusicUtils {
     /**
      * 收藏列表是否存在此收藏记录
      * @param musicID
-     * @return
+     * @return true:存在
      */
     public boolean isExistCollectHistroy(long musicID) {
         if(null==getACache()){
@@ -1633,7 +1616,7 @@ public class MusicUtils {
     /**
      * 检查是否拥有通知栏权限
      * @param context
-     * @return
+     * @return true:拥有
      */
 
     public boolean hasNiticePremission(Context context) {
@@ -1664,7 +1647,7 @@ public class MusicUtils {
 
     /**
      * 前往设置中心
-     * @param context
+     * @param context 上下文
      */
     public void startAppSetting(Context context) {
         Intent localIntent = new Intent();
@@ -1696,7 +1679,7 @@ public class MusicUtils {
      * 返回真实的文件地址
      * @param context
      * @param contentUri
-     * @return
+     * @return 绝对路径
      */
     public String getPathFromURI(Context context,Uri contentUri){
         //来自第三方
@@ -1724,7 +1707,7 @@ public class MusicUtils {
      * 格式化真实文件地址
      * @param context
      * @param contentUri
-     * @return
+     * @return 绝对路径
      */
     public String getRealPathFromURI(Context context,Uri contentUri) {
         String res = null;
@@ -1903,7 +1886,7 @@ public class MusicUtils {
      * 格式化数字为‘万’单位
      * @param count
      * @param continueSmall 是否保留最小单位为原样
-     * @return
+     * @return 格式化后的数字字符串
      */
     public String formatNumToWan(long count, boolean continueSmall) {
         if (continueSmall && count <= 10000) return String.valueOf(count);
@@ -1925,7 +1908,7 @@ public class MusicUtils {
     /**
      * 将毫秒格式化成时分秒
      * @param millis
-     * @return
+     * @return 格式化后的时间
      */
     public static String formatDateFromMillis(long millis){
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
@@ -1954,7 +1937,7 @@ public class MusicUtils {
     /**
      * 去除图片地址的重定向代理
      * @param url
-     * @return
+     * @return 真实路径
      */
     public String formatImageUrl(String url) {
         if(TextUtils.isEmpty(url)){

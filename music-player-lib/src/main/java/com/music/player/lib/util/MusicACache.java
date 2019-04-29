@@ -594,11 +594,6 @@ public class MusicACache {
     }
 
 
-
-    /**
-     * @version 1.0
-     * @title 缓存管理器
-     */
     public class ACacheManager {
         private final AtomicLong cacheSize;
         private final AtomicInteger cacheCount;

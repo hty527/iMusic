@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * hty_Yuye@Outlook.com
  * 2019/3/23
- * BaseAdapter T：数据类型，V：ViewHolder
+ * BaseAdapter T：DateType，V：ViewHolder
  */
 
 public abstract class BaseAdapter<T,V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V> {
@@ -87,10 +87,10 @@ public abstract class BaseAdapter<T,V extends RecyclerView.ViewHolder> extends R
     }
 
     /**
-     * ViewHolder初始化
+     * ViewHolder Init
      * @param viewGroup
      * @param viewType
-     * @return
+     * @return 默认或你定义的ViewHolder
      */
     public abstract V inCreateViewHolder(ViewGroup viewGroup,int viewType);
 
@@ -111,8 +111,8 @@ public abstract class BaseAdapter<T,V extends RecyclerView.ViewHolder> extends R
 
     /**
      * 返回数据集中的元素
-     * @param position 列表位置
-     * @return
+     * @param position Lists position
+     * @return 适配器持有的数据集
      */
     protected T getItemData(int position){
         if(null!=mData&&mData.size()>position){
@@ -123,7 +123,7 @@ public abstract class BaseAdapter<T,V extends RecyclerView.ViewHolder> extends R
 
     /**
      * 返回列表数据集
-     * @return
+     * @return 数据集
      */
     public List<T> getData(){
         if(null==mData){
