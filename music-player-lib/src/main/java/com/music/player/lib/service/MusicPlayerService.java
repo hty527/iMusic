@@ -1047,7 +1047,6 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 切换播放模式，调用次方法，允许随机模式
-     * @return
      */
     @Override
     public void changedPlayerPlayFullModel() {
