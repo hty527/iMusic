@@ -239,6 +239,7 @@ publish {
     website = 'xxx'
 }
 ```
+最终的依赖地址是compile '仓库包名:项目名称:版本号'
 #### 5：编译并发布到Bintray
 ##### 5.1：获取Bintray API Key
 在你的Bintray主页点击右上角头像 右上角用户名–>Edit Your Profile -> API Key –>输入密码–>Submit–>Show。复制API key备用。
@@ -276,7 +277,10 @@ allprojects {
 * 7.1.2：在app模块中的build.gradle中配置如下代码
 ```
 dependencies {
-    implementation project(':video-player-lib')
+    //添加你的项目依赖地址,如下规则
+    implementation '仓库包名:项目名称:版本号'
+    //例如我的：
+    //implementation 'com.imusic.player:music-player:1.0.0'
 }
 ```
 ##### 7.2：已添加至JCenter引用：
@@ -294,7 +298,10 @@ allprojects {
 * 7.2.2：在app模块中的build.gradle中配置如下代码
 ```
 dependencies {
-    implementation project(':video-player-lib')
+    //添加你的项目依赖地址,如下规则
+    implementation '仓库包名:项目名称:版本号'
+    //例如我的：
+    //implementation 'com.imusic.player:music-player:1.0.0'
 }
 ```
 ##至此，全部Maven及JCenter发布流程完毕，版本更新时只需要更改配置版本号重新发布即可。祝君耍的愉快~~

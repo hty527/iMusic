@@ -54,7 +54,7 @@ ___
 **1.项目build.gradle中添加**
 ```
     dependencies {
-        implementation 'com.imusic.player:msuic-player:1.0.0'
+        implementation 'com.imusic.player:music-player:1.0.0'
     }
 ```
 若拉取失败，请检查你的项目根build.gradle中是否启用支持jcenter仓库
