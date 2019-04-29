@@ -35,8 +35,6 @@ publish {
     desc = 'Android VideoPlayer Library'
     //项目主页，可以不写
     website = 'https://github.com/Yuye584312311/IMusic'
-    //编译并推送到Bintray命令
-    //gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false
 }
 
 uploadArchives{
