@@ -3,6 +3,6 @@
 //gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false
 ext{
     userOrg = 'htyopen'
-    groupId = 'com.android.player.lib'
+    groupId = 'com.imusic.player'
     licences = ['Apache-2.0']
 }

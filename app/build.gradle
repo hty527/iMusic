@@ -97,11 +97,12 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
     implementation 'com.google.android:flexbox:0.3.1'
     implementation 'com.tencent.bugly:crashreport:latest.release'
-    //包名+库名
-    //implementation 'com.android.imusic.lib:music-player-lib:1.0.0'
-    ///包名+库名
-    //implementation 'com.android.imusic.lib:video-player-lib:1.0.0'
+    //使用本地的
     implementation(name: 'music-player-lib-1.0.0', ext: 'aar')
-    //    implementation(name: 'video-player-lib-1.0.0', ext: 'aar')
+    implementation(name: 'video-player-lib-1.0.0', ext: 'aar')
+    //音乐播放器
+    //implementation 'com.imusic.player:music-player:1.0.0'
+    //视频播放器
+    //implementation 'com.imusic.player:video-player:1.0.0'
     implementation project(':video-player-lib')
 }
