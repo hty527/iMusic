@@ -82,7 +82,7 @@ public class MusicUtils {
     //允许收藏个数
     private static int MAX_COLLECT_COUNT = 100;
 
-    private static MusicUtils mInstance;
+    private static volatile MusicUtils mInstance;
     private static SharedPreferences mSharedPreferences;
     private static SharedPreferences.Editor mEditor;
     private static MusicACache mACache;
@@ -97,6 +97,8 @@ public class MusicUtils {
         }
         return mInstance;
     }
+
+    private MusicUtils(){}
 
     /**
      * 初始化历史记录存储器

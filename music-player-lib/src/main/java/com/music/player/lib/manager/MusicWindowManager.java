@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
 public class MusicWindowManager {
 
 	private static final String TAG = "MusicWindowManager";
-	private static MusicWindowManager mInstance;
+	private static volatile MusicWindowManager mInstance;
 	//迷你唱片机
 	private MusicWindowMiniJukebox mMusicWindowMiniJukebox;
 	private MusicWindowTrash mMusicWindowTrash;
@@ -45,6 +45,8 @@ public class MusicWindowManager {
         }
 		return mInstance;
 	}
+
+	private MusicWindowManager(){}
 
 	/**
 	 * 添加一个View到窗口

@@ -6,7 +6,7 @@ package com.music.player.lib.util;
 public class MusicColorUtils {
 
     private static final String TAG = "ColorUtils";
-    private static MusicColorUtils mInstance;
+    private static volatile MusicColorUtils mInstance;
 
     public static synchronized MusicColorUtils getInstance() {
         synchronized (MusicColorUtils.class) {
@@ -16,6 +16,8 @@ public class MusicColorUtils {
         }
         return mInstance;
     }
+
+    private MusicColorUtils(){}
 
     /**
      * 计算从startColor过度到endColor过程中百分比为franch时的颜色值

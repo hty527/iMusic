@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.text.TextUtils;
 import android.view.ViewConfiguration;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Formatter;
@@ -30,7 +29,7 @@ public class VideoUtils {
 
     private static final String TAG = "VideoUtils";
 
-    private static VideoUtils mInstance;
+    private static volatile VideoUtils mInstance;
 
     public static synchronized VideoUtils getInstance() {
         if(null==mInstance){
@@ -43,6 +42,8 @@ public class VideoUtils {
 
         return mInstance;
     }
+
+    private VideoUtils(){}
 
     /**
      * 时长格式化

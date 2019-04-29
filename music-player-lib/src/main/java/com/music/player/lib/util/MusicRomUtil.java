@@ -32,7 +32,7 @@ public class MusicRomUtil {
     private static String sName;
     private static String sVersion;
 
-    private static MusicRomUtil mInstance;
+    private static volatile MusicRomUtil mInstance;
 
     public static synchronized MusicRomUtil getInstance() {
         synchronized (MusicRomUtil.class) {
@@ -42,6 +42,8 @@ public class MusicRomUtil {
         }
         return mInstance;
     }
+
+    private MusicRomUtil(){}
 
     public boolean check(String str) {
         if (sName != null) {

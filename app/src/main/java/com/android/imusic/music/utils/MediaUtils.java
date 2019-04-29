@@ -28,7 +28,7 @@ import java.util.List;
 public class MediaUtils {
 
     private static final String TAG = "MediaUtils";
-    private static MediaUtils mInstance;
+    private static volatile MediaUtils mInstance;
     private static int MAX_SEARCH_KEY_NUM = 30;
     //搜索历史纪录
     public static final String SEARCH_HISTORY="SEARCH_HISTORY";
@@ -45,6 +45,8 @@ public class MediaUtils {
         }
         return mInstance;
     }
+
+    private MediaUtils(){}
 
     /**
      * 设置最大的缓存搜索历史记录个数

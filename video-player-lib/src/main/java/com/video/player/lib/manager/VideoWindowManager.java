@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 public class VideoWindowManager {
 
 	private static final String TAG = "VideoWindowManager";
-	private static VideoWindowManager mInstance;
+	private static volatile VideoWindowManager mInstance;
 	//迷你唱片机
 	private VideoWindowPlayerGroup mVideoWindowPlayerGroup;
 	private static WindowManager mWindowManager;
@@ -42,6 +42,7 @@ public class VideoWindowManager {
 		return mInstance;
 	}
 
+    private VideoWindowManager(){}
 
     /**
      * 添加一个播放器到窗口

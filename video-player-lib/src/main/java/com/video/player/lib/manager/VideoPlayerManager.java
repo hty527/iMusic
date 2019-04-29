@@ -34,7 +34,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
         MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, MediaPlayer.OnVideoSizeChangedListener {
 
     private static final String TAG = "VideoPlayerManager";
-    private static VideoPlayerManager mInstance;
+    private static volatile VideoPlayerManager mInstance;
     private static Context mContext;
     private MediaPlayer mMediaPlayer;
     //画面渲染
@@ -79,6 +79,8 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
         }
         return mInstance;
     }
+
+    private VideoPlayerManager(){}
 
     /**
      * 画面渲染图层初始化

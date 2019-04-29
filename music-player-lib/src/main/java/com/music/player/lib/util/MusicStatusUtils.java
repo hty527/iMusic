@@ -24,7 +24,7 @@ public class MusicStatusUtils {
     public static int navigationHeight = 0;
     private static DisplayMetrics mMetrics;
 
-    private static MusicStatusUtils mInstance;
+    private static volatile MusicStatusUtils mInstance;
 
     public static synchronized MusicStatusUtils getInstance() {
         synchronized (MusicStatusUtils.class) {
@@ -35,6 +35,8 @@ public class MusicStatusUtils {
         return mInstance;
     }
 
+    private MusicStatusUtils(){}
+    
     public static int getStatusBarHeight(Context context) {
         try {
             Class<?> c = Class.forName("com.android.internal.R$dimen");

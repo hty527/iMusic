@@ -33,7 +33,7 @@ import java.util.Observer;
 public class MusicPlayerManager implements MusicPlayerPresenter {
 
     private static final String TAG = MusicPlayerManager.class.getSimpleName();
-    private static MusicPlayerManager mInstance = null;
+    private static volatile MusicPlayerManager mInstance = null;
     private static MusicSubjectObservable cMMusicSubjectObservable;
     private static MusicPlayerServiceConnection mConnection;
     private static MusicPlayerBinder mBinder;
@@ -54,7 +54,7 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
         return mInstance;
     }
 
-    public MusicPlayerManager() {
+    private MusicPlayerManager(){
         cMMusicSubjectObservable = new MusicSubjectObservable();
     }
 
