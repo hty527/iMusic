@@ -118,7 +118,7 @@ ___
 ```
 * 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。实现自己的UI请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);<br/>
 
-**权限声明**
+**5.权限声明**
 ```
     <!--网络状态检查-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -228,7 +228,7 @@ ___
         VideoWindowManager.getInstance().onDestroy();
     }
 ```
-**权限声明：**
+**5.权限声明：**
 ```
     <!--网络状态-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
