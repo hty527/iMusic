@@ -1,12 +1,12 @@
-* 转载请注明出处，谢谢！<br/>
-**写在前面：**<br/>
-&emsp; &emsp; 之前写项目时，喜欢将重复的功能或者自定义控件封装到公用的模块中。当多个项目都依赖这个公共模块时，其中某一个项目中对模块中的代码做了修改，此时其他依赖该模块的项目不得不做出修改或者同步代码，相当麻烦。而此时有没有什么办法能避免一处改动，四方同步呢？答案肯定是有的。这里我们就跟随着前辈们的脚步来学习如何将项目模块发布至Maven仓库。真正做到只需一处修改，四处升级即可。本文将介绍发布到Maven的三种途径。教程开始前，先了解下Maven是干嘛的。
-###1：Maven是啥？
-简单来说Maven是项目管理工具，其内部工作机制是通过解析pom.xml文件中的配置获取jar包下载地址自动将jar到Peoject中，省去了手动下载到本地的繁琐过程。
-###2：Maven在哪里？
-目前Android比较著名的代码仓库是mavenCentral和jcenter，早期版本的Studio默认仓库是mavenCentral，后期版本默认仓库更换成了jcenter。Maven项目管理工具就在这两个仓库上。
-##代码仓库的三种发布方式
-### 一：发布仓库到本地
+* 转载请注明出处，谢谢！
+###写在前面：
+&emsp; &emsp; 之前在写项目时，喜欢将重复的功能或者自定义控件封装到公用的模块中，方便其他项目共用。当项目越来越多很多项目都需要依赖这个公用模块的时候，其中某一个项目中对公用模块中的代码进行了修改，此时其他依赖该模块的项目不得不做出修改或者同步代码，悲剧了，是不是相当麻烦？而此时就不得不将公用模块打包成.aar文件(不清楚.aar文件的童鞋请自行Google或Baidu)，提供给各个项目使用。这里我们就随着前辈们的脚步来学习如何将项目模块发布至Maven仓库。真正做到只需一处修改，四处升级即可。本文将介绍发布到Maven的三种方式，正式开始前，咱们先了解下Maven是干嘛的。
+###1：Maven的定义：
+就我理解来说，Maven是项目的管理工具，其管理工具由.jar、.aar和.xml等排至文件组成的管理库，其内部工作机制是通过解析pom.xml文件中的配置获取jar包或aar资源地址自动将资源download到Peoject中，省去了手动下载到本地的繁琐过程。
+###2：Maven的存储位置：
+Maven存储在第三方OSS的存储空间上，目前Android比较著名的代码仓库是mavenCentral和jcenter(早期版本的Studio默认仓库是mavenCentral，后期版本默认仓库更换成了jcenter)，Maven项目管理工具就在这两个仓库之上。而我们的代码是打包成了.aar文件，最终上传到了Maven中，发布至JCenter。
+##发布代码到Maven的三种方式
+### 一：发布到本地Maven
 #### 1：uploadArchives配置和Task生成
 在要发布的模块build.gradle中配置uploadArchives属性，示例代码：
 ```
@@ -26,7 +26,7 @@ uploadArchives{
     }
 }
 ```
-![uploadArchives配置截图图示](https://upload-images.jianshu.io/upload_images/16585967-7058b314d9fda540.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)<br/>
+![uploadArchives配置截图图示](https://upload-images.jianshu.io/upload_images/16585967-7058b314d9fda540.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 配置后Sync Now一把，Studio编辑器右上角Gradle中你要发布的模块下会多出一个upload目录，目录中有个uploadArchives任务脚本，这个脚本就是将库发布到Maven仓库的Task。
 #### 2：执行uploadArchives任务
 点击如图所示的uploadArchives
@@ -70,7 +70,7 @@ android {
 implementation(name: 'music-player-lib-1.0.0', ext: 'aar')
 ```
 点击Sync Now等待完成后发布依赖到本地Maven就成功啦！在发布到本地Maven前你应该要校验混淆开启的情况噢~免得他人依赖你的项目时掉坑里去了。发布到本地Maven固然方便，但是公司项目团队人数较多时，将模块打包成.aar文件后复制到项目多少有点不方便，比如所A程序员的本地Maven路径是在D盘，而B程序员的Maven路径又在E盘，这样同步代码改来改去着实难受，所以接下来就介绍适应公司内部团队多人开发的场景，即将代码发布至局域网仓库。
-### 二：发布仓库到局域网
+### 二：发布到局域网Maven
 局域网部署需要用到私服部署，这里跟随前辈脚步介绍使用Nexus来搭建部署局域网Maven仓库。
 #### 1：安装部署Nexus(这里用nexus-2.14.2-01版本演示)
 [点此前往下载nexus-2.14.2-01](https://sonatype-download.global.ssl.fastly.net/repository/repositoryManager/oss/nexus-2.14.8-01-bundle.zip)
@@ -171,8 +171,8 @@ dependencies {
     implementation 'com.android.imusic.lib:music-player-lib:1.0.0'
 ```
 到此，发布代码到本地仓库到此结束了。但是随之又来了一个问题，局域网仓库对公司团队来说固然是好，但是你开发的模块很牛逼的时候，别人要用你的模块时怎么办？这个时候就需要将模块发布至外网仓库，即发布代码至JCenter。
-### 三：发布代码到JCenter
-在早期的AndroidStudio版本中，Google默认使用的仓库是mavenCentral，但由于发布流程太复杂(前辈们是这样分析的，不知道对不对)，后来改用默认仓库是JCenter,说了这么久还没介绍JCenter是什么？简单来说JCenter是Bintray其下的一个分区仓库，代码托管的存储空间。那既然JCenter是属于Bintray旗下的，那就首先得从Bintray开始。
+### 三：发布到外网Maven
+发布到外网Maven，本问介绍发布到JCenter上。在早期的AndroidStudio版本中，Google默认使用的仓库是mavenCentral，但由于发布流程太复杂(前辈们是这样分析的，不知道对不对)，后来改用默认仓库是JCenter,说了这么久还没介绍JCenter是什么？简单来说JCenter是Bintray其下的一个分区仓库，代码托管的存储空间。那既然JCenter是属于Bintray旗下的，那就首先得从Bintray开始。
 #### 1：Bintray账号准备
 Bintray是一家OSS服务商，类似国内的阿里云OSS。要将代码发布之JCenter，必须先有Bintray账号和分区目录。感兴趣可以去看下AndroidStudio的Bintray库在Giuhub中的项目：[Bintray-Github](https://github.com/novoda/bintray-release)。注册账号我们注册个人账号即可。[前往Bintray官网个人账号注册](https://bintray.com/signup/oss)。
 * 注意：1.注册账号最好注册个人的，不然企业账号没有add To Jcenter功能，需要收费。2：注册的邮箱一定要使用国外的邮箱，不然注册没反应。
@@ -297,4 +297,5 @@ dependencies {
     implementation project(':video-player-lib')
 }
 ```
-##至此，全部Maven及JCenter发布流程完毕，祝您玩的愉快~~
+##至此，全部Maven及JCenter发布流程完毕，版本更新时只需要更改配置版本号重新发布即可。祝君耍的愉快~~
+
