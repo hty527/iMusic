@@ -1492,7 +1492,6 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 设置进度完成调用
-     * @param mediaPlayer
      */
     @Override
     public void onSeekComplete(MediaPlayer mediaPlayer) {

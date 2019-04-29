@@ -24,6 +24,7 @@ allprojects {
         //本地局域网仓库地址
 //        maven { url 'http://localhost:8081/nexus/content/repositories/releases/' }
         maven { url 'https://dl.bintray.com/novoda-oss/snapshots/' }
+        //自己的bintray仓库地址
         maven { url 'https://dl.bintray.com/htyopen/maven' }
     }
     //编译时报注释GBK编码错误解决
