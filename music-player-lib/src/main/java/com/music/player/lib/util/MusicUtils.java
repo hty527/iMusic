@@ -689,6 +689,27 @@ public class MusicUtils {
     }
 
     /**
+     * 返回相对于此数组正在播放的位置
+     * @param mediaInfos 列表集
+     * @param musicID 音频ID
+     * @return  在列表中所在的位置
+     */
+    public int getCurrentPlayIndexInThis(List<?> mediaInfos, long musicID) {
+        if(musicID<=0){
+            return 0;
+        }
+        if(null!=mediaInfos&&mediaInfos.size()>0){
+            List<BaseMediaInfo> mediaInfoList= (List<BaseMediaInfo>) mediaInfos;
+            for (int i = 0; i < mediaInfoList.size(); i++) {
+                if(mediaInfoList.get(i).getId()==musicID){
+                    return i;
+                }
+            }
+        }
+        return 0;
+    }
+
+    /**
      * 获取应用的包名
      * @param context 上下文
      * @return 应用包名
