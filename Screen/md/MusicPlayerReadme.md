@@ -39,11 +39,10 @@
 ### 五、付费购买逻辑
 ```
   一般付费音频播放前，播放地址是为空的，播放器内部将抛出onMusicPathInvalid(BaseMediaInfo musicInfo, int position);事件，你可在此方法中处理购买付费逻辑，
-  待获取到真实播放地址后，再调用MusicPlayerManager.getInstance().continuePlay(String sourcePath);继续尝试播放。也可以自行处理完购买逻辑后再开始调用播放音频事件。
+  待获取到真实播放地址后，再调用下面方法继续尝试播放。也可以自行处理完购买逻辑后再开始调用播放音频事件。
 ```
-在收到抛出的onMusicPathInvalid(BaseMediaInfo musicInfo, int position)事件时调用下面方法继续播放。
 ```
-    //继续尝试播放。
+    //调用此代码继续尝试播放。
     MusicPlayerManager.getInstance().continuePlay(String sourcePath);
 ```
 ### 六、后台播放避免被系统杀死
