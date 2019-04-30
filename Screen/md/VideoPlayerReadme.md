@@ -166,7 +166,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
 
     //切换至悬浮窗口播放之前需设置目标Activity所需的参数TAG，见VideoParams成员属性注释
     mVideoPlayer.setParamsTag(mVideoParams);
-    //若你的Activity已经处理了无缝衔接播放，则不做再做些什么，如果不支持无缝衔接播放，则需在你的目标Activity加上下面代码
+    //若你的目标Activity已经处理了无缝衔接播放，则不做再做些什么，如果不支持无缝衔接播放，则需在你的目标Activity加上下面代码
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
