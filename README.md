@@ -252,7 +252,7 @@ ___
 **更多自定义和其他功能详见此Wiki文档：**[视频播放器Wiki]
 ## iMusic预览及下载:
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
-* 此示例工程音乐搜索API取自《酷狗音乐》开放API，视频资源API取自《开眼视频》，在次致谢！<br/>
+* 此示例工程音乐搜索API取自《酷狗音乐》开放API，视频资源API取自《开眼视频》。<br/>
 #### 功能快照预览:
 <div align="center">
     <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/image/20190417_162033.jpg" height="480" width="270">
