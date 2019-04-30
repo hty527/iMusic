@@ -6,11 +6,10 @@
 [Android视频播放器开发记录]: https://www.jianshu.com/p/39d8f824c2fb "简书视频播放器"
 **视频播放器博文:**[Android视频播放器开发记录]
 
-基于MediaPlayer解码器封装的完整音乐播放器和视频播放器功能库，集成极简、功能较全面、体积小。欢迎Star！<br/>
-为方便集成参考，已将音频、视频两个库集成到此一个示例项目里中，欢迎下载体验！
+基于MediaPlayer解码器封装的完整音乐播放器和视频播放器功能库，集成极简、功能较全面、体积小。欢迎Star！欢迎下载体验！<br/>
 ___
 ## 功能演示及概述:
-#### 功能演示:(部分功能快照预览在最下面)
+#### 功能演示:(更多功能快照在结尾处)
 * 音乐播放器预览(如播放不流畅请点击图片查看)</br>
 <div>
     <img src="https://github.com/Yuye584312311/IMusic/blob/master/Screen/video/Music.gif" height="480" width="270">
