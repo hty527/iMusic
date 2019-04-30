@@ -22,9 +22,8 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
         <item name="video_mini_window" type="id"></item>
     </resources>
 ```
-使用方法示例：
+在你的播放器通道布局中,声明示例：
 ```
-    //在你的播放器布局文件中,声明ID
    <?xml version="1.0" encoding="utf-8"?>
    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
        android:layout_width="match_parent"
@@ -47,21 +46,21 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
    </FrameLayout>
 ```
 
-### 二、自定义交互UI的实现
+### 二、自定义交互UI的具体实现
 #### 1. 自定义交互控制器
 
-交互控制器在本项目中被定义为：用户与播放器的UI交互控制器。如需自定义请继承BaseVideoController类并实现其抽象方法，调用BaseVideoPlayer的setVideoController(V controller);绑定控制器。</br>
+交互控制器在本项目中被定义为：用户与播放器的UI交互控制器。如需自定义请继承BaseVideoController类并实现其抽象方法，调用播放器通道的setVideoController(V controller);绑定控制器。</br>
 如在播放过程中开启小窗口、悬浮窗播放器时，可指定控制器小窗口、悬浮窗专用的交互控制器。悬浮窗口的关闭按钮不支持自定义。<br/>
 
 #### 2. 自定义封面控制器
 
-封面控制器是指视频在开始播放前的封面显示图层，如需自定义请继承BaseCoverController类，调用BaseVideoPlayer的setVideoCoverController(C controller);绑定控制器。BaseCoverController中默认实现了点击开始播放能力。若需自定义点击自己的View开始播放，请实现点击事件后
-调用BaseVideoPlayer的mOnStartListener.onStartPlay();方法开始播放。<br/>
+封面控制器是指视频在开始播放前的封面显示图层，如需自定义请继承BaseCoverController类，调用播放器通道的setVideoCoverController(C controller);绑定控制器。BaseCoverController中默认实现了点击开始播放能力。若需自定义点击自己的View开始播放，请实现点击事件后
+调用BaseCoverController的mOnStartListener.onStartPlay();方法开始播放。<br/>
 
 #### 3. 自定义手势识别器
 
 手势识别器是播放器在全屏状态下播放时，播放器内部检测用户手势滑动行为对播放器功能做出改变时的UI交互提示，如快进、快退、音量、亮度等调节后的UI显示交互，如需自定义
-请继承BaseGestureController类，实现其抽象方法，调用调用BaseVideoPlayer的setVideoGestureController(G controller);绑定控制器。<br/>
+请继承BaseGestureController类，实现其抽象方法，调用调用播放器通道的setVideoGestureController(G controller);绑定控制器。<br/>
 
 **特别注意**<br/>
 * 播放器是支持播放器窗口切换无缝衔接播放、悬浮窗中点击全屏打开播放器界面功能的，在使用转场播放前，必须调用VideoPlayerManager.getInstance().setContinuePlay(true); <br/>
@@ -69,7 +68,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
 ### 三、其他功能拓展
 #### 1. 界面跳转无缝衔接播放
 界面跳转无缝衔接播放大多用在列表播放时点击条目跳转至视频详情界面继续播放，为了更好的用户体验，不应该重新去加载视频数据，而是衔接列表的播放进度和画面、声音等继续播放。<br/>
-功能实现代码：<br/>
+在你的Actvity中实现如下代码：<br/>
 跳转之前
 ```
     //播放器控件
@@ -135,7 +134,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     }
 ```
 #### 2. 迷你小窗口播放器与常规播放器切换
-
+播放器详情界面，
 #### 3. 切换至悬浮窗播放
 
 #### 4. 悬浮窗中打开APP播放界面或者指定其他界面
