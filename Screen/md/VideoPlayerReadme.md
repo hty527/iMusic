@@ -66,7 +66,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
 #### 3. 自定义手势识别器
 
 手势识别器是播放器在全屏状态下播放时，播放器内部检测用户手势滑动行为对播放器功能做出改变时的UI交互提示，如快进、快退、音量、亮度等调节后的UI显示交互，如需自定义
-请继承BaseGestureController类，实现其抽象方法，调用调用播放器通道的setVideoGestureController(G controller);绑定控制器。<br/>
+请继承BaseGestureController类，实现其抽象方法，调用调用播放器通道的setVideoGestureController(G controller);绑定控制器。手势识别器还支持用户自己处理手势意图，详见BaseGestureController抽象方法介绍。<br/>
 
 **特别注意**<br/>
 * 播放器是支持播放器窗口切换无缝衔接播放、悬浮窗中点击全屏打开播放器界面功能的，在使用转场播放前，必须调用VideoPlayerManager.getInstance().setContinuePlay(true); <br/>
