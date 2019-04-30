@@ -166,6 +166,45 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
 
     //切换至悬浮窗口播放之前需设置目标Activity所需的参数TAG，见VideoParams成员属性注释
     mVideoPlayer.setParamsTag(mVideoParams);
+    //若你的Activity已经处理了无缝衔接播放，则不做再做些什么，如果不支持无缝衔接播放，则需在你的目标Activity加上下面代码
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.xxx);
+        boolean isPlaying = intent.getBooleanExtra(VideoConstants.KEY_VIDEO_PLAYING,false);
+        mVideoPlayer = (VideoDetailsPlayerTrackView) findViewById(R.id.video_player);
+        //设置播放资源
+        mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
+        ...此处省去其他初始化
+        //衔接播放任务
+        if(isPlaying&&null!=VideoPlayerManager.getInstance().getTextureView()){
+            addTextrueViewToView(mVideoPlayer);
+            //为新的播放器窗口添加监听器
+            VideoPlayerManager.getInstance().addOnPlayerEventListener(mVideoPlayer);
+            //手动检查播放器内部状态，同步常规播放器状态至全屏播放器
+            VideoPlayerManager.getInstance().checkedVidepPlayerState();
+        }else{
+            //开始全新播放任务
+            mVideoPlayer.startPlayVideo();
+        }
+    }
+
+    /**
+     * 添加一个视频渲染组件至View
+     * @param videoPlayer
+     */
+    private void addTextrueViewToView(BaseVideoPlayer videoPlayer) {
+        //先移除存在的TextrueView
+        if(null!=VideoPlayerManager.getInstance().getTextureView()){
+            VideoTextureView textureView = VideoPlayerManager.getInstance().getTextureView();
+            if(null!=textureView.getParent()){
+                ((ViewGroup) textureView.getParent()).removeView(textureView);
+            }
+        }
+        if(null!=VideoPlayerManager.getInstance().getTextureView()){
+            videoPlayer.mSurfaceView.addView(VideoPlayerManager.getInstance().getTextureView(),new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
+        }
+    }
 ```
 ### 三、更多公开API介绍
 #### 1. BaseVideoPlayer 常用API预览及说明：
