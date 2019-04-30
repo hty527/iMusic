@@ -92,19 +92,17 @@ ___
     @Override
     protected void onCreate() {
         super.onCreate();
-        //绑定MusicService
-        MusicPlayerManager.getInstance().bindService(MainActivity.this);
+        //初始化内部服务组件
+        MusicPlayerManager.getInstance().initialize(MainActivity.this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //音频悬浮窗口释放
         MusicWindowManager.getInstance().onDestroy();
-        //若使用Demo中的本地音乐功能，需要调用此方法
-        MediaUtils.getInstance().onDestroy();
-        //解绑服务
-        MusicPlayerManager.getInstance().unBindService(MainActivity.this);
-        MusicPlayerManager.getInstance().onDestroy();
+        //播放器内部服务组件及其他对象反初始化
+        MusicPlayerManager.getInstance().unInitialize(MainActivity.this);
     }
 ```
 **4.开始播放任务**

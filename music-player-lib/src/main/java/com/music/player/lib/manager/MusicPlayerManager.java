@@ -59,10 +59,10 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
     /**
-     * 绑定服务，Activity初始化后调用
+     * 初始化音乐服务组件，Activity中初始化后调用
      * @param context Activity上下文
      */
-    public void bindService(Context context) {
+    public void initialize(Context context) {
         if(null!=context&&context instanceof Activity){
             mConnection = new MusicPlayerServiceConnection();
             Intent intent = new Intent(context, MusicPlayerService.class);
@@ -74,7 +74,7 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
     /**
-     * 解绑服务
+     * 解绑音乐服务组件
      * @param context Activity上下文
      */
     public void unBindService(Context context) {
@@ -830,8 +830,10 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
 
     /**
      * APP销毁时同步销毁
+     * @param context Activity类型上下文
      */
-    public void onDestroy(){
+    public void unInitialize(Activity context){
+        unBindService(context);
         removeObservers();
         removeAllPlayerListener();
         mConnection=null;mBinder=null;cMMusicSubjectObservable=null;mInstance=null;reBrowse=false;
