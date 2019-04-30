@@ -63,8 +63,8 @@ public class MainActivity extends MusicBaseActivity<IndexPersenter> {
         MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
         //设置点击通知栏打开的Activity绝对路径
         MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
-        //绑定MusicService
-        MusicPlayerManager.getInstance().bindService(MainActivity.this);
+        //初始化音频媒体服务
+        MusicPlayerManager.getInstance().initialize(MainActivity.this);
 
         mBtnMusic = (TextView) findViewById(R.id.music_btn_music);
         mBtnMusic.setSelected(true);
@@ -218,9 +218,7 @@ public class MainActivity extends MusicBaseActivity<IndexPersenter> {
         VideoPlayerManager.getInstance().onDestroy();
         VideoWindowManager.getInstance().onDestroy();
         MusicWindowManager.getInstance().onDestroy();
-        MediaUtils.getInstance().onDestroy();
-        MusicPlayerManager.getInstance().unBindService(MainActivity.this);
-        MusicPlayerManager.getInstance().onDestroy();
+        MusicPlayerManager.getInstance().unInitialize(MainActivity.this);
         if(null!=mPagerAdapter){
             mPagerAdapter.onDestroy();
             mPagerAdapter=null;
