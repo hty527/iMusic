@@ -1,9 +1,59 @@
 # **视频播放器Wiki**
+* 播放器自定义指导：
+此播放器定义的名词解释：<br/>
+* 播放器通道</br>
+&emsp; 为满足播放器在不同场景下的不同功能和UI实现，封装了播放器通道的概念，所有播放器通道都需继承BaseVideoPlayer抽象基类，指定三种控制器的泛型类型，具体用法请参考内部播放器封装
+的默认播放器通道VideoPlayerTrackView类。<br/>
+* 控制器</br>
+&emsp; 播放器在不同场景下，UI和功能难免有所差异，解决交互耦合问题，封装播放器时支持用户自定义控制器。播放器内部三种核心的控制器分别是：播放控制器、封面控制器、手势识别控制器。这三个控制器由BaseVideoPlayer
+类持有，分发内部播放器的各种播放事件，如：播放进度、暂停、开始等等。<br/>
+* BaseVideoPlayer<b/>
+BaseVideoPlayer被设计成抽象的基类，所有播放器通道必须继承BaseVideoPlayer类，返回LayoutID和指定泛型控制器类型，Layout布局中必须申明id:surface_view,如果你的播放器不需要与用户交互和封面图层，则其他ID无需申明。
+此播放器默认封装了一套播放器通道+三种控制器。
+所有资源ID如下：
+```
+    <resources>
+        <!--播放器渲染ID-->
+        <item name="surface_view" type="id"></item>
+        <!--视频播放器控制器ID-->
+        <item name="video_player_controller" type="id"></item>
+        <!--封面控制器ID-->
+        <item name="video_cover_controller" type="id"></item>
+        <!--全屏窗口播放器ID-->
+        <item name="video_full_screen_window" type="id"></item>
+        <!--迷你小窗口播放器ID-->
+        <item name="video_mini_window" type="id"></item>
+    </resources>
+```
+使用方法示例：
+```
+    //在你的播放器布局文件中,声明ID
+   <?xml version="1.0" encoding="utf-8"?>
+   <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+       <!--画面-->
+       <FrameLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:id="@id/surface_view"/>
+       <!--上层封面或其他-->
+       <FrameLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:id="@id/video_cover_controller"/>
+       <!--控制器-->
+       <FrameLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:id="@id/video_player_controller"/>
+   </FrameLayout>
+```
 
 ### 一、自定义交互UI的实现
 #### 1. 自定义交互控制器
 
-控制器是用户与播放器交互的控制器，如需自定义请继承BaseVideoController类并实现其抽象方法，调用BaseVideoPlayer的setVideoController(V controller);绑定控制器。</br>
+交互控制器在本项目中被定义为：用户与播放器的UI交互控制器。如需自定义请继承BaseVideoController类并实现其抽象方法，调用BaseVideoPlayer的setVideoController(V controller);绑定控制器。</br>
 如在播放过程中开启小窗口、悬浮窗播放器时，可指定控制器小窗口、悬浮窗专用的交互控制器。悬浮窗口的关闭按钮不支持自定义。<br/>
 
 #### 2. 自定义封面控制器
