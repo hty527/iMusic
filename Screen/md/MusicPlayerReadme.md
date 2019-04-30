@@ -29,9 +29,15 @@
      MusicPlayerListDialog：默认当前正在播放的列表
 ```
 ### 三、本地音乐与网络音频兼容
-播放器完美支持本地音乐及网络音乐的兼容播放和封面兼容，如果本地音乐对象的未指定音频封面，则播放器内部将尝试获取音频自带封面作为唱片机封面显示和背景渐变图层显示。
-### 四、你的业务逻辑如果需要付费播放
-一般付费音频播放前，播放地址是为空的，播放器内部将抛出onMusicPathInvalid(BaseMediaInfo musicInfo, int position);事件，你可在此方法中处理购买付费逻辑，待获取到真实播放地址后，再调用MusicPlayerManager.getInstance().continuePlay(String sourcePath);继续尝试播放。
+```
+    播放器完美支持本地音乐及网络音乐的兼容播放和音频封面显示兼容，如果本地音乐对象的未指定音频封面，则播放器内部将尝试获取音频自带封面作为唱片机封面显示和背景渐变图层显示。
+```
+### 四、付费购买逻辑
+```
+  一般付费音频播放前，播放地址是为空的，播放器内部将抛出onMusicPathInvalid(BaseMediaInfo musicInfo, int position);事件，你可在此方法中处理购买付费逻辑，
+  待获取到真实播放地址后，再调用MusicPlayerManager.getInstance().continuePlay(String sourcePath);继续尝试播放。也可以自行处理完购买逻辑后再开始调用播放音频事件。
+```
+在收到抛出的onMusicPathInvalid(BaseMediaInfo musicInfo, int position)事件时调用下面方法继续播放。
 ```
     //继续尝试播放。
     MusicPlayerManager.getInstance().continuePlay(String sourcePath);
