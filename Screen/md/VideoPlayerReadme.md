@@ -140,18 +140,41 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     }
 ```
 #### 2. 迷你小窗口播放器与常规播放器切换
-播放器详情界面，
+如果你的项目需求需要支持从常规播放器切换至迷你小窗口播放，那么本库内部支持从常规播放器切换至迷你小窗口播放且只能是常规播放器切换至小窗口，请不要尝试从全屏后者悬浮窗切换至小窗口播放！支持全屏幕拖拽功能。此处代码演示迷你小窗口默认出现在播放器右下方，播放器宽为屏幕1/2,高为16:9。具体的实现方式如下：
+```
+    //获取屏幕宽度
+    int screenWidth = VideoUtils.getInstance().getScreenWidth(VideoPlayerActviity.this);
+    int width = screenWidth / 2;
+    int height = width * 9 / 16;
+    //计算出小窗口出现在屏幕的X、Y轴的起点位置，也可以调用startMiniWindow的一参方法。具体内部实现，请阅读方法注释。
+    int startX = screenWidth / 2 -VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
+    int startY=mVideoPlayer.getMeasuredHeight()+VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
+    //调用视频通道的startMiniWindow方法，转到小窗口播放
+    mVideoPlayer.startMiniWindow(startX,startY,width,height,null);
+```
 #### 3. 切换至悬浮窗播放
-
+播放器封装支持从常规播放器切换至全局悬浮窗口播放，也支持从悬浮窗口播放器跳回至视频播放器界面，示例代码如下：
+##### 3.1 切换至全局悬浮窗
+```
+    //直接调用播放器通道的开始全局悬浮窗，startGlobalWindown方法为多参重载，请阅读方法参数注释
+    mVideoPlayer.startGlobalWindown(null);
+```
+##### 3.2 全局悬浮窗跳回至Activity
+若支持此功能，需在切换至悬浮窗口播放之前，设置回跳目标Activity的绝对路径和设置目标Activity的Params参数信息。
+```
+    //建议在初始化调用，设置悬浮窗跳转至目标Activity的绝对路径
+    VideoPlayerManager.getInstance().setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
+    //切换至悬浮窗之前需设置目标Activity所需的参数，见VideoParams成员属性注释
+    mVideoPlayer.setParamsTag(mVideoParams);
+```
 #### 4. 悬浮窗中打开APP播放界面或者指定其他界面
 悬浮窗中打开Activity，需要配置目标Activity的和绝对路径给VideoPlayerManager,设置代码：
 ```
     //1.全局初始化时设置目标Activity的绝对路径
     VideoPlayerManager.getInstance().setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
-    //2.调用播放器对象设置VideoParams,VideoParams中的字段根据自己需求填写，基本的ID、播放地址等不能为空。这个参数最红会在跳转至播放器Activity时传递过去。
+    //2.调用播放器对象设置VideoParams,这个TAG最终会在跳转至目标Activity时传递过去。
     VideoPlayerTrackView.setParamsTag(VideoParams params);
 ```
-
 #### 5. 常驻内存播放
 
 ##### 2.1：首先在全局初始化中设置要跳转的Activity绝对路径:

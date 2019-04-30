@@ -10,11 +10,18 @@ import android.os.Parcelable;
 
 public class VideoParams implements Parcelable{
 
-    private long videoiId;
+    //视频ID
+    private String videoiId;
+    //视频标题
     private String videoTitle;
+    //视频封面
     private String videoCover;
+    //视频描述
     private String videoDesp;
+    //视频播放地址
     private String videoUrl;
+    //一下字段根据你的业务声明
+    //用户昵称
     private String nickName;
     private String userFront;
     private String userSinger;
@@ -26,7 +33,7 @@ public class VideoParams implements Parcelable{
     public VideoParams(){}
 
     protected VideoParams(Parcel in) {
-        videoiId = in.readLong();
+        videoiId = in.readString();
         videoTitle = in.readString();
         videoCover = in.readString();
         videoDesp = in.readString();
@@ -47,7 +54,7 @@ public class VideoParams implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(videoiId);
+        dest.writeString(videoiId);
         dest.writeString(videoTitle);
         dest.writeString(videoCover);
         dest.writeString(videoDesp);
@@ -73,11 +80,11 @@ public class VideoParams implements Parcelable{
         }
     };
 
-    public long getVideoiId() {
+    public String getVideoiId() {
         return videoiId;
     }
 
-    public void setVideoiId(long videoiId) {
+    public void setVideoiId(String videoiId) {
         this.videoiId = videoiId;
     }
 

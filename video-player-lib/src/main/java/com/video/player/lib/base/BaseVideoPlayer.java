@@ -539,7 +539,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                 Logger.d(TAG,"mTitle:"+mTitle+",mDataSource:"+mDataSource);
                 videoParams.setVideoTitle(mTitle);
                 videoParams.setVideoUrl(mDataSource);
-                videoParams.setVideoiId(mVideoID);
+                videoParams.setVideoiId(mVideoID+"");
                 startIntent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
             }
             getContext().getApplicationContext().startActivity(startIntent);
