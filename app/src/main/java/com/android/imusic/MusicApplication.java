@@ -8,6 +8,7 @@ import com.android.imusic.music.manager.AppBackgroundManager;
 import com.android.imusic.music.manager.ForegroundManager;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicWindowClickListener;
+import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.MusicUtils;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -23,7 +24,8 @@ public class MusicApplication extends Application {
     public void onCreate() {
         super.onCreate();
         ForegroundManager.getInstance().init(this);
-        MusicUtils.getInstance().initSharedPreferencesConfig(getApplicationContext());
+        //全局初始化
+        MusicPlayerManager.getInstance().init(getApplicationContext());
         //APP前后台监测,悬浮窗的处理
         AppBackgroundManager.getInstance().setAppStateListener(new AppBackgroundManager.IAppStateChangeListener() {
             @Override

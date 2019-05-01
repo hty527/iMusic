@@ -19,6 +19,8 @@ import com.music.player.lib.model.MusicWindowStyle;
 import com.music.player.lib.service.MusicPlayerBinder;
 import com.music.player.lib.service.MusicPlayerService;
 import com.music.player.lib.util.Logger;
+import com.music.player.lib.util.MusicUtils;
+
 import java.util.List;
 import java.util.Observer;
 
@@ -59,7 +61,15 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
     /**
-     * 初始化音乐服务组件，Activity中初始化后调用
+     * 全局初始化
+     * @param context ApplicaionContext
+     */
+    public void init(Context context){
+        MusicUtils.getInstance().initSharedPreferencesConfig(context);
+    }
+
+    /**
+     * Activity初始化音乐服务组件，Activity中初始化后调用
      * @param context Activity上下文
      */
     public void initialize(Context context) {
@@ -836,6 +846,8 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
         unBindService(context);
         removeObservers();
         removeAllPlayerListener();
+        //音频悬浮窗口释放
+        MusicWindowManager.getInstance().onDestroy();
         mConnection=null;mBinder=null;cMMusicSubjectObservable=null;mInstance=null;reBrowse=false;
         mActivityClassName=null;mMusicPlayerConfig=null;
     }
