@@ -5,7 +5,6 @@ def minSdk = android.defaultConfig.minSdkVersion
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
     buildToolsVersion rootProject.ext.android.buildToolsVersion
-
     defaultConfig {
         applicationId rootProject.ext.imusic.applicationId
         minSdkVersion rootProject.ext.android.minSdkVersion
@@ -14,7 +13,6 @@ android {
         versionName rootProject.ext.imusic.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         debug {
             debuggable true
@@ -45,18 +43,16 @@ android {
             dimension "app"
         }
         //开发版
-        flavorDevelop {
+        develop {
             dimension "type"
             minSdkVersion minSdk
         }
-
         //正式版
-        flavorPublish{
+        publish{
             dimension "type"
             minSdkVersion minSdk
         }
     }
-
     signingConfigs {
         debug {
             storeFile file('music.keystore')
@@ -97,13 +93,13 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
     implementation 'com.google.android:flexbox:0.3.1'
     implementation 'com.tencent.bugly:crashreport:latest.release'
-    //使用本地的
-    //implementation(name: 'music-player-1.0.0', ext: 'aar')
-    //implementation(name: 'video-player-1.0.0', ext: 'aar')
-    //音乐播放器
-    //    implementation 'com.imusic.player:music-player:1.0.0'
+    //libs
+//    implementation(name: 'music-player-1.0.0', ext: 'aar')
+//    implementation(name: 'video-player-1.0.0', ext: 'aar')
+    //本地Maven、网络
+//    implementation 'com.imusic.player:music-player:1.0.0'
     //视频播放器
-    //    implementation 'com.imusic.player:video-player:1.0.0'
+//    implementation 'com.imusic.player:video-player:1.0.0'
     implementation project(':music-player-lib')
     implementation project(':video-player-lib')
 }
