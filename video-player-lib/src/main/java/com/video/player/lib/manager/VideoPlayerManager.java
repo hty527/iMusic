@@ -394,13 +394,14 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
                 mAudioFocusManager= new VideoAudioFocusManager(mContext.getApplicationContext());
             }
             int requestAudioFocus = mAudioFocusManager.requestAudioFocus(new VideoAudioFocusManager.OnAudioFocusListener() {
+
                 @Override
-                public void onStart() {
+                public void onFocusGet() {
                     play();
                 }
 
                 @Override
-                public void onStop() {
+                public void onFocusOut() {
                     VideoPlayerManager.this.onStop(true);
                 }
 
@@ -579,6 +580,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     @Override
     public void onReset() {
         onStop(true);
+
         mOnPlayerEventListeners=null;
         //销毁可能存在的悬浮窗
         VideoWindowManager.getInstance().onDestroy();
@@ -637,6 +639,14 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     public void seekTo(long currentTime) {
         try {
             if(null!=mMediaPlayer){
+                //非暂停状态下置为加载中状态
+//                if(!VideoPlayerManager.getInstance().getVideoPlayerState().equals(VideoPlayerState.MUSIC_PLAYER_PAUSE)){
+//
+//                }
+                VideoPlayerManager.this.mMusicPlayerState=VideoPlayerState.MUSIC_PLAYER_SEEK;
+                if(null!=mOnPlayerEventListeners){
+                    mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
+                }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     mMediaPlayer.seekTo(currentTime,MediaPlayer.SEEK_CLOSEST);
                 }else{

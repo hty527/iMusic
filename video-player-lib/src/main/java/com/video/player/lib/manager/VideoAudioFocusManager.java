@@ -61,23 +61,22 @@ public class VideoAudioFocusManager {
                         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mVolumeWhenFocusLossTransientCanDuck,
                                 AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
                     }
-                    //暂停下不恢复播放
                     if(null!=mFocusListener){
-                        mFocusListener.onStart();
+                        mFocusListener.onFocusGet();
                     }
                     break;
                 //被其他播放器抢占
                 case AudioManager.AUDIOFOCUS_LOSS:
                     Logger.d(TAG,"被其他播放器抢占");
                     if(null!=mFocusListener){
-                        mFocusListener.onStop();
+                        mFocusListener.onFocusOut();
                     }
                     break;
                 //暂时失去焦点，例如来电占用音频输出
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                     Logger.d(TAG,"暂时失去焦点");
                     if(null!=mFocusListener){
-                        mFocusListener.onStop();
+                        mFocusListener.onFocusOut();
                     }
                     break;
                 //瞬间失去焦点，例如通知占用了音频输出
@@ -90,7 +89,6 @@ public class VideoAudioFocusManager {
                             mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mVolumeWhenFocusLossTransientCanDuck / 2,
                                     AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
                         }
-                        mFocusListener.onStart();
                     }
                     break;
             }
@@ -98,8 +96,20 @@ public class VideoAudioFocusManager {
     };
 
     public interface OnAudioFocusListener{
-        void onStart();
-        void onStop();
+        /**
+         * 恢复焦点
+         */
+        void onFocusGet();
+
+        /**
+         * 失去焦点
+         */
+        void onFocusOut();
+
+        /**
+         * 内部播放器是否正在播放
+         * @return 为true正在播放
+         */
         boolean isPlaying();
     }
 

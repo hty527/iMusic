@@ -13,7 +13,6 @@ import com.video.player.lib.R;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.base.BaseVideoController;
 import com.video.player.lib.manager.VideoPlayerManager;
-import com.video.player.lib.model.VideoPlayerState;
 import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
 
@@ -115,15 +114,6 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     }
 
     /**
-     * 悬浮窗播放开关
-     * @param enable true:启用 false:禁用
-     */
-    @Override
-    public void setGlobaEnable(boolean enable) {
-        this.mEnable=enable;
-    }
-
-    /**
      * 负责控制器显示、隐藏
      */
     private  Runnable controllerRunnable=new Runnable() {
@@ -178,10 +168,6 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         isTouchSeekBar=false;
         //恢复控制器显示隐藏规则
         changeControllerState(mScrrenOrientation,false);
-        //非暂停状态下置为加载中状态
-        if(!VideoPlayerManager.getInstance().getVideoPlayerState().equals(VideoPlayerState.MUSIC_PLAYER_PAUSE)){
-            startSeekLoading();
-        }
         //跳转至某处
         long durtion = VideoPlayerManager.getInstance().getDurtion();
         if(durtion>0){
@@ -406,11 +392,13 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         }
     }
 
+
     /**
-     * 跳转至某处播放中
+     * 跳转至某处尝试开始播放中
      */
-    public void startSeekLoading(){
-        Logger.d(TAG,"startSeekLoading："+mScrrenOrientation);
+    @Override
+    public void startSeek() {
+        Logger.d(TAG,"startSeek："+mScrrenOrientation);
         //小窗口
         if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
             updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
@@ -420,6 +408,15 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         }else{
             updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         }
+    }
+
+    /**
+     * 悬浮窗播放开关
+     * @param enable true:启用 false:禁用
+     */
+    @Override
+    public void setGlobaEnable(boolean enable) {
+        this.mEnable=enable;
     }
 
     /**

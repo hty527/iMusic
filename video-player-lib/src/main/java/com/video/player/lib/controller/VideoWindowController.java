@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.video.player.lib.R;
 import com.video.player.lib.base.BaseVideoController;
 import com.video.player.lib.manager.VideoPlayerManager;
-import com.video.player.lib.model.VideoPlayerState;
 import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
 
@@ -121,10 +120,6 @@ public class VideoWindowController extends BaseVideoController implements SeekBa
         isTouchSeekBar=false;
         //恢复控制器显示隐藏规则
         changeControllerState(mScrrenOrientation,false);
-        //非暂停状态下置为加载中状态
-        if(!VideoPlayerManager.getInstance().getVideoPlayerState().equals(VideoPlayerState.MUSIC_PLAYER_PAUSE)){
-            startSeekLoading();
-        }
         //跳转至某处
         long durtion = VideoPlayerManager.getInstance().getDurtion();
         if(durtion>0){
@@ -245,15 +240,6 @@ public class VideoWindowController extends BaseVideoController implements SeekBa
     }
 
     /**
-     * 跳转至某处播放中
-     */
-    public void startSeekLoading(){
-        Logger.d(TAG,"startSeekLoading："+mScrrenOrientation);
-        //小窗口
-        updateVideoControllerUI(View.VISIBLE,View.INVISIBLE);
-    }
-
-    /**
      * 开启全局悬浮窗播放
      */
     @Override
@@ -261,6 +247,16 @@ public class VideoWindowController extends BaseVideoController implements SeekBa
         removeCallbacks(View.INVISIBLE);
         Logger.d(TAG,"startWindow");
         updateVideoControllerUI(View.INVISIBLE,View.VISIBLE);
+    }
+
+    /**
+     * 跳转至某处尝试开始播放中
+     */
+    @Override
+    public void startSeek() {
+        Logger.d(TAG,"startSeek："+mScrrenOrientation);
+        //小窗口
+        updateVideoControllerUI(View.VISIBLE,View.INVISIBLE);
     }
 
     /**

@@ -177,7 +177,7 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
                 //开始全新播放任务
                 mVideoPlayer.startPlayVideo();
             }
-            if(null!=mPresenter){
+            if(null!=mPresenter&&!TextUtils.isEmpty(mVideoParams.getVideoiId())){
                 //获取推荐视频
                 mPresenter.getRecommendVideoList(mVideoParams.getVideoiId(),new TypeToken<OpenEyesIndexInfo>(){}.getType(),new MusicNetUtils.OnOtherRequstCallBack<OpenEyesIndexInfo>() {
 
