@@ -77,7 +77,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     //资源地址、视频标题
     private String mDataSource,mTitle;
     //视频ID，悬浮窗打开Activity用到
-    private long mVideoID;
+    private String mVideoID;
     //视频帧渲染父容器
     public FrameLayout mSurfaceView;
     //缩放类型,默认是等比缩放
@@ -182,7 +182,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * @param title 视频描述
      * @param videoID 视频ID
      */
-    public void setDataSource(String path, String title,long videoID) {
+    public void setDataSource(String path, String title,String videoID) {
         if(null!= mVideoController){
             mVideoController.setTitle(title);
         }
@@ -486,7 +486,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * @param title 视频标题
      * @param videoID 视频ID
      */
-    public void startPlayVideo(String dataSource,String title,long videoID){
+    public void startPlayVideo(String dataSource,String title,String videoID){
         this.mDataSource=dataSource;
         this.mTitle=title;
         this.mVideoID=videoID;
@@ -539,7 +539,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                 Logger.d(TAG,"mTitle:"+mTitle+",mDataSource:"+mDataSource);
                 videoParams.setVideoTitle(mTitle);
                 videoParams.setVideoUrl(mDataSource);
-                videoParams.setVideoiId(mVideoID+"");
+                videoParams.setVideoiId(mVideoID);
                 startIntent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
             }
             getContext().getApplicationContext().startActivity(startIntent);
@@ -1419,6 +1419,12 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     case MUSIC_PLAYER_PLAY:
                         if(null!=mVideoController){
                             mVideoController.repeatPlay();
+                        }
+                        break;
+                    //开始跳转播放中
+                    case MUSIC_PLAYER_SEEK:
+                        if(null!=mVideoController){
+                            mVideoController.startSeek();
                         }
                         break;
                     //移动网络环境下播放
