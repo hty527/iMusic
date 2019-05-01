@@ -1,37 +1,5 @@
 # **视频播放器Wiki**
-### 一、播放器创建
-#### 1. 播放器java代码创建
-```
-    FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
-    VideoPlayerTrackView playerTrackView=new VideoPlayerTrackView(context);
-    playerTrackView.setVideoController(videoController);
-    playerTrackView.setVideoCoverController(coverController);
-    playerTrackView.setVideoGestureController(gestureController);
-    frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
-```
-#### 2. xml初始化支持的自定义属性
-```
-    <declare-styleable name="BaseVideoPlayer">
-            <!--是否自动设置默认控制器-->
-            <attr name="video_autoSetVideoController" format="boolean"/>
-            <!--是否自动设置封面控制器-->
-            <attr name="video_autoSetCoverController" format="boolean"/>
-            <!--循环播放-->
-            <attr name="video_loop" format="boolean"/>
-    </declare-styleable>
-```
-#### 3. 播放器拓展功能初始设置
-```
-    //会覆盖VideoPlayerManager的循环播放设置
-    playerTrackView.setLoop(true);
-    //如需在悬浮窗中支持点击全屏切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置并调用setDataSource的三参方法
-    playerTrackView.setParamsTag(mVideoParams);
-    //设置画面渲染缩放模式,默认VideoConstants.VIDEO_DISPLAY_TYPE_CUT，详见VideoConstants常量定义
-    playerTrackView.setVideoDisplayType(mode);
-    //是否支持悬浮窗播放功能，这个开关只针对入口有效，不会限制对startGlobalWindown();的调用
-    playerTrackView.setGlobaEnable(true); 或 mVideoPlayer.getVideoController().setGlobaEnable(true);
-```
-### 二、播放器框架定义的名词概念释义
+### 一、播放器框架定义的名词概念释义
 
 #### 1. 播放器通道
 
@@ -83,7 +51,38 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
            android:id="@id/video_player_controller"/>
    </FrameLayout>
 ```
-
+### 二、播放器通道创建
+#### 1. 播放器通道java代码创建
+```
+    FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
+    VideoPlayerTrackView playerTrackView=new VideoPlayerTrackView(context);
+    playerTrackView.setVideoController(videoController);
+    playerTrackView.setVideoCoverController(coverController);
+    playerTrackView.setVideoGestureController(gestureController);
+    frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
+```
+#### 2. xml初始化支持的自定义属性
+```
+    <declare-styleable name="BaseVideoPlayer">
+            <!--是否自动设置默认控制器-->
+            <attr name="video_autoSetVideoController" format="boolean"/>
+            <!--是否自动设置封面控制器-->
+            <attr name="video_autoSetCoverController" format="boolean"/>
+            <!--循环播放-->
+            <attr name="video_loop" format="boolean"/>
+    </declare-styleable>
+```
+#### 3. 播放器通道拓展功能初始设置
+```
+    //会覆盖VideoPlayerManager的循环播放设置
+    playerTrackView.setLoop(true);
+    //如需在悬浮窗中支持点击全屏切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置并调用setDataSource的三参方法
+    playerTrackView.setParamsTag(mVideoParams);
+    //设置画面渲染缩放模式,默认VideoConstants.VIDEO_DISPLAY_TYPE_CUT，详见VideoConstants常量定义
+    playerTrackView.setVideoDisplayType(mode);
+    //是否支持悬浮窗播放功能，这个开关只针对入口有效，不会限制对startGlobalWindown();的调用
+    playerTrackView.setGlobaEnable(true); 或 mVideoPlayer.getVideoController().setGlobaEnable(true);
+```
 ### 三、自定义交互UI的具体实现
 #### 1. 自定义交互控制器
 
