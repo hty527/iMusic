@@ -57,15 +57,6 @@ ___
         implementation 'com.imusic.player:music-player:1.0.0'
     }
 ```
-若拉取失败，请检查你的项目根build.gradle中是否启用支持jcenter仓库
-```
-    buildscript {
-        repositories {
-            //添加对jcenter仓库支持
-            jcenter()
-        }
-    }
-```
 **2.全局初始化**
 ```
     //Applicaion中初始化
@@ -87,7 +78,7 @@ ___
         MusicPlayerManager.getInstance().unInitialize(MainActivity.this);
     }
 ```
-**4.开始播放任务**
+**4.开始播放你的音频任务**
 ```
     /**
      * mediaInfos:待播放的歌单列表
@@ -125,7 +116,6 @@ ___
         implementation 'com.imusic.player:video-player:1.0.0'
     }
 ```
-若拉取失败，请检查你的项目根build.gradle中是否启用了jcenter仓库<br/>
 **2.在你的项目中的.xml中引入播放器布局</br>**
 ```
     <com.video.player.lib.view.VideoPlayerTrackView
@@ -135,26 +125,6 @@ ___
         app:video_autoSetCoverController="true"
         app:video_autoSetVideoController="true"/>
 ```
-支持的自定义属性说明：
-```
-    <declare-styleable name="BaseVideoPlayer">
-            <!--是否自动设置默认控制器-->
-            <attr name="video_autoSetVideoController" format="boolean"/>
-            <!--是否自动设置封面控制器-->
-            <attr name="video_autoSetCoverController" format="boolean"/>
-            <!--循环播放-->
-            <attr name="video_loop" format="boolean"/>
-    </declare-styleable>
-```
-也可以在java代码中动态初始化。<br/>
-```
-    FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
-    VideoPlayerTrackView playerTrackView=new VideoPlayerTrackView(context);
-    playerTrackView.setVideoController(videoController);
-    playerTrackView.setVideoCoverController(coverController);
-    playerTrackView.setVideoGestureController(gestureController);
-    frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
-```
 **3.播放器初始化及基本数据设置**
 ```
     mVideoPlayer = (VideoPlayerTrackView) findViewById(R.id.video_player);
@@ -163,19 +133,9 @@ ___
     mVideoPlayer.getLayoutParams().height=itemHeight;
     //开始准备播放
     mVideoPlayer.startPlayVideo(dataSource,title);
-    //或者分两步开始播放
+    //或者如下姿势准备和开始播放
     //mVideoPlayer.setDataSource(dataSource,title,);
     //mVideoPlayer.startPlayVideo();
-
-    //以下设置都是可选的，根据自己功能需求设置
-    //会覆盖VideoPlayerManager的循环播放设置
-    mVideoPlayer.setLoop(true);
-    //如需在悬浮窗中支持点击全屏切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置并调用setDataSource的三参方法
-    mVideoPlayer.setParamsTag(mVideoParams);
-    //设置画面渲染缩放模式,默认VideoConstants.VIDEO_DISPLAY_TYPE_CUT，详见VideoConstants常量定义
-    mVideoPlayer.setVideoDisplayType(mode);
-    //是否支持悬浮窗播放功能，这个开关只针对入口有效，不会限制对startGlobalWindown();的调用
-    mVideoPlayer.setGlobaEnable(true); 或 mVideoPlayer.getVideoController().setGlobaEnable(true);
 ```
 **4.Activity生命周期方法加入**
 ```

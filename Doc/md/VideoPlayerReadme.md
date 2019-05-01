@@ -1,5 +1,37 @@
 # **视频播放器Wiki**
-### 一、播放器框架定义的名词概念释义
+### 一、播放器创建
+#### 1. 播放器java代码创建
+```
+    FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
+    VideoPlayerTrackView playerTrackView=new VideoPlayerTrackView(context);
+    playerTrackView.setVideoController(videoController);
+    playerTrackView.setVideoCoverController(coverController);
+    playerTrackView.setVideoGestureController(gestureController);
+    frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
+```
+#### 2. xml初始化支持的自定义属性
+```
+    <declare-styleable name="BaseVideoPlayer">
+            <!--是否自动设置默认控制器-->
+            <attr name="video_autoSetVideoController" format="boolean"/>
+            <!--是否自动设置封面控制器-->
+            <attr name="video_autoSetCoverController" format="boolean"/>
+            <!--循环播放-->
+            <attr name="video_loop" format="boolean"/>
+    </declare-styleable>
+```
+#### 3. 播放器拓展功能初始设置
+```
+    //会覆盖VideoPlayerManager的循环播放设置
+    playerTrackView.setLoop(true);
+    //如需在悬浮窗中支持点击全屏切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置并调用setDataSource的三参方法
+    playerTrackView.setParamsTag(mVideoParams);
+    //设置画面渲染缩放模式,默认VideoConstants.VIDEO_DISPLAY_TYPE_CUT，详见VideoConstants常量定义
+    playerTrackView.setVideoDisplayType(mode);
+    //是否支持悬浮窗播放功能，这个开关只针对入口有效，不会限制对startGlobalWindown();的调用
+    playerTrackView.setGlobaEnable(true); 或 mVideoPlayer.getVideoController().setGlobaEnable(true);
+```
+### 二、播放器框架定义的名词概念释义
 
 #### 1. 播放器通道
 
@@ -52,7 +84,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
    </FrameLayout>
 ```
 
-### 二、自定义交互UI的具体实现
+### 三、自定义交互UI的具体实现
 #### 1. 自定义交互控制器
 
 交互控制器在本项目中被定义为：用户与播放器的UI交互控制器。如需自定义请继承BaseVideoController类并实现其抽象方法，调用播放器通道的setVideoController(V controller);绑定控制器。</br>
@@ -71,7 +103,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
 **特别注意**<br/>
 * 播放器是支持播放器窗口切换无缝衔接播放、悬浮窗中点击全屏打开播放器界面功能的，在使用转场播放前，必须调用VideoPlayerManager.getInstance().setContinuePlay(true); <br/>
 
-### 三、其他功能拓展
+### 四、其他功能拓展
 #### 1. 界面跳转无缝衔接播放
 界面跳转无缝衔接播放大多用在列表播放时点击条目跳转至视频详情界面继续播放，为了更好的用户体验，不应该重新去加载视频数据，而是衔接列表的播放进度和画面、声音等继续播放。<br/>
 在你的Actvity中实现如下代码：<br/>
@@ -206,7 +238,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
         }
     }
 ```
-### 三、更多公开API介绍
+### 五、更多公开API介绍
 #### 1. BaseVideoPlayer 常用API预览及说明：
 ```
     /**
