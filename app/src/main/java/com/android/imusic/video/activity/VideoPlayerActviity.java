@@ -60,6 +60,7 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_player_activity);
+        VideoPlayerManager.getInstance().setVideoDisplayType(VideoConstants.VIDEO_DISPLAY_TYPE_CUT);
         initViews();
         getIntentParams(getIntent(),true);
     }
@@ -72,7 +73,6 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
         DetailsCoverController coverController = new DetailsCoverController(VideoPlayerActviity.this);
         mVideoPlayer.setVideoCoverController(coverController,false);
         mVideoPlayer.setGlobaEnable(true);
-        mVideoPlayer.setVideoDisplayType(VideoConstants.VIDEO_DISPLAY_TYPE_CUT);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(mLayoutManager);

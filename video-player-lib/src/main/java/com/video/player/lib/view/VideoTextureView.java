@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.TextureView;
 import android.view.View;
-import com.video.player.lib.base.BaseVideoPlayer;
 import com.video.player.lib.constants.VideoConstants;
+import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.utils.Logger;
 
 /**
@@ -57,6 +57,14 @@ public class VideoTextureView extends TextureView {
         }
     }
 
+    /**
+     * 设置画面缩放模式
+     * @param displayType 详见VideoConstants常量定义
+     */
+    public void setVideoDisplayType(int displayType) {
+        requestLayout();
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int viewRotation = (int) getRotation();
@@ -67,7 +75,7 @@ public class VideoTextureView extends TextureView {
         int parentWidth = ((View) getParent()).getMeasuredWidth();
         if (parentWidth != 0 && parentHeight != 0 && videoWidth != 0 && videoHeight != 0) {
             //铺满延申至全屏，可能会有画面变形
-            if (BaseVideoPlayer.VIDEO_DISPLAY_TYPE == VideoConstants.VIDEO_DISPLAY_TYPE_PARENT) {
+            if (VideoConstants.VIDEO_DISPLAY_TYPE_PARENT== VideoPlayerManager.getInstance().getVideoDisplayType()) {
                 if (viewRotation == 90 || viewRotation == 270) {
                     int tempSize = parentWidth;
                     parentWidth = parentHeight;
@@ -138,12 +146,12 @@ public class VideoTextureView extends TextureView {
         }
         if (parentWidth != 0 && parentHeight != 0 && videoWidth != 0 && videoHeight != 0) {
             //原始大小居中显示，不做任何裁剪和缩放
-            if (BaseVideoPlayer.VIDEO_DISPLAY_TYPE == VideoConstants.VIDEO_DISPLAY_TYPE_ORIGINAL) {
+            if (VideoConstants.VIDEO_DISPLAY_TYPE_ORIGINAL==VideoPlayerManager.getInstance().getVideoDisplayType()) {
                 Logger.d(TAG,"原始大小");
                 height = videoHeight;
                 width = videoWidth;
                 //缩放至控件宽高，会裁剪超出比例的画面
-            } else if (BaseVideoPlayer.VIDEO_DISPLAY_TYPE == VideoConstants.VIDEO_DISPLAY_TYPE_CUT) {
+            } else if (VideoConstants.VIDEO_DISPLAY_TYPE_CUT==VideoPlayerManager.getInstance().getVideoDisplayType()) {
                 if (viewRotation == 90 || viewRotation == 270) {
                     int tempSize = parentWidth;
                     parentWidth = parentHeight;
@@ -158,7 +166,7 @@ public class VideoTextureView extends TextureView {
                     height = parentHeight;
                 }
              //缩放宽度至控件最大宽度，高度按比例缩放
-            } else if (BaseVideoPlayer.VIDEO_DISPLAY_TYPE == VideoConstants.VIDEO_DISPLAY_TYPE_ZOOM) {
+            } else if (VideoConstants.VIDEO_DISPLAY_TYPE_ZOOM==VideoPlayerManager.getInstance().getVideoDisplayType()) {
                 if (viewRotation == 90 || viewRotation == 270) {
                     parentWidth = parentHeight;
                 }

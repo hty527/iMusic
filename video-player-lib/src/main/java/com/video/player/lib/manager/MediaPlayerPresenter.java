@@ -52,6 +52,12 @@ public interface MediaPlayerPresenter {
     void startVideoPlayer(String dataSource,Context context,int percentIndex);
 
     /**
+     * 设置视频画面显示缩放类型
+     * @param displayType 详见VideoConstants常量定义
+     */
+    void setVideoDisplayType(int displayType);
+
+    /**
      * 尝试重新播放
      * @param percentIndex 尝试从指定位置重新开始
      */

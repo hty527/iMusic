@@ -12,6 +12,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
 import com.video.player.lib.base.BaseVideoPlayer;
+import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.model.VideoPlayerState;
 import com.video.player.lib.utils.Logger;
@@ -56,6 +57,8 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     //进度计时器
     private PlayTimerTask mPlayTimerTask;
     private Timer mTimer;
+    //缩放类型,默认是等比缩放
+    private int VIDEO_DISPLAY_TYPE = VideoConstants.VIDEO_DISPLAY_TYPE_CUT;
     //实时播放位置
     private int mPercentIndex;
     //移动网络下是否已经提示用户流量播放
@@ -456,6 +459,26 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
                 mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"网络未连接");
             }
         }
+    }
+
+    /**
+     * 设置视频画面显示缩放类型,如果正在播放，会立刻生效
+     * @param displayType 详见VideoConstants常量定义
+     */
+    @Override
+    public void setVideoDisplayType(int displayType) {
+        this.VIDEO_DISPLAY_TYPE=displayType;
+        if(null!=mTextureView){
+            mTextureView.setVideoDisplayType(displayType);
+        }
+    }
+
+    /**
+     * 返回视频画面缩放模式
+     * @return 用户设定的缩放模式
+     */
+    public int getVideoDisplayType() {
+        return VIDEO_DISPLAY_TYPE;
     }
 
     /**
