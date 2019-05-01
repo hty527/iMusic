@@ -5,6 +5,23 @@
 ```
 ### 二、音乐播放器更多功能初始化设置
 ```
+    //若需要实现播放器内部的悬浮窗播放按钮，则需监听悬浮窗单机事件
+    MusicWindowManager.getInstance().setOnMusicWindowClickListener(new MusicWindowClickListener() {
+
+        @Override
+        public void onWindownClick(View view, long musicID) {
+            if(musicID>0){
+                Intent intent=new Intent(getApplicationContext(), MusicPlayerActivity.class);
+                intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            }
+        }
+
+        @Override
+        public void onWindownCancel(View view) {}
+    });
+
     MusicPlayerConfig config=MusicPlayerConfig.Build()
         //是否启用前台服务、常驻进程
         .setLockForeground(true)
@@ -53,10 +70,10 @@
 ### MusicPlayerManager 常用API预览及说明：
 ```
     /**
-     * 绑定服务，Activity初始化后调用
+     * Activity初始化音乐服务组件，Activity中初始化后调用
      * @param context Activity上下文
      */
-    public void bindService(Context context);
+    public void initialize(Context context);
 
     /**
      * 解绑服务
@@ -487,6 +504,8 @@
 
     /**
      * APP销毁时同步销毁
+     * @param context Activity类型上下文
      */
-    public void onDestroy();
+    public void unInitialize(Activity context);
+
 ```

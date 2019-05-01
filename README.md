@@ -68,24 +68,8 @@ ___
 ```
 **2.全局初始化**
 ```
-    //初始化首选项，用以播放器内部保存播放模式设置和定时关闭设置参数
-    MusicUtils.getInstance().initSharedPreferencesConfig(getApplicationContext());
-    //全局悬浮窗播放器单击事件
-    MusicWindowManager.getInstance().setOnMusicWindowClickListener(new MusicWindowClickListener() {
-
-        @Override
-        public void onWindownClick(View view, long musicID) {
-            if(musicID>0){
-                Intent intent=new Intent(getApplicationContext(), MusicPlayerActivity.class);
-                intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
-            }
-        }
-
-        @Override
-        public void onWindownCancel(View view) {}
-    });
+    //Applicaion中初始化
+    MusicPlayerManager.getInstance().init(getApplicationContext());
 ```
 **3.MainActivity中初始化播放器服务组件**
 ```
@@ -99,8 +83,6 @@ ___
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //音频悬浮窗口释放
-        MusicWindowManager.getInstance().onDestroy();
         //播放器内部服务组件及其他对象反初始化
         MusicPlayerManager.getInstance().unInitialize(MainActivity.this);
     }
