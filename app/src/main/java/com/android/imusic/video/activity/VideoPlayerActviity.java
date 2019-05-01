@@ -1,6 +1,7 @@
 package com.android.imusic.video.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.adapter.VideoDetailsAdapter;
 import com.android.imusic.video.bean.OpenEyesIndexInfo;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
+import com.music.player.lib.manager.MusicWindowManager;
 import com.video.player.lib.bean.VideoParams;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -240,6 +242,23 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
     protected void onPause() {
         super.onPause();
         VideoPlayerManager.getInstance().onPause();
+    }
+
+    /**
+     * 屏幕方向变化监听
+     * @param newConfig
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Logger.d(TAG,"onConfigurationChanged-->newConfig:"+newConfig.orientation);
+        //转到横屏
+        if(2==newConfig.orientation){
+            MusicWindowManager.getInstance().onInvisible();
+            //转到竖屏
+        }else if(1==newConfig.orientation){
+            MusicWindowManager.getInstance().onVisible();
+        }
     }
 
     @Override
