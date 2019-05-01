@@ -235,15 +235,6 @@ ___
     <!--悬浮窗-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 ```
-**拓展功能初始化**
-```
-    //根据需求初始化
-    VideoPlayerManager.getInstance()
-          //循环模式开关，在这里配置的循环模式，只是临时的,适合在播放过程中调用
-          .setLoop(true)
-          //悬浮窗播放器中跳转到Activity的绝对路径，若需要支持从悬浮窗中跳转到APP的播放器界面，则必须设置此路径
-          .setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
-```
 至此你的播放器具备了基础的视频播放能力。<br/>
 
 [视频播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Doc/md/VideoPlayerReadme.md "视频播放器API介绍"
