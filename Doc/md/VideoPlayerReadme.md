@@ -222,7 +222,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      * @param title 视频描述
      * @param videoID 视频ID
      */
-    public void setDataSource(String path, String title,long videoID);
+    public void setDataSource(String path, String title,String videoID);
 
     /**
      * 设置参数TAG，可选的，若支持悬浮窗中打开播放器功能，则必须调用此方法绑定PlayerActivity所需参数
