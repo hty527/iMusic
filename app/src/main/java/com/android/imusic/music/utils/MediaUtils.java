@@ -299,7 +299,7 @@ public class MediaUtils {
             return new VideoParams();
         }
         VideoParams videoParams=new VideoParams();
-        videoParams.setVideoiId(indexItemBean.getId());
+        videoParams.setVideoiId(indexItemBean.getId()+"");
         if(null!=indexItemBean.getAuthor()){
             videoParams.setNickName(indexItemBean.getAuthor().getName());
             videoParams.setUserFront(indexItemBean.getAuthor().getIcon());

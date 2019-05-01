@@ -105,6 +105,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     private int mBufferProgress;
     //秒针计时器换算
     private long RUN_TAG=0;
+    //是否被动暂停，用来处理音频焦点失去标记
+    private boolean mIsPassive;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -326,6 +328,30 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
+     * 被动暂停播放，仅提供给失去焦点时内部调用
+     */
+    private void passivePause(){
+        try {
+            if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
+                MusicPlayerService.this.mIsPassive=true;
+                mMediaPlayer.pause();
+            }
+        }catch (RuntimeException e){
+
+        }finally {
+            MusicPlayerService.this.mMusicPlayerState =MusicPlayerState.MUSIC_PLAYER_PAUSE;
+            if (null != mOnPlayerEventListeners) {
+                for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
+                    onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,null);
+                }
+            }
+            MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_PAUSE));
+            //最后更新通知栏
+            startServiceForeground();
+        }
+    }
+
+    /**
      * 恢复播放
      */
     @Override
@@ -335,6 +361,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         }
         try {
             if(null!=mMediaPlayer){
+                MusicPlayerService.this.mIsPassive=false;
                 mMediaPlayer.start();
                 MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_START));
             }else{
@@ -910,6 +937,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     @Override
     public void onReset() {
         mBufferProgress=0;
+        MusicPlayerService.this.mIsPassive=false;
         try {
             if(null!=mMediaPlayer){
                 mMediaPlayer.reset();
@@ -1250,18 +1278,33 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             if(null==mAudioFocusManager){
                 mAudioFocusManager= new MusicAudioFocusManager(MusicPlayerService.this.getApplicationContext());
             }
-
+            MusicPlayerService.this.mIsPassive=false;
             int requestAudioFocus = mAudioFocusManager.requestAudioFocus(new MusicAudioFocusManager.OnAudioFocusListener() {
+                /**
+                 * 恢复音频输出焦点，这里恢复播放需要和用户调用恢复播放有区别
+                 * 因为当用户主动暂停，获取到音频焦点后不应该恢复播放，而是继续保持暂停状态
+                 */
                 @Override
-                public void onStart() {
-                    play();
+                public void onFocusGet() {
+                    //如果是被动失去焦点的，则继续播放，否则继续保持暂停状态
+                    if(mIsPassive){
+                        play();
+                    }
                 }
 
+                /**
+                 * 失去音频焦点后暂停播放，这里暂停播放需要和用户主动暂停有区别，做一个标记，配合onResume。
+                 * 当获取到音频焦点后，根据onResume根据标识状态看是否需要恢复播放
+                 */
                 @Override
-                public void onPause() {
-                    pause();
+                public void onFocusOut() {
+                    passivePause();
                 }
 
+                /**
+                 * 返回播放器是否正在播放
+                 * @return 为true正在播放
+                 */
                 @Override
                 public boolean isPlaying() {
                     return MusicPlayerService.this.isPlaying();
@@ -1774,7 +1817,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         }
         MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_DESTROY));
         stopServiceForeground();
-        mWifiLock=null;
+        mWifiLock=null;mIsPassive=false;
         mAudioFocusManager=null;
         if(null!= mOnPlayerEventListeners){
             mOnPlayerEventListeners.clear();

@@ -45,7 +45,7 @@ public class IndexPersenter extends MusicNetUtils {
      * @param type
      * @param callBack
      */
-    public void getRecommendVideoList(long videoID,Type type, OnOtherRequstCallBack callBack){
+    public void getRecommendVideoList(String videoID,Type type, OnOtherRequstCallBack callBack){
         requstOtherApi("http://baobab.kaiyanapp.com/api/v4/video/related?id="+videoID+"&udid=a53873ffaa4430bbb41ea178c1187e97c4b3c4a",type,callBack);
     }
 
