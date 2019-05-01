@@ -29,7 +29,6 @@ import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -188,8 +187,7 @@ public class MusicJukeBoxView extends RelativeLayout{
             public void onAnimationEnd(Animator animator) {
                 if (needleAnimatorStatus == NeedleAnimatorStatus.TO_NEAR_END) {
                     needleAnimatorStatus = NeedleAnimatorStatus.IN_NEAR_END;
-                    int index = mViewPager.getCurrentItem();
-                    playDiscAnimator(index);
+                    playDiscAnimator(mViewPager.getCurrentItem());
                     mDiscStatus = DiscStatus.PLAY;
                 } else if (needleAnimatorStatus == NeedleAnimatorStatus.TO_FAR_END) {
                     needleAnimatorStatus = NeedleAnimatorStatus.IN_FAR_END;
@@ -345,8 +343,7 @@ public class MusicJukeBoxView extends RelativeLayout{
                 mIsNeed2StartPlayAnimator = true;
             }else if(needleAnimatorStatus == NeedleAnimatorStatus.IN_NEAR_END){
                 if(null!=mViewPager){
-                    int index = mViewPager.getCurrentItem();
-                    playDiscAnimator(index);
+                    playDiscAnimator(mViewPager.getCurrentItem());
                     mDiscStatus = DiscStatus.PLAY;
                 }
             }
@@ -382,32 +379,28 @@ public class MusicJukeBoxView extends RelativeLayout{
 
     /**
      * 播放唱盘动画
-     * @param indexID
+     * @param position
      */
-    private void playDiscAnimator(int indexID) {
-        Logger.d(TAG,"playDiscAnimator--POSITION:"+indexID);
+    private void playDiscAnimator(int position) {
+        Logger.d(TAG,"playDiscAnimator--POSITION:"+position);
         if(null!= mFragments && mFragments.size()>0){
-            Iterator<Map.Entry<Integer, MusicJukeBoxCoverPager>> iterator = mFragments.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Integer, MusicJukeBoxCoverPager> next = iterator.next();
-                if(indexID==next.getKey()){
-                    MusicJukeBoxCoverPager value = next.getValue();
-                    ObjectAnimator animator=value.getObjectAnimator();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (animator.isPaused()) {
-                            animator.resume();
-                        } else {
-                            if(animator.isRunning()){
-                                return;
-                            }
-                            animator.start();
+            MusicJukeBoxCoverPager musicJukeBoxCoverPager = mFragments.get(position);
+            if(null!=musicJukeBoxCoverPager){
+                ObjectAnimator animator=musicJukeBoxCoverPager.getObjectAnimator();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    if (animator.isPaused()) {
+                        animator.resume();
+                    } else {
+                        if(animator.isRunning()){
+                            return;
                         }
-                    }else{
                         animator.start();
                     }
-                    if(null!=mAnimatorListener){
-                        mAnimatorListener.onAnimationEnd();
-                    }
+                }else{
+                    animator.start();
+                }
+                if(null!=mAnimatorListener){
+                    mAnimatorListener.onAnimationEnd();
                 }
             }
         }
@@ -415,21 +408,16 @@ public class MusicJukeBoxView extends RelativeLayout{
 
     /**
      * 暂停唱盘动画
-     * @param indexID
+     * @param position
      */
-    private void pauseDiscAnimatior(int indexID) {
-        Logger.d(TAG,"playDiscAnimator:"+indexID);
+    private void pauseDiscAnimatior(int position) {
+        Logger.d(TAG,"playDiscAnimator:"+position);
         if(null!= mFragments && mFragments.size()>0){
-            Iterator<Map.Entry<Integer, MusicJukeBoxCoverPager>> iterator = mFragments.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Integer, MusicJukeBoxCoverPager> next = iterator.next();
-                if(indexID==next.getKey()){
-                    Logger.d(TAG,"pauseDiscAnimatior--INDEX:"+next.getKey());
-                    MusicJukeBoxCoverPager value = next.getValue();
-                    ObjectAnimator animator=value.getObjectAnimator();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        animator.pause();
-                    }
+            MusicJukeBoxCoverPager musicJukeBoxCoverPager = mFragments.get(position);
+            if(null!=musicJukeBoxCoverPager){
+                ObjectAnimator animator=musicJukeBoxCoverPager.getObjectAnimator();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    animator.pause();
                 }
             }
         }
@@ -621,7 +609,7 @@ public class MusicJukeBoxView extends RelativeLayout{
             if(null!=object && object instanceof MusicJukeBoxCoverPager){
                 MusicJukeBoxCoverPager coverPager= (MusicJukeBoxCoverPager) object;
                 coverPager.onDestroy();
-                mFragments.remove(coverPager.getId());
+                mFragments.remove(position);
             }
             container.removeView(((View) object));
         }
