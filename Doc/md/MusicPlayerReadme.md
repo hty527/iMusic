@@ -1,4 +1,14 @@
 # **音乐播放器Wiki**
+### 一、APP后台防杀死和更多权限
+设置MusicPlayerManager.getInstance().setLockForeground(true)即可实现APP后台防杀死。
+```
+    <!--更多权限，若开启垃圾桶回收播放器、悬浮窗口播放、常驻内存、状态栏控制、锁屏播放控制、耳机监控 等功能，请开启已下权限-->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!--APP后台防杀死-->
+    <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
+```
 ### 一、音乐播放器主界面UI实现
 ```
     iMusic工程实现了一套近乎完整的播放器工程，暂时没打算支持歌词显示。实现播放器交互UI，可以参考MusicPlayerActivity类的实现。

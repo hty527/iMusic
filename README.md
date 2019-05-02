@@ -87,26 +87,20 @@ ___
      */
     MusicPlayerManager.getInstance().startPlayMusic(List<?> mediaInfos,int position);
 ```
-* 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。实现自己的UI请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);<br/>
-
 **5.权限声明**
 ```
     <!--网络状态检查-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--锁屏防止CPU休眠，锁屏下继续缓冲。-->
+    <!--锁屏下继续缓冲-->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <!--以下权限非必须，若开启垃圾桶回收播放器、悬浮窗口播放、常驻内存、状态栏控制、锁屏播放控制、耳机监控 等功能，请开启已下权限-->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
 ```
 **添加混淆**
 ```
     -keep class com.music.player.lib.bean.**{*;}
 ```
+* 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。实现自己的UI请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);<br/>
 [音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Doc/md/MusicPlayerReadme.md "音乐播放器API介绍"
-**更多功能及使用详见Wiki文档：**[音乐播放器Wiki]
+**APP后台防杀死和更多功能Wiki文档：**[音乐播放器Wiki]
 ___
 
 ## 二.视频播放器集成:
@@ -128,12 +122,11 @@ ___
 **3.播放器初始化及基本数据设置**
 ```
     mVideoPlayer = (VideoPlayerTrackView) findViewById(R.id.video_player);
-     //播放器控件宽高
-    int itemHeight = MusicUtils.getInstance().getScreenWidth(this) * 9 / 16;
-    mVideoPlayer.getLayoutParams().height=itemHeight;
+     //播放器控件高度设置，默认是match_parent
+    mVideoPlayer.getLayoutParams().height=200dp;
     //开始准备播放
     mVideoPlayer.startPlayVideo(dataSource,title);
-    //或者如下姿势准备和开始播放
+    //第二种姿势准备播放
     //mVideoPlayer.setDataSource(dataSource,title,);
     //mVideoPlayer.startPlayVideo();
 ```
