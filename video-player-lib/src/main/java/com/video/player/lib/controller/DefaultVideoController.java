@@ -13,6 +13,7 @@ import com.video.player.lib.R;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.base.BaseVideoController;
 import com.video.player.lib.manager.VideoPlayerManager;
+import com.video.player.lib.model.VideoPlayerState;
 import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
 
@@ -166,8 +167,10 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         isTouchSeekBar=false;
-        //恢复控制器显示隐藏规则
-        changeControllerState(mScrrenOrientation,false);
+        //只有非暂停下才恢复控制器显示隐藏规则
+        if(VideoPlayerManager.getInstance().getVideoPlayerState()!= VideoPlayerState.MUSIC_PLAYER_PAUSE){
+            changeControllerState(mScrrenOrientation,false);
+        }
         //跳转至某处
         long durtion = VideoPlayerManager.getInstance().getDurtion();
         if(durtion>0){
