@@ -283,11 +283,24 @@ public class VideoWindowController extends BaseVideoController implements SeekBa
                     mSeekBar.setProgress(progress);
                 }
             }
-            if(null!=mBottomProgressBar){
-                if(bufferPercent>=100&&mBottomProgressBar.getSecondaryProgress()<bufferPercent){
-                    mBottomProgressBar.setSecondaryProgress(bufferPercent);
-                }
-                mBottomProgressBar.setProgress(progress);
+        }
+    }
+
+    /**
+     * 实时播放和缓冲进度，子线程更新
+     * @param totalPosition 总视频时长，单位：毫秒
+     * @param currentPosition 实施播放进度，单位：毫秒
+     * @param bufferPercent 缓冲进度，单位：百分比
+     */
+    @Override
+    protected void currentPosition(long totalPosition, long currentPosition, int bufferPercent) {
+        if(null!=mBottomProgressBar&&currentPosition>-1){
+            //播放进度，这里比例是1/1000
+            int progress = (int) (((float) currentPosition / totalPosition) * 1000);
+            mBottomProgressBar.setProgress(progress);
+            //缓冲进度
+            if(null!=mBottomProgressBar&&mBottomProgressBar.getSecondaryProgress()<(bufferPercent*10)){
+                mBottomProgressBar.setSecondaryProgress(bufferPercent*10);
             }
         }
     }
@@ -301,9 +314,6 @@ public class VideoWindowController extends BaseVideoController implements SeekBa
         Logger.d("onBufferingUpdate","percent-->"+percent);
         if(null!=mSeekBar&&mSeekBar.getSecondaryProgress()<100){
             mSeekBar.setSecondaryProgress(percent);
-        }
-        if(null!=mBottomProgressBar&&mBottomProgressBar.getSecondaryProgress()<100){
-            mBottomProgressBar.setSecondaryProgress(percent);
         }
     }
 

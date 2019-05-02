@@ -129,35 +129,21 @@ public class VideoMiniWindowController extends BaseVideoController {
     }
 
     /**
-     * 播放进度
-     * @param totalDurtion 总时长
-     * @param currentDurtion 已播放时长
-     * @param bufferPercent 缓冲进度，未必满重复刷新控件，在>=100时更新,比如说切换至全屏后需要更新进度
+     * 实时播放和缓冲进度，子线程更新
+     * @param totalPosition 总视频时长，单位：毫秒
+     * @param currentPosition 实施播放进度，单位：毫秒
+     * @param bufferPercent 缓冲进度，单位：百分比
      */
     @Override
-    public void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent) {
-        Logger.d("播放实时进度","onTaskRuntime-->totalDurtion:"+totalDurtion+",currentDurtion:"+currentDurtion);
-        if(totalDurtion>-1){
-            //得到当前进度
-            int progress = (int) (((float) currentDurtion / totalDurtion) * 100);
-            if(null!=mBottomProgressBar){
-                if(bufferPercent>=100&&mBottomProgressBar.getSecondaryProgress()<bufferPercent){
-                    mBottomProgressBar.setSecondaryProgress(bufferPercent);
-                }
-                mBottomProgressBar.setProgress(progress);
+    protected void currentPosition(long totalPosition, long currentPosition, int bufferPercent) {
+        if(null!=mBottomProgressBar&&currentPosition>-1){
+            //播放进度，这里比例是1/1000
+            int progress = (int) (((float) currentPosition / totalPosition) * 1000);
+            mBottomProgressBar.setProgress(progress);
+            //缓冲进度
+            if(null!=mBottomProgressBar&&mBottomProgressBar.getSecondaryProgress()<(bufferPercent*10)){
+                mBottomProgressBar.setSecondaryProgress(bufferPercent*10);
             }
-        }
-    }
-
-    /**
-     * 缓冲进度
-     * @param percent
-     */
-    @Override
-    public void onBufferingUpdate(int percent) {
-        Logger.d("onBufferingUpdate","percent-->"+percent);
-        if(null!=mBottomProgressBar&&mBottomProgressBar.getSecondaryProgress()<100){
-            mBottomProgressBar.setSecondaryProgress(percent);
         }
     }
 

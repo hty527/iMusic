@@ -193,7 +193,7 @@
         android:layout_width="match_parent"
         android:layout_height="1.6dp"
         android:layout_alignParentBottom="true"
-        android:max="100"
+        android:max="1000"
         android:progressDrawable="@drawable/video_bottom_progress"
         android:visibility="invisible"/>
     <!--小窗口-->

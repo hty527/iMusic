@@ -424,9 +424,9 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
 
     /**
      * 播放进度
-     * @param totalDurtion 总时长
-     * @param currentDurtion 已播放时长
-     * @param bufferPercent 缓冲进度，未必满重复刷新控件，在>=100时更新,比如说切换至全屏后需要更新进度
+     * @param totalDurtion 视频总长度 单位：毫秒，暂停下为-1
+     * @param currentDurtion 播放进度 单位：毫秒，暂停下为-1
+     * @param bufferPercent 缓冲进度，单位：百分比
      */
     @Override
     public void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent) {
@@ -447,27 +447,37 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
                     mSeekBar.setProgress(progress);
                 }
             }
-            if(null!=mBottomProgressBar){
-                if(bufferPercent>=100&&mBottomProgressBar.getSecondaryProgress()<bufferPercent){
-                    mBottomProgressBar.setSecondaryProgress(bufferPercent);
-                }
-                mBottomProgressBar.setProgress(progress);
+        }
+    }
+
+    /**
+     * 实时播放和缓冲进度，子线程更新
+     * @param totalPosition 总视频时长，单位：毫秒
+     * @param currentPosition 实施播放进度，单位：毫秒
+     * @param bufferPercent 缓冲进度，单位：百分比
+     */
+    @Override
+    protected void currentPosition(long totalPosition, long currentPosition, int bufferPercent) {
+        if(null!=mBottomProgressBar&&currentPosition>-1){
+            //播放进度，这里比例是1/1000
+            int progress = (int) (((float) currentPosition / totalPosition) * 1000);
+            mBottomProgressBar.setProgress(progress);
+            //缓冲进度
+            if(null!=mBottomProgressBar&&mBottomProgressBar.getSecondaryProgress()<(bufferPercent*10)){
+                mBottomProgressBar.setSecondaryProgress(bufferPercent*10);
             }
         }
     }
 
     /**
      * 缓冲进度
-     * @param percent
+     * @param percent 实时缓冲进度，单位：百分比
      */
     @Override
     public void onBufferingUpdate(int percent) {
         Logger.d("onBufferingUpdate","percent-->"+percent);
         if(null!=mSeekBar&&mSeekBar.getSecondaryProgress()<100){
             mSeekBar.setSecondaryProgress(percent);
-        }
-        if(null!=mBottomProgressBar&&mBottomProgressBar.getSecondaryProgress()<100){
-            mBottomProgressBar.setSecondaryProgress(percent);
         }
     }
 
@@ -549,8 +559,8 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     /**
      * 显示、隐藏 控制器 上下交互功能区
      * 手动点击，根据播放状态自动处理，手势交互处理等状态
-     * @param scrrenOrientation 横竖屏状态
-     * @param isInterceptIntent 是否拦截意图
+     * @param scrrenOrientation 当前的窗口方向
+     * @param isInterceptIntent 为true：用户主动点击
      */
     @Override
     public void changeControllerState(int scrrenOrientation,boolean isInterceptIntent) {

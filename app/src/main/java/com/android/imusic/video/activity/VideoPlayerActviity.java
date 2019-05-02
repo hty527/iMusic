@@ -286,7 +286,7 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
             mAdapter=null;
         }
         if(null!=mVideoPlayer){
-            mVideoPlayer.destroy();
+            mVideoPlayer.onDestroy();
             mVideoPlayer=null;
         }
         mLayoutManager=null;mVideoParams=null;

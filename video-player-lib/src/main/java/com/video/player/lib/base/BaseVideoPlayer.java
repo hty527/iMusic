@@ -545,7 +545,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
             getContext().getApplicationContext().startActivity(startIntent);
             //销毁一下，万不能再界面跳转之前销毁
             if(null!=baseVideoPlayer){
-                baseVideoPlayer.destroy();
+                baseVideoPlayer.onDestroy();
                 VideoPlayerManager.getInstance().setWindownPlayer(null);
             }
         }
@@ -937,7 +937,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                 if(null!= VideoPlayerManager.getInstance().getTextureView()&&null!=fullScrrenPlayer.mSurfaceView){
                     fullScrrenPlayer.mSurfaceView.removeView(VideoPlayerManager.getInstance().getTextureView());
                 }
-                fullScrrenPlayer.destroy();
+                fullScrrenPlayer.onDestroy();
                 //从窗口移除ViewPlayer
                 ViewGroup viewGroup = (ViewGroup) appCompActivity.getWindow().getDecorView();
                 View oldFullVideo = viewGroup.findViewById(R.id.video_full_screen_window);
@@ -1160,7 +1160,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                 if(null!= VideoPlayerManager.getInstance().getTextureView()&&null!=miniWindowPlayer.mSurfaceView){
                     miniWindowPlayer.mSurfaceView.removeView(VideoPlayerManager.getInstance().getTextureView());
                 }
-                miniWindowPlayer.destroy();
+                miniWindowPlayer.onDestroy();
                 //从窗口移除ViewPlayer
                 ViewGroup viewGroup = (ViewGroup) appCompActivity.getWindow().getDecorView();
                 View oldTinyVideo = viewGroup.findViewById(R.id.video_mini_window);
@@ -1556,6 +1556,19 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     }
 
     /**
+     * 播放器播放实时进度，每100毫秒回调一次,此事件将在子线程抛出至控制器
+     * @param totalPosition 视频总时长 单位毫秒
+     * @param currentPosition 播放实时位置时长，单位毫秒
+     * @param bufferPercent 缓冲进度，单位：百分比
+     */
+    @Override
+    public void currentPosition(long totalPosition, long currentPosition, int bufferPercent) {
+        if(null!=mVideoController){
+            mVideoController.currentPosition(totalPosition, currentPosition,bufferPercent);
+        }
+    }
+
+    /**
      * 仅释放播放器窗口UI
      */
     public void reset() {
@@ -1588,7 +1601,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * 仅仅内部销毁，外部组件调用VideoPlayerManager 的 onDestroy()方法销毁播放器
      */
     @Override
-    public void destroy() {
+    public void onDestroy() {
         if(null!=mSensorManager&&null!=mOrientationListener){
             mSensorManager.unregisterListener(mOrientationListener);
             mSensorManager=null;mOrientationListener=null;

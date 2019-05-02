@@ -71,6 +71,8 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     private boolean mContinuePlay;
     //悬浮窗点击展开的目标Activity
     private static String mActivityClassName=null;
+    //TASK执行次数计时
+    private long TIMER_RUN_COUNT=0;
 
     public static VideoPlayerManager getInstance(){
         if(null==mInstance){
@@ -224,31 +226,6 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
     }
 
     /**
-     * 开始计时任务
-     */
-    private void startTimer() {
-        if(null==mPlayTimerTask){
-            mTimer = new Timer();
-            mPlayTimerTask = new PlayTimerTask();
-            mTimer.schedule(mPlayTimerTask, 0, 1000);
-        }
-    }
-
-    /**
-     * 结束计时任务
-     */
-    private void stopTimer() {
-        if (null != mPlayTimerTask) {
-            mPlayTimerTask.cancel();
-            mPlayTimerTask = null;
-        }
-        if (null != mTimer) {
-            mTimer.cancel();
-            mTimer = null;
-        }
-    }
-
-    /**
      * 视频宽高
      * @param mp 播放器实例
      * @param width 视频宽 单位：分辨率
@@ -280,18 +257,58 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
         return mActivityClassName;
     }
 
+
+    /**
+     * 开始计时任务
+     */
+    private void startTimer() {
+        if(null==mPlayTimerTask){
+            mTimer = new Timer();
+            mPlayTimerTask = new PlayTimerTask();
+            mTimer.schedule(mPlayTimerTask, 0, 100);
+        }
+    }
+
+    /**
+     * 结束计时任务
+     */
+    private void stopTimer() {
+        if (null != mPlayTimerTask) {
+            mPlayTimerTask.cancel();
+            mPlayTimerTask = null;
+        }
+        if (null != mTimer) {
+            mTimer.cancel();
+            mTimer = null;
+        }
+        TIMER_RUN_COUNT=0;
+    }
+
     /**
      * 播放进度、闹钟倒计时进度 计时器
      */
     private class PlayTimerTask extends TimerTask {
         @Override
         public void run() {
+            TIMER_RUN_COUNT++;
+            Logger.i(TAG,"TIMER_RUN_COUNT:"+TIMER_RUN_COUNT+"%:"+TIMER_RUN_COUNT%10);
+            //播放进度实时回调
             if(null!=mOnPlayerEventListeners){
                 if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
-                    //至于为什么在CurrentPosition上+500毫秒，是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
-                    mOnPlayerEventListeners.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition()+500,mBufferPercent);
+                    mOnPlayerEventListeners.currentPosition(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition(),mBufferPercent);
                 }else{
-                    mOnPlayerEventListeners.onTaskRuntime(-1,-1,mBufferPercent);
+                    mOnPlayerEventListeners.currentPosition(-1,-1,mBufferPercent);
+                }
+            }
+            //每隔1秒播放进度回调，主要用于更新Text和SEEK BAR
+            if(TIMER_RUN_COUNT%10==0){
+                if(null!=mOnPlayerEventListeners){
+                    if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
+                        //至于为什么在CurrentPosition上+500毫秒，是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
+                        mOnPlayerEventListeners.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition()+500,mBufferPercent);
+                    }else{
+                        mOnPlayerEventListeners.onTaskRuntime(-1,-1,mBufferPercent);
+                    }
                 }
             }
         }
@@ -608,7 +625,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
         //销毁可能存在的悬浮窗
         VideoWindowManager.getInstance().onDestroy();
         if(null!=mWindownPlayer){
-            mWindownPlayer.destroy();
+            mWindownPlayer.onDestroy();
             mWindownPlayer=null;
         }
     }
@@ -648,7 +665,7 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
             }
             VideoWindowManager.getInstance().onDestroy();
             if(null!=mWindownPlayer){
-                mWindownPlayer.destroy();
+                mWindownPlayer.onDestroy();
                 mWindownPlayer=null;
             }
         }
@@ -831,19 +848,19 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
         onStop(true);
         mContext=null;mDataSource=null;mInstance=null;mContinuePlay=false;
         if(null!=mFullScrrenPlayer){
-            mFullScrrenPlayer.destroy();
+            mFullScrrenPlayer.onDestroy();
             mFullScrrenPlayer=null;
         }
         if(null!=mNoimalPlayer){
-            mNoimalPlayer.destroy();
+            mNoimalPlayer.onDestroy();
             mNoimalPlayer=null;
         }
         if(null!= mMiniWindowPlayer){
-            mMiniWindowPlayer.destroy();
+            mMiniWindowPlayer.onDestroy();
             mMiniWindowPlayer =null;
         }
         if(null!=mWindownPlayer){
-            mWindownPlayer.destroy();
+            mWindownPlayer.onDestroy();
             mWindownPlayer=null;
         }
     }

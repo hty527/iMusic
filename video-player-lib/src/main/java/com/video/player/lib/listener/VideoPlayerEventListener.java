@@ -48,7 +48,15 @@ public interface VideoPlayerEventListener {
     void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent);
 
     /**
+     * 播放器播放实时进度，每100毫秒回调一次
+     * @param totalPosition 视频总时长 单位毫秒
+     * @param currentPosition 播放实时位置时长，单位毫秒
+     * @param bufferPercent 缓冲进度，单位：百分比
+     */
+    void currentPosition(long totalPosition,long currentPosition,int bufferPercent);
+
+    /**
      * 销毁
      */
-    void destroy();
+    void onDestroy();
 }
