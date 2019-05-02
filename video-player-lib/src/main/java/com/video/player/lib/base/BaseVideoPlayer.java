@@ -26,7 +26,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.video.player.lib.R;
 import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
@@ -44,7 +43,6 @@ import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
 import com.video.player.lib.view.PlayerGestureView;
 import com.video.player.lib.view.VideoTextureView;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -84,6 +82,8 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     public FrameLayout mSurfaceView;
     //此播放器是否正在工作,配合列表滚动时，检测工作状态
     private boolean isWorking=false;
+    //是否循环
+    private boolean mLoop;
     //屏幕方向、手势调节，默认未知
     private int SCRREN_ORIENTATION = 0,GESTURE_SCENE=0;
     //屏幕的方向,竖屏、横屏、窗口
@@ -129,8 +129,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         setVideoCoverController(null,autoSetCoverController);
         //画面渲染
         mSurfaceView = (FrameLayout) findViewById(R.id.surface_view);
-        // TODO: 2019/4/15 这里遇到了坑：当播放器组件设置了OnTouchListener或OnClickListener事件后，悬浮窗开启时，Windown无法取得焦点
-        // 故这里采用GestureDetector手势分发器代为处理手势,至于全屏后的播放器，这里做法是新创建一个ViewGroup至控制器的底层处理手势事件
+        //GestureDetector手势分发器代为处理手势,至于全屏后的播放器，这里做法是新创建一个ViewGroup至控制器的底层处理手势事件
         if(null!=mSurfaceView){
             mGestureDetector = new GestureDetector(context,new TouchOnGestureListener());
             mSurfaceView.setOnTouchListener(this);
@@ -204,15 +203,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * @param loop true: 循环 false:不循环
      */
     public void setLoop(boolean loop) {
-        VideoPlayerManager.getInstance().setLoop(loop);
-    }
-
-    /**
-     * 设置缩放类型,一经设置，在APP被回收之前一直生效，请注意调用时机
-     * @param displayType 详见VideoConstants常量定义
-     */
-    public void setVideoDisplayType(int displayType) {
-        VideoPlayerManager.getInstance().setVideoDisplayType(displayType);
+        this.mLoop=loop;
     }
 
     /**
