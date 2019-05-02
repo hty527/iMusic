@@ -9,10 +9,6 @@
     <!--APP后台防杀死-->
     <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
 ```
-### 一、音乐播放器主界面UI实现
-```
-    iMusic工程实现了一套近乎完整的播放器工程，暂时没打算支持歌词显示。实现播放器交互UI，可以参考MusicPlayerActivity类的实现。
-```
 ### 二、音乐播放器更多功能初始化设置
 ```
     //若需要实现播放器内部的悬浮窗播放按钮，则需监听悬浮窗单机事件
@@ -48,7 +44,11 @@
     //配置点击通知栏跳转至Activity的绝对路径，若支持点击通知栏跳转至播放器界面，则必须设置！！
     MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
 ```
-### 三、播放器内部协调工作说明
+### 三、音乐播放器主界面UI实现
+```
+    iMusic工程实现了一套近乎完整的播放器工程，暂时没打算支持歌词显示。实现播放器交互UI，可以参考MusicPlayerActivity类的实现。
+```
+### 四、播放器内部协调工作说明
 ```
      MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作。
      MusicPlayerActivity：音乐播放器交互示例容器，负责用户交互。
@@ -59,11 +59,11 @@
      MusicAlarmSettingDialog：默认定制闹钟设置。
      MusicPlayerListDialog：默认当前正在播放的列表
 ```
-### 四、本地音乐与网络音频兼容
+### 五、本地音乐与网络音频兼容
 ```
     播放器完美支持本地音乐及网络音乐的兼容播放和音频封面显示兼容，如果本地音乐对象的未指定音频封面，则播放器内部将尝试获取音频自带封面作为唱片机封面显示和背景渐变图层显示。
 ```
-### 五、付费购买逻辑
+### 六、付费购买逻辑
 ```
   一般付费音频播放前，播放地址是为空的，播放器内部将抛出onMusicPathInvalid(BaseMediaInfo musicInfo, int position);事件，你可在此方法中处理购买付费逻辑，
   待获取到真实播放地址后，再调用下面方法继续尝试播放。也可以自行处理完购买逻辑后再开始调用播放音频事件。
@@ -72,12 +72,12 @@
     //调用此代码继续尝试播放。
     MusicPlayerManager.getInstance().continuePlay(String sourcePath);
 ```
-### 六、后台播放避免被系统杀死
+### 七、后台播放避免被系统杀死
 ```
     在开始播放前，需设置MusicPlayerManager中的setLockForeground(boolean enable);方法，设置为true即可，播放器内部以兼容处理8.0手机和国产部分机型通知栏显示。
 ```
  ___
-### MusicPlayerManager 常用API预览及说明：
+### 八、MusicPlayerManager 常用API预览及说明：
 ```
     /**
      * Activity初始化音乐服务组件，Activity中初始化后调用

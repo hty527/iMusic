@@ -99,6 +99,7 @@ ___
     -keep class com.music.player.lib.bean.**{*;}
 ```
 * 播放器自定义UI和交互说明：项目默认提供了一个播放器交互组件：MusicPlayerActivity，请参照集成。实现自己的UI请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);<br/>
+
 [音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Doc/md/MusicPlayerReadme.md "音乐播放器API介绍"
 **APP后台防杀死和更多功能Wiki文档：**[音乐播放器Wiki]
 ___
