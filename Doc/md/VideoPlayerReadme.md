@@ -268,12 +268,6 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     public void setLoop(boolean loop);
 
     /**
-     * 设置缩放类型,一经设置，在APP被回收之前一直生效，请注意调用时机
-     * @param displayType 详见VideoConstants常量定义
-     */
-    public void setVideoDisplayType(int displayType);
-
-    /**
      * 设置画面缩放类型
      * @param displayType 详见VideoConstants常量定义释义说明
      */
