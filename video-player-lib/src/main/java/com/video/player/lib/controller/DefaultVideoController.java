@@ -1,6 +1,7 @@
 package com.video.player.lib.controller;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -112,6 +113,36 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
             mBtnFullWindow.setOnClickListener(onClickListener);
         }
         mSeekBar.setOnSeekBarChangeListener(this);
+    }
+
+    /**
+     * 设置seekBarDrawable样式
+     * @param drawable seekBarDrawable样式
+     */
+    public void setSeekBarDrawable(Drawable drawable){
+        if(null!=mSeekBar){
+            mSeekBar.setProgressDrawable(drawable);
+        }
+    }
+
+    /**
+     * 设置seekBarThumb样式
+     * @param drawable ThumbDrawable样式
+     */
+    public void setSeekBarThumb(Drawable drawable){
+        if(null!=mSeekBar){
+            mSeekBar.setThumb(drawable);
+        }
+    }
+
+    /**
+     * 设置底部进度条Drawable
+     * @param drawable 底部进度条Drawable
+     */
+    public void setProgressBarDrawable(Drawable drawable){
+        if(null!=mBottomProgressBar){
+            mBottomProgressBar.setProgressDrawable(drawable);
+        }
     }
 
     /**
