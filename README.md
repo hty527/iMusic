@@ -74,9 +74,9 @@ ___
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //播放器内部服务组件及其他对象反初始化
+        //播放器反初始化
         MusicPlayerManager.getInstance().unInitialize(MainActivity.this);
-        //如果你启用了内部悬浮窗口播放器，则还需要释放悬浮窗
+        //如果你启用了内置悬浮窗口播放器，则还需要对其释放
         MusicWindowManager.getInstance().onDestroy();
     }
 ```
@@ -159,7 +159,7 @@ ___
     protected void onDestroy() {
         super.onDestroy();
         VideoPlayerManager.getInstance().onDestroy();
-        //如果你的Activity是MainActivity，则需要销毁和释放悬浮窗口
+        //如果你的Activity是MainActivity并且你开启过悬浮窗口播放器，则还需要对其释放
         VideoWindowManager.getInstance().onDestroy();
     }
 ```
