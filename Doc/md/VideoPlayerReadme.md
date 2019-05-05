@@ -369,18 +369,6 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     public void startMiniWindow(BaseVideoController miniWindowController);
 
     /**
-     * 开启小窗口播放
-     *
-     * @param startX     起点位于屏幕的X轴像素
-     * @param startY     起点位于屏幕的Y轴像素
-     * @param tinyWidth  小窗口的宽 未指定使用默认 屏幕宽的 1/2(二分之一)
-     * @param tinyHeight 小窗口的高 未指定使用默认 屏幕宽的 1/2 *9/16
-     * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
-     */
-    public void startMiniWindow(int startX, int startY, int tinyWidth, int tinyHeight,V miniWindowController);
-
-
-    /**
      * 开启迷你小窗口播放，将窗口添加至屏幕的具体方位，内部换算显示比例。这个方法有别于startMiniWindow方法请阅读参数注解
      * 视频显示换算比例：宽屏视频：16:9，竖屏视频：9:16，正方形：1:1。
      * @param gravity 位于屏幕中的这里只能是左侧、右侧，(Gravity.LEFT、Gravity.RIGHT)内部切换至迷你小窗口会保证不会超出屏幕边界
@@ -390,6 +378,17 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
      */
     public void startMiniWindowToLocaion(int gravity,int startY,int videoWidth, int videoHeight,V miniWindowController);
+
+    /**
+     * 开启小窗口播放
+     *
+     * @param startX     起点位于屏幕的X轴像素
+     * @param startY     起点位于屏幕的Y轴像素
+     * @param tinyWidth  小窗口的宽 未指定使用默认 屏幕宽的 1/2(二分之一)
+     * @param tinyHeight 小窗口的高 未指定使用默认 屏幕宽的 1/2 *9/16
+     * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
+     */
+    public void startMiniWindow(int startX, int startY, int tinyWidth, int tinyHeight,V miniWindowController);
 
     /**
      * 退出迷你小窗口播放
