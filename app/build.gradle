@@ -96,10 +96,8 @@ dependencies {
     //libs
 //    implementation(name: 'music-player-1.0.0', ext: 'aar')
 //    implementation(name: 'video-player-1.0.0', ext: 'aar')
-    //本地Maven、网络
-    implementation 'com.imusic.player:music-player:1.0.1'
+    //音乐播放器
+    implementation 'com.imusic.player:music-player:1.0.2'
     //视频播放器
     implementation 'com.imusic.player:video-player:1.0.1'
-//    implementation project(':music-player-lib')
-//    implementation project(':video-player-lib')
 }

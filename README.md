@@ -54,7 +54,7 @@ ___
 **1.项目build.gradle中添加**
 ```
     dependencies {
-        implementation 'com.imusic.player:music-player:1.0.1'
+        implementation 'com.imusic.player:music-player:1.0.2'
     }
 ```
 **2.全局初始化**
