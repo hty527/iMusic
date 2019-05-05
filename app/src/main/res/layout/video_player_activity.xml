@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:textColor="#FFFFFF"
-        android:textSize="16dp"
+        android:textSize="15dp"
         android:paddingLeft="20dp"
         android:paddingRight="15dp"
         android:paddingTop="10dp"

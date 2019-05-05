@@ -60,7 +60,7 @@
                     android:layout_marginTop="2dp"
                     android:singleLine="true"
                     android:ellipsize="end"
-                    android:textSize="12dp"
+                    android:textSize="11dp"
                     android:text="--" />
             </LinearLayout>
         </RelativeLayout>
@@ -86,7 +86,7 @@
                 android:lineSpacingMultiplier="1.2"
                 android:textSize="13dp"
                 android:paddingTop="5dp"
-                android:textColor="#A9A9A9"/>
+                android:textColor="#A1A1A1"/>
             <TextView
                 android:id="@+id/tv_desp_long"
                 android:layout_width="match_parent"
@@ -95,7 +95,7 @@
                 android:lineSpacingMultiplier="1.2"
                 android:textSize="13dp"
                 android:paddingTop="5dp"
-                android:textColor="#A9A9A9"
+                android:textColor="#A1A1A1"
                 android:visibility="gone"/>
             <ImageView
                 android:id="@+id/view_btn_details"

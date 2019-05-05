@@ -1019,9 +1019,9 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 开启小窗口播放
-     * @param startX     起点位于屏幕的X轴像素
-     * @param startY     起点位于屏幕的Y轴像素
-     * @param tinyWidth  小窗口的宽 未指定使用默认 屏幕宽的 1/2(二分之一)
+     * @param startX 起点位于屏幕的X轴像素
+     * @param startY 起点位于屏幕的Y轴像素
+     * @param tinyWidth 小窗口的宽 未指定使用默认 屏幕宽的 1/2(二分之一)
      * @param tinyHeight 小窗口的高 未指定使用默认 屏幕宽的 1/2 *9/16
      * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
      */
