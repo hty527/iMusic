@@ -18,7 +18,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.music.player.lib.R;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicAnimatorListener;
 import com.music.player.lib.listener.MusicJukeBoxStatusListener;
@@ -234,7 +234,7 @@ public class MusicJukeBoxView extends RelativeLayout{
             if(mPagerAdapter.getCount()>position){
                 setCurrentMusicItem(position,false,false);
                 this.mOffsetPosition=mViewPager.getCurrentItem();
-                if(null!=mPlayerInfoListener) mPlayerInfoListener.onJukeBoxObjectChanged(position,(BaseMediaInfo) mMusicDatas.get(position),true);
+                if(null!=mPlayerInfoListener) mPlayerInfoListener.onJukeBoxObjectChanged(position,(BaseAudioInfo) mMusicDatas.get(position),true);
             }
             mViewPager.addOnPageChangeListener(onPageChangedListener);
         }
@@ -285,9 +285,9 @@ public class MusicJukeBoxView extends RelativeLayout{
                     if(mEchoPageSelectedEnable){
                         mEchoPageSelectedEnable=false;
                         Logger.d(TAG,"onPageSelected-->onPageSelected(index)遭到禁用，只处理回显");
-                        mPlayerInfoListener.onJukeBoxObjectChanged(position,(BaseMediaInfo) mMusicDatas.get(position),true);
+                        mPlayerInfoListener.onJukeBoxObjectChanged(position,(BaseAudioInfo) mMusicDatas.get(position),true);
                     }else{
-                        mPlayerInfoListener.onJukeBoxObjectChanged(position,(BaseMediaInfo) mMusicDatas.get(position),false);
+                        mPlayerInfoListener.onJukeBoxObjectChanged(position,(BaseAudioInfo) mMusicDatas.get(position),false);
                     }
                 }
             }
@@ -430,7 +430,7 @@ public class MusicJukeBoxView extends RelativeLayout{
      */
     public void postOffsetMusicInfo(int position) {
         if(null!=mPlayerInfoListener&&null!=mMusicDatas&&mMusicDatas.size()>position){
-            mPlayerInfoListener.onJukeBoxOffsetObject((BaseMediaInfo) mMusicDatas.get(position));
+            mPlayerInfoListener.onJukeBoxOffsetObject((BaseAudioInfo) mMusicDatas.get(position));
         }
     }
 
@@ -538,10 +538,10 @@ public class MusicJukeBoxView extends RelativeLayout{
      * 放回当前正在显示Media对象
      * @return 唱片机正在处理的对象
      */
-    public BaseMediaInfo getCurrentMedia() {
+    public BaseAudioInfo getCurrentMedia() {
         if(null!=mViewPager){
             if(null!=mMusicDatas&&mMusicDatas.size()>mViewPager.getCurrentItem()){
-                return (BaseMediaInfo) mMusicDatas.get(mViewPager.getCurrentItem());
+                return (BaseAudioInfo) mMusicDatas.get(mViewPager.getCurrentItem());
             }
         }
         return null;
@@ -594,7 +594,7 @@ public class MusicJukeBoxView extends RelativeLayout{
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            BaseMediaInfo musicInfo = (BaseMediaInfo) mMusicDatas.get(position);
+            BaseAudioInfo musicInfo = (BaseAudioInfo) mMusicDatas.get(position);
             MusicJukeBoxCoverPager coverPager=new MusicJukeBoxCoverPager(container.getContext());
             coverPager.setMusicCover(MusicUtils.getInstance().getMusicFrontPath(musicInfo));
             coverPager.setId(position);

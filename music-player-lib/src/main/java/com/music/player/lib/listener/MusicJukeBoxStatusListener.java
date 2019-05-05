@@ -1,6 +1,6 @@
 package com.music.player.lib.listener;
 
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.model.MusicPlayerStatus;
 
 /**
@@ -13,9 +13,9 @@ public interface MusicJukeBoxStatusListener {
 
     /**
      * 手指横向滚动过程对象变化
-     * @param mediaInfo 音频对象
+     * @param audioInfo 音频对象
      */
-    void onJukeBoxOffsetObject(BaseMediaInfo mediaInfo);
+    void onJukeBoxOffsetObject(BaseAudioInfo audioInfo);
 
     /**
      * 音频对象切换了
@@ -23,7 +23,7 @@ public interface MusicJukeBoxStatusListener {
      * @param musicPicRes 音频对象
      * @param isEchoDisplay 是否回显
      */
-    void onJukeBoxObjectChanged(int position,BaseMediaInfo musicPicRes,boolean isEchoDisplay);
+    void onJukeBoxObjectChanged(int position, BaseAudioInfo musicPicRes, boolean isEchoDisplay);
 
     /**
      * 唱片机状态发生了变化

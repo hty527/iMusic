@@ -13,7 +13,7 @@ import com.android.imusic.music.adapter.MusicCommenListAdapter;
 import com.android.imusic.music.base.MusicBaseActivity;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
@@ -66,10 +66,10 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
     @Override
     public void onItemClick(View view, final int position, long musicID) {
         if(null!=view.getTag()){
-            final BaseMediaInfo mediaInfo= (BaseMediaInfo) view.getTag();
+            final BaseAudioInfo audioInfo= (BaseAudioInfo) view.getTag();
             if(musicID>0){
                 long currentPlayerID = MusicPlayerManager.getInstance().getCurrentPlayerID();
-                if(currentPlayerID>0&&currentPlayerID==mediaInfo.getId()){
+                if(currentPlayerID>0&&currentPlayerID==audioInfo.getAudioId()){
                     //重复点击，打开播放器
                     startToMusicPlayer(currentPlayerID);
                     return;
@@ -83,7 +83,7 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
                 createMiniJukeboxWindow();
             }else{
                 //Menu
-                MusicMusicDetailsDialog.getInstance(MusicCollectActivity.this,mediaInfo,MusicMusicDetailsDialog.DialogScene.SCENE_COLLECT)
+                MusicMusicDetailsDialog.getInstance(MusicCollectActivity.this,audioInfo,MusicMusicDetailsDialog.DialogScene.SCENE_COLLECT)
                         .setMusicOnItemClickListener(new MusicOnItemClickListener() {
                             /**
                              * @param view
@@ -92,7 +92,7 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
                              */
                             @Override
                             public void onItemClick(View view, int itemId, long musicID) {
-                                onMusicMenuClick(position,itemId,mediaInfo);
+                                onMusicMenuClick(position,itemId,audioInfo);
                             }
                         }).show();
             }
@@ -103,11 +103,11 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
      * 菜单处理
      * @param position
      * @param itemId
-     * @param mediaInfo
+     * @param audioInfo
      */
     @Override
-    protected void onMusicMenuClick(int position, int itemId, final BaseMediaInfo mediaInfo) {
-        super.onMusicMenuClick(position, itemId, mediaInfo);
+    protected void onMusicMenuClick(int position, int itemId, final BaseAudioInfo audioInfo) {
+        super.onMusicMenuClick(position, itemId, audioInfo);
         if(itemId== MusicDetails.ITEM_ID_DETELE){
             new android.support.v7.app.AlertDialog.Builder(MusicCollectActivity.this)
                     .setTitle("删除提示")
@@ -116,10 +116,10 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
                     .setPositiveButton("删除", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            boolean flag = MusicUtils.getInstance().removeMusicCollectById(mediaInfo.getId());
+                            boolean flag = MusicUtils.getInstance().removeMusicCollectById(audioInfo.getAudioId());
                             if(flag){
                                 Toast.makeText(MusicCollectActivity.this,"已删除",Toast.LENGTH_SHORT).show();
-                                List<BaseMediaInfo> collectMusics = MusicUtils.getInstance().getMusicsByCollect();
+                                List<BaseAudioInfo> collectMusics = MusicUtils.getInstance().getMusicsByCollect();
                                 mAdapter.setNewData(collectMusics);
                                 MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
                             }
@@ -155,7 +155,7 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
             new android.os.Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    List<BaseMediaInfo> playListByHistroy = MusicUtils.getInstance().getMusicsByCollect();
+                    List<BaseAudioInfo> playListByHistroy = MusicUtils.getInstance().getMusicsByCollect();
                     mAdapter.setNewData(playListByHistroy);
                 }
             },100);

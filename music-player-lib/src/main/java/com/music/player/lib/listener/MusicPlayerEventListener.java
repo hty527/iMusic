@@ -1,6 +1,6 @@
 package com.music.player.lib.listener;
 
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.model.MusicAlarmModel;
 import com.music.player.lib.model.MusicPlayModel;
 import com.music.player.lib.model.MusicPlayerState;
@@ -47,21 +47,21 @@ public interface MusicPlayerEventListener {
      * @param position 当前正在播放的位置
      */
 
-    void onPlayMusiconInfo(BaseMediaInfo musicInfo, int position);
+    void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position);
 
     /**
      * 回显内部播放位置至唱片机
      * @param musicInfo 音频对象
      * @param position 内部播放器正在处理的对象位置,相对于当前播放队列
      */
-    void onEchoPlayCurrentIndex(BaseMediaInfo musicInfo,int position);
+    void onEchoPlayCurrentIndex(BaseAudioInfo musicInfo,int position);
 
     /**
      * 音频地址无效,组件可处理付费购买等逻辑
      * @param musicInfo 播放对象
      * @param position 索引
      */
-    void onMusicPathInvalid(BaseMediaInfo musicInfo,int position);
+    void onMusicPathInvalid(BaseAudioInfo musicInfo,int position);
 
     /**
      * @param totalDurtion 音频总时间

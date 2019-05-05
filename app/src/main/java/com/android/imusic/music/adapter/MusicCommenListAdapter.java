@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.music.player.lib.adapter.base.BaseAdapter;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.util.MusicAlbumCoverTask;
@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
  * Commend Music List Adapter
  */
 
-public class MusicCommenListAdapter extends BaseAdapter<BaseMediaInfo,MusicListViewHolder> {
+public class MusicCommenListAdapter extends BaseAdapter<BaseAudioInfo,MusicListViewHolder> {
 
     //是否来自专辑界面持有适配器
     private final boolean mIsAlbum;
@@ -35,11 +35,11 @@ public class MusicCommenListAdapter extends BaseAdapter<BaseMediaInfo,MusicListV
     private MusicOnItemClickListener mListener;
     private int mCurrentPosition;
 
-    public MusicCommenListAdapter(Context context, List<BaseMediaInfo> data, MusicOnItemClickListener listener) {
+    public MusicCommenListAdapter(Context context, List<BaseAudioInfo> data, MusicOnItemClickListener listener) {
         this(context,data,listener,false);
     }
 
-    public MusicCommenListAdapter(Context context, List<BaseMediaInfo> data, MusicOnItemClickListener listener,boolean isAlbum) {
+    public MusicCommenListAdapter(Context context, List<BaseAudioInfo> data, MusicOnItemClickListener listener,boolean isAlbum) {
         super(context,data);
         this.mListener=listener;
         int processors = Runtime.getRuntime().availableProcessors();
@@ -61,17 +61,17 @@ public class MusicCommenListAdapter extends BaseAdapter<BaseMediaInfo,MusicListV
      */
     @Override
     public void inBindViewHolder(MusicListViewHolder viewHolder, final int position) {
-        BaseMediaInfo itemData = getItemData(position);
+        BaseAudioInfo itemData = getItemData(position);
         if(null!=itemData){
-            viewHolder.textTitle.setText(itemData.getVideo_desp());
-            if(!TextUtils.isEmpty(itemData.getMediaAlbum())){
-                viewHolder.textAnchor.setText(itemData.getNickname()+"-"+itemData.getMediaAlbum());
+            viewHolder.textTitle.setText(itemData.getAudioName());
+            if(!TextUtils.isEmpty(itemData.getAudioAlbumName())){
+                viewHolder.textAnchor.setText(itemData.getNickname()+"-"+itemData.getAudioAlbumName());
             }else{
                 viewHolder.textAnchor.setText(itemData.getNickname());
             }
             boolean isPlaying=false;
-            BaseMediaInfo currentPlayerMusic = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-            if(null!=currentPlayerMusic&&currentPlayerMusic.getId()==itemData.getId()){
+            BaseAudioInfo currentPlayerMusic = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
+            if(null!=currentPlayerMusic&&currentPlayerMusic.getAudioId()==itemData.getAudioId()){
                 isPlaying=true;
                 mCurrentPosition =position;
             }
@@ -79,8 +79,8 @@ public class MusicCommenListAdapter extends BaseAdapter<BaseMediaInfo,MusicListV
             viewHolder.itemPlayingStatus.setVisibility(itemData.isSelected()?View.VISIBLE:View.GONE);
             viewHolder.itemLine.setVisibility(position==(getData().size()-1)?View.INVISIBLE:View.VISIBLE);
             //封面绑定
-            if(itemData.getFile_path().startsWith("http:")|| itemData.getFile_path().startsWith("https:")){
-                String cover= TextUtils.isEmpty(itemData.getImg_path())?itemData.getAvatar():itemData.getImg_path();
+            if(itemData.getAudioPath().startsWith("http:")|| itemData.getAudioPath().startsWith("https:")){
+                String cover= TextUtils.isEmpty(itemData.getAudioCover())?itemData.getAvatar():itemData.getAudioCover();
                 if(!TextUtils.isEmpty(cover)){
                     Glide.with(getContext())
                             .load(cover)
@@ -99,12 +99,12 @@ public class MusicCommenListAdapter extends BaseAdapter<BaseMediaInfo,MusicListV
                 //用户指定了开关，才加载本地音乐封面
                 if(MediaUtils.getInstance().isLocalImageEnable()){
                     viewHolder.imageCover.setImageResource(R.drawable.ic_music_default_cover);
-                    Bitmap bitmap = MusicImageCache.getInstance().getBitmap(itemData.getFile_path());
+                    Bitmap bitmap = MusicImageCache.getInstance().getBitmap(itemData.getAudioPath());
                     if(null!=bitmap){
                         viewHolder.imageCover.setImageBitmap(bitmap);
                     }else{
                         if(null!=mExecutorService){
-                            new MusicAlbumCoverTask(viewHolder.imageCover,itemData.getFile_path()).executeOnExecutor(mExecutorService);
+                            new MusicAlbumCoverTask(viewHolder.imageCover,itemData.getAudioPath()).executeOnExecutor(mExecutorService);
                         }
                     }
                 }else{
@@ -143,7 +143,7 @@ public class MusicCommenListAdapter extends BaseAdapter<BaseMediaInfo,MusicListV
     @Override
     protected void inBindViewHolder(MusicListViewHolder viewHolder, int position, List<Object> payloads) {
         super.inBindViewHolder(viewHolder, position, payloads);
-        BaseMediaInfo itemData = getItemData(position);
+        BaseAudioInfo itemData = getItemData(position);
         if(null!=itemData){
             viewHolder.itemPlayingStatus.setVisibility(itemData.isSelected()?View.VISIBLE:View.GONE);
             viewHolder.itemRootView.setTag(itemData);
@@ -163,7 +163,7 @@ public class MusicCommenListAdapter extends BaseAdapter<BaseMediaInfo,MusicListV
      * @param position
      */
     public void notifyDataSetChanged(int position){
-        List<BaseMediaInfo> data = getData();
+        List<BaseAudioInfo> data = getData();
         data.get(mCurrentPosition).setSelected(false);
         data.get(position).setSelected(true);
         notifyItemChanged(mCurrentPosition,"NITIFY_DATA");

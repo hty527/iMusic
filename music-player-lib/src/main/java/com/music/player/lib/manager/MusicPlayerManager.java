@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerPresenter;
 import com.music.player.lib.model.MusicAlarmModel;
@@ -18,7 +18,6 @@ import com.music.player.lib.model.MusicPlayingChannel;
 import com.music.player.lib.model.MusicWindowStyle;
 import com.music.player.lib.service.MusicPlayerBinder;
 import com.music.player.lib.service.MusicPlayerService;
-import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import java.util.List;
 import java.util.Observer;
@@ -286,13 +285,13 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
 
     /**
      * 开始播放新的音频队列，播放器会替换全新音乐列表
-     * @param musicList 待播放的数据集，对象需要继承BaseMediaInfo
+     * @param audios 待播放的数据集，对象需要继承BaseaudioInfo
      * @param index 指定要播放的位置 0-data.size()
      */
     @Override
-    public void startPlayMusic(List<?> musicList, int index) {
+    public void startPlayMusic(List<?> audios, int index) {
         if(null!=mBinder&&mBinder.pingBinder()){
-            mBinder.startPlayMusic(musicList,index);
+            mBinder.startPlayMusic(audios,index);
         }
     }
 
@@ -309,12 +308,12 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
 
     /**
      * 开始一个新的播放任务，播放器内部自动将其添加至队列顶部,即插队播放
-     * @param mediaInfo 音频对象
+     * @param audioInfo 音频对象
      */
     @Override
-    public void addPlayMusicToTop(BaseMediaInfo mediaInfo) {
+    public void addPlayMusicToTop(BaseAudioInfo audioInfo) {
         if(null!=mBinder&&mBinder.pingBinder()){
-            mBinder.addPlayMusicToTop(mediaInfo);
+            mBinder.addPlayMusicToTop(audioInfo);
         }
     }
 
@@ -404,13 +403,13 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
 
     /**
      * 替换播放器内部待播放列表
-     * @param musicLists 数据集
+     * @param audios 待播放列表
      * @param index 位置
      */
     @Override
-    public void updateMusicPlayerData(List<?> musicLists, int index) {
+    public void updateMusicPlayerData(List<?> audios, int index) {
         if(null!=mBinder&&mBinder.pingBinder()){
-            mBinder.updateMusicPlayerData(musicLists,index);
+            mBinder.updateMusicPlayerData(audios,index);
         }
     }
 
@@ -560,7 +559,7 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
      * @return 音频对象
      */
     @Override
-    public BaseMediaInfo getCurrentPlayerMusic() {
+    public BaseAudioInfo getCurrentPlayerMusic() {
         if(null!=mBinder&&mBinder.pingBinder()){
             return mBinder.getCurrentPlayerMusic();
         }

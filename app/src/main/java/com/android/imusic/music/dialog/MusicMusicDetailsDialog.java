@@ -19,7 +19,7 @@ import com.android.imusic.music.adapter.MusicDetailsAdapter;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.utils.MediaUtils;
 import com.music.player.lib.adapter.base.OnItemClickListener;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.manager.MusicPlayerManager;
@@ -53,49 +53,49 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
     /**
      * 普通入口，默认场景为本地音乐入口
      * @param context
-     * @param mediaInfo
+     * @param audioInfo
      * @return
      */
-    public static MusicMusicDetailsDialog getInstance(Context context, BaseMediaInfo mediaInfo) {
-        return new MusicMusicDetailsDialog(context,mediaInfo,DialogScene.SCENE_LOCATION,null);
+    public static MusicMusicDetailsDialog getInstance(Context context, BaseAudioInfo audioInfo) {
+        return new MusicMusicDetailsDialog(context,audioInfo,DialogScene.SCENE_LOCATION,null);
     }
 
     /**
      * 指定场景
      * @param context
-     * @param mediaInfo
+     * @param audioInfo
      * @param sceneMode
      * @return
      */
-    public static MusicMusicDetailsDialog getInstance(Context context, BaseMediaInfo mediaInfo,DialogScene sceneMode) {
-        return new MusicMusicDetailsDialog(context,mediaInfo,sceneMode,null);
+    public static MusicMusicDetailsDialog getInstance(Context context, BaseAudioInfo audioInfo, DialogScene sceneMode) {
+        return new MusicMusicDetailsDialog(context,audioInfo,sceneMode,null);
     }
 
     /**
      * 携带专辑名称的入口
      * @param context
-     * @param mediaInfo
+     * @param audioInfo
      * @param sceneMode
      * @param albumName
      * @return
      */
-    public static MusicMusicDetailsDialog getInstance(Context context, BaseMediaInfo mediaInfo,DialogScene sceneMode,String albumName) {
-        return new MusicMusicDetailsDialog(context,mediaInfo,sceneMode,albumName);
+    public static MusicMusicDetailsDialog getInstance(Context context, BaseAudioInfo audioInfo,DialogScene sceneMode,String albumName) {
+        return new MusicMusicDetailsDialog(context,audioInfo,sceneMode,albumName);
     }
 
-    public MusicMusicDetailsDialog(@NonNull Context context,BaseMediaInfo mediaInfo,DialogScene sceneMode,String albumName) {
-        this(context, R.style.MusicButtomAnimationStyle,mediaInfo,sceneMode,albumName);
+    public MusicMusicDetailsDialog(@NonNull Context context,BaseAudioInfo audioInfo,DialogScene sceneMode,String albumName) {
+        this(context, R.style.MusicButtomAnimationStyle,audioInfo,sceneMode,albumName);
     }
 
-    public MusicMusicDetailsDialog(@NonNull Context context, int theme,BaseMediaInfo mediaInfo,DialogScene sceneMode,String albumName) {
+    public MusicMusicDetailsDialog(@NonNull Context context, int theme,BaseAudioInfo audioInfo,DialogScene sceneMode,String albumName) {
         super(context, theme);
         setContentView(R.layout.music_dialog_details);
         this.mSceneMode=sceneMode;
-        ((TextView) findViewById(R.id.view_item_title)).setText("歌曲："+mediaInfo.getVideo_desp());
+        ((TextView) findViewById(R.id.view_item_title)).setText("歌曲："+audioInfo.getAudioName());
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        List<MusicDetails> musicDetails= MediaUtils.getInstance().getMusicDetails(mediaInfo,mSceneMode,albumName);
+        List<MusicDetails> musicDetails= MediaUtils.getInstance().getMusicDetails(audioInfo,mSceneMode,albumName);
         mAdapter = new MusicDetailsAdapter(context,musicDetails);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -186,13 +186,13 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
     @Override
     public void onInfo(int event, int extra) {}
     @Override
-    public void onPlayMusiconInfo(BaseMediaInfo musicInfo, int position) {}
+    public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {}
 
     @Override
-    public void onEchoPlayCurrentIndex(BaseMediaInfo musicInfo,int position) {}
+    public void onEchoPlayCurrentIndex(BaseAudioInfo musicInfo,int position) {}
 
     @Override
-    public void onMusicPathInvalid(BaseMediaInfo musicInfo, int position) {}
+    public void onMusicPathInvalid(BaseAudioInfo musicInfo, int position) {}
     @Override
     public void onTaskRuntime(long totalDurtion, long currentDurtion, long alarmResidueDurtion,int bufferProgress) {}
 

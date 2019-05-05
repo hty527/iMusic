@@ -1,7 +1,7 @@
 package com.music.player.lib.listener;
 
 import android.app.Notification;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.model.MusicAlarmModel;
 import com.music.player.lib.model.MusicPlayModel;
 import com.music.player.lib.model.MusicPlayerState;
@@ -17,10 +17,10 @@ import java.util.List;
 public interface MusicPlayerPresenter {
     /**
      * 开始播放任务
-     * @param musicList 待播放的数据集，对象需要继承BaseMediaInfo
+     * @param audios 待播放的数据集，对象需要继承BaseaudioInfo
      * @param index 指定要播放的位置 0-data.size()
      */
-    void startPlayMusic(List<?> musicList,int index);
+    void startPlayMusic(List<?> audios,int index);
 
     /**
      * 开始播放指定位置音频文件，如果内部数据集存在的话，此方法需在调用updateMusicPlayerData之后调用生效
@@ -30,9 +30,9 @@ public interface MusicPlayerPresenter {
 
     /**
      * 开始播放，并将此播放对象添加至正在播放的队列顶部
-     * @param mediaInfo 音频对象
+     * @param audioInfo 音频对象
      */
-    void addPlayMusicToTop(BaseMediaInfo mediaInfo);
+    void addPlayMusicToTop(BaseAudioInfo audioInfo);
 
     /**
      * 开始、暂停
@@ -80,10 +80,10 @@ public interface MusicPlayerPresenter {
 
     /**
      * 更新内部播放器的数据集合位置，此方法适合在外部列表已经改变了，需同步至内部播放器
-     * @param musicLists 数据集
+     * @param audios 待播放列表
      * @param index 位置
      */
-    void updateMusicPlayerData(List<?> musicLists, int index);
+    void updateMusicPlayerData(List<?> audios, int index);
 
     /**
      * 设置播放模式
@@ -161,7 +161,7 @@ public interface MusicPlayerPresenter {
      * 返回正在播放的音频对象
      * @return 音频对象
      */
-    BaseMediaInfo getCurrentPlayerMusic();
+    BaseAudioInfo getCurrentPlayerMusic();
 
     /**
      * 返回正在播放的音频HASH KEY，此处只是酷狗音乐对象用到

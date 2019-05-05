@@ -19,7 +19,7 @@ import com.android.imusic.music.activity.MusicLocalActivity;
 import com.android.imusic.music.activity.MusicSearchActivity;
 import com.android.imusic.music.adapter.MusicIndexDataAdapter;
 import com.android.imusic.music.base.MusicBaseFragment;
-import com.android.imusic.music.bean.MediaInfo;
+import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.ResultData;
 import com.android.imusic.music.bean.ResultList;
 import com.android.imusic.music.engin.IndexPersenter;
@@ -27,7 +27,7 @@ import com.android.imusic.music.net.MusicNetUtils;
 import com.android.imusic.music.utils.MediaUtils;
 import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.adapter.base.OnItemClickListener;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
@@ -62,30 +62,30 @@ public class IndexMusicFragment extends MusicBaseFragment<IndexPersenter> implem
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager=new GridLayoutManager(getContext(),3,GridLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
-        List<MediaInfo> dataList= MediaUtils.getInstance().createIndexData();
+        List<AudioInfo> dataList= MediaUtils.getInstance().createIndexData();
         mAdapter = new MusicIndexDataAdapter(getContext(),dataList);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, long itemId) {
                 if(null!=view.getTag()){
-                    MediaInfo mediaInfo = (MediaInfo) view.getTag();
+                    AudioInfo audioInfo = (AudioInfo) view.getTag();
                     //本地条目类型
-                    if(mediaInfo.getItemType()== MediaInfo.ITEM_DEFAULT){
-                        if(!TextUtils.isEmpty(mediaInfo.getTag_id())){
+                    if(audioInfo.getItemType()== AudioInfo.ITEM_DEFAULT){
+                        if(!TextUtils.isEmpty(audioInfo.getTag_id())){
                             //本地音乐
-                            if(mediaInfo.getTag_id().equals(MediaInfo.TAG_LOCATION)){
+                            if(audioInfo.getTag_id().equals(AudioInfo.TAG_LOCATION)){
                                 Intent intent=new Intent(getContext(), MusicLocalActivity.class);
                                 startActivity(intent);
                                 return;
                             }
                             //最近播放历史记录
-                            if(mediaInfo.getTag_id().equals(MediaInfo.TAG_LAST_PLAYING)){
+                            if(audioInfo.getTag_id().equals(AudioInfo.TAG_LAST_PLAYING)){
                                 Intent intent=new Intent(getContext(), MusicHistroyActivity.class);
                                 startActivity(intent);
                                 return;
                             }
                             //收藏列表
-                            if(mediaInfo.getTag_id().equals(MediaInfo.TAG_COLLECT)){
+                            if(audioInfo.getTag_id().equals(AudioInfo.TAG_COLLECT)){
                                 Intent intent=new Intent(getContext(), MusicCollectActivity.class);
                                 startActivity(intent);
                                 return;
@@ -94,29 +94,29 @@ public class IndexMusicFragment extends MusicBaseFragment<IndexPersenter> implem
                         return;
                     }
                     //专辑
-                    if(mediaInfo.getItemType()== MediaInfo.ITEM_ALBUM){
-                        if(!TextUtils.isEmpty(mediaInfo.getTag_id())){
+                    if(audioInfo.getItemType()== AudioInfo.ITEM_ALBUM){
+                        if(!TextUtils.isEmpty(audioInfo.getTag_id())){
                             Intent intent=new Intent(getContext(), MusicAlbumActivity.class);
-                            intent.putExtra(MusicConstants.KEY_TAG_ID, mediaInfo.getTag_id());
-                            intent.putExtra(MusicConstants.KEY_ALBUM_ANME, mediaInfo.getTitle());
+                            intent.putExtra(MusicConstants.KEY_TAG_ID, audioInfo.getTag_id());
+                            intent.putExtra(MusicConstants.KEY_ALBUM_ANME, audioInfo.getTitle());
                             startActivity(intent);
                         }
                         return;
                     }
                     //音乐
-                    if(mediaInfo.getItemType()== MediaInfo.ITEM_MUSIC){
-                        List<MediaInfo> data = mAdapter.getData();
+                    if(audioInfo.getItemType()== AudioInfo.ITEM_MUSIC){
+                        List<AudioInfo> data = mAdapter.getData();
                         //提取音乐文件前往播放
-                        List<MediaInfo> newData=new ArrayList<>();
+                        List<AudioInfo> newData=new ArrayList<>();
                         for (int i = 0; i < data.size(); i++) {
-                            MediaInfo dumMediaInfo = data.get(i);
-                            if(!TextUtils.isEmpty(dumMediaInfo.getClass_enty())&&dumMediaInfo.getClass_enty().equals(MediaInfo.ITEM_CLASS_TYPE_MUSIC)){
-                                newData.add(dumMediaInfo);
+                            AudioInfo dunAudioInfo = data.get(i);
+                            if(!TextUtils.isEmpty(dunAudioInfo.getClass_enty())&&dunAudioInfo.getClass_enty().equals(AudioInfo.ITEM_CLASS_TYPE_MUSIC)){
+                                newData.add(dunAudioInfo);
                             }
                         }
                         if(newData.size()>0){
                             MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_NET);
-                            startToMusicPlayer(mediaInfo.getId(),newData);
+                            startToMusicPlayer(audioInfo.getAudioId(),newData);
                         }
                         return;
                     }
@@ -176,19 +176,19 @@ public class IndexMusicFragment extends MusicBaseFragment<IndexPersenter> implem
             Toast.makeText(getContext(),"无法读取SD卡，请检查SD卡使用权限！",Toast.LENGTH_SHORT).show();
             return;
         }
-        new AsyncTask<Void, Void, List<BaseMediaInfo>>() {
+        new AsyncTask<Void, Void, List<BaseAudioInfo>>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
             }
             @Override
-            protected List<BaseMediaInfo> doInBackground(final Void... unused) {
-                ArrayList<BaseMediaInfo> mediaInfos = MediaUtils.getInstance().queryLocationMusics(context);
-                return mediaInfos;
+            protected List<BaseAudioInfo> doInBackground(final Void... unused) {
+                ArrayList<BaseAudioInfo> audioInfos = MediaUtils.getInstance().queryLocationMusics(context);
+                return audioInfos;
             }
 
             @Override
-            protected void onPostExecute(List<BaseMediaInfo> data) {
+            protected void onPostExecute(List<BaseAudioInfo> data) {
                 if(null!=data&&null!=mAdapter){
                     MediaUtils.getInstance().setLocationMusic(data);
                     if(mAdapter.getData().size()>0){
@@ -213,10 +213,10 @@ public class IndexMusicFragment extends MusicBaseFragment<IndexPersenter> implem
                     }
                 });
             }
-            mPresenter.getIndexMusicList(new TypeToken<ResultData<ResultList<MediaInfo>>>(){}.getType(),new MusicNetUtils.OnRequstCallBack<ResultList<MediaInfo>>() {
+            mPresenter.getIndexMusicList(new TypeToken<ResultData<ResultList<AudioInfo>>>(){}.getType(),new MusicNetUtils.OnRequstCallBack<ResultList<AudioInfo>>() {
 
                 @Override
-                public void onResponse(ResultData<ResultList<MediaInfo>> data) {
+                public void onResponse(ResultData<ResultList<AudioInfo>> data) {
                     if(null!=mSwipeRefreshLayout){
                         mSwipeRefreshLayout.post(new Runnable() {
                             @Override
@@ -226,7 +226,7 @@ public class IndexMusicFragment extends MusicBaseFragment<IndexPersenter> implem
                         });
                     }
                     if(null!=data.getData()&&null!=data.getData().getList()&&data.getData().getList().size()>0){
-                        List<MediaInfo> dataList=MediaUtils.getInstance().createIndexData();
+                        List<AudioInfo> dataList=MediaUtils.getInstance().createIndexData();
                         data.getData().getList().addAll(0,dataList);
                         mAdapter.setNewData(data.getData().getList());
                     }else{

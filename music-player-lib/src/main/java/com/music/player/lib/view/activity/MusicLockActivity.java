@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.music.player.lib.R;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicPlayerEventListener;
@@ -104,15 +104,15 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
                         MusicPlayerManager.getInstance().playNextMusic();
                     }else if(id==R.id.music_lock_collect){
                         if(null!=mMusicCollect.getTag()){
-                            BaseMediaInfo mediaInfo = (BaseMediaInfo) mMusicCollect.getTag();
+                            BaseAudioInfo audioInfo = (BaseAudioInfo) mMusicCollect.getTag();
                             if(mMusicCollect.isSelected()){
-                                boolean isSuccess = MusicUtils.getInstance().removeMusicCollectById(mediaInfo.getId());
+                                boolean isSuccess = MusicUtils.getInstance().removeMusicCollectById(audioInfo.getAudioId());
                                 Logger.d(TAG,"removeState:"+isSuccess);
                                 if(isSuccess){
                                     mMusicCollect.setSelected(false);
                                 }
                             }else{
-                                boolean isSuccess = MusicUtils.getInstance().putMusicToCollect(mediaInfo);
+                                boolean isSuccess = MusicUtils.getInstance().putMusicToCollect(audioInfo);
                                 Logger.d(TAG,"addState:"+isSuccess);
                                 if(isSuccess){
                                     mMusicCollect.setSelected(true);
@@ -136,14 +136,14 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
         MusicPlayModel playerModel = MusicPlayerManager.getInstance().getPlayerModel();
         mMusicModel.setImageResource(getResToPlayModel(playerModel,false));
         //播放对象、状态
-        BaseMediaInfo mediaInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
+        BaseAudioInfo audioInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
         mMusicPause.setImageResource(getPauseIcon(MusicPlayerManager.getInstance().getPlayerState()));
         mScreenWidth = MusicUtils.getInstance().getScreenWidth(this);
         int discSize = (int) (mScreenWidth * MusicConstants.SCALE_DISC_LOCK_SIZE);
         Logger.d(TAG,"discSize:"+discSize);
         mMusicCover.getLayoutParams().height=discSize;
         mMusicCover.getLayoutParams().width=discSize;
-        updateMusicData(mediaInfo);
+        updateMusicData(audioInfo);
         MusicPlayerManager.getInstance().addOnPlayerEventListener(this);
         mDiscObjectAnimator = getDiscObjectAnimator(mMusicCover);
         mClickControler=new MusicClickControler();
@@ -152,17 +152,17 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
 
     /**
      * 更新当前处理的对象
-     * @param mediaInfo
+     * @param audioInfo
      */
-    private void updateMusicData(BaseMediaInfo mediaInfo) {
-        if(null!=mediaInfo){
+    private void updateMusicData(BaseAudioInfo audioInfo) {
+        if(null!=audioInfo){
             //是否已收藏
-            boolean isExist = MusicUtils.getInstance().isExistCollectHistroy(mediaInfo.getId());
+            boolean isExist = MusicUtils.getInstance().isExistCollectHistroy(audioInfo.getAudioId());
             mMusicCollect.setSelected(isExist);
-            mMusicCollect.setTag(mediaInfo);
-            mMusicTitle.setText(mediaInfo.getVideo_desp());
-            mMusicAnchor.setText(mediaInfo.getNickname());
-            MusicUtils.getInstance().setMusicComposeFront(MusicLockActivity.this,mMusicCover,MusicUtils.getInstance().getMusicFrontPath(mediaInfo),MusicConstants.SCALE_DISC_LOCK_SIZE
+            mMusicCollect.setTag(audioInfo);
+            mMusicTitle.setText(audioInfo.getAudioName());
+            mMusicAnchor.setText(audioInfo.getNickname());
+            MusicUtils.getInstance().setMusicComposeFront(MusicLockActivity.this,mMusicCover,MusicUtils.getInstance().getMusicFrontPath(audioInfo),MusicConstants.SCALE_DISC_LOCK_SIZE
                     ,MusicConstants.SCALE_MUSIC_PIC_LOCK_SIZE,R.drawable.ic_music_lock_cover_plate,R.drawable.ic_music_juke_default_cover);
         }
     }
@@ -366,7 +366,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
      * @param position 当前正在播放的位置
      */
     @Override
-    public void onPlayMusiconInfo(final BaseMediaInfo musicInfo, int position) {
+    public void onPlayMusiconInfo(final BaseAudioInfo musicInfo, int position) {
         if(null!=musicInfo&&null!=mHandler){
             mHandler.post(new Runnable() {
                 @Override
@@ -378,7 +378,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
     }
 
     @Override
-    public void onEchoPlayCurrentIndex(final BaseMediaInfo musicInfo, int position) {
+    public void onEchoPlayCurrentIndex(final BaseAudioInfo musicInfo, int position) {
         if(null!=musicInfo&&null!=mHandler){
             mHandler.post(new Runnable() {
                 @Override
@@ -390,7 +390,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
     }
 
     @Override
-    public void onMusicPathInvalid(BaseMediaInfo musicInfo, int position) {}
+    public void onMusicPathInvalid(BaseAudioInfo musicInfo, int position) {}
 
     @Override
     public void onTaskRuntime(long totalDurtion, long currentDurtion, long alarmResidueDurtion,int bufferProgress) {

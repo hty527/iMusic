@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.music.player.lib.R;
 import com.music.player.lib.adapter.MusicPlayerListAdapter;
 import com.music.player.lib.adapter.base.OnItemClickListener;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
@@ -113,12 +113,12 @@ public class MusicPlayerListDialog extends BottomSheetDialog implements Observer
                 if(null!= mAdapter){
                     List<?> currentPlayList = MusicPlayerManager.getInstance().getCurrentPlayList();
                     if(null!=currentPlayList&&currentPlayList.size()>0){
-                        List<BaseMediaInfo> musicInfos=new ArrayList<>();
-                        musicInfos.addAll((Collection<? extends BaseMediaInfo>) currentPlayList);
-                        BaseMediaInfo currentPlayerMusic = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
+                        List<BaseAudioInfo> musicInfos=new ArrayList<>();
+                        musicInfos.addAll((Collection<? extends BaseAudioInfo>) currentPlayList);
+                        BaseAudioInfo currentPlayerMusic = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
                         if(null!=currentPlayerMusic){
                             for (int i = 0; i < musicInfos.size(); i++) {
-                                if(currentPlayerMusic.getId()==musicInfos.get(i).getId()){
+                                if(currentPlayerMusic.getAudioId()==musicInfos.get(i).getAudioId()){
                                     currentPosition=i;
                                     musicInfos.get(i).setSelected(true);
                                 }else{

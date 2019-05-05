@@ -1,14 +1,14 @@
 package com.android.imusic.music.bean;
 
 import android.text.TextUtils;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 
 /**
  * TinyHung@Outlook.com
  * 2019/3/6
  */
 
-public class MediaInfo extends BaseMediaInfo  {
+public class AudioInfo extends BaseAudioInfo {
     //Item类型
     public static final int ITEM_UNKNOWN=0;
     public static final int ITEM_DEFAULT=1;

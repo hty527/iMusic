@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.imusic.music.activity.MusicPlayerActivity;
-import com.android.imusic.music.bean.MediaInfo;
+import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.net.MusicNetUtils;
 import com.music.player.lib.constants.MusicConstants;
 
@@ -77,12 +77,12 @@ public abstract class MusicBaseFragment<P extends MusicNetUtils> extends Fragmen
 
     /**
      * 打开播放器
-     * @param musicID
-     * @param mediaInfos
+     * @param musicID 要播放的音频对象
+     * @param audioInfos 要播放的音频队列对象
      */
-    protected void startToMusicPlayer(long musicID,List<MediaInfo> mediaInfos){
+    protected void startToMusicPlayer(long musicID,List<AudioInfo> audioInfos){
         Intent intent=new Intent(getContext().getApplicationContext(), MusicPlayerActivity.class);
-        intent.putExtra(MusicConstants.KEY_MUSIC_LIST, (Serializable) mediaInfos);
+        intent.putExtra(MusicConstants.KEY_MUSIC_LIST, (Serializable) audioInfos);
         intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getContext().getApplicationContext().startActivity(intent);

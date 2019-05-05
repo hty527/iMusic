@@ -65,7 +65,7 @@
 ```
 ### 六、付费购买逻辑
 ```
-  一般付费音频播放前，播放地址是为空的，播放器内部将抛出onMusicPathInvalid(BaseMediaInfo musicInfo, int position);事件，你可在此方法中处理购买付费逻辑，
+  一般付费音频播放前，播放地址是为空的，播放器内部将抛出onMusicPathInvalid(BaseaudioInfo musicInfo, int position);事件，你可在此方法中处理购买付费逻辑，
   待获取到真实播放地址后，再调用下面方法继续尝试播放。也可以自行处理完购买逻辑后再开始调用播放音频事件。
 ```
 ```
@@ -191,11 +191,11 @@
 
     /**
      * 开始播放新的音频队列，播放器会替换全新音乐列表
-     * @param musicList 待播放的数据集，对象需要继承BaseMediaInfo
+     * @param audios 待播放的数据集，对象需要继承BaseaudioInfo
      * @param index 指定要播放的位置 0-data.size()
      */
     @Override
-    public void startPlayMusic(List<?> musicList, int index);
+    public void startPlayMusic(List<?> audios, int index);
 
     /**
      * 开始播放指定位置音频文件，如果播放列表存在
@@ -206,10 +206,10 @@
 
     /**
      * 开始一个新的播放任务，播放器内部自动将其添加至队列顶部,即插队播放
-     * @param mediaInfo 音频对象
+     * @param audioInfo 音频对象
      */
     @Override
-    public void addPlayMusicToTop(BaseMediaInfo mediaInfo);
+    public void addPlayMusicToTop(BaseaudioInfo audioInfo);
 
     /**
      * 开始、暂停播放
@@ -266,11 +266,11 @@
 
     /**
      * 替换播放器内部待播放列表
-     * @param musicLists 数据集
+     * @param audios 待播放列表
      * @param index 位置
      */
     @Override
-    public void updateMusicPlayerData(List<?> musicLists, int index);
+    public void updateMusicPlayerData(List<?> audios, int index);
 
     /**
      * 设置播放模式
@@ -360,7 +360,7 @@
      * @return 音频对象
      */
     @Override
-    public BaseMediaInfo getCurrentPlayerMusic();
+    public BaseaudioInfo getCurrentPlayerMusic();
 
     /**
      * 获取播放器正在处理第三方网络歌曲的唯一标识，此hashKey只有搜索的歌曲有此属性

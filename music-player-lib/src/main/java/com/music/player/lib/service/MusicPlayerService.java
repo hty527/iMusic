@@ -30,7 +30,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.music.player.lib.R;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicPlayerEventListener;
@@ -78,7 +78,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     //音频焦点Manager
     private static MusicAudioFocusManager mAudioFocusManager;
     //待播放音频队列池子
-    private static List<Object> mMusicLists = new ArrayList<>();
+    private static List<Object> mAudios = new ArrayList<>();
     //当前播放播放器正在处理的对象位置
     private static int mCurrentPlayIndex = 0;
     //循环模式
@@ -206,14 +206,14 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 播放全新的音频列表任务
-     * @param musicList 待播放的数据集，对象需要继承BaseMediaInfo
+     * @param musicList 待播放的数据集，对象需要继承BaseaudioInfo
      * @param index 指定要播放的位置 0-data.size()
      */
     @Override
     public void startPlayMusic(List<?> musicList, int index) {
         if(null!=musicList){
-            mMusicLists.clear();
-            mMusicLists.addAll(musicList);
+            mAudios.clear();
+            mAudios.addAll(musicList);
             startPlayMusic(index);
         }
     }
@@ -227,9 +227,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         if(index<0){
             throw new IndexOutOfBoundsException("start play index must > 0");
         }
-        if(null!=mMusicLists&&mMusicLists.size()>index){
+        if(null!=mAudios&&mAudios.size()>index){
             this.mCurrentPlayIndex=index;
-            BaseMediaInfo baseMusicInfo = (BaseMediaInfo) mMusicLists.get(index);
+            BaseAudioInfo baseMusicInfo = (BaseAudioInfo) mAudios.get(index);
             startPlay(baseMusicInfo);
             //检查用户设定的闹钟
             initAlarmConfig();
@@ -238,35 +238,35 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 开始一个新的播放，将其加入正在播放的队列顶部
-     * @param mediaInfo 音频对象
+     * @param audioInfo 音频对象
      */
     @Override
-    public void addPlayMusicToTop(BaseMediaInfo mediaInfo) {
-        if(null==mediaInfo){
+    public void addPlayMusicToTop(BaseAudioInfo audioInfo) {
+        if(null==audioInfo){
             return;
         }
-        if(null==mMusicLists){
-            mMusicLists=new ArrayList<>();
+        if(null==mAudios){
+            mAudios=new ArrayList<>();
         }
-        BaseMediaInfo playerMusic = getCurrentPlayerMusic();
-        if(null!=playerMusic&&playerMusic.getId()==mediaInfo.getId()){
+        BaseAudioInfo playerMusic = getCurrentPlayerMusic();
+        if(null!=playerMusic&&playerMusic.getAudioId()==audioInfo.getAudioId()){
             return;
         }
-        if(mMusicLists.size()>0){
+        if(mAudios.size()>0){
             int pisition=-1;
-            for (int i = 0; i < mMusicLists.size(); i++) {
-                BaseMediaInfo musicInfo = (BaseMediaInfo) mMusicLists.get(i);
-                if(mediaInfo.getId()==musicInfo.getId()){
+            for (int i = 0; i < mAudios.size(); i++) {
+                BaseAudioInfo musicInfo = (BaseAudioInfo) mAudios.get(i);
+                if(audioInfo.getAudioId()==musicInfo.getAudioId()){
                     pisition=i;
                     break;
                 }
             }
             if(pisition>-1){
                 onReset();
-                mMusicLists.remove(pisition);
+                mAudios.remove(pisition);
             }
         }
-        mMusicLists.add(0,mediaInfo);
+        mAudios.add(0,audioInfo);
         startPlayMusic(0);
     }
 
@@ -276,7 +276,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     @Override
     public synchronized void playOrPause() {
         Logger.d(TAG,"playOrPause--"+getPlayerState());
-        if (null != mMusicLists && mMusicLists.size() > 0) {
+        if (null != mAudios && mAudios.size() > 0) {
             switch (getPlayerState()) {
                 case MUSIC_PLAYER_STOP:
                     startPlayMusic(mCurrentPlayIndex);
@@ -408,8 +408,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         if(TextUtils.isEmpty(sourcePath)){
             return;
         }
-        if(null!=mMusicLists&&mMusicLists.size()>mCurrentPlayIndex){
-            ((BaseMediaInfo) mMusicLists.get(mCurrentPlayIndex)).setFile_path(sourcePath);
+        if(null!=mAudios&&mAudios.size()>mCurrentPlayIndex){
+            ((BaseAudioInfo) mAudios.get(mCurrentPlayIndex)).setAudioPath(sourcePath);
             startPlayMusic(mCurrentPlayIndex);
         }
     }
@@ -424,8 +424,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         if(TextUtils.isEmpty(sourcePath)){
             return;
         }
-        if(null!=mMusicLists&&mMusicLists.size()>index){
-            ((BaseMediaInfo) mMusicLists.get(index)).setFile_path(sourcePath);
+        if(null!=mAudios&&mAudios.size()>index){
+            ((BaseAudioInfo) mAudios.get(index)).setAudioPath(sourcePath);
             startPlayMusic(index);
         }
     }
@@ -545,7 +545,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             return;
         }
         Logger.d(TAG,"playLastMusic--oldPlayIndex:"+mCurrentPlayIndex+",MODE:"+getPlayerModel());
-        if (null != mMusicLists && mMusicLists.size() > 0) {
+        if (null != mAudios && mAudios.size() > 0) {
             switch (getPlayerModel()) {
                 //单曲：上一首不为0，上一首，否则循环当前
 //                case MUSIC_MODEL_SINGLE:
@@ -558,7 +558,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                 case MUSIC_MODEL_SINGLE:
                     mCurrentPlayIndex--;
                     if(mCurrentPlayIndex<0){
-                        mCurrentPlayIndex=mMusicLists.size()-1;
+                        mCurrentPlayIndex=mAudios.size()-1;
                     }
                     postViewHandlerCurrentPosition(mCurrentPlayIndex);
                     startPlayMusic(mCurrentPlayIndex);
@@ -567,7 +567,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                 case MUSIC_MODEL_LOOP:
                     mCurrentPlayIndex--;
                     if(mCurrentPlayIndex<0){
-                        mCurrentPlayIndex=mMusicLists.size()-1;
+                        mCurrentPlayIndex=mAudios.size()-1;
                     }
                     postViewHandlerCurrentPosition(mCurrentPlayIndex);
                     startPlayMusic(mCurrentPlayIndex);
@@ -582,7 +582,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     break;
                 //随机
                 case MUSIC_MODEL_RANDOM:
-                    int index = MusicUtils.getInstance().getRandomNum(0, mMusicLists.size() - 1);
+                    int index = MusicUtils.getInstance().getRandomNum(0, mAudios.size() - 1);
                     mCurrentPlayIndex=index;
                     postViewHandlerCurrentPosition(mCurrentPlayIndex);
                     startPlayMusic(mCurrentPlayIndex);
@@ -602,18 +602,18 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             return;
         }
         Logger.d(TAG,"playNextMusic--oldPlayIndex:"+mCurrentPlayIndex+",MODE:"+getPlayerModel());
-        if (null != mMusicLists && mMusicLists.size() > 0) {
+        if (null != mAudios && mAudios.size() > 0) {
             switch (getPlayerModel()) {
                 //单曲：上一首不为0，上一首，否则循环当前
 //                case MUSIC_MODEL_SINGLE:
-//                    if(mCurrentPlayIndex<mMusicLists.size()-1){
+//                    if(mCurrentPlayIndex<mAudios.size()-1){
 //                        mCurrentPlayIndex++;
 //                    }
 //                    startPlayMusic(mCurrentPlayIndex);
 //                    break;
                 //单曲：等同列表循环
                 case MUSIC_MODEL_SINGLE:
-                    if(mCurrentPlayIndex>=mMusicLists.size()-1){
+                    if(mCurrentPlayIndex>=mAudios.size()-1){
                         mCurrentPlayIndex=0;
                     }else{
                         mCurrentPlayIndex++;
@@ -623,7 +623,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     break;
                 //列表循环
                 case MUSIC_MODEL_LOOP:
-                    if(mCurrentPlayIndex>=mMusicLists.size()-1){
+                    if(mCurrentPlayIndex>=mAudios.size()-1){
                         mCurrentPlayIndex=0;
                     }else{
                         mCurrentPlayIndex++;
@@ -633,7 +633,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     break;
                 //顺序：下一首存在播放下一首，不存在则结束播放
                 case MUSIC_MODEL_ORDER:
-                    if(mMusicLists.size()-1>mCurrentPlayIndex){
+                    if(mAudios.size()-1>mCurrentPlayIndex){
                         mCurrentPlayIndex++;
                     }
                     postViewHandlerCurrentPosition(mCurrentPlayIndex);
@@ -641,7 +641,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     break;
                 //随机
                 case MUSIC_MODEL_RANDOM:
-                    int index = MusicUtils.getInstance().getRandomNum(0, mMusicLists.size() - 1);
+                    int index = MusicUtils.getInstance().getRandomNum(0, mAudios.size() - 1);
                     mCurrentPlayIndex=index;
                     postViewHandlerCurrentPosition(mCurrentPlayIndex);
                     startPlayMusic(mCurrentPlayIndex);
@@ -658,7 +658,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     @Override
     public int playLastIndex() {
         Logger.d(TAG,"playLastIndex--oldPlayIndex:"+mCurrentPlayIndex+",MODE:"+getPlayerModel());
-        if (null != mMusicLists && mMusicLists.size() > 0) {
+        if (null != mAudios && mAudios.size() > 0) {
             switch (getPlayerModel()) {
                 //单曲：上一首不为0播放上一首，否则循环当前
 //                case MUSIC_MODEL_SINGLE:
@@ -670,14 +670,14 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                 case MUSIC_MODEL_SINGLE:
                     mCurrentPlayIndex--;
                     if(mCurrentPlayIndex<0){
-                        mCurrentPlayIndex=mMusicLists.size()-1;
+                        mCurrentPlayIndex=mAudios.size()-1;
                     }
                     break;
                 //列表循环
                 case MUSIC_MODEL_LOOP:
                     mCurrentPlayIndex--;
                     if(mCurrentPlayIndex<0){
-                        mCurrentPlayIndex=mMusicLists.size()-1;
+                        mCurrentPlayIndex=mAudios.size()-1;
                     }
                     break;
                 //顺序：上一首不为0播放上一首，否则结束播放
@@ -688,7 +688,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     break;
                 //随机
                 case MUSIC_MODEL_RANDOM:
-                    int index = MusicUtils.getInstance().getRandomNum(0, mMusicLists.size() - 1);
+                    int index = MusicUtils.getInstance().getRandomNum(0, mAudios.size() - 1);
                     mCurrentPlayIndex=index;
                     break;
             }
@@ -704,17 +704,17 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     @Override
     public int playNextIndex() {
         Logger.d(TAG,"playNextIndex--oldPlayIndex:"+mCurrentPlayIndex+",MODE:"+getPlayerModel());
-        if (null != mMusicLists && mMusicLists.size() > 0) {
+        if (null != mAudios && mAudios.size() > 0) {
             switch (getPlayerModel()) {
                 //单曲：下一首存在，下一首，不存在重复当前播放
 //                case MUSIC_MODEL_SINGLE:
-//                    if(mCurrentPlayIndex<mMusicLists.size()-1){
+//                    if(mCurrentPlayIndex<mAudios.size()-1){
 //                        mCurrentPlayIndex++;
 //                    }
 //                    break;
                 //单曲：等同列表循环
                 case MUSIC_MODEL_SINGLE:
-                    if(mCurrentPlayIndex>=mMusicLists.size()-1){
+                    if(mCurrentPlayIndex>=mAudios.size()-1){
                         mCurrentPlayIndex=0;
                     }else{
                         mCurrentPlayIndex++;
@@ -722,7 +722,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     break;
                 //列表循环
                 case MUSIC_MODEL_LOOP:
-                    if(mCurrentPlayIndex>=mMusicLists.size()-1){
+                    if(mCurrentPlayIndex>=mAudios.size()-1){
                         mCurrentPlayIndex=0;
                     }else{
                         mCurrentPlayIndex++;
@@ -730,13 +730,13 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     break;
                 //顺序：下一首存在，下一首，不存在结束播放
                 case MUSIC_MODEL_ORDER:
-                    if(mMusicLists.size()-1>mCurrentPlayIndex){
+                    if(mAudios.size()-1>mCurrentPlayIndex){
                         mCurrentPlayIndex++;
                     }
                     break;
                 //随机
                 case MUSIC_MODEL_RANDOM:
-                    int index = MusicUtils.getInstance().getRandomNum(0, mMusicLists.size() - 1);
+                    int index = MusicUtils.getInstance().getRandomNum(0, mAudios.size() - 1);
                     mCurrentPlayIndex=index;
                     break;
             }
@@ -786,8 +786,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         if(mMusicPlayerState.equals(MusicPlayerState.MUSIC_PLAYER_STOP)){
             return 0;
         }
-        if(null!=mMusicLists&&mMusicLists.size()>mCurrentPlayIndex){
-            return ((BaseMediaInfo) mMusicLists.get(mCurrentPlayIndex)).getId();
+        if(null!=mAudios&&mAudios.size()>mCurrentPlayIndex){
+            return ((BaseAudioInfo) mAudios.get(mCurrentPlayIndex)).getAudioId();
         }
         return 0;
     }
@@ -797,12 +797,12 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      * @return 音频对象
      */
     @Override
-    public BaseMediaInfo getCurrentPlayerMusic() {
+    public BaseAudioInfo getCurrentPlayerMusic() {
         if(mMusicPlayerState.equals(MusicPlayerState.MUSIC_PLAYER_STOP)){
             return null;
         }
-        if(null!=mMusicLists&&mMusicLists.size()>mCurrentPlayIndex){
-            return (BaseMediaInfo) mMusicLists.get(mCurrentPlayIndex);
+        if(null!=mAudios&&mAudios.size()>mCurrentPlayIndex){
+            return (BaseAudioInfo) mAudios.get(mCurrentPlayIndex);
         }
         return null;
     }
@@ -816,8 +816,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         if(mMusicPlayerState.equals(MusicPlayerState.MUSIC_PLAYER_STOP)){
             return "";
         }
-        if(null!=mMusicLists&&mMusicLists.size()>mCurrentPlayIndex){
-            return ((BaseMediaInfo) mMusicLists.get(mCurrentPlayIndex)).getHashKey();
+        if(null!=mAudios&&mAudios.size()>mCurrentPlayIndex){
+            return ((BaseAudioInfo) mAudios.get(mCurrentPlayIndex)).getAudioHashKey();
         }
         return "";
     }
@@ -828,7 +828,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      */
     @Override
     public List<?> getCurrentPlayList() {
-        return mMusicLists;
+        return mAudios;
     }
 
     /**
@@ -877,9 +877,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      */
     @Override
     public void onCheckedCurrentPlayTask() {
-        if (null != mMediaPlayer && null != mMusicLists && mMusicLists.size() > 0) {
+        if (null != mMediaPlayer && null != mAudios && mAudios.size() > 0) {
             if (null != mOnPlayerEventListeners) {
-                BaseMediaInfo musicInfo = (BaseMediaInfo) mMusicLists.get(mCurrentPlayIndex);
+                BaseAudioInfo musicInfo = (BaseAudioInfo) mAudios.get(mCurrentPlayIndex);
                 for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
                     onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,null);
                     onPlayerEventListener.onPlayMusiconInfo(musicInfo,mCurrentPlayIndex);
@@ -994,14 +994,14 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 播放器内部数据刷新
-     * @param musicLists 数据集
+     * @param audios 数据集
      * @param index 位置
      */
     @Override
-    public void updateMusicPlayerData(List<?> musicLists, int index) {
-        if(null!=mMusicLists){
-            mMusicLists.clear();
-            mMusicLists.addAll(musicLists);
+    public void updateMusicPlayerData(List<?> audios, int index) {
+        if(null!=mAudios){
+            mAudios.clear();
+            mAudios.addAll(audios);
         }
         mCurrentPlayIndex=index;
     }
@@ -1123,12 +1123,12 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
             boolean isOpen = manager.areNotificationsEnabled();
             if(isOpen){
-                BaseMediaInfo mediaInfo = getCurrentPlayerMusic();
-                if(null!=mediaInfo){
+                BaseAudioInfo audioInfo = getCurrentPlayerMusic();
+                if(null!=audioInfo){
                     //先准备好歌曲封面Bitmap
-                    if(mediaInfo.getFile_path().startsWith("http:")|| mediaInfo.getFile_path().startsWith("https:")){
+                    if(audioInfo.getAudioPath().startsWith("http:")|| audioInfo.getAudioPath().startsWith("https:")){
                         Glide.with(getApplication().getApplicationContext())
-                                .load(TextUtils.isEmpty(mediaInfo.getImg_path())?mediaInfo.getAvatar():mediaInfo.getImg_path())
+                                .load(TextUtils.isEmpty(audioInfo.getAudioCover())?audioInfo.getAvatar():audioInfo.getAudioCover())
                                 .asBitmap()
                                 .error(R.drawable.ic_music_default_cover)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -1145,10 +1145,10 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     }else{
                         //File
                         Bitmap bitmap;
-                        bitmap = MusicImageCache.getInstance().getBitmap(mediaInfo.getFile_path());
+                        bitmap = MusicImageCache.getInstance().getBitmap(audioInfo.getAudioPath());
                         //缓存为空，获取音频文件自身封面
                         if(null==bitmap){
-                            bitmap=MusicImageCache.getInstance().createBitmap(mediaInfo.getFile_path());
+                            bitmap=MusicImageCache.getInstance().createBitmap(audioInfo.getAudioPath());
                         }
                         //封面为空，使用默认
                         if(null==bitmap){
@@ -1271,9 +1271,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      * 开始播放媒体文件
      * @param musicInfo
      */
-    private synchronized void startPlay(BaseMediaInfo musicInfo) {
+    private synchronized void startPlay(BaseAudioInfo musicInfo) {
         onReset();
-        if(null!=musicInfo&&!TextUtils.isEmpty(musicInfo.getFile_path())){
+        if(null!=musicInfo&&!TextUtils.isEmpty(musicInfo.getAudioPath())){
             startTimer();
             if(null==mAudioFocusManager){
                 mAudioFocusManager= new MusicAudioFocusManager(MusicPlayerService.this.getApplicationContext());
@@ -1327,16 +1327,16 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     mMediaPlayer.setWakeMode(MusicPlayerService.this, PowerManager.PARTIAL_WAKE_LOCK);
                     //更新播放状态
                     MusicStatus musicStatus=new MusicStatus();
-                    musicStatus.setId(musicInfo.getId());
+                    musicStatus.setId(musicInfo.getAudioId());
                     String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);
                     musicStatus.setCover(frontPath);
-                    musicStatus.setTitle(musicInfo.getVideo_desp());
+                    musicStatus.setTitle(musicInfo.getAudioName());
                     musicStatus.setPlayerStatus(MusicStatus.PLAYER_STATUS_PREPARED);
                     MusicPlayerManager.getInstance().observerUpdata(musicStatus);
                     Class<MediaPlayer> clazz = MediaPlayer.class;
                     Method method = clazz.getDeclaredMethod("setDataSource", String.class, Map.class);
-                    String path=getPlayPath(musicInfo.getFile_path());
-                    Logger.e(TAG, "startPlay-->: ID:" + musicInfo.getId() + ",TITLE:" + musicInfo.getVideo_desp() + ",PATH:" + path);
+                    String path=getPlayPath(musicInfo.getAudioPath());
+                    Logger.e(TAG, "startPlay-->: ID:" + musicInfo.getAudioId() + ",TITLE:" + musicInfo.getAudioName() + ",PATH:" + path);
                     method.invoke(mMediaPlayer, path, null);
                     if (null != mOnPlayerEventListeners) {
                         for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
@@ -1356,7 +1356,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                             onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,"播放失败，"+e.getMessage());
                         }
                     }
-                    MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_STOP,musicInfo.getId()));
+                    MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_STOP,musicInfo.getAudioId()));
                     startServiceForeground();
                 }
             }else{
@@ -1366,7 +1366,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                         onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,"未成功获取音频输出焦点");
                     }
                 }
-                MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_STOP,musicInfo.getId()));
+                MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_STOP,musicInfo.getAudioId()));
                 startServiceForeground();
             }
         }else{
@@ -1382,7 +1382,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                 MusicPlayerManager.getInstance().setReBrowse(true);
             }
             stopServiceForeground();
-            MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_ERROR,musicInfo.getId()));
+            MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_ERROR,musicInfo.getAudioId()));
         }
     }
 
@@ -1411,7 +1411,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             return;
         }
         Logger.d(TAG,"onCompletionPlay--mCurrentPlayIndex:"+mCurrentPlayIndex+",MODE:"+getPlayerModel());
-        if (null != mMusicLists && mMusicLists.size() > 0) {
+        if (null != mAudios && mAudios.size() > 0) {
             switch (getPlayerModel()) {
                 //单曲
                 case MUSIC_MODEL_SINGLE:
@@ -1420,7 +1420,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     break;
                 //列表循环
                 case MUSIC_MODEL_LOOP:
-                    if(mCurrentPlayIndex>=mMusicLists.size()-1){
+                    if(mCurrentPlayIndex>=mAudios.size()-1){
                         mCurrentPlayIndex=0;
                     }else{
                         mCurrentPlayIndex++;
@@ -1431,7 +1431,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     break;
                 //顺序
                 case MUSIC_MODEL_ORDER:
-                    if(mMusicLists.size()-1>mCurrentPlayIndex){
+                    if(mAudios.size()-1>mCurrentPlayIndex){
                         mCurrentPlayIndex++;
                         Logger.d(TAG,"onCompletionPlay--顺序:"+mCurrentPlayIndex);
                         postEchoCurrentPosition(mCurrentPlayIndex);
@@ -1440,7 +1440,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     break;
                 //随机
                 case MUSIC_MODEL_RANDOM:
-                    mCurrentPlayIndex = MusicUtils.getInstance().getRandomNum(0, mMusicLists.size() - 1);
+                    mCurrentPlayIndex = MusicUtils.getInstance().getRandomNum(0, mAudios.size() - 1);
                     Logger.d(TAG,"onCompletionPlay--随机:"+mCurrentPlayIndex);
                     postEchoCurrentPosition(mCurrentPlayIndex);
                     startPlayMusic(mCurrentPlayIndex);
@@ -1454,9 +1454,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      * @param mCurrentPlayIndex
      */
     private void postEchoCurrentPosition(int mCurrentPlayIndex) {
-        if (null != mOnPlayerEventListeners &&null!=mMusicLists&&mMusicLists.size()>mCurrentPlayIndex) {
+        if (null != mOnPlayerEventListeners &&null!=mAudios&&mAudios.size()>mCurrentPlayIndex) {
             for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
-                onPlayerEventListener.onEchoPlayCurrentIndex((BaseMediaInfo) mMusicLists.get(mCurrentPlayIndex),mCurrentPlayIndex);
+                onPlayerEventListener.onEchoPlayCurrentIndex((BaseAudioInfo) mAudios.get(mCurrentPlayIndex),mCurrentPlayIndex);
             }
         }
     }
@@ -1466,9 +1466,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      * @param currentPlayIndex
      */
     private void postViewHandlerCurrentPosition(int currentPlayIndex) {
-        if (null != mOnPlayerEventListeners &&null!=mMusicLists&&mMusicLists.size()>currentPlayIndex) {
+        if (null != mOnPlayerEventListeners &&null!=mAudios&&mAudios.size()>currentPlayIndex) {
             for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
-                onPlayerEventListener.onPlayMusiconInfo((BaseMediaInfo) mMusicLists.get(currentPlayIndex),currentPlayIndex);
+                onPlayerEventListener.onPlayMusiconInfo((BaseAudioInfo) mAudios.get(currentPlayIndex),currentPlayIndex);
             }
         }
     }
@@ -1712,12 +1712,12 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
     /**
      * 构建一个前台进程通知
-     * @param mediaInfo 播放器正在处理的多媒体对象
+     * @param audioInfo 播放器正在处理的多媒体对象
      * @param resource 封面
      * @return 通知对象
      */
-    private Notification buildNotifyInstance(BaseMediaInfo mediaInfo, Bitmap resource) {
-        if(null==mediaInfo){
+    private Notification buildNotifyInstance(BaseAudioInfo audioInfo, Bitmap resource) {
+        if(null==audioInfo){
             return null;
         }
         final NotificationCompat.Builder builder;
@@ -1731,11 +1731,11 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         RemoteViews defaultremoteviews = new RemoteViews(getPackageName(), R.layout.music_notify_default_controller);
         defaultremoteviews.setImageViewBitmap(R.id.music_notice_def_cover, resource);
             defaultremoteviews.setImageViewResource(R.id.music_notice_def_btn_pause,getPauseIcon(getPlayerState()));
-            defaultremoteviews.setTextViewText(R.id.music_notice_def_title, mediaInfo.getVideo_desp());
-            defaultremoteviews.setTextViewText(R.id.music_notice_def_subtitle, mediaInfo.getNickname());
+            defaultremoteviews.setTextViewText(R.id.music_notice_def_title, audioInfo.getAudioName());
+            defaultremoteviews.setTextViewText(R.id.music_notice_def_subtitle, audioInfo.getNickname());
             //通知栏根点击意图
             Intent clickIntent = new Intent(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW);
-            clickIntent.putExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,mediaInfo.getId());
+            clickIntent.putExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,audioInfo.getAudioId());
             PendingIntent pendClickIntent = PendingIntent.getBroadcast(this, 1, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             //上一首
             defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_last, getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_LAST));
@@ -1822,8 +1822,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         if(null!= mOnPlayerEventListeners){
             mOnPlayerEventListeners.clear();
         }
-        if(null!=mMusicLists){
-            mMusicLists.clear();
+        if(null!=mAudios){
+            mAudios.clear();
         }
         if(null!=mAudioFocusManager){
             mAudioFocusManager.onDestroy();

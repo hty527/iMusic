@@ -2,7 +2,7 @@ package com.music.player.lib.service;
 
 import android.app.Notification;
 import android.os.Binder;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerPresenter;
 import com.music.player.lib.model.MusicAlarmModel;
@@ -38,9 +38,9 @@ public class MusicPlayerBinder extends Binder{
         }
     }
 
-    public void addPlayMusicToTop(BaseMediaInfo mediaInfo){
+    public void addPlayMusicToTop(BaseAudioInfo audioInfo){
         if(null!=mPresenter){
-            mPresenter.addPlayMusicToTop(mediaInfo);
+            mPresenter.addPlayMusicToTop(audioInfo);
         }
     }
 
@@ -88,9 +88,9 @@ public class MusicPlayerBinder extends Binder{
         if(null!=mPresenter) mPresenter.onStop();
     }
 
-    public void updateMusicPlayerData(List<?> musicLists, int index) {
+    public void updateMusicPlayerData(List<?> audios, int index) {
         if(null!=mPresenter){
-            mPresenter.updateMusicPlayerData(musicLists,index);
+            mPresenter.updateMusicPlayerData(audios,index);
         }
     }
 
@@ -167,7 +167,7 @@ public class MusicPlayerBinder extends Binder{
         return 0;
     }
 
-    public BaseMediaInfo getCurrentPlayerMusic(){
+    public BaseAudioInfo getCurrentPlayerMusic(){
         if(null!=mPresenter) {
             return mPresenter.getCurrentPlayerMusic();
         }

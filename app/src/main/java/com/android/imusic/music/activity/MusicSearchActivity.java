@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.adapter.MusicSearchAdapter;
 import com.android.imusic.music.base.MusicBaseActivity;
-import com.android.imusic.music.bean.MediaInfo;
+import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.bean.ResultData;
 import com.android.imusic.music.bean.SearchHistroy;
@@ -304,9 +304,9 @@ public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> impl
                                     searchResultInfo.setAlbum_img(musicData.getImg());
                                     searchResultInfo.setSource(musicData.getPlay_url());
                                     mAdapter.notifyDataSetChanged(posotion);
-                                    MediaInfo mediaInfo=getMediaInfo(musicData,searchResultInfo.getAudio_id());
+                                    AudioInfo audioInfo=getaudioInfo(musicData,searchResultInfo.getAudio_id());
                                     MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_SEARCH);
-                                    MusicPlayerManager.getInstance().addPlayMusicToTop(mediaInfo);
+                                    MusicPlayerManager.getInstance().addPlayMusicToTop(audioInfo);
                                     //如果悬浮窗权限未给定
                                     createMiniJukeboxWindow();
                                 }else{
@@ -326,8 +326,8 @@ public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> impl
                 }
             }else{
                 //Menu
-                final MediaInfo mediaInfo = getMediaInfo(searchResultInfo);
-                MusicMusicDetailsDialog.getInstance(MusicSearchActivity.this,mediaInfo,MusicMusicDetailsDialog.DialogScene.SCENE_SEARCH)
+                final AudioInfo audioInfo = getaudioInfo(searchResultInfo);
+                MusicMusicDetailsDialog.getInstance(MusicSearchActivity.this,audioInfo,MusicMusicDetailsDialog.DialogScene.SCENE_SEARCH)
                         .setMusicOnItemClickListener(new MusicOnItemClickListener() {
                             /**
                              * @param view
@@ -351,29 +351,29 @@ public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> impl
     /**
      * 音乐列表菜单处理
      * @param itemId
-     * @param mediaInfo
+     * @param audioInfo
      */
-    protected void onMusicMenuClick(int position,int itemId, SearchResultInfo mediaInfo) {
+    protected void onMusicMenuClick(int position,int itemId, SearchResultInfo audioInfo) {
         if(itemId== MusicDetails.ITEM_ID_NEXT_PLAY){
             MusicPlayerManager.getInstance().playNextMusic();
         }else if(itemId== MusicDetails.ITEM_ID_SHARE){
             try {
-                if(!TextUtils.isEmpty(mediaInfo.getSource())){
-                    if(mediaInfo.getSource().startsWith("http:")||mediaInfo.getSource().startsWith("https:")){
+                if(!TextUtils.isEmpty(audioInfo.getSource())){
+                    if(audioInfo.getSource().startsWith("http:")||audioInfo.getSource().startsWith("https:")){
                         Intent sendIntent = new Intent();
                         //sendIntent.setPackage("com.tencent.mm")
                         sendIntent.putExtra(Intent.EXTRA_SUBJECT, "iMusic分享");
                         sendIntent.setAction(Intent.ACTION_SEND);
                         sendIntent.putExtra(Intent.EXTRA_TEXT, "我正在使用"+getResources().getString(R.string.app_name)+
-                                "听:《"+mediaInfo.getSongname()+"》，快来听吧~猛戳-->"+mediaInfo.getSource());
+                                "听:《"+audioInfo.getSongname()+"》，快来听吧~猛戳-->"+audioInfo.getSource());
                         sendIntent.setType("text/plain");
                         startActivity(Intent.createChooser(sendIntent, "iMusic分享"));
                     }else{
                         Intent sendIntent = new Intent();
                         //sendIntent.setPackage("com.tencent.mm")
                         sendIntent.setAction(Intent.ACTION_SEND);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, "来自iMusic的音乐分享:《"+mediaInfo.getSongname()+"》-"+mediaInfo.getSingername());
-                        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(mediaInfo.getSource()));
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, "来自iMusic的音乐分享:《"+audioInfo.getSongname()+"》-"+audioInfo.getSingername());
+                        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(audioInfo.getSource()));
                         sendIntent.setType("audio/*");
                         startActivity(Intent.createChooser(sendIntent, "iMusic分享"));
                     }
@@ -385,11 +385,11 @@ public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> impl
                 Toast.makeText(MusicSearchActivity.this,"分享失败："+e.getMessage(),Toast.LENGTH_SHORT).show();
             }
         }else if(itemId==MusicDetails.ITEM_ID_COLLECT){
-            MediaInfo cacheAudioInfo = getMediaInfo(mediaInfo);
-            cacheAudioInfo.setId(mediaInfo.getAudio_id());
-            cacheAudioInfo.setImg_path(mediaInfo.getAlbum_img());
-            cacheAudioInfo.setFile_path(mediaInfo.getSource());
-            if(!TextUtils.isEmpty(cacheAudioInfo.getFile_path())){
+            AudioInfo cacheAudioInfo = getaudioInfo(audioInfo);
+            cacheAudioInfo.setAudioId(audioInfo.getAudio_id());
+            cacheAudioInfo.setAudioCover(audioInfo.getAlbum_img());
+            cacheAudioInfo.setAudioPath(audioInfo.getSource());
+            if(!TextUtils.isEmpty(cacheAudioInfo.getAudioPath())){
                 boolean toCollect = MusicUtils.getInstance().putMusicToCollect(cacheAudioInfo);
                 if(toCollect){
                     Toast.makeText(MusicSearchActivity.this,"已添加至收藏列表",Toast.LENGTH_SHORT).show();
@@ -406,17 +406,17 @@ public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> impl
      * @param musicData
      * @return
      */
-    private MediaInfo getMediaInfo(SearchResultInfo musicData) {
+    private AudioInfo getaudioInfo(SearchResultInfo musicData) {
         if(null!=musicData){
-            MediaInfo mediaInfo=new MediaInfo();
-            mediaInfo.setId(musicData.getAudio_id());
-            mediaInfo.setVideo_desp(musicData.getSongname());
-            mediaInfo.setMediaAlbum(musicData.getAlbum_name());
-            mediaInfo.setNickname(musicData.getSingername());
-            mediaInfo.setVideo_durtion(musicData.getDuration());
-            mediaInfo.setFile_path(musicData.getSource());
-            mediaInfo.setFile_size(musicData.getFilesize());
-            return mediaInfo;
+            AudioInfo audioInfo=new AudioInfo();
+            audioInfo.setAudioId(musicData.getAudio_id());
+            audioInfo.setAudioName(musicData.getSongname());
+            audioInfo.setAudioAlbumName(musicData.getAlbum_name());
+            audioInfo.setNickname(musicData.getSingername());
+            audioInfo.setAudioDurtion(musicData.getDuration());
+            audioInfo.setAudioPath(musicData.getSource());
+            audioInfo.setAudioSize(musicData.getFilesize());
+            return audioInfo;
         }
         return null;
     }
@@ -427,24 +427,24 @@ public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> impl
      * @param audioID 多媒体文件ID
      * @return
      */
-    private MediaInfo getMediaInfo(SearchMusicData musicData,long audioID) {
+    private AudioInfo getaudioInfo(SearchMusicData musicData,long audioID) {
         if(null!=musicData){
-            MediaInfo mediaInfo=new MediaInfo();
-            mediaInfo.setId(audioID);
-            mediaInfo.setFile_path(musicData.getPlay_url());
-            mediaInfo.setVideo_desp(musicData.getAudio_name());
-            mediaInfo.setMediaAlbum(musicData.getAlbum_name());
-            mediaInfo.setImg_path(musicData.getImg());
-            mediaInfo.setNickname(musicData.getAuthor_name());
-            mediaInfo.setVideo_durtion(musicData.getTimelength());
-            mediaInfo.setFile_size(musicData.getFilesize());
-            mediaInfo.setAvatar(musicData.getImg());
-            mediaInfo.setHashKey(musicData.getHash());
+            AudioInfo audioInfo=new AudioInfo();
+            audioInfo.setAudioId(audioID);
+            audioInfo.setAudioPath(musicData.getPlay_url());
+            audioInfo.setAudioName(musicData.getAudio_name());
+            audioInfo.setAudioAlbumName(musicData.getAlbum_name());
+            audioInfo.setAudioCover(musicData.getImg());
+            audioInfo.setNickname(musicData.getAuthor_name());
+            audioInfo.setAudioDurtion(musicData.getTimelength());
+            audioInfo.setAudioSize(musicData.getFilesize());
+            audioInfo.setAvatar(musicData.getImg());
+            audioInfo.setAudioHashKey(musicData.getHash());
             if(null!=musicData.getAuthors()&&musicData.getAuthors().size()>0){
                 SearchMusicAnchor searchMusicAnchor = musicData.getAuthors().get(0);
-                mediaInfo.setAvatar(searchMusicAnchor.getAvatar());
+                audioInfo.setAvatar(searchMusicAnchor.getAvatar());
             }
-            return mediaInfo;
+            return audioInfo;
         }
         return null;
     }

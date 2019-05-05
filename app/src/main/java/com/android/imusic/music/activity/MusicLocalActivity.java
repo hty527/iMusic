@@ -17,7 +17,7 @@ import com.android.imusic.music.base.MusicBaseActivity;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
 import com.android.imusic.music.utils.MediaUtils;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
@@ -59,8 +59,8 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
             public void onSubTitleClick(View v) {
                 if(null!=mAdapter&&null!=mAdapter.getData()&&mAdapter.getData().size()>0){
                     MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_LOCATION);
-                    List<BaseMediaInfo> mediaInfos = mAdapter.getData();
-                    startToMusicPlayer(mediaInfos.get(0).getId(),mediaInfos);
+                    List<BaseAudioInfo> audioInfos = mAdapter.getData();
+                    startToMusicPlayer(audioInfos.get(0).getAudioId(),audioInfos);
                 }
             }
         });
@@ -99,9 +99,9 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
     private void queryLocationMusic() {
         if(null!=MediaUtils.getInstance().getLocationMusic()&&MediaUtils.getInstance().getLocationMusic().size()>0){
             mTitleView.setSubTitle("播放全部");
-            List<BaseMediaInfo> mediaInfos = MediaUtils.getInstance().getLocationMusic();
-            List<BaseMediaInfo> medias=new ArrayList<>();
-            medias.addAll(mediaInfos);
+            List<BaseAudioInfo> audioInfos = MediaUtils.getInstance().getLocationMusic();
+            List<BaseAudioInfo> medias=new ArrayList<>();
+            medias.addAll(audioInfos);
             mAdapter.setNewData(medias);
             //定位至正在播放的任务
             if(null!=mLayoutManager){
@@ -123,19 +123,19 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
             Toast.makeText(this,"无法读取SD卡，请检查SD卡使用权限！",Toast.LENGTH_SHORT).show();
             return;
         }
-        new AsyncTask<Void, Void, List<BaseMediaInfo>>() {
+        new AsyncTask<Void, Void, List<BaseAudioInfo>>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
             }
             @Override
-            protected List<BaseMediaInfo> doInBackground(final Void... unused) {
-                ArrayList<BaseMediaInfo> mediaInfos = MediaUtils.getInstance().queryLocationMusics(MusicLocalActivity.this);
-                return mediaInfos;
+            protected List<BaseAudioInfo> doInBackground(final Void... unused) {
+                ArrayList<BaseAudioInfo> audioInfos = MediaUtils.getInstance().queryLocationMusics(MusicLocalActivity.this);
+                return audioInfos;
             }
 
             @Override
-            protected void onPostExecute(List<BaseMediaInfo> data) {
+            protected void onPostExecute(List<BaseAudioInfo> data) {
                 if(null!=data&&null!=mAdapter){
                     mTitleView.setSubTitle("播放全部");
                     MediaUtils.getInstance().setLocationMusic(data);
@@ -158,10 +158,10 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
     @Override
     public void onItemClick(View view, final int position, long musicID) {
         if(null!=view.getTag()){
-            final BaseMediaInfo mediaInfo= (BaseMediaInfo) view.getTag();
+            final BaseAudioInfo audioInfo= (BaseAudioInfo) view.getTag();
             if(musicID>0){
                 long currentPlayerID = MusicPlayerManager.getInstance().getCurrentPlayerID();
-                if(currentPlayerID>0&&currentPlayerID==mediaInfo.getId()){
+                if(currentPlayerID>0&&currentPlayerID==audioInfo.getAudioId()){
                     //重复点击，打开播放器
                     startToMusicPlayer(currentPlayerID);
                     return;
@@ -170,12 +170,12 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
                 mAdapter.notifyDataSetChanged(position);
                 //冒泡排序将选中的项移动至数组第一位置
                 //外层循环系数，取决于数组长度、内层循环控制每一次循环排序比较多少次
-//                for (int i = 0; i < mediaInfos.size()-1; i++) {
-//                    for (int i1 = 0; i1 < mediaInfos.size()-1-i; i1++) {
-//                        if(!mediaInfos.get(i1).isSelected()&&mediaInfos.get(i1+1).isSelected()){
-//                            MediaInfo tempMedia=mediaInfos.get(i1);
-//                            mediaInfos.set(i1,mediaInfos.get(i1+1));//和下一个交换位置
-//                            mediaInfos.set(i1+1,tempMedia);
+//                for (int i = 0; i < audioInfos.size()-1; i++) {
+//                    for (int i1 = 0; i1 < audioInfos.size()-1-i; i1++) {
+//                        if(!audioInfos.get(i1).isSelected()&&audioInfos.get(i1+1).isSelected()){
+//                            audioInfo tempMedia=audioInfos.get(i1);
+//                            audioInfos.set(i1,audioInfos.get(i1+1));//和下一个交换位置
+//                            audioInfos.set(i1+1,tempMedia);
 //                        }
 //                    }
 //                }
@@ -186,7 +186,7 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
                 createMiniJukeboxWindow();
             }else{
                 //Menu
-                MusicMusicDetailsDialog.getInstance(MusicLocalActivity.this,mediaInfo)
+                MusicMusicDetailsDialog.getInstance(MusicLocalActivity.this,audioInfo)
                         .setMusicOnItemClickListener(new MusicOnItemClickListener() {
                             /**
                              * @param view
@@ -195,7 +195,7 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
                              */
                             @Override
                             public void onItemClick(View view, int itemId, long musicID) {
-                                onMusicMenuClick(position,itemId,mediaInfo);
+                                onMusicMenuClick(position,itemId,audioInfo);
                             }
                         }).show();
             }
@@ -203,8 +203,8 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
     }
 
     @Override
-    protected void onMusicMenuClick(final int position, int itemId, final BaseMediaInfo mediaInfo) {
-        super.onMusicMenuClick(position,itemId, mediaInfo);
+    protected void onMusicMenuClick(final int position, int itemId, final BaseAudioInfo audioInfo) {
+        super.onMusicMenuClick(position,itemId, audioInfo);
         if(itemId== MusicDetails.ITEM_ID_DETELE){
             new android.support.v7.app.AlertDialog.Builder(MusicLocalActivity.this)
                     .setTitle("删除提示")

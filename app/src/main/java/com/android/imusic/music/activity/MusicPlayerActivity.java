@@ -23,8 +23,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
-import com.android.imusic.music.bean.MediaInfo;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.android.imusic.music.bean.AudioInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicAnimatorListener;
@@ -131,19 +131,19 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
             return;
         }
         //正在播放的对象
-        BaseMediaInfo currentPlayerMusic = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
+        BaseAudioInfo currentPlayerMusic = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
         //点击了通知栏回显
-        if(!isOnCreate&&null!=currentPlayerMusic&&currentPlayerMusic.getId()==musicID){
+        if(!isOnCreate&&null!=currentPlayerMusic&&currentPlayerMusic.getAudioId()==musicID){
             return;
         }
         MusicWindowManager.getInstance().onInvisible();
         MusicPlayerManager.getInstance().onCheckedPlayerConfig();//检查播放器配置
         if(null!=intent.getSerializableExtra(MusicConstants.KEY_MUSIC_LIST)){
-            List<MediaInfo> mediaInfos = (List<MediaInfo>) intent.getSerializableExtra(MusicConstants.KEY_MUSIC_LIST);
-            final List<MediaInfo> thisMusicLists=new ArrayList<>();
-            thisMusicLists.addAll(mediaInfos);
+            List<AudioInfo> audioInfos = (List<AudioInfo>) intent.getSerializableExtra(MusicConstants.KEY_MUSIC_LIST);
+            final List<AudioInfo> thisMusicLists=new ArrayList<>();
+            thisMusicLists.addAll(audioInfos);
             final int index=MusicUtils.getInstance().getCurrentPlayIndex(thisMusicLists,musicID);
-            if(null!=currentPlayerMusic&&currentPlayerMusic.getId()==musicID&&MusicPlayerManager.getInstance().getPlayerState()==MusicPlayerState.MUSIC_PLAYER_PLAYING){
+            if(null!=currentPlayerMusic&&currentPlayerMusic.getAudioId()==musicID&&MusicPlayerManager.getInstance().getPlayerState()==MusicPlayerState.MUSIC_PLAYER_PLAYING){
                 Logger.d(TAG,"RESET PLAY,musicID:"+musicID);
                 //更新播放器内部数据
                 MusicPlayerManager.getInstance().updateMusicPlayerData(thisMusicLists,index);
@@ -183,7 +183,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
      */
     private void onStatusResume(long musicID) {
         Logger.d(TAG,"onStatusResume-->musicID:"+musicID);
-        List<BaseMediaInfo> currentPlayList = (List<BaseMediaInfo>) MusicPlayerManager.getInstance().getCurrentPlayList();
+        List<BaseAudioInfo> currentPlayList = (List<BaseAudioInfo>) MusicPlayerManager.getInstance().getCurrentPlayList();
         int currentPlayIndex = MusicUtils.getInstance().getCurrentPlayIndex(currentPlayList, musicID);
         mMusicJukeBoxView.setNewData(currentPlayList,currentPlayIndex);
         isVisibility=true;
@@ -270,9 +270,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
                     //收藏
                     case R.id.music_top_collect:
                         if(null!=mMusicJukeBoxView&&null!=mMusicJukeBoxView.getCurrentMedia()){
-                            BaseMediaInfo currentMedia = mMusicJukeBoxView.getCurrentMedia();
+                            BaseAudioInfo currentMedia = mMusicJukeBoxView.getCurrentMedia();
                             if(mBtnCollect.isSelected()){
-                                boolean isSuccess = MusicUtils.getInstance().removeMusicCollectById(currentMedia.getId());
+                                boolean isSuccess = MusicUtils.getInstance().removeMusicCollectById(currentMedia.getAudioId());
                                 if(isSuccess){
                                     mBtnCollect.setSelected(false);
                                 }
@@ -348,7 +348,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
         isVisibility=true;
         //收藏状态,针对可能在锁屏界面收藏的同步
         if(null!=mBtnCollect&&null!=mMusicJukeBoxView&&null!=mMusicJukeBoxView.getCurrentMedia()){
-            boolean isExist = MusicUtils.getInstance().isExistCollectHistroy(mMusicJukeBoxView.getCurrentMedia().getId());
+            boolean isExist = MusicUtils.getInstance().isExistCollectHistroy(mMusicJukeBoxView.getCurrentMedia().getAudioId());
             mBtnCollect.setSelected(isExist);
         }
         if(MusicPlayerManager.getInstance().getPlayerState()==MusicPlayerState.MUSIC_PLAYER_PLAYING){
@@ -403,33 +403,33 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
     //========================================唱片机内部状态==========================================
     /**
      * 用户手指滑动触发
-     * @param mediaInfo 音频对象
+     * @param audioInfo 音频对象
      */
     @Override
-    public void onJukeBoxOffsetObject(BaseMediaInfo mediaInfo) {
-        Logger.d(TAG,"onJukeBoxOffsetObject:MUSIC_ID："+mediaInfo.getId());
-        mViewTitle.setText(mediaInfo.getVideo_desp());
-        mSubTitle.setText(mediaInfo.getNickname());
+    public void onJukeBoxOffsetObject(BaseAudioInfo audioInfo) {
+        Logger.d(TAG,"onJukeBoxOffsetObject:MUSIC_ID："+audioInfo.getAudioId());
+        mViewTitle.setText(audioInfo.getAudioName());
+        mSubTitle.setText(audioInfo.getNickname());
     }
 
     /**
      * 唱片机切换了音频对象
      * @param position 索引
-     * @param mediaInfo 音频对象
+     * @param audioInfo 音频对象
      * @param isEchoDisplay 是否回显
      */
     @Override
-    public void onJukeBoxObjectChanged(final int position, BaseMediaInfo mediaInfo, boolean isEchoDisplay) {
-        Logger.d(TAG,"onJukeBoxObjectChanged-->POSITION:"+position+",MUSIC_INFO:"+mediaInfo.getId()+",isEchoDisplay:"+isEchoDisplay);
+    public void onJukeBoxObjectChanged(final int position, BaseAudioInfo audioInfo, boolean isEchoDisplay) {
+        Logger.d(TAG,"onJukeBoxObjectChanged-->POSITION:"+position+",MUSIC_INFO:"+audioInfo.getAudioId()+",isEchoDisplay:"+isEchoDisplay);
         //清空唱片机播放器
-        if(null!=mediaInfo){
-            mViewTitle.setText(mediaInfo.getVideo_desp());
-            mSubTitle.setText(mediaInfo.getNickname());
-            mTotalTime.setText(MusicUtils.getInstance().stringForAudioTime(mediaInfo.getVideo_durtion()));
+        if(null!=audioInfo){
+            mViewTitle.setText(audioInfo.getAudioName());
+            mSubTitle.setText(audioInfo.getNickname());
+            mTotalTime.setText(MusicUtils.getInstance().stringForAudioTime(audioInfo.getAudioDurtion()));
             //收藏状态
-            boolean isExist = MusicUtils.getInstance().isExistCollectHistroy(mediaInfo.getId());
+            boolean isExist = MusicUtils.getInstance().isExistCollectHistroy(audioInfo.getAudioId());
             mBtnCollect.setSelected(isExist);
-            mRootLayout.setBackgroundCover(MusicUtils.getInstance().getMusicFrontPath(mediaInfo),1200);
+            mRootLayout.setBackgroundCover(MusicUtils.getInstance().getMusicFrontPath(audioInfo),1200);
             //非回显事件，释放原有播放器并开始播放
             if(!isEchoDisplay){
                 mCurrentTime.setText("00:00");
@@ -585,8 +585,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
      * @param position 当前正在播放的位置
      */
     @Override
-    public void onPlayMusiconInfo(BaseMediaInfo musicInfo,final int position) {
-        Logger.d(TAG,"onPlayMusiconInfo-->MUSIC_INFO:"+musicInfo.getId()+",POSITION:"+position);
+    public void onPlayMusiconInfo(BaseAudioInfo musicInfo,final int position) {
+        Logger.d(TAG,"onPlayMusiconInfo-->MUSIC_INFO:"+musicInfo.getAudioId()+",POSITION:"+position);
         getHandler().post(new Runnable() {
             @Override
             public void run() {
@@ -603,7 +603,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
      * @param position 内部播放器正在处理的对象位置,相对于当前播放队列
      */
     @Override
-    public void onEchoPlayCurrentIndex(BaseMediaInfo musicInfo, final int position) {
+    public void onEchoPlayCurrentIndex(BaseAudioInfo musicInfo, final int position) {
         getHandler().post(new Runnable() {
             @Override
             public void run() {
@@ -621,8 +621,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
      * @param position 索引
      */
     @Override
-    public void onMusicPathInvalid(BaseMediaInfo musicInfo, int position) {
-        Logger.d(TAG,"onMusicPathInvalid-->MUSIC_INFO:"+musicInfo.getId()+",POSITION:"+position);
+    public void onMusicPathInvalid(BaseAudioInfo musicInfo, int position) {
+        Logger.d(TAG,"onMusicPathInvalid-->MUSIC_INFO:"+musicInfo.getAudioId()+",POSITION:"+position);
         if(null!=mMusicJukeBoxView){
             mMusicJukeBoxView.onPause();
         }
@@ -801,13 +801,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
     private void createMiniJukeBoxToWindown() {
         if(!MusicWindowManager.getInstance().isWindowShowing()){
             if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
-                BaseMediaInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
+                BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
                 MusicWindowManager.getInstance().createMiniJukeBoxToWindown(MusicPlayerActivity.this.getApplicationContext(),MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,80f),MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,170f));
                 MusicStatus musicStatus=new MusicStatus();
-                musicStatus.setId(musicInfo.getId());
+                musicStatus.setId(musicInfo.getAudioId());
                 String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);
                 musicStatus.setCover(frontPath);
-                musicStatus.setTitle(musicInfo.getVideo_desp());
+                musicStatus.setTitle(musicInfo.getAudioName());
                 MusicPlayerState playerState = MusicPlayerManager.getInstance().getPlayerState();
                 boolean playing = playerState.equals(MusicPlayerState.MUSIC_PLAYER_PLAYING) || playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE) || playerState.equals(MusicPlayerState.MUSIC_PLAYER_BUFFER);
                 musicStatus.setPlayerStatus(playing?MusicStatus.PLAYER_STATUS_START:MusicStatus.PLAYER_STATUS_PAUSE);

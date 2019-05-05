@@ -46,7 +46,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicAlarmSetting;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
@@ -669,18 +669,18 @@ public class MusicUtils {
 
     /**
      * 返回正在播放的位置
-     * @param mediaInfos 数据集
+     * @param audioInfos 数据集
      * @param musicID 音频ID
      * @return 角标
      */
-    public int getCurrentPlayIndex(List<?> mediaInfos, long musicID) {
-        if(null==mediaInfos){
-            mediaInfos= MusicPlayerManager.getInstance().getCurrentPlayList();
+    public int getCurrentPlayIndex(List<?> audioInfos, long musicID) {
+        if(null==audioInfos){
+            audioInfos= MusicPlayerManager.getInstance().getCurrentPlayList();
         }
-        if(null!=mediaInfos&&mediaInfos.size()>0){
-            List<BaseMediaInfo> mediaInfoList= (List<BaseMediaInfo>) mediaInfos;
-            for (int i = 0; i < mediaInfoList.size(); i++) {
-                if(musicID==mediaInfoList.get(i).getId()){
+        if(null!=audioInfos&&audioInfos.size()>0){
+            List<BaseAudioInfo> audioInfoList= (List<BaseAudioInfo>) audioInfos;
+            for (int i = 0; i < audioInfoList.size(); i++) {
+                if(musicID==audioInfoList.get(i).getAudioId()){
                     return i;
                 }
             }
@@ -690,18 +690,18 @@ public class MusicUtils {
 
     /**
      * 返回相对于此数组正在播放的位置
-     * @param mediaInfos 列表集
+     * @param audioInfos 列表集
      * @param musicID 音频ID
      * @return  在列表中所在的位置
      */
-    public int getCurrentPlayIndexInThis(List<?> mediaInfos, long musicID) {
+    public int getCurrentPlayIndexInThis(List<?> audioInfos, long musicID) {
         if(musicID<=0){
             return 0;
         }
-        if(null!=mediaInfos&&mediaInfos.size()>0){
-            List<BaseMediaInfo> mediaInfoList= (List<BaseMediaInfo>) mediaInfos;
-            for (int i = 0; i < mediaInfoList.size(); i++) {
-                if(mediaInfoList.get(i).getId()==musicID){
+        if(null!=audioInfos&&audioInfos.size()>0){
+            List<BaseAudioInfo> audioInfoList= (List<BaseAudioInfo>) audioInfos;
+            for (int i = 0; i < audioInfoList.size(); i++) {
+                if(audioInfoList.get(i).getAudioId()==musicID){
                     return i;
                 }
             }
@@ -890,8 +890,8 @@ public class MusicUtils {
      * @param context
      * @return 设备所有音频文件
      */
-    public ArrayList<BaseMediaInfo> queryLocationMusics(Context context) {
-        ArrayList<BaseMediaInfo> mediaInfos=null;
+    public ArrayList<BaseAudioInfo> queryLocationMusics(Context context) {
+        ArrayList<BaseAudioInfo> audioInfos=null;
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[] { MediaStore.Audio.Media._ID,
@@ -908,57 +908,57 @@ public class MusicUtils {
                         + MediaStore.Audio.Media.MIME_TYPE + "=?",
                 new String[] { "audio/mpeg", "audio/x-ms-wma" }, null);
         if (null!=cursor&&cursor.moveToFirst()) {
-            mediaInfos = new ArrayList<>();
+            audioInfos = new ArrayList<>();
             do {
                 if(!TextUtils.isEmpty(cursor.getString(9))){
-                    BaseMediaInfo mediaInfo = new BaseMediaInfo();
+                    BaseAudioInfo audioInfo = new BaseAudioInfo();
                     // 文件名
-                    //mediaInfo.setVideo_desp(cursor.getString(1));
+                    //audioInfo.setaudioName(cursor.getString(1));
                     // 歌曲名
-                    mediaInfo.setVideo_desp(cursor.getString(2));
+                    audioInfo.setAudioName(cursor.getString(2));
 //                song.setPinyin(Pinyin.toPinyin(title.charAt(0)).substring(0, 1).toUpperCase());
                     // 时长
-                    mediaInfo.setVideo_durtion(cursor.getInt(3));
+                    audioInfo.setAudioDurtion(cursor.getInt(3));
                     // 歌手名
-                    mediaInfo.setNickname(cursor.getString(4));
+                    audioInfo.setNickname(cursor.getString(4));
                     // 专辑名
-                    mediaInfo.setMediaAlbum(cursor.getString(5));
+                    audioInfo.setAudioAlbumName(cursor.getString(5));
                     // 年代 cursor.getString(6)
                     // 歌曲格式
                     if ("audio/mpeg".equals(cursor.getString(7).trim())) {
-                        mediaInfo.setMediaType("mp3");
+                        audioInfo.setAudioType("mp3");
                     } else if ("audio/x-ms-wma".equals(cursor.getString(7).trim())) {
-                        mediaInfo.setMediaType("wma");
+                        audioInfo.setAudioType("wma");
                     }
                     // 文件大小 cursor.getString(8)
                     // 文件路径
-                    mediaInfo.setFile_path(cursor.getString(9));
-                    mediaInfos.add(mediaInfo);
+                    audioInfo.setAudioPath(cursor.getString(9));
+                    audioInfos.add(audioInfo);
                 }
             } while (cursor.moveToNext());
             cursor.close();
         }
-        return mediaInfos;
+        return audioInfos;
     }
 
     /**
      * 获取音频文件的封面地址
-     * @param mediaInfo
+     * @param audioInfo
      * @return 封面绝对路径
      */
-    public String getMusicFrontPath(BaseMediaInfo mediaInfo) {
-        if(null==mediaInfo){
+    public String getMusicFrontPath(BaseAudioInfo audioInfo) {
+        if(null==audioInfo){
             return null;
         }
         //未购买，直接返回封面
-        if(TextUtils.isEmpty(mediaInfo.getFile_path())){
-            return TextUtils.isEmpty(mediaInfo.getImg_path())?mediaInfo.getAvatar():mediaInfo.getImg_path();
+        if(TextUtils.isEmpty(audioInfo.getAudioPath())){
+            return TextUtils.isEmpty(audioInfo.getAudioCover())?audioInfo.getAvatar():audioInfo.getAudioCover();
         }
-        if(mediaInfo.getFile_path().startsWith("http:")||mediaInfo.getFile_path().startsWith("https:")){
-            return TextUtils.isEmpty(mediaInfo.getImg_path())?mediaInfo.getAvatar():mediaInfo.getImg_path();
+        if(audioInfo.getAudioPath().startsWith("http:")||audioInfo.getAudioPath().startsWith("https:")){
+            return TextUtils.isEmpty(audioInfo.getAudioCover())?audioInfo.getAvatar():audioInfo.getAudioCover();
         }else{
             //本地音频文件
-            return mediaInfo.getFile_path();
+            return audioInfo.getAudioPath();
         }
     }
 
@@ -1399,29 +1399,29 @@ public class MusicUtils {
 
     /**
      * 保存播放记录到历史记录中，使用默认最大个数
-     * @param mediaInfo 播放对象
+     * @param audioInfo 播放对象
      */
-    public void putMusicToHistory(BaseMediaInfo mediaInfo){
-        putMusicToHistory(mediaInfo, MAX_PLAY_HISTROY_COUNT);
+    public void putMusicToHistory(BaseAudioInfo audioInfo){
+        putMusicToHistory(audioInfo, MAX_PLAY_HISTROY_COUNT);
     }
 
     /**
      * 保存播放记录到历史记录中
-     * @param mediaInfo
+     * @param audioInfo
      * @param maxHistoryCount 最大历史记录个数
      */
-    public void putMusicToHistory(final BaseMediaInfo mediaInfo, final int maxHistoryCount) {
-        if(null!=getACache()&&null!=mediaInfo&&!TextUtils.isEmpty(mediaInfo.getFile_path())){
+    public void putMusicToHistory(final BaseAudioInfo audioInfo, final int maxHistoryCount) {
+        if(null!=getACache()&&null!=audioInfo&&!TextUtils.isEmpty(audioInfo.getAudioPath())){
             new Thread(){
                 @Override
                 public void run() {
                     super.run();
-                    List<BaseMediaInfo> cacheMusics = (List<BaseMediaInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_HISTORY);
+                    List<BaseAudioInfo> cacheMusics = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_HISTORY);
                     if(null!=cacheMusics){
                         int currentIndex=-1;
                         for (int i = 0; i < cacheMusics.size(); i++) {
-                            BaseMediaInfo baseMediaInfo = cacheMusics.get(i);
-                            if(baseMediaInfo.getId()==mediaInfo.getId()){
+                            BaseAudioInfo baseaudioInfo = cacheMusics.get(i);
+                            if(baseaudioInfo.getAudioId()==audioInfo.getAudioId()){
                                 currentIndex=i;
                                 break;
                             }
@@ -1430,13 +1430,13 @@ public class MusicUtils {
                         if(currentIndex>-1){
                             cacheMusics.remove(currentIndex);
                         }
-                        mediaInfo.setLastPlayTime(System.currentTimeMillis());
-                        cacheMusics.add(mediaInfo);
+                        audioInfo.setLastPlayTime(System.currentTimeMillis());
+                        cacheMusics.add(audioInfo);
                         //冒泡排序，由近到远
                         for (int i = 0; i < cacheMusics.size()-1; i++) {
                             for (int i1 = 0; i1 < cacheMusics.size()-1-i; i1++) {
                                 if(cacheMusics.get(i1).getLastPlayTime()<cacheMusics.get(i1+1).getLastPlayTime()){
-                                    BaseMediaInfo tempMedia=cacheMusics.get(i1);
+                                    BaseAudioInfo tempMedia=cacheMusics.get(i1);
                                     cacheMusics.set(i1,cacheMusics.get(i1+1));
                                     cacheMusics.set(i1+1,tempMedia);
                                 }
@@ -1450,10 +1450,10 @@ public class MusicUtils {
                         getACache().put(MusicConstants.A_KEY_PLAY_HISTORY, (Serializable) cacheMusics);
                     }else{
                         //新的第一条播放记录
-                        List<BaseMediaInfo> newCacheMediaInfos=new ArrayList<>();
-                        mediaInfo.setLastPlayTime(System.currentTimeMillis());
-                        newCacheMediaInfos.add(mediaInfo);
-                        getACache().put(MusicConstants.A_KEY_PLAY_HISTORY, (Serializable) newCacheMediaInfos);
+                        List<BaseAudioInfo> newCacheaudioInfos=new ArrayList<>();
+                        audioInfo.setLastPlayTime(System.currentTimeMillis());
+                        newCacheaudioInfos.add(audioInfo);
+                        getACache().put(MusicConstants.A_KEY_PLAY_HISTORY, (Serializable) newCacheaudioInfos);
                     }
                 }
             }.start();
@@ -1464,12 +1464,12 @@ public class MusicUtils {
      * 获取历史播放记录
      * @return 所有历史播放记录
      */
-    public List<BaseMediaInfo> getMusicsByHistroy(){
+    public List<BaseAudioInfo> getMusicsByHistroy(){
         if(null==getACache()){
             return null;
         }
-        List<BaseMediaInfo> mediaInfos = (List<BaseMediaInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_HISTORY);
-        return mediaInfos;
+        List<BaseAudioInfo> audioInfos = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_HISTORY);
+        return audioInfos;
     }
 
     /**
@@ -1481,19 +1481,19 @@ public class MusicUtils {
         if(null==getACache()){
             return false;
         }
-        List<BaseMediaInfo> mediaInfos = (List<BaseMediaInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_HISTORY);
-        if(null!=mediaInfos&&mediaInfos.size()>0){
+        List<BaseAudioInfo> audioInfos = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_HISTORY);
+        if(null!=audioInfos&&audioInfos.size()>0){
             int index=-1;
-            for (int i = 0; i < mediaInfos.size(); i++) {
-                if(mediaInfos.get(i).getId()==musicID){
+            for (int i = 0; i < audioInfos.size(); i++) {
+                if(audioInfos.get(i).getAudioId()==musicID){
                     index=i;
                     break;
                 }
             }
             if(index>-1){
-                mediaInfos.remove(index);
+                audioInfos.remove(index);
                 getACache().remove(MusicConstants.A_KEY_PLAY_HISTORY);
-                getACache().put(MusicConstants.A_KEY_PLAY_HISTORY, (Serializable) mediaInfos);
+                getACache().put(MusicConstants.A_KEY_PLAY_HISTORY, (Serializable) audioInfos);
                 return true;
             }
             return false;
@@ -1516,24 +1516,24 @@ public class MusicUtils {
 
     /**
      * 保存音乐到收藏记录，使用默认最大个数
-     * @param mediaInfo 音频对象
+     * @param audioInfo 音频对象
      */
-    public boolean putMusicToCollect(BaseMediaInfo mediaInfo){
-        return putMusicToCollect(mediaInfo, MAX_COLLECT_COUNT);
+    public boolean putMusicToCollect(BaseAudioInfo audioInfo){
+        return putMusicToCollect(audioInfo, MAX_COLLECT_COUNT);
     }
 
-    public boolean putMusicToCollect(final BaseMediaInfo mediaInfo, final int maxCollectCount){
-        if(null!=getACache()&&null!=mediaInfo&&!TextUtils.isEmpty(mediaInfo.getFile_path())) {
+    public boolean putMusicToCollect(final BaseAudioInfo audioInfo, final int maxCollectCount){
+        if(null!=getACache()&&null!=audioInfo&&!TextUtils.isEmpty(audioInfo.getAudioPath())) {
             new Thread() {
                 @Override
                 public void run() {
                     super.run();
-                    List<BaseMediaInfo> cacheMusics = (List<BaseMediaInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
+                    List<BaseAudioInfo> cacheMusics = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
                     if (null != cacheMusics) {
                         int currentIndex = -1;
                         for (int i = 0; i < cacheMusics.size(); i++) {
-                            BaseMediaInfo baseMediaInfo = cacheMusics.get(i);
-                            if (baseMediaInfo.getId() == mediaInfo.getId()) {
+                            BaseAudioInfo baseaudioInfo = cacheMusics.get(i);
+                            if (baseaudioInfo.getAudioId() == audioInfo.getAudioId()) {
                                 currentIndex = i;
                                 break;
                             }
@@ -1542,14 +1542,14 @@ public class MusicUtils {
                         if (currentIndex > -1) {
                             cacheMusics.remove(currentIndex);
                         }
-                        mediaInfo.setLastPlayTime(System.currentTimeMillis());
-                        cacheMusics.add(mediaInfo);
+                        audioInfo.setLastPlayTime(System.currentTimeMillis());
+                        cacheMusics.add(audioInfo);
                         //冒泡排序算法交换位置
                         //冒泡排序，由近到远
                         for (int i = 0; i < cacheMusics.size() - 1; i++) {
                             for (int i1 = 0; i1 < cacheMusics.size() - 1 - i; i1++) {
                                 if (cacheMusics.get(i1).getLastPlayTime() < cacheMusics.get(i1 + 1).getLastPlayTime()) {
-                                    BaseMediaInfo tempMedia = cacheMusics.get(i1);
+                                    BaseAudioInfo tempMedia = cacheMusics.get(i1);
                                     cacheMusics.set(i1, cacheMusics.get(i1 + 1));
                                     cacheMusics.set(i1 + 1, tempMedia);
                                 }
@@ -1563,10 +1563,10 @@ public class MusicUtils {
                         getACache().put(MusicConstants.A_KEY_PLAY_COLLECT, (Serializable) cacheMusics);
                     } else {
                         //第一条播放记录
-                        List<BaseMediaInfo> newCacheMediaInfos = new ArrayList<>();
-                        mediaInfo.setLastPlayTime(System.currentTimeMillis());
-                        newCacheMediaInfos.add(mediaInfo);
-                        getACache().put(MusicConstants.A_KEY_PLAY_COLLECT, (Serializable) newCacheMediaInfos);
+                        List<BaseAudioInfo> newCacheaudioInfos = new ArrayList<>();
+                        audioInfo.setLastPlayTime(System.currentTimeMillis());
+                        newCacheaudioInfos.add(audioInfo);
+                        getACache().put(MusicConstants.A_KEY_PLAY_COLLECT, (Serializable) newCacheaudioInfos);
                     }
                 }
             }.start();
@@ -1583,19 +1583,19 @@ public class MusicUtils {
         if(null==getACache()){
             return false;
         }
-        List<BaseMediaInfo> mediaInfos = (List<BaseMediaInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
-        if(null!=mediaInfos&&mediaInfos.size()>0){
+        List<BaseAudioInfo> audioInfos = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
+        if(null!=audioInfos&&audioInfos.size()>0){
             int index=-1;
-            for (int i = 0; i < mediaInfos.size(); i++) {
-                if(mediaInfos.get(i).getId()==musicID){
+            for (int i = 0; i < audioInfos.size(); i++) {
+                if(audioInfos.get(i).getAudioId()==musicID){
                     index=i;
                     break;
                 }
             }
             if(index>-1){
-                mediaInfos.remove(index);
+                audioInfos.remove(index);
                 getACache().remove(MusicConstants.A_KEY_PLAY_COLLECT);
-                getACache().put(MusicConstants.A_KEY_PLAY_COLLECT, (Serializable) mediaInfos);
+                getACache().put(MusicConstants.A_KEY_PLAY_COLLECT, (Serializable) audioInfos);
                 return true;
             }
             return false;
@@ -1607,12 +1607,12 @@ public class MusicUtils {
      * 获取收藏记录
      * @return 所有收藏记录
      */
-    public List<BaseMediaInfo> getMusicsByCollect(){
+    public List<BaseAudioInfo> getMusicsByCollect(){
         if(null==getACache()){
             return null;
         }
-        List<BaseMediaInfo> mediaInfos = (List<BaseMediaInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
-        return mediaInfos;
+        List<BaseAudioInfo> audioInfos = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
+        return audioInfos;
     }
 
     /**
@@ -1624,10 +1624,10 @@ public class MusicUtils {
         if(null==getACache()){
             return false;
         }
-        List<BaseMediaInfo> mediaInfos = (List<BaseMediaInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
-        if(null!=mediaInfos&&mediaInfos.size()>0) {
-            for (int i = 0; i < mediaInfos.size(); i++) {
-                if (mediaInfos.get(i).getId() == musicID) {
+        List<BaseAudioInfo> audioInfos = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
+        if(null!=audioInfos&&audioInfos.size()>0) {
+            for (int i = 0; i < audioInfos.size(); i++) {
+                if (audioInfos.get(i).getAudioId() == musicID) {
                     return true;
                 }
             }

@@ -1,9 +1,0 @@
-com.video.player.lib.base
-com.video.player.lib.bean
-com.video.player.lib.constants
-com.video.player.lib.controller
-com.video.player.lib.listener
-com.video.player.lib.manager
-com.video.player.lib.model
-com.video.player.lib.utils
-com.video.player.lib.view

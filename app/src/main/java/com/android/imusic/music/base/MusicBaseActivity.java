@@ -20,11 +20,11 @@ import android.view.WindowManager;
 import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.activity.MusicPlayerActivity;
-import com.android.imusic.music.bean.MediaInfo;
+import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicLoadingView;
 import com.android.imusic.music.net.MusicNetUtils;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
@@ -302,14 +302,14 @@ public class MusicBaseActivity<P extends MusicNetUtils> extends AppCompatActivit
     private void createMiniJukeBoxToWindown() {
         if(!MusicWindowManager.getInstance().isWindowShowing()){
             if(null!= MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
-                BaseMediaInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
+                BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
                 MusicWindowManager.getInstance().createMiniJukeBoxToWindown(MusicBaseActivity.this.getApplicationContext(), MusicUtils.getInstance().dpToPxInt(MusicBaseActivity.this,80f)
                         ,MusicUtils.getInstance().dpToPxInt(MusicBaseActivity.this,170f));
                 MusicStatus musicStatus=new MusicStatus();
-                musicStatus.setId(musicInfo.getId());
+                musicStatus.setId(musicInfo.getAudioId());
                 String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);
                 musicStatus.setCover(frontPath);
-                musicStatus.setTitle(musicInfo.getVideo_desp());
+                musicStatus.setTitle(musicInfo.getAudioName());
                 MusicPlayerState playerState = MusicPlayerManager.getInstance().getPlayerState();
                 boolean playing = playerState.equals(MusicPlayerState.MUSIC_PLAYER_PLAYING) || playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE) || playerState.equals(MusicPlayerState.MUSIC_PLAYER_BUFFER);
                 musicStatus.setPlayerStatus(playing?MusicStatus.PLAYER_STATUS_START:MusicStatus.PLAYER_STATUS_PAUSE);
@@ -321,7 +321,7 @@ public class MusicBaseActivity<P extends MusicNetUtils> extends AppCompatActivit
 
     /**
      * 显示加载中弹窗
-     * @param message
+     * @param message 提示MSG
      */
     public void showProgressDialog(String message){
         if(!MusicBaseActivity.this.isFinishing()){
@@ -350,30 +350,30 @@ public class MusicBaseActivity<P extends MusicNetUtils> extends AppCompatActivit
 
     /**
      * 音乐列表菜单处理
-     * @param itemId
-     * @param mediaInfo
+     * @param itemId ITEM 类型
+     * @param audioInfo 音频对象
      */
-    protected void onMusicMenuClick(int position,int itemId, BaseMediaInfo mediaInfo) {
+    protected void onMusicMenuClick(int position,int itemId, BaseAudioInfo audioInfo) {
         if(itemId== MusicDetails.ITEM_ID_NEXT_PLAY){
             MusicPlayerManager.getInstance().playNextMusic();
         }else if(itemId== MusicDetails.ITEM_ID_SHARE){
             try {
-                if(!TextUtils.isEmpty(mediaInfo.getFile_path())){
-                    if(mediaInfo.getFile_path().startsWith("http:")||mediaInfo.getFile_path().startsWith("https:")){
+                if(!TextUtils.isEmpty(audioInfo.getAudioPath())){
+                    if(audioInfo.getAudioPath().startsWith("http:")||audioInfo.getAudioPath().startsWith("https:")){
                         Intent sendIntent = new Intent();
                         //sendIntent.setPackage("com.tencent.mm")
                         sendIntent.putExtra(Intent.EXTRA_SUBJECT, "iMusic分享");
                         sendIntent.setAction(Intent.ACTION_SEND);
                         sendIntent.putExtra(Intent.EXTRA_TEXT, "我正在使用"+getResources().getString(R.string.app_name)+
-                                "听:《"+mediaInfo.getVideo_desp()+"》，快来听吧~猛戳-->"+mediaInfo.getFile_path());
+                                "听:《"+audioInfo.getAudioName()+"》，快来听吧~猛戳-->"+audioInfo.getAudioPath());
                         sendIntent.setType("text/plain");
                         startActivity(Intent.createChooser(sendIntent, "iMusic分享"));
                     }else{
                         Intent sendIntent = new Intent();
                         //sendIntent.setPackage("com.tencent.mm")
                         sendIntent.setAction(Intent.ACTION_SEND);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, "来自iMusic的音乐分享:《"+mediaInfo.getVideo_desp()+"》-"+mediaInfo.getNickname());
-                        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(mediaInfo.getFile_path()));
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, "来自iMusic的音乐分享:《"+audioInfo.getAudioName()+"》-"+audioInfo.getNickname());
+                        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(audioInfo.getAudioPath()));
                         sendIntent.setType("audio/*");
                         startActivity(Intent.createChooser(sendIntent, "iMusic分享"));
                     }
@@ -385,7 +385,7 @@ public class MusicBaseActivity<P extends MusicNetUtils> extends AppCompatActivit
                 Toast.makeText(MusicBaseActivity.this,"分享失败："+e.getMessage(),Toast.LENGTH_SHORT).show();
             }
         }else if(itemId==MusicDetails.ITEM_ID_COLLECT){
-            boolean toCollect = MusicUtils.getInstance().putMusicToCollect(mediaInfo);
+            boolean toCollect = MusicUtils.getInstance().putMusicToCollect(audioInfo);
             if(toCollect){
                 Toast.makeText(MusicBaseActivity.this,"已添加至收藏列表",Toast.LENGTH_SHORT).show();
                 MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
@@ -395,7 +395,7 @@ public class MusicBaseActivity<P extends MusicNetUtils> extends AppCompatActivit
 
     /**
      * 打开播放器
-     * @param musicID
+     * @param musicID 正在播放的音频对象
      */
     protected void startToMusicPlayer(long musicID) {
         Intent intent=new Intent(getApplicationContext(), MusicPlayerActivity.class);
@@ -407,12 +407,12 @@ public class MusicBaseActivity<P extends MusicNetUtils> extends AppCompatActivit
 
     /**
      * 打开播放器
-     * @param musicID
-     * @param mediaInfos
+     * @param musicID 要播放的音频对象
+     * @param audioInfos 要播放的音频队列对象
      */
-    protected void startToMusicPlayer(long musicID,List<MediaInfo> mediaInfos){
+    protected void startToMusicPlayer(long musicID,List<AudioInfo> audioInfos){
         Intent intent=new Intent(getApplicationContext(), MusicPlayerActivity.class);
-        intent.putExtra(MusicConstants.KEY_MUSIC_LIST, (Serializable) mediaInfos);
+        intent.putExtra(MusicConstants.KEY_MUSIC_LIST, (Serializable) audioInfos);
         intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getApplicationContext().startActivity(intent);
@@ -420,12 +420,12 @@ public class MusicBaseActivity<P extends MusicNetUtils> extends AppCompatActivit
 
     /**
      * 打开播放器
-     * @param musicID
-     * @param mediaInfos
+     * @param musicID 要播放的音频对象
+     * @param audioInfos 要播放的音频队列对象
      */
-    protected void startMusicPlayer(long musicID,List<BaseMediaInfo> mediaInfos){
+    protected void startMusicPlayer(long musicID,List<BaseAudioInfo> audioInfos){
         Intent intent=new Intent(getApplicationContext(), MusicPlayerActivity.class);
-        intent.putExtra(MusicConstants.KEY_MUSIC_LIST, (Serializable) mediaInfos);
+        intent.putExtra(MusicConstants.KEY_MUSIC_LIST, (Serializable) audioInfos);
         intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getApplicationContext().startActivity(intent);

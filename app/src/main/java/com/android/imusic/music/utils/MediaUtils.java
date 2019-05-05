@@ -5,17 +5,17 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import com.android.imusic.R;
-import com.android.imusic.music.bean.MediaInfo;
+import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
-import com.android.imusic.video.bean.OpenEyesIndexItemBean;
 import com.android.imusic.music.bean.SearchHistroy;
 import com.android.imusic.music.bean.SearchResultInfo;
-import com.video.player.lib.bean.VideoParams;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.android.imusic.video.bean.OpenEyesIndexItemBean;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicACache;
 import com.music.player.lib.util.MusicUtils;
+import com.video.player.lib.bean.VideoParams;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class MediaUtils {
     private static int MAX_SEARCH_KEY_NUM = 30;
     //搜索历史纪录
     public static final String SEARCH_HISTORY="SEARCH_HISTORY";
-    private List<BaseMediaInfo> mLocationMusic;
+    private List<BaseAudioInfo> mLocationMusic;
     private static boolean mLocalImageEnable;//本地音乐图片获取开关,默认关闭
 
     public static MediaUtils getInstance() {
@@ -60,8 +60,8 @@ public class MediaUtils {
      * 获取SD卡所有音频文件
      * @return
      */
-    public ArrayList<BaseMediaInfo> queryLocationMusics(Context context) {
-        ArrayList<BaseMediaInfo> mediaInfos=null;
+    public ArrayList<BaseAudioInfo> queryLocationMusics(Context context) {
+        ArrayList<BaseAudioInfo> audioInfos=null;
         if(null!=context.getContentResolver()){
             Cursor cursor = context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -79,72 +79,72 @@ public class MediaUtils {
                             + MediaStore.Audio.Media.MIME_TYPE + "=?",
                     new String[] { "audio/mpeg", "audio/x-ms-wma" }, null);
             if (null!=cursor&&cursor.moveToFirst()) {
-                mediaInfos = new ArrayList<>();
+                audioInfos = new ArrayList<>();
                 do {
                     if(!TextUtils.isEmpty(cursor.getString(9))){
-                        BaseMediaInfo mediaInfo = new BaseMediaInfo();
+                        BaseAudioInfo audioInfo = new BaseAudioInfo();
                         if(!TextUtils.isEmpty(cursor.getString(0))){
-                            mediaInfo.setId(Long.parseLong(cursor.getString(0)));
+                            audioInfo.setAudioId(Long.parseLong(cursor.getString(0)));
                         }else{
-                            mediaInfo.setId(System.currentTimeMillis());
+                            audioInfo.setAudioId(System.currentTimeMillis());
                         }
                         // 文件名
-                        //mediaInfo.setVideo_desp(cursor.getString(1));
+                        //audioInfo.setaudioName(cursor.getString(1));
                         // 歌曲名
                         if(!TextUtils.isEmpty(cursor.getString(2))){
-                            mediaInfo.setVideo_desp(cursor.getString(2));
+                            audioInfo.setAudioName(cursor.getString(2));
                         }
 //                song.setPinyin(Pinyin.toPinyin(title.charAt(0)).substring(0, 1).toUpperCase());
                         // 时长
                         if(!TextUtils.isEmpty(cursor.getString(3))){
-                            mediaInfo.setVideo_durtion(cursor.getInt(3));
+                            audioInfo.setAudioDurtion(cursor.getInt(3));
                         }
                         // 歌手名
                         if(!TextUtils.isEmpty(cursor.getString(4))){
-                            mediaInfo.setNickname(cursor.getString(4));
+                            audioInfo.setNickname(cursor.getString(4));
                         }
                         // 专辑名
                         if(!TextUtils.isEmpty(cursor.getString(5))){
-                            mediaInfo.setMediaAlbum(cursor.getString(5));
+                            audioInfo.setAudioAlbumName(cursor.getString(5));
                         }
                         // 年代 cursor.getString(6)
                         if(!TextUtils.isEmpty(cursor.getString(7))){
                             // 歌曲格式
                             if ("audio/mpeg".equals(cursor.getString(7).trim())) {
-                                mediaInfo.setMediaType("mp3");
+                                audioInfo.setAudioType("mp3");
                             } else if ("audio/x-ms-wma".equals(cursor.getString(7).trim())) {
-                                mediaInfo.setMediaType("wma");
+                                audioInfo.setAudioType("wma");
                             }
                         }
                         //文件大小 cursor.getString(8)
                         // 文件路径
                         //  /storage/emulated/0/Music/齐晨-咱们结婚吧.mp3
-                        mediaInfo.setFile_path(cursor.getString(9));
-                        mediaInfos.add(mediaInfo);
+                        audioInfo.setAudioPath(cursor.getString(9));
+                        audioInfos.add(audioInfo);
                     }
                 } while (cursor.moveToNext());
                 cursor.close();
             }
-            return mediaInfos;
+            return audioInfos;
         }
         return null;
     }
 
     /**
      * 根据歌曲信息返回详细信息数组
-     * @param mediaInfo
+     * @param audioInfo
      * @param sceneMode 场景
      * @param albumName 专辑昵称
      * @return
      */
-    public List<MusicDetails> getMusicDetails(BaseMediaInfo mediaInfo, MusicMusicDetailsDialog.DialogScene sceneMode, String albumName) {
+    public List<MusicDetails> getMusicDetails(BaseAudioInfo audioInfo, MusicMusicDetailsDialog.DialogScene sceneMode, String albumName) {
         List<MusicDetails> musicDetailsList=new ArrayList<>();
         if(!sceneMode.equals(MusicMusicDetailsDialog.DialogScene.SCENE_COLLECT)){
             MusicDetails musicDetails0=new MusicDetails();
             musicDetails0.setTitle("添加到我的收藏");
             musicDetails0.setIcon(R.drawable.ic_music_details_collect);
             musicDetails0.setItemID(MusicDetails.ITEM_ID_COLLECT);
-            musicDetails0.setId(mediaInfo.getId());
+            musicDetails0.setId(audioInfo.getAudioId());
             musicDetailsList.add(musicDetails0);
         }
         if(sceneMode.equals(MusicMusicDetailsDialog.DialogScene.SCENE_LOCATION)
@@ -159,14 +159,14 @@ public class MediaUtils {
         }
         MusicDetails shareDetails=new MusicDetails();
         shareDetails.setTitle("分享");
-        shareDetails.setPath(mediaInfo.getFile_path());
+        shareDetails.setPath(audioInfo.getAudioPath());
         shareDetails.setIcon(R.drawable.ic_music_details_share);
         shareDetails.setItemID(MusicDetails.ITEM_ID_SHARE);
         musicDetailsList.add(shareDetails);
 
-        if(!TextUtils.isEmpty(mediaInfo.getNickname())){
+        if(!TextUtils.isEmpty(audioInfo.getNickname())){
             MusicDetails musicDetails=new MusicDetails();
-            musicDetails.setTitle("歌手：<font color='#333333'>"+mediaInfo.getNickname()+"</font>");
+            musicDetails.setTitle("歌手：<font color='#333333'>"+audioInfo.getNickname()+"</font>");
             musicDetails.setIcon(R.drawable.ic_music_details_anchor);
             musicDetailsList.add(musicDetails);
         }
@@ -176,16 +176,16 @@ public class MediaUtils {
             defaultDetails.setIcon(R.drawable.ic_music_details_album);
             musicDetailsList.add(defaultDetails);
         }else{
-            if(!TextUtils.isEmpty(mediaInfo.getMediaAlbum())){
+            if(!TextUtils.isEmpty(audioInfo.getAudioAlbumName())){
                 MusicDetails musicDetails=new MusicDetails();
-                musicDetails.setTitle("专辑：<font color='#333333'>"+mediaInfo.getMediaAlbum()+"</font>");
+                musicDetails.setTitle("专辑：<font color='#333333'>"+audioInfo.getAudioAlbumName()+"</font>");
                 musicDetails.setIcon(R.drawable.ic_music_details_album);
                 musicDetailsList.add(musicDetails);
             }
         }
-        if(mediaInfo.getVideo_durtion()>0){
+        if(audioInfo.getAudioDurtion()>0){
             MusicDetails musicDetails=new MusicDetails();
-            musicDetails.setTitle("时长：<font color='#333333'>"+MusicUtils.getInstance().stringForAudioTime(mediaInfo.getVideo_durtion())+"</font>");
+            musicDetails.setTitle("时长：<font color='#333333'>"+MusicUtils.getInstance().stringForAudioTime(audioInfo.getAudioDurtion())+"</font>");
             musicDetails.setIcon(R.drawable.ic_music_details_durtion);
             musicDetailsList.add(musicDetails);
         }
@@ -209,17 +209,17 @@ public class MediaUtils {
 
     /**
      * 返回相对于此数组正在播放的位置
-     * @param mediaInfos
+     * @param searchResultInfos
      * @param musicID
      * @return
      */
-    public int getNetCurrentPlayIndexInThis(List<SearchResultInfo> mediaInfos, long musicID) {
+    public int getNetCurrentPlayIndexInThis(List<SearchResultInfo> searchResultInfos, long musicID) {
         if(musicID<=0){
             return 0;
         }
-        if(null!=mediaInfos&&mediaInfos.size()>0){
-            for (int i = 0; i < mediaInfos.size(); i++) {
-                if(mediaInfos.get(i).getAudio_id()==musicID){
+        if(null!=searchResultInfos&&searchResultInfos.size()>0){
+            for (int i = 0; i < searchResultInfos.size(); i++) {
+                if(searchResultInfos.get(i).getAudio_id()==musicID){
                     return i;
                 }
             }
@@ -231,36 +231,36 @@ public class MediaUtils {
      * 生成主页本地列表
      * @return
      */
-    public List<MediaInfo> createIndexData() {
-        List<MediaInfo> dataList=new ArrayList<>();
-        MediaInfo indexData=new MediaInfo();
+    public List<AudioInfo> createIndexData() {
+        List<AudioInfo> dataList=new ArrayList<>();
+        AudioInfo indexData=new AudioInfo();
         indexData.setTitle("本地音乐");
         indexData.setImage(R.drawable.ic_music_index_music);
-        indexData.setTag_id(MediaInfo.TAG_LOCATION);
+        indexData.setTag_id(AudioInfo.TAG_LOCATION);
         indexData.setClass_enty(indexData.ITEM_CLASS_TYPE_DEFAULT);
         dataList.add(indexData);
 
-        MediaInfo indexData1=new MediaInfo();
+        AudioInfo indexData1=new AudioInfo();
         indexData1.setTitle("最近播放");
         indexData1.setImage(R.drawable.ic_music_index_last_play);
-        indexData1.setTag_id(MediaInfo.TAG_LAST_PLAYING);
+        indexData1.setTag_id(AudioInfo.TAG_LAST_PLAYING);
         indexData1.setClass_enty(indexData.ITEM_CLASS_TYPE_DEFAULT);
         dataList.add(indexData1);
 
-        MediaInfo indexData2=new MediaInfo();
+        AudioInfo indexData2=new AudioInfo();
         indexData2.setTitle("我的收藏");
         indexData2.setImage(R.drawable.ic_music_index_collect);
-        indexData2.setTag_id(MediaInfo.TAG_COLLECT);
+        indexData2.setTag_id(AudioInfo.TAG_COLLECT);
         indexData2.setClass_enty(indexData.ITEM_CLASS_TYPE_DEFAULT);
         dataList.add(indexData2);
         return dataList;
     }
 
-    public void setLocationMusic(List<BaseMediaInfo> locationMusic) {
+    public void setLocationMusic(List<BaseAudioInfo> locationMusic) {
         mLocationMusic = locationMusic;
     }
 
-    public List<BaseMediaInfo> getLocationMusic() {
+    public List<BaseAudioInfo> getLocationMusic() {
         return mLocationMusic;
     }
 

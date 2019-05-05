@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.music.player.lib.R;
 import com.music.player.lib.adapter.base.BaseAdapter;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.util.MusicUtils;
 import java.util.List;
 
@@ -18,9 +18,9 @@ import java.util.List;
  * Player List
  */
 
-public class MusicPlayerListAdapter extends BaseAdapter<BaseMediaInfo,MusicPlayerListAdapter.MusicHolderView> {
+public class MusicPlayerListAdapter extends BaseAdapter<BaseAudioInfo,MusicPlayerListAdapter.MusicHolderView> {
 
-    public MusicPlayerListAdapter(Context context, List<BaseMediaInfo> data) {
+    public MusicPlayerListAdapter(Context context, List<BaseAudioInfo> data) {
         super(context,data);
     }
 
@@ -31,9 +31,9 @@ public class MusicPlayerListAdapter extends BaseAdapter<BaseMediaInfo,MusicPlaye
 
     @Override
     public void inBindViewHolder(MusicHolderView viewHolder, int position) {
-        BaseMediaInfo itemData = getItemData(position);
+        BaseAudioInfo itemData = getItemData(position);
         if(null!=itemData){
-            String subString = MusicUtils.getInstance().subString(itemData.getVideo_desp(), 16);
+            String subString = MusicUtils.getInstance().subString(itemData.getAudioName(), 16);
             viewHolder.textTitle.setText(subString);
             viewHolder.textSubTitle.setText(itemData.getNickname());
             if(itemData.isSelected()){
@@ -50,9 +50,9 @@ public class MusicPlayerListAdapter extends BaseAdapter<BaseMediaInfo,MusicPlaye
     @Override
     protected void inBindViewHolder(MusicHolderView viewHolder, int position, List<Object> payloads) {
         super.inBindViewHolder(viewHolder, position, payloads);
-        BaseMediaInfo itemData = getItemData(position);
+        BaseAudioInfo itemData = getItemData(position);
         if(null!=itemData){
-            String subString = MusicUtils.getInstance().subString(itemData.getVideo_desp(), 16);
+            String subString = MusicUtils.getInstance().subString(itemData.getAudioName(), 16);
             viewHolder.textTitle.setText(subString);
             if(itemData.isSelected()){
                 viewHolder.textTitle.setTextColor(Color.parseColor("#F8E71C"));

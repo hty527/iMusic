@@ -30,7 +30,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.reflect.TypeToken;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicOnItemClickListener;
@@ -128,8 +128,8 @@ public class MusicAlbumActivity extends MusicBaseActivity<IndexPersenter> implem
                     case R.id.btn_play_all:
                         if(null!=mAdapter&&null!=mAdapter.getData()&&mAdapter.getData().size()>0){
                             MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_NET);
-                            List<BaseMediaInfo> mediaInfos = mAdapter.getData();
-                            startMusicPlayer(mediaInfos.get(0).getId(),mediaInfos);
+                            List<BaseAudioInfo> audioInfos = mAdapter.getData();
+                            startMusicPlayer(audioInfos.get(0).getAudioId(),audioInfos);
                         }
                         break;
                     case R.id.btn_play_model:
@@ -301,10 +301,10 @@ public class MusicAlbumActivity extends MusicBaseActivity<IndexPersenter> implem
     @Override
     public void onItemClick(View view, final int posotion, long musicID) {
         if(null!=view.getTag()){
-            final BaseMediaInfo mediaInfo = (BaseMediaInfo) view.getTag();
+            final BaseAudioInfo audioInfo = (BaseAudioInfo) view.getTag();
             if(musicID>0){
                 long currentPlayerID = MusicPlayerManager.getInstance().getCurrentPlayerID();
-                if(currentPlayerID>0&&currentPlayerID==mediaInfo.getId()){
+                if(currentPlayerID>0&&currentPlayerID==audioInfo.getAudioId()){
                     //重复点击，打开播放器
                     startToMusicPlayer(currentPlayerID);
                     return;
@@ -318,7 +318,7 @@ public class MusicAlbumActivity extends MusicBaseActivity<IndexPersenter> implem
                 createMiniJukeboxWindow();
             }else{
                 //Menu
-                MusicMusicDetailsDialog.getInstance(MusicAlbumActivity.this,mediaInfo, MusicMusicDetailsDialog.DialogScene.SCENE_ALBUM,mTitle)
+                MusicMusicDetailsDialog.getInstance(MusicAlbumActivity.this,audioInfo, MusicMusicDetailsDialog.DialogScene.SCENE_ALBUM,mTitle)
                         .setMusicOnItemClickListener(new MusicOnItemClickListener() {
                             /**
                              * @param view
@@ -327,7 +327,7 @@ public class MusicAlbumActivity extends MusicBaseActivity<IndexPersenter> implem
                              */
                             @Override
                             public void onItemClick(View view, int itemId, long musicID) {
-                                onMusicMenuClick(posotion,itemId,mediaInfo);
+                                onMusicMenuClick(posotion,itemId,audioInfo);
                             }
                         }).show();
             }
@@ -379,11 +379,11 @@ public class MusicAlbumActivity extends MusicBaseActivity<IndexPersenter> implem
     @Override
     public void onInfo(int event, int extra) {}
     @Override
-    public void onPlayMusiconInfo(BaseMediaInfo musicInfo, int position) {}
+    public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {}
     @Override
-    public void onEchoPlayCurrentIndex(BaseMediaInfo musicInfo, int position) {}
+    public void onEchoPlayCurrentIndex(BaseAudioInfo musicInfo, int position) {}
     @Override
-    public void onMusicPathInvalid(BaseMediaInfo musicInfo, int position) {}
+    public void onMusicPathInvalid(BaseAudioInfo musicInfo, int position) {}
     @Override
     public void onTaskRuntime(long totalDurtion, long currentDurtion, long alarmResidueDurtion, int bufferProgress) {}
     @Override

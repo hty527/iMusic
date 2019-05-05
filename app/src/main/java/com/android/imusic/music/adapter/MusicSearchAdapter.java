@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.music.player.lib.adapter.base.BaseAdapter;
-import com.music.player.lib.bean.BaseMediaInfo;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.util.MusicUtils;
@@ -74,8 +74,8 @@ public class MusicSearchAdapter extends BaseAdapter<SearchResultInfo,MusicListVi
                 viewHolder.imageCover.setImageResource(R.drawable.ic_music_default_cover);
             }
             boolean isPlaying=false;
-            BaseMediaInfo currentPlayerMusic = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-            if(null!=currentPlayerMusic&&!TextUtils.isEmpty(currentPlayerMusic.getHashKey())&&currentPlayerMusic.getHashKey().equals(itemData.getHash())){
+            BaseAudioInfo currentPlayerMusic = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
+            if(null!=currentPlayerMusic&&!TextUtils.isEmpty(currentPlayerMusic.getAudioHashKey())&&currentPlayerMusic.getAudioHashKey().equals(itemData.getHash())){
                 isPlaying=true;
                 mCurrentPosition =viewHolder.getAdapterPosition();
             }

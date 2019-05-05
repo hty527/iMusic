@@ -83,11 +83,11 @@ ___
 **4.开始播放你的音频任务**
 ```
     /**
-     * mediaInfos:待播放的歌单列表
+     * audios:待播放的歌单列表
      * position：从这个数组集中的哪个位置开始播放
-     * ? : 你的数据实体必须继承BaseMediaInfo，必须的字段看类中的属性注释
+     * ? : 你的音频实体类必须继承BaseAudioInfo，必须的字段看类中的属性注释
      */
-    MusicPlayerManager.getInstance().startPlayMusic(List<?> mediaInfos,int position);
+    MusicPlayerManager.getInstance().startPlayMusic(List<?> audios,int position);
 ```
 **5.权限声明**
 ```
