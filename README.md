@@ -54,7 +54,7 @@ ___
 **1.项目build.gradle中添加**
 ```
     dependencies {
-        implementation 'com.imusic.player:music-player:1.0.0'
+        implementation 'com.imusic.player:music-player:1.0.1'
     }
 ```
 **2.全局初始化**
@@ -76,6 +76,8 @@ ___
         super.onDestroy();
         //播放器内部服务组件及其他对象反初始化
         MusicPlayerManager.getInstance().unInitialize(MainActivity.this);
+        //如果你启用了内部悬浮窗口播放器，则还需要释放悬浮窗
+        MusicWindowManager.getInstance().onDestroy();
     }
 ```
 **4.开始播放你的音频任务**
@@ -108,7 +110,7 @@ ___
 **1.项目build.gradle中添加**
 ```
     dependencies {
-        implementation 'com.imusic.player:video-player:1.0.0'
+        implementation 'com.imusic.player:video-player:1.0.1'
     }
 ```
 **2.在你的项目中的.xml中引入播放器布局</br>**
@@ -157,8 +159,7 @@ ___
     protected void onDestroy() {
         super.onDestroy();
         VideoPlayerManager.getInstance().onDestroy();
-        //若你的Activity是MainActivity，则需要调用下面这两个方法，其他Activity在销毁时若需支持悬浮窗口播放，则勿需调用下面方法！！！
-        VideoPlayerManager.getInstance().onDestroy();
+        //如果你的Activity是MainActivity，则需要销毁和释放悬浮窗口
         VideoWindowManager.getInstance().onDestroy();
     }
 ```
