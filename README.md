@@ -212,4 +212,4 @@ ___
 </div>
 <br/>
 
-* 集成中遇到问题请阅读Wiki,发现BUG欢迎issues。如有其他问题，欢迎邮箱：TinyHung@Outlook.com
+* 集成中遇到问题请阅读Wiki,BUG提交欢迎issues。如有其他问题，联系邮箱：TinyHung@Outlook.com
