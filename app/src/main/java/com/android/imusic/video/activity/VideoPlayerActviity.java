@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -14,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
 import com.android.imusic.R;
 import com.android.imusic.music.base.MusicBaseActivity;
 import com.android.imusic.music.engin.IndexPersenter;
@@ -22,15 +22,15 @@ import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.adapter.VideoDetailsAdapter;
 import com.android.imusic.video.bean.OpenEyesIndexInfo;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
-import com.music.player.lib.manager.MusicWindowManager;
-import com.video.player.lib.bean.VideoParams;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.adapter.base.OnItemClickListener;
+import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.base.BaseVideoPlayer;
+import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.controller.DetailsCoverController;
 import com.video.player.lib.manager.VideoPlayerManager;
@@ -105,12 +105,8 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
             @Override
             public void onClick(View v) {
                 if(null!=mVideoPlayer){
-                    int screenWidth = VideoUtils.getInstance().getScreenWidth(VideoPlayerActviity.this);
-                    int width = screenWidth / 2;
-                    int height = width * 9 / 16;
-                    int startX = screenWidth / 2 -VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
                     int startY=mVideoPlayer.getMeasuredHeight()+VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
-                    mVideoPlayer.startMiniWindow(startX,startY,width,height,null);
+                    mVideoPlayer.startMiniWindowToLocaion(Gravity.RIGHT,startY,1280,720,null);
                 }
             }
         });

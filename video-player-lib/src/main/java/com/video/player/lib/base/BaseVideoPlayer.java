@@ -26,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.video.player.lib.R;
 import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
@@ -43,8 +44,10 @@ import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
 import com.video.player.lib.view.PlayerGestureView;
 import com.video.player.lib.view.VideoTextureView;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 
 /**
  * TinyHung@Outlook.com
@@ -961,7 +964,6 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
 
     /**
      * 开启小窗口播放
-     *
      * @param startX     起点位于屏幕的X轴像素
      * @param startY     起点位于屏幕的Y轴像素
      * @param tinyWidth  小窗口的宽 未指定使用默认 屏幕宽的 1/2(二分之一)
@@ -969,7 +971,6 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
      */
     public void startMiniWindow(int startX, int startY, int tinyWidth, int tinyHeight,V miniWindowController) {
-        Logger.d(TAG,"startMiniWindow-->isPlaying():"+isPlaying());
         if (VideoWindowManager.getInstance().isWindowShowing()) {
             Toast.makeText(getContext(), "已在悬浮窗播放", Toast.LENGTH_SHORT).show();
             return;
@@ -1013,7 +1014,6 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     if (tinyHeight > 0) {
                         height = tinyHeight;
                     }
-                    Logger.d(TAG, "startMiniWindow-->startX:" + startX + ",startY:" + startY + ",tinyWidth:" + tinyWidth + ",tinyHeight:" + tinyHeight);
                     LayoutParams layoutParams = new LayoutParams(width, height);
                     layoutParams.setMargins(startX, startY, 0, 0);
                     viewGroup.addView(videoPlayer, layoutParams);
@@ -1057,6 +1057,79 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                 }
             }
         }
+    }
+
+    /**
+     * 开启迷你小窗口播放，将窗口添加至屏幕的具体方位，内部换算显示比例。这个方法有别于startMiniWindow方法请阅读参数注解。
+     * 视频显示换算比例：宽屏视频：16:9，竖屏视频：9:16，正方形：1:1。
+     * @param gravity 位于屏幕中的这里只能是左侧、右侧，(Gravity.LEFT、Gravity.RIGHT)内部切换至迷你小窗口会保证不会超出屏幕边界
+     * @param videoWidth 视频真实宽度，用来换算窗口缩放的真实px
+     * @param videoHeight 视频真实高度，用来换算窗口缩放的真实px
+     * @param startY 其实Y轴位置
+     * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
+     */
+    public void startMiniWindowToLocaion(int gravity,int startY,int videoWidth, int videoHeight,V miniWindowController) {
+        if (VideoWindowManager.getInstance().isWindowShowing()) {
+            Toast.makeText(getContext(), "已在悬浮窗播放", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (SCRREN_ORIENTATION == VideoConstants.SCREEN_ORIENTATION_TINY) {
+            Toast.makeText(getContext(), "已切换至小窗口", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!isPlaying()){
+            Toast.makeText(getContext(), "只能在正在播放状态下切换小窗口播放", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(gravity==Gravity.LEFT||gravity==Gravity.RIGHT){
+            int startX=VideoUtils.getInstance().dpToPxInt(getContext(),10f);
+            int screenWidth = VideoUtils.getInstance().getScreenWidth(getContext());
+            //默认是横屏的
+            int width = screenWidth / 2;
+            int height = width * 9 / 16;
+            if(videoWidth>videoHeight){
+                //横屏,啥也不做
+            }else if(videoHeight>videoWidth){
+                //竖屏,如果宽高比例接近16:9,则只交换宽高，否则按照4:3比例显示
+                boolean is16bi9= is16bi9(videoWidth,videoHeight);
+                if(is16bi9){
+                    int tempWidth = width;
+                    width = height;
+                    height = tempWidth;
+                }else{
+                    width = height;
+                    height = width * 4 / 3;
+                }
+            }else{
+                //正方形,宽高为屏幕宽度1/3+20dp
+                width= screenWidth/3+VideoUtils.getInstance().dpToPxInt(getContext(),20f);
+                height = width;
+            }
+            //确定窗口位于屏幕的X轴位置
+            if(gravity==Gravity.RIGHT){
+                startX=screenWidth-(width+VideoUtils.getInstance().dpToPxInt(getContext(),10f));
+            }
+            startMiniWindow(startX,startY,width,height,miniWindowController);
+        }else{
+            new IllegalArgumentException("Mini windows can only be on the left or right of the screen!");
+        }
+    }
+
+    /**
+     * 检测视频分辨率是否为16:9
+     * @param videoWidth 视频的宽
+     * @param videoHeight 视频的高
+     * @return true:16:9，false:非16:9
+     */
+    private boolean is16bi9(int videoWidth, int videoHeight) {
+        //整数相除，保留两位小数点
+        float scale = (float) videoHeight / (float) videoWidth;
+        double scaleMath = new BigDecimal(scale).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        if(scaleMath < 1.78){
+            return false;
+        }
+        return true;
     }
 
     /**
