@@ -20,7 +20,6 @@ import com.music.player.lib.service.MusicPlayerBinder;
 import com.music.player.lib.service.MusicPlayerService;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
-
 import java.util.List;
 import java.util.Observer;
 
@@ -826,16 +825,13 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             if (null != service) {
-                Logger.d(TAG, "onServiceConnected--->"+name.getClassName()+",BINDER:"+service.pingBinder());
                 if(service instanceof MusicPlayerBinder){
                     mBinder = (MusicPlayerBinder) service;
                 }
             }
         }
         @Override
-        public void onServiceDisconnected(ComponentName name) {
-            Logger.d(TAG, "onServiceDisconnected--->"+name);
-        }
+        public void onServiceDisconnected(ComponentName name) {}
     }
 
     /**

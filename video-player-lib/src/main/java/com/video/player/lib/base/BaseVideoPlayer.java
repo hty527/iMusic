@@ -26,7 +26,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.video.player.lib.R;
 import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
@@ -44,7 +43,6 @@ import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
 import com.video.player.lib.view.PlayerGestureView;
 import com.video.player.lib.view.VideoTextureView;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
