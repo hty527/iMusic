@@ -173,14 +173,10 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
 #### 2. 迷你小窗口播放器与常规播放器切换
 本库内部已封装支持从常规播放器切换至迷你小窗口播放且只能是常规播放器切换至小窗口，请不要尝试从全屏或者悬浮窗切换至小窗口播放！也支持小窗口全屏幕拖拽功能。此处代码演示迷你小窗口默认出现在播放器右下方，播放器宽为屏幕1/2，高为16:9。具体的实现代码如下：
 ```
-    int screenWidth = VideoUtils.getInstance().getScreenWidth(VideoPlayerActviity.this);
-    int width = screenWidth / 2;
-    int height = width * 9 / 16;
-    //计算出小窗口出现在屏幕的X、Y轴的起点位置，也可以调用startMiniWindow的多参方法。具体内部实现，请阅读方法注释说明。
-    int startX = screenWidth / 2 -VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
     int startY=mVideoPlayer.getMeasuredHeight()+VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
-    //调用视频通道的startMiniWindow方法，转到小窗口播放
-    mVideoPlayer.startMiniWindow(startX,startY,width,height,null);
+    //切换至小窗口播放
+    mVideoPlayer.startMiniWindowToLocaion(Gravity.RIGHT,startY,1280,720,null);
+
 ```
 #### 3. 切换至悬浮窗播放
 播放器封装支持从常规播放器切换至全局悬浮窗口播放，也支持从悬浮窗口播放器跳回至视频播放器界面无缝衔接播放，示例代码如下：
@@ -382,6 +378,18 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
      */
     public void startMiniWindow(int startX, int startY, int tinyWidth, int tinyHeight,V miniWindowController);
+
+
+    /**
+     * 开启迷你小窗口播放，将窗口添加至屏幕的具体方位，内部换算显示比例。这个方法有别于startMiniWindow方法请阅读参数注解
+     * 视频显示换算比例：宽屏视频：16:9，竖屏视频：9:16，正方形：1:1。
+     * @param gravity 位于屏幕中的这里只能是左侧、右侧，(Gravity.LEFT、Gravity.RIGHT)内部切换至迷你小窗口会保证不会超出屏幕边界
+     * @param videoWidth 视频真实宽度，用来换算窗口缩放的真实px
+     * @param videoHeight 视频真实高度，用来换算窗口缩放的真实px
+     * @param startY 其实Y轴位置
+     * @param miniWindowController 适用于迷你窗口播放器的控制器，若传空，则使用内部默认的交互控制器
+     */
+    public void startMiniWindowToLocaion(int gravity,int startY,int videoWidth, int videoHeight,V miniWindowController);
 
     /**
      * 退出迷你小窗口播放
