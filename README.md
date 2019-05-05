@@ -174,15 +174,9 @@ ___
 **6.Activity Manifest文件配置：**
 ```
     <activity android:name="xxx.xxx.xxx.MainActivity"
-        android:launchMode="singleTop"
-        <!--加上这个属性，告诉系统Activity在-->
-        android:configChanges="orientation|screenSize"
-        android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+        android:screenOrientation="portrait"
+        <!--在你需要全屏播放的Activity中加上这个属性，告诉系统Activity在横竖屏切换时不要销毁Activity-->
+        android:configChanges="orientation|screenSize">
     </activity>
 ```
 至此基础的视频播放器项目集成完毕，更多高级功能和API请阅读文档。<br/>
