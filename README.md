@@ -83,9 +83,8 @@ ___
 **4.开始播放你的音频任务**
 ```
     /**
-     * audios:待播放的歌单列表
-     * position：从这个数组集中的哪个位置开始播放
-     * ? : 你的音频实体类必须继承BaseAudioInfo，必须的字段看类中的属性注释
+     * audios:待播放的歌单列表,音频对象需继承BaseAudioInfo类，请阅读类中成员属性注解
+     * position：开始播放的位置(位于audios中的index)
      */
     MusicPlayerManager.getInstance().startPlayMusic(List<?> audios,int position);
 ```
