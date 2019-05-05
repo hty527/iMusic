@@ -171,10 +171,24 @@ ___
     <!--悬浮窗-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 ```
-至此你的播放器具备了基础的视频播放能力。<br/>
+**6.Activity Manifest文件配置：**
+```
+    <activity android:name="xxx.xxx.xxx.MainActivity"
+        android:launchMode="singleTop"
+        <!--加上这个属性，告诉系统Activity在-->
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="portrait">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+```
+至此基础的视频播放器项目集成完毕，更多高级功能和API请阅读文档。<br/>
 
 [视频播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Doc/md/VideoPlayerReadme.md "视频播放器API介绍"
-**更多自定义和其他功能详见此Wiki文档：**[视频播放器Wiki]
+**自定义交互和其他功能详见此Wiki文档：**[视频播放器Wiki]
 ## iMusic预览及下载:
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
 * 此示例工程音乐搜索API取自《酷狗音乐》开放API，视频资源API取自《开眼视频》。<br/>
