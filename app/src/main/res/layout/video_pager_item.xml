@@ -18,7 +18,7 @@
             android:id="@+id/music_tr_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12dp"
+            android:textSize="13dp"
             android:textColor="#FFFFFF"
             android:gravity="center_vertical"
             android:shadowColor="#000000"

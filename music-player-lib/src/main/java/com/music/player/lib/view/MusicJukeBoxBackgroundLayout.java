@@ -131,22 +131,45 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
 
     /**
      * 设置背景封面
-     * @param frontCover
-     * @param delayMillis
+     * @param imageUrl 图片URL
+     * @param delayMillis 加载图片并处理延时时长，单位：毫秒
      */
-    public void setBackgroundCover(String frontCover,long delayMillis) {
-        setBackgroundCover(frontCover,delayMillis,true);
+    public void setBackgroundCover(String imageUrl,long delayMillis) {
+        setBackgroundCover(imageUrl,delayMillis,true);
     }
 
     /**
      * 设置背景封面
-     * @param frontCover
-     * @param delayMillis
-     * @param isBlur 是否毛玻璃处理
+     * @param imageUrl 图片URL
+     * @param delayMillis 加载图片并处理延时时长，单位：毫秒
+     * @param isBlur bitmap是否虚化？
      */
-    public synchronized void setBackgroundCover(String frontCover,long delayMillis,boolean isBlur) {
+    public synchronized void setBackgroundCover(String imageUrl,long delayMillis,boolean isBlur) {
+        setBackgroundCover(imageUrl, delayMillis,isBlur,5);
+    }
+
+    /**
+     * 设置背景封面
+     * @param imageUrl 图片URL
+     * @param delayMillis 加载图片并处理延时时长，单位：毫秒
+     * @param isBlur bitmap是否虚化？
+     * @param blurRadius bitmap 虚化角度阈值
+     */
+    public synchronized void setBackgroundCover(String imageUrl,long delayMillis,boolean isBlur,int blurRadius) {
+        setBackgroundCover(imageUrl, delayMillis, isBlur, blurRadius,true);
+    }
+
+    /**
+     * 设置背景封面
+     * @param imageUrl 图片URL
+     * @param delayMillis 加载图片并处理延时时长，单位：毫秒
+     * @param isBlur bitmap是否虚化？
+     * @param blurRadius bitmap 虚化角度阈值
+     * @param shadeEnable 是否启用遮罩层图层
+     */
+    public synchronized void setBackgroundCover(String imageUrl,long delayMillis,boolean isBlur,int blurRadius,boolean shadeEnable) {
         if(null!=mLayerDrawable&&Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if(null!=mBackgroundRunnable&&!TextUtils.isEmpty(mBackgroundRunnable.getFrontCover())&&mBackgroundRunnable.getFrontCover().equals(frontCover)){
+            if(null!=mBackgroundRunnable&&!TextUtils.isEmpty(mBackgroundRunnable.getImageUrl())&&mBackgroundRunnable.getImageUrl().equals(imageUrl)){
                 //重复的，不做任何处理
                 return;
             }
@@ -155,7 +178,7 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
                 MusicJukeBoxBackgroundLayout.this.removeCallbacks(mBackgroundRunnable);
                 mBackgroundRunnable=null;
             }
-            mBackgroundRunnable = new SetBackgroundRunnable(frontCover,isBlur);
+            mBackgroundRunnable = new SetBackgroundRunnable(imageUrl,isBlur,blurRadius,shadeEnable);
             MusicJukeBoxBackgroundLayout.this.postDelayed(mBackgroundRunnable,delayMillis);
         }
     }
@@ -181,22 +204,29 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
     }
 
     private class SetBackgroundRunnable implements Runnable{
-        //是否毛玻璃处理
+        //Bitmap是否虚化处理
         private final boolean mIsBlur;
-        private String mFrontCover;
+        //遮罩图层默认是开启的
+        private boolean mShadeEnable=true;
+        //图片URL
+        private String mImageUrl;
+        //虚化半径
+        private int mBlurRadius=5;
 
-        public SetBackgroundRunnable(String frontCover, boolean isBlur) {
-            this.mFrontCover=frontCover;
+        public SetBackgroundRunnable(String imageUrl, boolean isBlur, int blurRadius, boolean shadeEnable) {
+            this.mImageUrl=imageUrl;
             this.mIsBlur=isBlur;
+            this.mBlurRadius=blurRadius;
+            this.mShadeEnable=shadeEnable;
         }
 
         @Override
         public void run() {
-            if(!TextUtils.isEmpty(mFrontCover)){
+            if(!TextUtils.isEmpty(mImageUrl)){
                 //HTTP || HTTPS
-                if(mFrontCover.startsWith("http:")|| mFrontCover.startsWith("https:")){
+                if(mImageUrl.startsWith("http:")|| mImageUrl.startsWith("https:")){
                     Glide.with(getContext())
-                            .load(mFrontCover)
+                            .load(mImageUrl)
                             .asBitmap()
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .centerCrop()
@@ -207,7 +237,12 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
                                         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.music_default_music_bg);
                                     }
                                     if(mIsBlur){
-                                        Drawable foregroundDrawable = MusicUtils.getInstance().getForegroundDrawable(bitmap, mScreenWidth, mScreenHeight, 5, Color.parseColor("#FF999999"));
+                                        Drawable foregroundDrawable=null;
+                                        if(mShadeEnable){
+                                            foregroundDrawable = MusicUtils.getInstance().getForegroundDrawable(bitmap, mScreenWidth, mScreenHeight, mBlurRadius, Color.parseColor("#FF999999"));
+                                        }else{
+                                            foregroundDrawable = MusicUtils.getInstance().getForegroundDrawable(bitmap, mScreenWidth, mScreenHeight, mBlurRadius, Color.parseColor("#00000000"));
+                                        }
                                         if(null==foregroundDrawable){
                                             foregroundDrawable = ContextCompat.getDrawable(getContext(),R.drawable.music_default_music_bg);
                                         }
@@ -229,9 +264,9 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
                 }else{
                     //File
                     Bitmap bitmap;
-                    bitmap = MusicImageCache.getInstance().getBitmap(mFrontCover);
+                    bitmap = MusicImageCache.getInstance().getBitmap(mImageUrl);
                     if(null==bitmap){
-                        bitmap=MusicImageCache.getInstance().createBitmap(mFrontCover);
+                        bitmap=MusicImageCache.getInstance().createBitmap(mImageUrl);
                     }
                     if(null==bitmap){
                         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.music_default_music_bg);
@@ -246,11 +281,11 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
         }
 
         public void onReset() {
-            mFrontCover=null;
+            mImageUrl=null;
         }
 
-        public String getFrontCover() {
-            return mFrontCover;
+        public String getImageUrl() {
+            return mImageUrl;
         }
     }
 

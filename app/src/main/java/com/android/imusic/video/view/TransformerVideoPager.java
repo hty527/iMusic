@@ -88,7 +88,7 @@ public class TransformerVideoPager extends RelativeLayout{
             OpenEyesIndexItemBean indexItemBean = mDataBeans.get(position).getData().getContent().getData();
             mVideoIndexNum.setText((position + 1) + "/" + mDataBeans.size());
             if(null!=mBackgroundLayout){
-                mBackgroundLayout.setBackgroundCover(indexItemBean.getCover().getBlurred(),100,false);
+                mBackgroundLayout.setBackgroundCover(indexItemBean.getCover().getBlurred(),100,false,8,false);
             }
         }
     }
