@@ -13,7 +13,6 @@ import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
 import com.android.imusic.base.MusicBaseActivity;
-import com.android.imusic.music.ui.presenter.MusicListPersenter;
 import com.android.imusic.music.ui.fragment.IndexMusicFragment;
 import com.android.imusic.video.activity.VideoPlayerActviity;
 import com.android.imusic.video.fragment.IndexVideoFragment;
@@ -35,7 +34,7 @@ import java.util.List;
  * Music Player示例
  */
 
-public class MainActivity extends MusicBaseActivity<MusicListPersenter> {
+public class MainActivity extends MusicBaseActivity {
 
     private long currentMillis=0;
     private TextView mBtnMusic,mBtnVideo;

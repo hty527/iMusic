@@ -10,7 +10,6 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicWindowClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
-import com.music.player.lib.util.MusicUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 
 /**
