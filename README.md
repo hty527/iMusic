@@ -121,6 +121,8 @@ ___
         app:video_autoSetCoverController="true"
         app:video_autoSetVideoController="true"/>
 ```
+[视频播放器Wiki介绍]: https://github.com/Yuye584312311/IMusic/blob/master/Doc/md/VideoPlayerReadme.md "视频播放器API介绍"
+你也可以在java代码中创建播放器，详见[视频播放器Wiki介绍]
 **3.播放器初始化及基本数据设置**
 ```
     mVideoPlayer = (VideoPlayerTrackView) findViewById(R.id.video_player);
