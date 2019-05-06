@@ -58,7 +58,7 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
 ```
     //1.开启锁屏控制播放界面
     MusicPlayerManager.getInstance().setScreenOffEnable(true);
-    //2.设置自己实现的锁屏Activity绝对路径，有关属性设置，请参考MusicLockActivity
+    //2.设置自己实现的锁屏Activity绝对路径，有关属性设置，请参考iMusic中的MusicLockActivity
     MusicPlayerManager.getInstance().setLockActivityName(MusicLockActivity.class.getCanonicalName());
 ```
 #### 3. 自定义通知栏
