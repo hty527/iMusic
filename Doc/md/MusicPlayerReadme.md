@@ -47,7 +47,6 @@
     .setLockActivityName(MusicLockActivity.class.getCanonicalName());
 ```
 ### 三、音乐播放器主界面UI和自定义锁屏、通知栏实现
-```
 #### 1. 自定义播放器界面UI
 iMusic工程实现了一套近乎完整的播放器工程，内置自定义唱片机交互UI，播放器Activity是MusicPlayerActivity类，请参照该类实现自己的UI效果。
 ```
