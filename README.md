@@ -57,6 +57,7 @@ ___
         implementation 'com.imusic.player:music-player:1.0.3'
     }
 ```
+若拉取失败，请检查根build.gradle中是否对jcenter支持
 **2.全局初始化**
 ```
     //Applicaion中初始化
