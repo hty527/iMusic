@@ -1,9 +1,9 @@
 # **iMusic**
 
-[Android音频播放器开发记录]: https://www.jianshu.com/p/9051b96c02f9 "简书音频播放器"
+[Android音乐播放器封装]: https://www.jianshu.com/p/9051b96c02f9 "简书音频播放器"
 **音乐播放器封装:**[Android音乐播放器封装]
 
-[Android视频播放器开发记录]: https://www.jianshu.com/p/39d8f824c2fb "简书视频播放器"
+[Android视频播放器封装]: https://www.jianshu.com/p/39d8f824c2fb "简书视频播放器"
 **视频播放器封装:**[Android视频播放器封装]
 
 基于MediaPlayer解码器封装的完整音乐播放器和视频播放器功能库，极简接入、功能较全面、体积小。欢迎Star！欢迎下载体验！<br/>
