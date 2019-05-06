@@ -50,6 +50,11 @@ ___
 * 列表横竖屏切换</br>
 * 常规横竖屏切换</br>
 * 已对视频输出焦点管理作处理<br/>
+
+### 历史版本
+[查看历史版本]: https://github.com/Yuye584312311/IMusic/wiki/HistoryVersion "历史版本"
+[查看历史版本]
+
 ## 一.音乐播放器集成:
 **1.项目build.gradle中添加**
 ```
