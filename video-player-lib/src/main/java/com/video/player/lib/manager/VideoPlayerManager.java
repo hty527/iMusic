@@ -867,6 +867,12 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     //=========================================画面渲染状态===========================================
 
+    /**
+     * TextureView准备好了回调
+     * @param surface 内部surface
+     * @param width TextureView布局宽
+     * @param height TextureView布局高
+     */
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         Logger.d(TAG,"onSurfaceTextureAvailable-->width:"+width+",height:"+height);
@@ -878,17 +884,32 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
         }
     }
 
+    /**
+     * TextureView宽高发生变化时回调
+     * @param surface 内部surface
+     * @param width 新的TextureView布局宽
+     * @param height 新的TextureView布局高
+     */
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         Logger.d(TAG,"onSurfaceTextureSizeChanged-->width:"+width+",height:"+height);
     }
 
+    /**
+     * TextureView销毁时回调
+     * @param surface 内部surface
+     * @return Most applications should return true.
+     */
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
         Logger.d(TAG,"onSurfaceTextureDestroyed");
         return null==mSurfaceTexture;
     }
 
+    /**
+     * TextureView刷新时回调
+     * @param surface 内部surface
+     */
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
@@ -896,6 +917,10 @@ public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.Sur
 
     //========================================播放器内部状态==========================================
 
+    /**
+     * 播放器准备好了
+     * @param mp 解码器
+     */
     @Override
     public void onPrepared(MediaPlayer mp) {
         Logger.d(TAG,"onPrepared");
