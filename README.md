@@ -107,8 +107,8 @@ ___
 ```
 * Demo内置一套完整的UI交互播放器，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);并参照MusicPlayerActivity集成。<br/>
 
-[音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
-**APP后台防杀死和更多功能Wiki文档：**[音乐播放器Wiki]
+[点击查看更多功能Wiki]: https://github.com/Yuye584312311/IMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
+**[[点击查看更多功能Wiki]]**
 ___
 
 ## 二.视频播放器集成:
@@ -128,7 +128,7 @@ ___
         app:video_autoSetVideoController="true"/>
 ```
 [视频播放器Wiki介绍]: https://github.com/Yuye584312311/IMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
-你也可以在java代码中创建播放器，前往[视频播放器Wiki介绍]<br/>
+你也可以在java代码中创建播放器，前往[视频播放器Wiki文档]<br/>
 
 **3.播放器初始化及基本数据设置**
 ```
@@ -190,8 +190,8 @@ ___
 ```
 至此基础的视频播放器项目集成完毕，更多高级功能和API请阅读文档。<br/>
 
-[视频播放器Wiki]: https://github.com/Yuye584312311/IMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
-**自定义交互和其他功能Wiki文档：**[视频播放器Wiki]
+[点击查看自定义交互和其他功能Wiki文档]: https://github.com/Yuye584312311/IMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
+**[点击查看自定义交互和其他功能Wiki文档]**
 ## iMusic预览及下载:
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
 * 此示例工程音乐搜索API取自《酷狗音乐》开放API，视频资源API取自《开眼视频》。<br/>
