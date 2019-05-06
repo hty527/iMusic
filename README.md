@@ -102,7 +102,7 @@ ___
 ```
 * Demo内置一套完整的UI交互播放器，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);并参照MusicPlayerActivity集成。<br/>
 
-[音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Doc/md/MusicPlayerReadme.md "音乐播放器API介绍"
+[音乐播放器Wiki]: https://github.com/Yuye584312311/IMusic/wiki/MsuicPlayerWiki "音乐播放器API介绍"
 **APP后台防杀死和更多功能Wiki文档：**[音乐播放器Wiki]
 ___
 
@@ -122,7 +122,7 @@ ___
         app:video_autoSetCoverController="true"
         app:video_autoSetVideoController="true"/>
 ```
-[视频播放器Wiki介绍]: https://github.com/Yuye584312311/IMusic/blob/master/Doc/md/VideoPlayerReadme.md "视频播放器API介绍"
+[视频播放器Wiki介绍]: https://github.com/Yuye584312311/IMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
 你也可以在java代码中创建播放器，前往[视频播放器Wiki介绍]<br/>
 
 **3.播放器初始化及基本数据设置**
@@ -185,7 +185,7 @@ ___
 ```
 至此基础的视频播放器项目集成完毕，更多高级功能和API请阅读文档。<br/>
 
-[视频播放器Wiki]: https://github.com/Yuye584312311/IMusic/blob/master/Doc/md/VideoPlayerReadme.md "视频播放器API介绍"
+[视频播放器Wiki]: https://github.com/Yuye584312311/IMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
 **自定义交互和其他功能Wiki文档：**[视频播放器Wiki]
 ## iMusic预览及下载:
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
