@@ -107,7 +107,7 @@ ___
 ```
 * Demo内置一套完整的UI交互播放器，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);并参照MusicPlayerActivity集成。<br/>
 
-[点击查看自定义交互及其他功能Wiki]: https://github.com/Yuye584312311/IMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
+[点击查看Music自定义交互及其他功能Wiki]: https://github.com/Yuye584312311/IMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
 **[点击查看Music自定义交互及其他功能Wiki]**
 ___
 
