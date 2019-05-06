@@ -27,7 +27,7 @@ ___
 * 搜索(歌手、专辑、歌曲名)播放</br>
 * 基本常规操作示例播放器</br>
 * 锁屏播放控制</br>
-* 自定义唱片机</br>
+* 自定义唱片机、锁屏界面、通知栏</br>
 * 悬浮窗播放</br>
 * 状态栏通知控制</br>
 * 定时关闭播放</br>
@@ -54,7 +54,7 @@ ___
 **1.项目build.gradle中添加**
 ```
     dependencies {
-        implementation 'com.imusic.player:music-player:1.0.2'
+        implementation 'com.imusic.player:music-player:1.0.3'
     }
 ```
 **2.全局初始化**
