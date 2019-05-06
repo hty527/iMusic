@@ -12,17 +12,16 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 import com.android.imusic.R;
-import com.android.imusic.music.base.MusicBaseFragment;
-import com.android.imusic.music.engin.IndexPersenter;
+import com.android.imusic.base.MusicBaseFragment;
 import com.android.imusic.music.net.MusicNetUtils;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.activity.VideoListActivity;
 import com.android.imusic.video.activity.VideoPlayerActviity;
 import com.android.imusic.video.adapter.VideoIndexVideoAdapter;
-import com.android.imusic.video.bean.OpenEyesIndexInfo;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
+import com.android.imusic.video.ui.contract.IndexVideoContract;
+import com.android.imusic.video.ui.presenter.IndexVideoPersenter;
 import com.video.player.lib.bean.VideoParams;
-import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.adapter.base.OnLoadMoreListener;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.util.Logger;
@@ -31,6 +30,7 @@ import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.utils.VideoUtils;
 import com.video.player.lib.view.VideoPlayerTrackView;
+import java.util.List;
 
 /**
  * TinyHung@Outlook.com
@@ -39,7 +39,7 @@ import com.video.player.lib.view.VideoPlayerTrackView;
  * 主页视频列表，采用“开眼视频”的API做数据支持，演示列表播放的功能
  */
 
-public class IndexVideoFragment extends MusicBaseFragment<IndexPersenter> implements MusicOnItemClickListener {
+public class IndexVideoFragment extends MusicBaseFragment<IndexVideoPersenter> implements MusicOnItemClickListener, IndexVideoContract.View {
 
     private static final String TAG = "IndexVideoFragment";
     private VideoIndexVideoAdapter mAdapter;
@@ -114,7 +114,8 @@ public class IndexVideoFragment extends MusicBaseFragment<IndexPersenter> implem
                 loadData();
             }
         });
-        mPresenter=new IndexPersenter();
+        mPresenter=new IndexVideoPersenter();
+        mPresenter.attachView(this);
     }
 
     /**
@@ -246,62 +247,74 @@ public class IndexVideoFragment extends MusicBaseFragment<IndexPersenter> implem
      * 加载音频列表
      */
     private void loadData() {
-        if(null!=mPresenter){
-            if(0==mPage&&null!=mSwipeRefreshLayout&&!mSwipeRefreshLayout.isRefreshing()){
-                mSwipeRefreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSwipeRefreshLayout.setRefreshing(true);
-                    }
-                });
-            }
-            mPresenter.getIndexVideoList(mPage,new TypeToken<OpenEyesIndexInfo>(){}.getType(),new MusicNetUtils.OnOtherRequstCallBack<OpenEyesIndexInfo>() {
+        if(null!=mPresenter) {
+            mPresenter.getIndexVideos(mPage);
+        }
+    }
 
+    /**
+     * 加载中
+     */
+    @Override
+    public void showLoading() {
+        if(0==mPage&&null!=mSwipeRefreshLayout&&!mSwipeRefreshLayout.isRefreshing()){
+            mSwipeRefreshLayout.post(new Runnable() {
                 @Override
-                public void onResponse(OpenEyesIndexInfo data) {
-                    refreshFinish=true;
-                    if(null!=mSwipeRefreshLayout){
-                        mSwipeRefreshLayout.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSwipeRefreshLayout.setRefreshing(false);
-                            }
-                        });
-                    }
-                    if(null!=mAdapter){
-                        if(null!=data.getItemList()&&data.getItemList().size()>0){
-                            mAdapter.onLoadComplete();
-                            if(mPage==0){
-                                mAdapter.setNewData(data.getItemList());
-                            }else{
-                                mAdapter.addData(data.getItemList());
-                            }
-                        }else{
-                            mAdapter.onLoadEnd();
-                        }
-                    }
-                }
-
-                @Override
-                public void onError(int code, String errorMsg) {
-                    Logger.d(TAG,"onError-->code:"+code+",errorMsg:"+errorMsg);
-                    if(null!=mSwipeRefreshLayout){
-                        mSwipeRefreshLayout.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSwipeRefreshLayout.setRefreshing(false);
-                            }
-                        });
-                    }
-                    if(mPage>-1){
-                        mPage--;
-                    }
-                    if(null!=mAdapter){
-                        mAdapter.onLoadError();
-                    }
-                    Toast.makeText(getContext(),errorMsg,Toast.LENGTH_SHORT).show();
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(true);
                 }
             });
+        }
+    }
+
+    /**
+     * 异常
+     * @param code 0：为空 -1：失败
+     * @param errorMsg 描述信息
+     */
+    @Override
+    public void showError(int code, String errorMsg) {
+        if(null!=mSwipeRefreshLayout){
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
+        if(code==MusicNetUtils.API_RESULT_EMPTY){
+            mAdapter.onLoadEnd();
+        }else{
+            if(mPage>-1){
+                mPage--;
+            }
+            mAdapter.onLoadError();
+        }
+        Toast.makeText(getContext(),errorMsg,Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 显示视频列表
+     * @param data 视频列表
+     */
+    @Override
+    public void showVideos(List<OpenEyesIndexItemBean> data) {
+        refreshFinish=true;
+        if(null!=mSwipeRefreshLayout){
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
+        if(null!=mAdapter){
+            mAdapter.onLoadComplete();
+            if(mPage==0){
+                mAdapter.setNewData(data);
+            }else{
+                mAdapter.addData(data);
+            }
         }
     }
 

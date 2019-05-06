@@ -17,19 +17,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
+import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
-import com.android.imusic.music.base.MusicBaseActivity;
 import com.android.imusic.music.bean.AlbumInfo;
-import com.android.imusic.music.bean.ResultData;
+import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.SingerInfo;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
-import com.android.imusic.music.engin.IndexPersenter;
-import com.android.imusic.music.net.MusicNetUtils;
+import com.android.imusic.music.ui.contract.MusicListContract;
+import com.android.imusic.music.ui.presenter.MusicListPersenter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
@@ -58,7 +57,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * Album-Songs
  */
 
-public class MusicAlbumActivity extends MusicBaseActivity<IndexPersenter> implements MusicOnItemClickListener, Observer, AppBarLayout.OnOffsetChangedListener, MusicPlayerEventListener {
+public class MusicAlbumActivity extends MusicBaseActivity<MusicListPersenter> implements MusicOnItemClickListener, Observer, AppBarLayout.OnOffsetChangedListener, MusicPlayerEventListener, MusicListContract.View {
 
     private MusicCommenListAdapter mAdapter;
     private String mTagID,mTitle;
@@ -159,7 +158,8 @@ public class MusicAlbumActivity extends MusicBaseActivity<IndexPersenter> implem
         mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         mAppBarLayout.addOnOffsetChangedListener(this);
         MusicPlayerManager.getInstance().addObservable(this);
-        mPresenter=new IndexPersenter();
+        mPresenter=new MusicListPersenter();
+        mPresenter.attachView(this);
         loadData();
     }
 
@@ -223,28 +223,7 @@ public class MusicAlbumActivity extends MusicBaseActivity<IndexPersenter> implem
      */
     private void loadData() {
         if(null!=mPresenter){
-            mPresenter.getMusicListsByTag(mTagID,new TypeToken<ResultData<AlbumInfo>>(){}.getType(),new MusicNetUtils.OnRequstCallBack<AlbumInfo>() {
-                @Override
-                public void onResponse(ResultData<AlbumInfo> data) {
-                    if(null!=data.getData()&&null!=data.getData().getList()&&data.getData().getList().size()>0){
-                        mAdapter.setNewData(data.getData().getList());
-                        if(null!=mTvSubPlay){
-                            mTvSubPlay.setText(Html.fromHtml("(共"+data.getData().getList().size()+"首)"));
-                        }
-                    }else{
-                        Toast.makeText(MusicAlbumActivity.this,data.getMsg(),Toast.LENGTH_SHORT).show();
-                    }
-                    if(null!=data.getData()&&null!=data.getData().getSinger()){
-                        updateHead(data.getData().getSinger());
-                    }
-                }
-
-                @Override
-                public void onError(int code, String errorMsg) {
-                    Logger.d(TAG,"onError-->code:"+code+",errorMsg:"+errorMsg);
-                    Toast.makeText(MusicAlbumActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
-                }
-            });
+            mPresenter.getAudiosByTag(mTagID);
         }
     }
 
@@ -333,6 +312,42 @@ public class MusicAlbumActivity extends MusicBaseActivity<IndexPersenter> implem
             }
         }
     }
+
+
+    @Override
+    public void showAudios(List<AudioInfo> data) {}
+
+    /**
+     * 显示专辑信息
+     * @param data 专辑信息
+     */
+    @Override
+    public void showAudiosFromTag(AlbumInfo data) {
+        if(null!=mAdapter&&null!=data.getList()&&data.getList().size()>0){
+            mAdapter.setNewData(data.getList());
+            if(null!=mTvSubPlay){
+                mTvSubPlay.setText(Html.fromHtml("(共"+data.getList().size()+"首)"));
+            }
+        }
+        if(null!=data.getSinger()){
+            updateHead(data.getSinger());
+        }
+    }
+
+    @Override
+    public void showLoading() {}
+
+    /**
+     * 错误获取音频列表错误信息
+     * @param code 0：为空 -1：失败
+     * @param errorMsg 描述信息
+     */
+    @Override
+    public void showError(int code, String errorMsg) {
+        Logger.d(TAG,"onError-->code:"+code+",errorMsg:"+errorMsg);
+        Toast.makeText(MusicAlbumActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public void update(Observable o, Object arg) {

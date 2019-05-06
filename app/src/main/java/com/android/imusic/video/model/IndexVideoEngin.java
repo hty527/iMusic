@@ -1,33 +1,46 @@
-package com.android.imusic.music.engin;
+package com.android.imusic.video.model;
 
 import com.android.imusic.music.net.MusicNetUtils;
+import com.android.imusic.video.bean.OpenEyesIndexInfo;
+import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
 /**
- * TinyHung@Outlook.com
- * 2019/3/23
+ * hty_Yuye@Outlook.com
+ * 2019/5/6
+ * Video Model
  */
 
-public class IndexPersenter extends MusicNetUtils {
+public class IndexVideoEngin extends MusicNetUtils {
 
     /**
-     * 获取首页音乐数据
-     * @param type
-     * @param callBack
+     * 获取视频列为表
+     * @param page 页眉
+     * @param callBack 回调
      */
-    public void getIndexMusicList(Type type, OnRequstCallBack callBack){
-        requstApi("https://gitee.com/hty_Yuye/OpenFile/raw/master/index/index_list.json",type,callBack);
+    public void getIndexVideos(int page,OnOtherRequstCallBack callBack){
+        getIndexVideoList(page,new TypeToken<OpenEyesIndexInfo>(){}.getType(),callBack);
     }
 
     /**
-     * 根据TAG获取音乐列表
-     * http://www.9ku.com/geshou/798.htm
-     * http://www.9ku.com/
-     * @param callBack
+     * 根据URL获取视频列表
+     * @param url url
+     * @param page 页眉
+     * @param callBack 回调
      */
-    public void getMusicListsByTag(String tag,Type type, OnRequstCallBack callBack){
-        requstApi("https://gitee.com/hty_Yuye/OpenFile/raw/master/index/"+tag+".json",type,callBack);
+    public void getVideosByUrl(String url,int page,OnOtherRequstCallBack callBack){
+        getVideoByUrl(url,page,new TypeToken<OpenEyesIndexInfo>(){}.getType(),callBack);
     }
+
+    /**
+     * 根据视频ID获取视频列表
+     * @param videoID 视频ID
+     * @param callBack 回调
+     */
+    public void getVideosByVideo(String videoID,OnOtherRequstCallBack callBack){
+        getRecommendVideoList(videoID,new TypeToken<OpenEyesIndexInfo>(){}.getType(),callBack);
+    }
+
 
     /**
      * 获取首页视频数据

@@ -1,4 +1,4 @@
-package com.android.imusic.music.fragment;
+package com.android.imusic.music.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,14 +18,12 @@ import com.android.imusic.music.activity.MusicHistroyActivity;
 import com.android.imusic.music.activity.MusicLocalActivity;
 import com.android.imusic.music.activity.MusicSearchActivity;
 import com.android.imusic.music.adapter.MusicIndexDataAdapter;
-import com.android.imusic.music.base.MusicBaseFragment;
+import com.android.imusic.base.MusicBaseFragment;
+import com.android.imusic.music.bean.AlbumInfo;
 import com.android.imusic.music.bean.AudioInfo;
-import com.android.imusic.music.bean.ResultData;
-import com.android.imusic.music.bean.ResultList;
-import com.android.imusic.music.engin.IndexPersenter;
-import com.android.imusic.music.net.MusicNetUtils;
+import com.android.imusic.music.ui.contract.MusicListContract;
+import com.android.imusic.music.ui.presenter.MusicListPersenter;
 import com.android.imusic.music.utils.MediaUtils;
-import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.adapter.base.OnItemClickListener;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
@@ -33,7 +31,6 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.model.MusicPlayingChannel;
-import com.music.player.lib.util.Logger;
 import com.music.player.lib.view.MusicCommentTitleView;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +43,7 @@ import java.util.Observer;
  * Index Music
  */
 
-public class IndexMusicFragment extends MusicBaseFragment<IndexPersenter> implements Observer {
+public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter> implements Observer, MusicListContract.View {
 
     private static final String TAG = "IndexMusicFragment";
     private MusicIndexDataAdapter mAdapter;
@@ -130,7 +127,9 @@ public class IndexMusicFragment extends MusicBaseFragment<IndexPersenter> implem
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadData();
+                if(null!=mPresenter){
+                    mPresenter.getIndexAudios();
+                }
             }
         });
 
@@ -153,8 +152,9 @@ public class IndexMusicFragment extends MusicBaseFragment<IndexPersenter> implem
         });
         //关注播放器内部状态和渠道状态
         MusicPlayerManager.getInstance().addObservable(this);
-        mPresenter=new IndexPersenter();
-        loadData();
+        mPresenter=new MusicListPersenter();
+        mPresenter.attachView(this);
+        mPresenter.getIndexAudios();
     }
 
     /**
@@ -201,54 +201,60 @@ public class IndexMusicFragment extends MusicBaseFragment<IndexPersenter> implem
     }
 
     /**
-     * 加载音频列表
+     * 显示音频列表
+     * @param data
      */
-    private void loadData() {
-        if(null!=mPresenter){
-            if(null!=mSwipeRefreshLayout&&!mSwipeRefreshLayout.isRefreshing()){
-                mSwipeRefreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSwipeRefreshLayout.setRefreshing(true);
-                    }
-                });
-            }
-            mPresenter.getIndexMusicList(new TypeToken<ResultData<ResultList<AudioInfo>>>(){}.getType(),new MusicNetUtils.OnRequstCallBack<ResultList<AudioInfo>>() {
-
+    @Override
+    public void showAudios(List<AudioInfo> data) {
+        if(null!=mSwipeRefreshLayout){
+            mSwipeRefreshLayout.post(new Runnable() {
                 @Override
-                public void onResponse(ResultData<ResultList<AudioInfo>> data) {
-                    if(null!=mSwipeRefreshLayout){
-                        mSwipeRefreshLayout.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSwipeRefreshLayout.setRefreshing(false);
-                            }
-                        });
-                    }
-                    if(null!=data.getData()&&null!=data.getData().getList()&&data.getData().getList().size()>0){
-                        List<AudioInfo> dataList=MediaUtils.getInstance().createIndexData();
-                        data.getData().getList().addAll(0,dataList);
-                        mAdapter.setNewData(data.getData().getList());
-                    }else{
-                        Toast.makeText(getContext(),data.getMsg(),Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onError(int code, String errorMsg) {
-                    Logger.d(TAG,"onError-->code:"+code+",errorMsg:"+errorMsg);
-                    if(null!=mSwipeRefreshLayout){
-                        mSwipeRefreshLayout.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSwipeRefreshLayout.setRefreshing(false);
-                            }
-                        });
-                    }
-                    Toast.makeText(getContext(),errorMsg,Toast.LENGTH_SHORT).show();
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             });
         }
+        if(null!=mAdapter){
+            List<AudioInfo> dataList= MediaUtils.getInstance().createIndexData();
+            data.addAll(0,dataList);
+            mAdapter.setNewData(data);
+        }
+    }
+
+    @Override
+    public void showAudiosFromTag(AlbumInfo data) {}
+
+    /**
+     * 加载中
+     */
+    @Override
+    public void showLoading() {
+        if(null!=mSwipeRefreshLayout&&!mSwipeRefreshLayout.isRefreshing()){
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                }
+            });
+        }
+    }
+
+    /**
+     * 为空、失败
+     * @param code 0：为空 -1：失败
+     * @param errorMsg 描述信息
+     */
+    @Override
+    public void showError(int code, String errorMsg) {
+        if(null!=mSwipeRefreshLayout){
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
+        Toast.makeText(getContext(),errorMsg,Toast.LENGTH_SHORT).show();
     }
 
     @Override

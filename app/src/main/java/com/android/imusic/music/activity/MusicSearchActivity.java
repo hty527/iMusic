@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.adapter.MusicSearchAdapter;
-import com.android.imusic.music.base.MusicBaseActivity;
+import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.bean.ResultData;
@@ -31,8 +31,9 @@ import com.android.imusic.music.bean.SearchMusicData;
 import com.android.imusic.music.bean.SearchResult;
 import com.android.imusic.music.bean.SearchResultInfo;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
-import com.android.imusic.music.engin.SearchPersenter;
 import com.android.imusic.music.net.MusicNetUtils;
+import com.android.imusic.music.ui.contract.MusicSearchContract;
+import com.android.imusic.music.ui.presenter.MusicSearchPersenter;
 import com.android.imusic.music.utils.MediaUtils;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.gson.reflect.TypeToken;
@@ -55,7 +56,7 @@ import java.util.Observer;
  * 音频搜索界面，使用酷狗API做数据支持
  */
 
-public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> implements MusicOnItemClickListener, Observer {
+public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter> implements MusicOnItemClickListener, Observer, MusicSearchContract.View {
 
     private View mBtnClean;
     private EditText mEtInput;
@@ -150,7 +151,8 @@ public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> impl
             }
         },mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
-        mPresenter=new SearchPersenter();
+        mPresenter=new MusicSearchPersenter();
+        mPresenter.attachView(this);
         MusicPlayerManager.getInstance().addObservable(this);
         //搜索记录回显
         createSearchCache();
@@ -198,9 +200,6 @@ public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> impl
      * @param isAuto
      */
     private void search(boolean isAuto) {
-        if(null==mPresenter){
-            mPresenter=new SearchPersenter();
-        }
         String key = mEtInput.getText().toString().trim();
         if(!TextUtils.isEmpty(key)){
             search(key,isAuto);
@@ -231,48 +230,7 @@ public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> impl
                 }
             });
         }
-        mPresenter.queryMusicToKey(key,mPage,new TypeToken<ResultData<SearchResult>>() {}.getType(), new MusicNetUtils.OnRequstCallBack<SearchResult>() {
-            @Override
-            public void onResponse(ResultData<SearchResult> data) {
-                if(!MusicSearchActivity.this.isFinishing()){
-                    closeProgressDialog();
-                    if(null!=mRecyclerView&&mRecyclerView.getVisibility()!=View.VISIBLE){
-                        mRecyclerView.setVisibility(View.VISIBLE);
-                    }
-                    if(null!=mTagsRoot&&mTagsRoot.getVisibility()!=View.GONE){
-                        mTagsRoot.setVisibility(View.GONE);
-                    }
-                    if(null!=mAdapter){
-                        if(null!=data.getData()&&null!=data.getData().getInfo()){
-                            mAdapter.onLoadComplete();
-                            if(mPage==1){
-                                mAdapter.setNewData(data.getData().getInfo());
-                            }else{
-                                mAdapter.addData(data.getData().getInfo());
-                            }
-                        }else{
-                            mAdapter.onLoadEnd();
-                            Toast.makeText(MusicSearchActivity.this,data.getMsg(),Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onError(int code, String errorMsg) {
-                Logger.d(TAG,"onError-->code:"+code+",errorMsg:"+errorMsg);
-                if(!MusicSearchActivity.this.isFinishing()){
-                    closeProgressDialog();
-                    if(mPage>0){
-                        mPage--;
-                    }
-                    if(null!=mAdapter){
-                        mAdapter.onLoadError();
-                    }
-                    Toast.makeText(MusicSearchActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        mPresenter.queryMusicToKey(key,mPage);
     }
 
     /**
@@ -294,7 +252,7 @@ public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> impl
                     return;
                 }
                 if(null!=mPresenter&&!mPresenter.isRequsting()){
-                    mPresenter.getPlayUrl(searchResultInfo.getHash(), new TypeToken<ResultData<SearchMusicData>>() {}.getType(), new MusicNetUtils.OnRequstCallBack<SearchMusicData>() {
+                    mPresenter.getPathBkKey(searchResultInfo.getHash(), new TypeToken<ResultData<SearchMusicData>>() {}.getType(), new MusicNetUtils.OnRequstCallBack<SearchMusicData>() {
                         @Override
                         public void onResponse(ResultData<SearchMusicData> data) {
                             if(null!=mAdapter&&null!=data.getData()){
@@ -513,5 +471,50 @@ public class MusicSearchActivity extends MusicBaseActivity<SearchPersenter> impl
         mEtInput=null;
         mSearchHistroyCount=0;
         MusicPlayerManager.getInstance().removeObserver(this);
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void showError(int code, String errorMsg) {
+        if(!MusicSearchActivity.this.isFinishing()){
+            closeProgressDialog();
+            if(mPage>0){
+                mPage--;
+            }
+            if(null!=mAdapter){
+                mAdapter.onLoadError();
+            }
+            Toast.makeText(MusicSearchActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void showResult(SearchResult data) {
+        if(!MusicSearchActivity.this.isFinishing()){
+            closeProgressDialog();
+            if(null!=mRecyclerView&&mRecyclerView.getVisibility()!=View.VISIBLE){
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
+            if(null!=mTagsRoot&&mTagsRoot.getVisibility()!=View.GONE){
+                mTagsRoot.setVisibility(View.GONE);
+            }
+            if(null!=mAdapter){
+                if(null!=data.getInfo()){
+                    mAdapter.onLoadComplete();
+                    if(mPage==1){
+                        mAdapter.setNewData(data.getInfo());
+                    }else{
+                        mAdapter.addData(data.getInfo());
+                    }
+                }else{
+                    mAdapter.onLoadEnd();
+                    Toast.makeText(MusicSearchActivity.this,"暂未搜索到相关音乐",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }

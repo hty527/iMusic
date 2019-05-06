@@ -1,12 +1,10 @@
 package com.android.imusic.music.net;
 
 import android.os.Handler;
-
 import com.android.imusic.music.bean.ResultData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.util.Logger;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,6 +28,11 @@ public class MusicNetUtils <T> {
     private int TIME_OUT_TIME=15000;
     //请求状态
     private boolean isRequst=false;
+
+    public static final int API_RESULT_EMPTY = 0;//数据为空
+    public static final int API_RESULT_ERROR = -1;//加载失败
+    public static final String API_EMPTY = "没有数据";
+    public static final String API_ERROR = "获取数据失败";
 
     public MusicNetUtils() {
         mHandler = new Handler();
@@ -115,7 +118,7 @@ public class MusicNetUtils <T> {
                                             callBack.onError(urlConnection.getResponseCode(),urlConnection.getResponseMessage());
                                         } catch (IOException e) {
                                             e.printStackTrace();
-                                            callBack.onError(-1,"请求失败"+e.getMessage());
+                                            callBack.onError(MusicNetUtils.API_RESULT_ERROR,"请求失败"+e.getMessage());
                                         }
                                     }
                                 });
@@ -139,7 +142,7 @@ public class MusicNetUtils <T> {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    callBack.onError(-1,e.getMessage());
+                                    callBack.onError(MusicNetUtils.API_RESULT_ERROR,e.getMessage());
                                 }
                             });
                         }
@@ -152,7 +155,7 @@ public class MusicNetUtils <T> {
                             @Override
                             public void run() {
                                 if(null!=callBack){
-                                    callBack.onError(-1,e.getMessage());
+                                    callBack.onError(MusicNetUtils.API_RESULT_ERROR,e.getMessage());
                                 }
                             }
                         });
@@ -213,7 +216,7 @@ public class MusicNetUtils <T> {
                                         if(null!=resultInfo){
                                             callBack.onResponse(resultInfo);
                                         }else{
-                                            callBack.onError(-1,"解析Json失败");
+                                            callBack.onError(MusicNetUtils.API_RESULT_ERROR,"解析Json失败");
                                         }
                                     }
                                 });
@@ -228,7 +231,7 @@ public class MusicNetUtils <T> {
                                             callBack.onError(urlConnection.getResponseCode(),urlConnection.getResponseMessage());
                                         } catch (IOException e) {
                                             e.printStackTrace();
-                                            callBack.onError(-1,"请求失败"+e.getMessage());
+                                            callBack.onError(MusicNetUtils.API_RESULT_ERROR,"请求失败"+e.getMessage());
                                         }
                                     }
                                 });
@@ -252,7 +255,7 @@ public class MusicNetUtils <T> {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    callBack.onError(-1,e.getMessage());
+                                    callBack.onError(MusicNetUtils.API_RESULT_ERROR,e.getMessage());
                                 }
                             });
                         }
@@ -265,7 +268,7 @@ public class MusicNetUtils <T> {
                             @Override
                             public void run() {
                                 if(null!=callBack){
-                                    callBack.onError(-1,e.getMessage());
+                                    callBack.onError(MusicNetUtils.API_RESULT_ERROR,e.getMessage());
                                 }
                             }
                         });

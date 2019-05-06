@@ -9,13 +9,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
-import com.android.imusic.music.base.MusicBaseActivity;
-import com.android.imusic.music.engin.IndexPersenter;
-import com.android.imusic.music.fragment.IndexMusicFragment;
+import com.android.imusic.base.MusicBaseActivity;
+import com.android.imusic.music.ui.presenter.MusicListPersenter;
+import com.android.imusic.music.ui.fragment.IndexMusicFragment;
 import com.android.imusic.video.activity.VideoPlayerActviity;
 import com.android.imusic.video.fragment.IndexVideoFragment;
 import com.android.imusic.music.net.MusicNetUtils;
@@ -36,7 +35,7 @@ import java.util.List;
  * Music Player示例
  */
 
-public class MainActivity extends MusicBaseActivity<IndexPersenter> {
+public class MainActivity extends MusicBaseActivity<MusicListPersenter> {
 
     private long currentMillis=0;
     private TextView mBtnMusic,mBtnVideo;

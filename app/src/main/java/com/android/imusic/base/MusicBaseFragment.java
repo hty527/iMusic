@@ -1,4 +1,4 @@
-package com.android.imusic.music.base;
+package com.android.imusic.base;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,12 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.bean.AudioInfo;
-import com.android.imusic.music.net.MusicNetUtils;
 import com.music.player.lib.constants.MusicConstants;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -21,7 +18,7 @@ import java.util.List;
  * 2019/4/8
  */
 
-public abstract class MusicBaseFragment<P extends MusicNetUtils> extends Fragment{
+public abstract class MusicBaseFragment<P extends BasePresenter> extends Fragment{
 
     protected P mPresenter;
     protected abstract int getLayoutID();
@@ -53,7 +50,7 @@ public abstract class MusicBaseFragment<P extends MusicNetUtils> extends Fragmen
     public void onDestroy() {
         super.onDestroy();
         if(null!=mPresenter){
-            mPresenter.onDestroy();
+            mPresenter.detachView();
             mPresenter=null;
         }
     }

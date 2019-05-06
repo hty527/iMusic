@@ -16,14 +16,13 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 import com.android.imusic.R;
-import com.android.imusic.music.base.MusicBaseActivity;
-import com.android.imusic.music.engin.IndexPersenter;
+import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.net.MusicNetUtils;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.adapter.VideoIndexVideoAdapter;
-import com.android.imusic.video.bean.OpenEyesIndexInfo;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
-import com.google.gson.reflect.TypeToken;
+import com.android.imusic.video.ui.contract.IndexVideoContract;
+import com.android.imusic.video.ui.presenter.IndexVideoPersenter;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.Logger;
@@ -34,6 +33,7 @@ import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.utils.VideoUtils;
 import com.video.player.lib.view.VideoPlayerTrackView;
+import java.util.List;
 
 /**
  * TinyHung@Outlook.com
@@ -41,7 +41,7 @@ import com.video.player.lib.view.VideoPlayerTrackView;
  * Video List
  */
 
-public class VideoListActivity extends MusicBaseActivity<IndexPersenter> implements MusicOnItemClickListener {
+public class VideoListActivity extends MusicBaseActivity<IndexVideoPersenter> implements MusicOnItemClickListener, IndexVideoContract.View {
 
     private VideoIndexVideoAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -64,8 +64,9 @@ public class VideoListActivity extends MusicBaseActivity<IndexPersenter> impleme
             return;
         }
         mTitleView.setTitle(VideoUtils.getInstance().formatTitleByTitle(getIntent().getStringExtra(VideoConstants.KEY_VIDEO_TITLE)));
-        mPresenter=new IndexPersenter();
-        loadData();
+        mPresenter=new IndexVideoPersenter();
+        mPresenter.attachView(this);
+        mPresenter.getVideosByUrl(mUrl,mPage);
     }
 
     /**
@@ -117,8 +118,10 @@ public class VideoListActivity extends MusicBaseActivity<IndexPersenter> impleme
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPage=0;
-                loadData();
+                if(null!=mPresenter){
+                    mPage=0;
+                    mPresenter.getVideosByUrl(mUrl,mPage);
+                }
             }
         });
     }
@@ -213,64 +216,71 @@ public class VideoListActivity extends MusicBaseActivity<IndexPersenter> impleme
     }
 
     /**
-     * 加载音频列表
+     * 加载中
      */
-    private void loadData() {
-        if(null!=mPresenter){
-            if(0==mPage&&null!=mSwipeRefreshLayout&&!mSwipeRefreshLayout.isRefreshing()){
+    @Override
+    public void showLoading() {
+        if(0==mPage&&null!=mSwipeRefreshLayout&&!mSwipeRefreshLayout.isRefreshing()){
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                }
+            });
+        }
+    }
+
+    /**
+     * 异常
+     * @param code 0：为空 -1：失败
+     * @param errorMsg 描述信息
+     */
+    @Override
+    public void showError(int code, String errorMsg) {
+        if(!VideoListActivity.this.isFinishing()){
+            if(null!=mSwipeRefreshLayout){
                 mSwipeRefreshLayout.post(new Runnable() {
                     @Override
                     public void run() {
-                        mSwipeRefreshLayout.setRefreshing(true);
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 });
             }
-            mPresenter.getVideoByUrl(mUrl,mPage,new TypeToken<OpenEyesIndexInfo>(){}.getType(),new MusicNetUtils.OnOtherRequstCallBack<OpenEyesIndexInfo>() {
-
-                @Override
-                public void onResponse(OpenEyesIndexInfo data) {
-                    if(null!=mSwipeRefreshLayout){
-                        mSwipeRefreshLayout.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSwipeRefreshLayout.setRefreshing(false);
-                            }
-                        });
-                    }
-                    if(null!=mAdapter){
-                        if(null!=data.getVideoList()&&data.getVideoList().size()>0){
-                            mAdapter.onLoadComplete();
-                            if(mPage==0){
-                                mAdapter.setNewData(data.getVideoList());
-                            }else{
-                                mAdapter.addData(data.getVideoList());
-                            }
-                        }else{
-                            mAdapter.onLoadEnd();
-                        }
-                    }
+            if(code==MusicNetUtils.API_RESULT_EMPTY){
+                mAdapter.onLoadEnd();
+            }else{
+                if(mPage>-1){
+                    mPage--;
                 }
+                mAdapter.onLoadError();
+            }
+            Toast.makeText(VideoListActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
+        }
+    }
 
-                @Override
-                public void onError(int code, String errorMsg) {
-                    Logger.d(TAG,"onError-->code:"+code+",errorMsg:"+errorMsg);
-                    if(null!=mSwipeRefreshLayout){
-                        mSwipeRefreshLayout.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSwipeRefreshLayout.setRefreshing(false);
-                            }
-                        });
+    /**
+     * 显示视频列表
+     * @param data 视频列表
+     */
+    @Override
+    public void showVideos(List<OpenEyesIndexItemBean> data) {
+        if(!VideoListActivity.this.isFinishing()){
+            if(null!=mSwipeRefreshLayout){
+                mSwipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
-                    if(mPage>-1){
-                        mPage--;
-                    }
-                    if(null!=mAdapter){
-                        mAdapter.onLoadError();
-                    }
-                    Toast.makeText(VideoListActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
+                });
+            }
+            if(null!=mAdapter){
+                mAdapter.onLoadComplete();
+                if(mPage==0){
+                    mAdapter.setNewData(data);
+                }else{
+                    mAdapter.addData(data);
                 }
-            });
+            }
         }
     }
 

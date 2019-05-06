@@ -13,18 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-
 import com.android.imusic.R;
-import com.android.imusic.music.base.MusicBaseActivity;
-import com.android.imusic.music.engin.IndexPersenter;
+import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.net.MusicNetUtils;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.adapter.VideoDetailsAdapter;
-import com.android.imusic.video.bean.OpenEyesIndexInfo;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
+import com.android.imusic.video.ui.contract.IndexVideoContract;
+import com.android.imusic.video.ui.presenter.IndexVideoPersenter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.adapter.base.OnItemClickListener;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.Logger;
@@ -37,6 +35,7 @@ import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.utils.VideoUtils;
 import com.video.player.lib.view.VideoDetailsPlayerTrackView;
 import com.video.player.lib.view.VideoTextureView;
+import java.util.List;
 
 /**
  * TinyHung@Outlook.com
@@ -47,7 +46,7 @@ import com.video.player.lib.view.VideoTextureView;
  * 打开迷你小窗口参见 ID btn_tiny的点击事件示例代码
  */
 
-public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
+public class VideoPlayerActviity extends MusicBaseActivity<IndexVideoPersenter> implements IndexVideoContract.View {
 
     private static final String TAG = "VideoPlayerActviity";
     private VideoDetailsPlayerTrackView  mVideoPlayer;
@@ -141,7 +140,8 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
             finish();
             return;
         }
-        mPresenter=new IndexPersenter();
+        mPresenter=new IndexVideoPersenter();
+        mPresenter.attachView(this);
         initVideoParams(isCreate);
     }
 
@@ -178,35 +178,7 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
             }
             if(null!=mPresenter&&!TextUtils.isEmpty(mVideoParams.getVideoiId())){
                 //获取推荐视频
-                mPresenter.getRecommendVideoList(mVideoParams.getVideoiId(),new TypeToken<OpenEyesIndexInfo>(){}.getType(),new MusicNetUtils.OnOtherRequstCallBack<OpenEyesIndexInfo>() {
-
-                    @Override
-                    public void onResponse(OpenEyesIndexInfo data) {
-                        if(null!=mAdapter){
-                            if(null!=data.getItemList()&&data.getItemList().size()>0){
-                                mAdapter.onLoadComplete();
-                                OpenEyesIndexItemBean openEyesIndexItemBean=new OpenEyesIndexItemBean();
-                                openEyesIndexItemBean.setType(VideoConstants.VIDEO_HEADER);
-                                openEyesIndexItemBean.setVideoParams(mVideoParams);
-                                data.getItemList().add(0,openEyesIndexItemBean);
-                                mAdapter.setNewData(data.getItemList());
-                                if(null!=mLayoutManager){
-                                    mLayoutManager.scrollToPositionWithOffset(0,0);
-                                }
-                            }else{
-                                mAdapter.onLoadEnd();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(int code, String errorMsg) {
-                        Logger.d(TAG,"onError-->code:"+code+",errorMsg:"+errorMsg);
-                        if(null!=mAdapter){
-                            mAdapter.onLoadError();
-                        }
-                    }
-                });
+                mPresenter.getVideosByVideo(mVideoParams.getVideoiId());
             }
         }
     }
@@ -226,6 +198,44 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexPersenter> {
         }
         if(null!=VideoPlayerManager.getInstance().getTextureView()){
             videoPlayer.mSurfaceView.addView(VideoPlayerManager.getInstance().getTextureView(),new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
+        }
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void showError(int code, String errorMsg) {
+        if(!VideoPlayerActviity.this.isFinishing()){
+            if(code==MusicNetUtils.API_RESULT_EMPTY){
+                mAdapter.onLoadEnd();
+            }else{
+                mAdapter.onLoadError();
+            }
+            Toast.makeText(VideoPlayerActviity.this,errorMsg,Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 显示视频列表
+     * @param data 视频列表
+     */
+    @Override
+    public void showVideos(List<OpenEyesIndexItemBean> data) {
+        if(!VideoPlayerActviity.this.isFinishing()){
+            if(null!=mAdapter){
+                mAdapter.onLoadComplete();
+                OpenEyesIndexItemBean openEyesIndexItemBean=new OpenEyesIndexItemBean();
+                openEyesIndexItemBean.setType(VideoConstants.VIDEO_HEADER);
+                openEyesIndexItemBean.setVideoParams(mVideoParams);
+                data.add(0,openEyesIndexItemBean);
+                mAdapter.setNewData(data);
+                if(null!=mLayoutManager){
+                    mLayoutManager.scrollToPositionWithOffset(0,0);
+                }
+            }
         }
     }
 

@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
-import com.android.imusic.music.base.MusicBaseActivity;
+import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
 import com.android.imusic.music.utils.MediaUtils;

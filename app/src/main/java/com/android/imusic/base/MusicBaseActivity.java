@@ -1,4 +1,4 @@
-package com.android.imusic.music.base;
+package com.android.imusic.base;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -23,7 +23,6 @@ import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicLoadingView;
-import com.android.imusic.music.net.MusicNetUtils;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
@@ -40,7 +39,7 @@ import java.util.List;
  * 2019/3/22
  */
 
-public class MusicBaseActivity<P extends MusicNetUtils> extends AppCompatActivity{
+public class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivity{
 
     protected static final String TAG = "MusicBaseActivity";
     protected P mPresenter;
@@ -435,7 +434,7 @@ public class MusicBaseActivity<P extends MusicNetUtils> extends AppCompatActivit
     protected void onDestroy() {
         super.onDestroy();
         if(null!=mPresenter){
-            mPresenter.onDestroy();
+            mPresenter.detachView();
             mPresenter=null;
         }
     }
