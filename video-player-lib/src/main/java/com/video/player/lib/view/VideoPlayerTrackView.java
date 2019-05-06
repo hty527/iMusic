@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import com.video.player.lib.R;
 import com.video.player.lib.base.BaseVideoPlayer;
 import com.video.player.lib.controller.DefaultCoverController;
+import com.video.player.lib.controller.DefaultGestureController;
 import com.video.player.lib.controller.DefaultVideoController;
 
 /**
@@ -16,7 +17,7 @@ import com.video.player.lib.controller.DefaultVideoController;
  * 示例视频播放器
  */
 
-public class VideoPlayerTrackView extends BaseVideoPlayer<DefaultVideoController,DefaultCoverController, PlayerGestureView> {
+public class VideoPlayerTrackView extends BaseVideoPlayer<DefaultVideoController,DefaultCoverController, DefaultGestureController> {
 
     @Override
     protected int getLayoutID() {

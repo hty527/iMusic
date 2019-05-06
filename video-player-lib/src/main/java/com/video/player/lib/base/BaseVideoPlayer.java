@@ -30,6 +30,7 @@ import com.video.player.lib.R;
 import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.controller.DefaultCoverController;
+import com.video.player.lib.controller.DefaultGestureController;
 import com.video.player.lib.controller.DefaultVideoController;
 import com.video.player.lib.controller.VideoMiniWindowController;
 import com.video.player.lib.controller.VideoWindowController;
@@ -41,7 +42,6 @@ import com.video.player.lib.manager.VideoWindowManager;
 import com.video.player.lib.model.VideoPlayerState;
 import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
-import com.video.player.lib.view.PlayerGestureView;
 import com.video.player.lib.view.VideoTextureView;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -609,7 +609,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     //生成一个默认的亮度、进度、声音手势进度调节View
                     if(null==mGestureController){
                         Logger.d(TAG,"startFullScreen-->使用默认的手势控制器");
-                        mGestureController = (G) new PlayerGestureView(videoPlayer.getContext());
+                        mGestureController = (G) new DefaultGestureController(videoPlayer.getContext());
                     }
                     removeGroupView(mGestureController);
                     videoPlayer.addView(mGestureController,new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

@@ -1,4 +1,4 @@
-package com.video.player.lib.view;
+package com.video.player.lib.controller;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -25,22 +25,22 @@ import com.video.player.lib.utils.VideoUtils;
  * 默认的手势识别器
  */
 
-public class PlayerGestureView extends BaseGestureController {
+public class DefaultGestureController extends BaseGestureController {
 
     private View mSoundPresent,mVideoPresent,mCurrentView;
     private ImageView mSoundIcon,mProgressIcon;
     private TextView mProgressText;
     private ProgressBar mSoundProgressBar,mProgressBar;
 
-    public PlayerGestureView(@NonNull Context context) {
+    public DefaultGestureController(@NonNull Context context) {
         this(context,null);
     }
 
-    public PlayerGestureView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public DefaultGestureController(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs,0);
     }
 
-    public PlayerGestureView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public DefaultGestureController(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         View.inflate(context, R.layout.video_full_plsyer_gesture_layout,this);
         mSoundPresent = findViewById(R.id.view_progress_sound_present);
@@ -59,7 +59,7 @@ public class PlayerGestureView extends BaseGestureController {
     @Override
     public void updataGestureScene(int gestureScene) {
         if(null!=controllerRunnable){
-            PlayerGestureView.this.removeCallbacks(controllerRunnable);
+            DefaultGestureController.this.removeCallbacks(controllerRunnable);
         }
         if(SCENE_PROGRESS==gestureScene){
             changedControllerUi(View.INVISIBLE, View.VISIBLE);
@@ -192,7 +192,7 @@ public class PlayerGestureView extends BaseGestureController {
      * 内部释放
      */
     private void reset() {
-        PlayerGestureView.this.removeCallbacks(controllerRunnable);
+        DefaultGestureController.this.removeCallbacks(controllerRunnable);
         if(null!=mSoundPresent){
             mSoundPresent.setVisibility(View.INVISIBLE);
         }
@@ -233,8 +233,8 @@ public class PlayerGestureView extends BaseGestureController {
     public void onReset(long delayedMilliss) {
         if(null!=mCurrentView&&null!=controllerRunnable){
             Logger.d(TAG,"onReset-->");
-            PlayerGestureView.this.removeCallbacks(controllerRunnable);
-            PlayerGestureView.this.postDelayed(controllerRunnable,delayedMilliss);
+            DefaultGestureController.this.removeCallbacks(controllerRunnable);
+            DefaultGestureController.this.postDelayed(controllerRunnable,delayedMilliss);
         }else{
             reset();
         }
