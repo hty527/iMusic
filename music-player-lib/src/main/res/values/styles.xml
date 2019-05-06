@@ -21,18 +21,6 @@
         <!-- 出厂动画 -->
         <item name="android:windowExitAnimation">@anim/music_bottom_menu_exit</item>
     </style>
-    <!--锁屏Theme-->
-    <style name="MusicLockScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
     <!--标题栏的返回按钮-->
     <style name="MusicTitleBack">
         <item name="android:layout_width">wrap_content</item>

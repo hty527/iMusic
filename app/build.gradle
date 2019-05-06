@@ -94,10 +94,10 @@ dependencies {
     implementation 'com.google.android:flexbox:0.3.1'
     implementation 'com.tencent.bugly:crashreport:latest.release'
     //libs
-//    implementation(name: 'music-player-1.0.0', ext: 'aar')
-//    implementation(name: 'video-player-1.0.0', ext: 'aar')
+    //implementation(name: 'music-player-1.0.0', ext: 'aar')
+    //implementation(name: 'video-player-1.0.0', ext: 'aar')
     //音乐播放器
-    implementation 'com.imusic.player:music-player:1.0.2'
+    implementation 'com.imusic.player:music-player:1.0.3'
     //视频播放器
     implementation 'com.imusic.player:video-player:1.0.1'
 }

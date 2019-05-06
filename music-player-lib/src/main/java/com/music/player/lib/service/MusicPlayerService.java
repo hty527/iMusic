@@ -47,7 +47,6 @@ import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicImageCache;
 import com.music.player.lib.util.MusicRomUtil;
 import com.music.player.lib.util.MusicUtils;
-import com.music.player.lib.view.activity.MusicLockActivity;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -1666,11 +1665,12 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             //屏幕点亮
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
                 //用户需要开启锁屏控制才生效
-                if(MusicPlayerManager.getInstance().isScreenOffEnable()){
+                if(MusicPlayerManager.getInstance().isScreenOffEnable()&&!TextUtils.isEmpty(MusicPlayerManager.getInstance().getLockActivityName())){
                     MusicPlayerState playerState = getPlayerState();
                     if(playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE)
                             ||playerState.equals(MusicPlayerState.MUSIC_PLAYER_PLAYING)){
-                        Intent startIntent=new Intent(MusicPlayerService.this.getApplicationContext(), MusicLockActivity.class);
+                        Intent startIntent=new Intent();
+                        startIntent.setClassName(getPackageName(),MusicPlayerManager.getInstance().getLockActivityName());
                         startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                         MusicPlayerService.this.startActivity(startIntent);
@@ -1679,9 +1679,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             //前台进程-通知栏根点击事件
             }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW)){
                 if(intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0)>0){
-                    if(!TextUtils.isEmpty(MusicPlayerManager.getInstance().getForegroundActivityClassName())){
+                    if(!TextUtils.isEmpty(MusicPlayerManager.getInstance().getMusicPlayerActivityClassName())){
                         Intent startIntent=new Intent();
-                        startIntent.setClassName(getPackageName(),MusicPlayerManager.getInstance().getForegroundActivityClassName());
+                        startIntent.setClassName(getPackageName(),MusicPlayerManager.getInstance().getMusicPlayerActivityClassName());
                         startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0));
                         //如果播放器组件未启用，创建新的实例
                         //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图

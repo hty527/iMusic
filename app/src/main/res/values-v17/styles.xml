@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--播放器时间进度条样式 paddingStart只扎在>=API17生效-->
     <style name="MusicSeekBarStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>

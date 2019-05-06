@@ -19,14 +19,5 @@
         <service
             android:name=".service.MusicPlayerService"
             android:exported="true" />
-        <!--锁屏-->
-        <activity android:name="com.music.player.lib.view.activity.MusicLockActivity"
-            android:theme="@style/MusicLockScreenTheme"
-            android:screenOrientation="portrait"
-            android:taskAffinity="imusic.player.lock"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:noHistory="true">
-        </activity>
     </application>
 </manifest>

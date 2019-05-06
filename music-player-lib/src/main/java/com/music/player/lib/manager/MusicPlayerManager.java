@@ -41,7 +41,7 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
     private boolean reBrowse = false;
     //播放器配置
     private static MusicPlayerConfig mMusicPlayerConfig;
-    private static String mActivityClassName = null;
+    private static String mActivityPlayerClassName, mActivityLockClassName;
 
     public static MusicPlayerManager getInstance() {
         if(null==mInstance){
@@ -804,17 +804,37 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
     /**
      * 指定点击通知栏后打开的Activity对象绝对路径
      * @param className
+     * @return MusicPlayerManager
      */
-    public void setForegroundOpenActivityClassName(String className) {
-        mActivityClassName = className;
+    public MusicPlayerManager setMusicPlayerActivityClassName(String className) {
+        mActivityPlayerClassName = className;
+        return mInstance;
     }
 
     /**
      * 返回点击通知栏后打开的Activity对象绝对路径
      * @return Anctivity绝对路径
      */
-    public String getForegroundActivityClassName() {
-        return mActivityClassName;
+    public String getMusicPlayerActivityClassName() {
+        return mActivityPlayerClassName;
+    }
+
+    /**
+     * 设置锁屏Activity绝对路径
+     * @param activityClassName activity绝对路径
+     * @return MusicPlayerManager
+     */
+    public MusicPlayerManager setLockActivityName(String activityClassName){
+        mActivityLockClassName=activityClassName;
+        return mInstance;
+    }
+
+    /**
+     * 返回锁屏Activity绝对路径
+     * @return activity绝对路径
+     */
+    public String getLockActivityName(){
+        return mActivityLockClassName;
     }
 
     /**
@@ -844,6 +864,6 @@ public class MusicPlayerManager implements MusicPlayerPresenter {
         //音频悬浮窗口释放
         MusicWindowManager.getInstance().onDestroy();
         mConnection=null;mBinder=null;cMMusicSubjectObservable=null;mInstance=null;reBrowse=false;
-        mActivityClassName=null;mMusicPlayerConfig=null;
+        mActivityPlayerClassName =null;mActivityLockClassName=null;mMusicPlayerConfig=null;
     }
 }

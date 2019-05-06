@@ -6,6 +6,19 @@
         <item name="colorPrimaryDark">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <!--播放器时间进度条样式 paddingStart只扎在>=API17生效-->
+    <style name="MusicSeekBarStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@null</item>
+        <item name="android:max">100</item>
+        <item name="android:maxHeight">2dp</item>
+        <item name="android:minHeight">1dp</item>
+        <item name="android:progressDrawable">@drawable/music_bottom_seek_progress</item>
+        <item name="android:thumb">@drawable/music_bottom_seek_thumb</item>
+    </style>
     <!--播放器标题-->
     <style name="MusicTitleStyle">
         <item name="android:layout_width">match_parent</item>
@@ -36,5 +49,17 @@
         <item name="android:windowIsFloating">true</item>
         <!--是否模糊-->
         <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    <!--锁屏Theme-->
+    <style name="MusicLockScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 </resources>

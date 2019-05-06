@@ -1,4 +1,4 @@
-package com.music.player.lib.view.activity;
+package com.android.imusic.music.activity;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -17,7 +17,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.music.player.lib.R;
+import com.android.imusic.R;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
@@ -40,7 +40,7 @@ import java.util.Locale;
  * TinyHung@Outlook.com
  * 2019/3/19
  * Music lock
- * 锁频播放、控制示例
+ * iMusic锁频播放、控制示例Activity
  */
 
 public class MusicLockActivity extends AppCompatActivity implements MusicPlayerEventListener {

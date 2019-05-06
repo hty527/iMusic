@@ -27,6 +27,15 @@
         <activity android:name="com.android.imusic.music.activity.MusicPlayerActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
+        <!--锁屏-->
+        <activity android:name="com.android.imusic.music.activity.MusicLockActivity"
+            android:theme="@style/MusicLockScreenTheme"
+            android:screenOrientation="portrait"
+            android:taskAffinity="imusic.player.lock"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true">
+        </activity>
         <!--本地音乐-->
         <activity android:name="com.android.imusic.music.activity.MusicLocalActivity"
             android:launchMode="singleTask"

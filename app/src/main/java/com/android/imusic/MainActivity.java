@@ -9,6 +9,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
 import com.android.imusic.music.base.MusicBaseActivity;
@@ -63,8 +65,10 @@ public class MainActivity extends MusicBaseActivity<IndexPersenter> {
             .setScreenOffEnable(true)//锁屏控制器开关
             .setWindownStyle(MusicWindowStyle.TRASH);//悬浮窗播放器样式
         MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
-        //设置点击通知栏打开的Activity绝对路径
-        MusicPlayerManager.getInstance().setForegroundOpenActivityClassName(MusicPlayerActivity.class.getCanonicalName());
+        //设置点击通知栏打开的播放器界面,需开启setLockForeground(true);
+        MusicPlayerManager.getInstance().setMusicPlayerActivityClassName(MusicPlayerActivity.class.getCanonicalName())
+            //设置锁屏界面,需开启setScreenOffEnable(true);
+            .setLockActivityName(MusicLockActivity.class.getCanonicalName());
         //初始化音频媒体服务
         MusicPlayerManager.getInstance().initialize(MainActivity.this);
 

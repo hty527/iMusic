@@ -1,4 +1,4 @@
-package com.music.player.lib.view;
+package com.android.imusic.music.view;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.music.player.lib.R;
+import com.android.imusic.R;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import java.util.ArrayList;
@@ -233,12 +233,12 @@ public class MusicArcMenuView extends FrameLayout implements View.OnTouchListene
             ImageView imageView=new ImageView(getContext());
             imageView.setImageResource(resID[i]);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(menuWidth, menuWidth);
+            LayoutParams layoutParams = new LayoutParams(menuWidth, menuWidth);
             layoutParams.gravity=mGravity;
             layoutParams.setMargins(marginTop,marginTop,0,0);
             imageView.setLayoutParams(layoutParams);
             imageView.setTag(i);
-            imageView.setOnClickListener(new View.OnClickListener() {
+            imageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(null!=mOnItemClickListener){
@@ -250,7 +250,7 @@ public class MusicArcMenuView extends FrameLayout implements View.OnTouchListene
             MusicArcMenuView.this.addView(imageView);
         }
         mBtnImage = new ImageView(getContext());
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(menuWidth+margin, menuWidth+margin);
+        LayoutParams layoutParams = new LayoutParams(menuWidth+margin, menuWidth+margin);
         layoutParams.gravity=mGravity;
         if(null!=mBtnDrawable){
             Logger.d(TAG,"属性已设置");
@@ -259,7 +259,7 @@ public class MusicArcMenuView extends FrameLayout implements View.OnTouchListene
             mBtnImage.setImageResource(R.drawable.ic_music_default_arc_icon);
         }
         mBtnImage.setLayoutParams(layoutParams);
-        mBtnImage.setOnClickListener(new View.OnClickListener() {
+        mBtnImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mMenuShowing){
@@ -450,7 +450,7 @@ public class MusicArcMenuView extends FrameLayout implements View.OnTouchListene
     }
 
     public interface OnArcMenuClickListener{
-        void onItemClick(View view,int index);
+        void onItemClick(View view, int index);
     }
     private OnArcMenuClickListener mOnItemClickListener;
 
