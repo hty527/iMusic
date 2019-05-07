@@ -12,7 +12,7 @@ import com.music.player.lib.util.Logger;
  */
 
 
-public class MusicAudioFocusManager{
+public final class MusicAudioFocusManager{
 
     public static final String TAG = "MusicAudioFocusManager";
     private int mVolumeWhenFocusLossTransientCanDuck;

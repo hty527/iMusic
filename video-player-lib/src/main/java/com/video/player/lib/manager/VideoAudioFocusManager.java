@@ -11,7 +11,7 @@ import com.video.player.lib.utils.Logger;
  */
 
 
-public class VideoAudioFocusManager {
+public final class VideoAudioFocusManager {
 
     public static final String TAG = "VideoAudioFocusManager";
     private int mVolumeWhenFocusLossTransientCanDuck;

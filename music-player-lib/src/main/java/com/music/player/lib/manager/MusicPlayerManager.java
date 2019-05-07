@@ -30,7 +30,7 @@ import java.util.Observer;
  * MusicPlayerService 交互的目的
  */
 
-public class MusicPlayerManager implements MusicPlayerPresenter {
+public final class MusicPlayerManager implements MusicPlayerPresenter {
 
     private static final String TAG = MusicPlayerManager.class.getSimpleName();
     private static volatile MusicPlayerManager mInstance = null;

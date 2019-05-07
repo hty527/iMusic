@@ -29,7 +29,7 @@ import java.util.TimerTask;
  * VideoPlayerManager 与播放器直接交互代理者
  */
 
-public class VideoPlayerManager implements MediaPlayerPresenter, TextureView.SurfaceTextureListener,
+public final class VideoPlayerManager implements MediaPlayerPresenter, TextureView.SurfaceTextureListener,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener,
         MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnSeekCompleteListener,
         MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, MediaPlayer.OnVideoSizeChangedListener {
