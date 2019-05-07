@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         app:musicCommentTitle="iMusic"
         app:musicCommentMenuRes="@drawable/ic_music_search"
+        app:musicCommentBackRes="@drawable/ic_music_support"
         android:background="@drawable/music_top_title_bg"/>
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"

@@ -2,7 +2,9 @@ package com.android.imusic.music.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,13 +14,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 import com.android.imusic.R;
+import com.android.imusic.base.MusicBaseFragment;
 import com.android.imusic.music.activity.MusicAlbumActivity;
 import com.android.imusic.music.activity.MusicCollectActivity;
 import com.android.imusic.music.activity.MusicHistroyActivity;
 import com.android.imusic.music.activity.MusicLocalActivity;
 import com.android.imusic.music.activity.MusicSearchActivity;
 import com.android.imusic.music.adapter.MusicIndexDataAdapter;
-import com.android.imusic.base.MusicBaseFragment;
 import com.android.imusic.music.bean.AlbumInfo;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.ui.contract.MusicListContract;
@@ -137,6 +139,26 @@ public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter>
 
         MusicCommentTitleView titleView = (MusicCommentTitleView) getView().findViewById(R.id.title_view);
         titleView.setOnTitleClickListener(new MusicCommentTitleView.OnTitleClickListener() {
+
+            @Override
+            public void onBack(View view) {
+                new android.support.v7.app.AlertDialog.Builder(getActivity())
+                        .setTitle("支持作者")
+                        .setMessage("感谢您的支持与厚爱，您的支持是我前进的动力！点击‘赏赐’立即前往支付宝犒赏作者")
+                        .setNegativeButton("赏赐",new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String userSing="tsx07156kgzd8yafw8bi628";
+                                try {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("alipays://platformapi/startapp?saId=10000007&clientVersion=3.7.0.0718&qrcode=https%3A%2F%2Fqr.alipay.com%2F"+userSing+"%3Dweb-other"));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).show();
+            }
 
             @Override
             public void onMenuClick(View v) {
