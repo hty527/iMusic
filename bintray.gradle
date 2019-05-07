@@ -1,4 +1,3 @@
-//Bintray配置
 //编译并推送到Bintray命令
 //gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false
 ext{
