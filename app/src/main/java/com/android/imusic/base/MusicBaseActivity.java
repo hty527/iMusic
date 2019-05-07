@@ -56,8 +56,10 @@ public class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivit
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }
@@ -78,8 +80,10 @@ public class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivit
             return;
         }
         if(null==models) models=new PermissionModel[]{
-                new PermissionModel(Manifest.permission.READ_EXTERNAL_STORAGE, "读取本地音频文件需要'读取本地存储'权限", READ_EXTERNAL_STORAGE_CODE),
-                new PermissionModel(Manifest.permission.WRITE_EXTERNAL_STORAGE, "播放记录存储需要'写入数据到存储'权限", WRITE_EXTERNAL_STORAGE_CODE)
+                new PermissionModel(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        "读取本地音频文件需要'读取本地存储'权限", READ_EXTERNAL_STORAGE_CODE),
+                new PermissionModel(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        "播放记录存储需要'写入数据到存储'权限", WRITE_EXTERNAL_STORAGE_CODE)
         };
         try {
             for (PermissionModel model : models) {
@@ -180,7 +184,8 @@ public class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivit
                                     .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            startActivityForResult(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.fromParts("package", getPackageName(), null)), SETTING_REQUST);
+                                            startActivityForResult(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                                    .setData(Uri.fromParts("package", getPackageName(), null)), SETTING_REQUST);
                                         }
                                     }).setCancelable(false).show();
                         }
@@ -211,7 +216,8 @@ public class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivit
     protected boolean isAllRequestedPermissionGranted() {
         if(null!=models){
             for (PermissionModel model : models) {
-                if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this, model.permission)) {
+                if (PackageManager.PERMISSION_GRANTED !=
+                        ContextCompat.checkSelfPermission(this, model.permission)) {
                     return false;
                 }
             }
@@ -278,7 +284,8 @@ public class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivit
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.setData(Uri.parse( "package:"+MusicUtils.getInstance().getPackageName(MusicBaseActivity.this)));
+                                intent.setData(Uri.parse( "package:"+MusicUtils.getInstance()
+                                        .getPackageName(MusicBaseActivity.this)));
                                 MusicBaseActivity.this.startActivityForResult(intent,MusicConstants.REQUST_WINDOWN_PERMISSION);
                             } else {
                                 Toast.makeText(MusicBaseActivity.this,"请在设置中手动开启",Toast.LENGTH_SHORT).show();
@@ -302,7 +309,8 @@ public class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivit
         if(!MusicWindowManager.getInstance().isWindowShowing()){
             if(null!= MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                 BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(MusicBaseActivity.this.getApplicationContext(), MusicUtils.getInstance().dpToPxInt(MusicBaseActivity.this,80f)
+                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(MusicBaseActivity.this.
+                                getApplicationContext(), MusicUtils.getInstance().dpToPxInt(MusicBaseActivity.this,80f)
                         ,MusicUtils.getInstance().dpToPxInt(MusicBaseActivity.this,170f));
                 MusicStatus musicStatus=new MusicStatus();
                 musicStatus.setId(musicInfo.getAudioId());
@@ -310,7 +318,8 @@ public class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivit
                 musicStatus.setCover(frontPath);
                 musicStatus.setTitle(musicInfo.getAudioName());
                 MusicPlayerState playerState = MusicPlayerManager.getInstance().getPlayerState();
-                boolean playing = playerState.equals(MusicPlayerState.MUSIC_PLAYER_PLAYING) || playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE) || playerState.equals(MusicPlayerState.MUSIC_PLAYER_BUFFER);
+                boolean playing = playerState.equals(MusicPlayerState.MUSIC_PLAYER_PLAYING) ||
+                        playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE) || playerState.equals(MusicPlayerState.MUSIC_PLAYER_BUFFER);
                 musicStatus.setPlayerStatus(playing?MusicStatus.PLAYER_STATUS_START:MusicStatus.PLAYER_STATUS_PAUSE);
                 MusicWindowManager.getInstance().updateWindowStatus(musicStatus);
                 MusicWindowManager.getInstance().onVisible();
@@ -371,7 +380,8 @@ public class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivit
                         Intent sendIntent = new Intent();
                         //sendIntent.setPackage("com.tencent.mm")
                         sendIntent.setAction(Intent.ACTION_SEND);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, "来自iMusic的音乐分享:《"+audioInfo.getAudioName()+"》-"+audioInfo.getNickname());
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, "来自iMusic的音乐分享:《"
+                                +audioInfo.getAudioName()+"》-"+audioInfo.getNickname());
                         sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(audioInfo.getAudioPath()));
                         sendIntent.setType("audio/*");
                         startActivity(Intent.createChooser(sendIntent, "iMusic分享"));

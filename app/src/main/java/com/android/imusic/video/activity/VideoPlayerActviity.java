@@ -42,11 +42,12 @@ import java.util.List;
  * 2019/4/10
  * VideoPlayer Activity
  * 视频播放器实例界面
- * Intent 中传递的 VideoConstants.KEY_VIDEO_PLAYING 参数作用：为 true：衔接外部播放任务无缝继续播放,false：不作处理
- * 打开迷你小窗口参见 ID btn_tiny的点击事件示例代码
+ * Intent 中传递的 VideoConstants.KEY_VIDEO_PLAYING 参数作用：为 true：衔接外部播放任务无缝继续播放,
+ * false：不作处理  打开迷你小窗口参见 ID btn_tiny的点击事件示例代码
  */
 
-public class VideoPlayerActviity extends MusicBaseActivity<IndexVideoPersenter> implements IndexVideoContract.View {
+public class VideoPlayerActviity extends MusicBaseActivity<IndexVideoPersenter>
+        implements IndexVideoContract.View {
 
     private static final String TAG = "VideoPlayerActviity";
     private VideoDetailsPlayerTrackView  mVideoPlayer;
@@ -104,7 +105,8 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexVideoPersenter> 
             @Override
             public void onClick(View v) {
                 if(null!=mVideoPlayer){
-                    int startY=mVideoPlayer.getMeasuredHeight()+VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
+                    int startY=mVideoPlayer.getMeasuredHeight()
+                            +VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
                     mVideoPlayer.startMiniWindowToLocaion(Gravity.RIGHT,startY,1280,720,null);
                 }
             }
@@ -197,7 +199,8 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexVideoPersenter> 
             }
         }
         if(null!=VideoPlayerManager.getInstance().getTextureView()){
-            videoPlayer.mSurfaceView.addView(VideoPlayerManager.getInstance().getTextureView(),new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
+            videoPlayer.mSurfaceView.addView(VideoPlayerManager.getInstance().getTextureView(),
+                    new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
         }
     }
 

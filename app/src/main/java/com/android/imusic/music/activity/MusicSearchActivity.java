@@ -56,7 +56,8 @@ import java.util.Observer;
  * 音频搜索界面，使用酷狗API做数据支持
  */
 
-public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter> implements MusicOnItemClickListener, Observer, MusicSearchContract.View {
+public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
+        implements MusicOnItemClickListener, Observer, MusicSearchContract.View {
 
     private View mBtnClean;
     private EditText mEtInput;
@@ -98,7 +99,8 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
                                         }
                                     }).setCancelable(false).show();
                         }else{
-                            Toast.makeText(MusicSearchActivity.this,"暂无搜索记录可清除",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MusicSearchActivity.this,"暂无搜索记录可清除",
+                                    Toast.LENGTH_SHORT).show();
                         }
                         break;
                 }
@@ -140,7 +142,8 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
         });
         mRecyclerView = (RecyclerView) findViewById(R.id.recyler_view);
         mTagsRoot = findViewById(R.id.music_tags_root);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
+                LinearLayoutManager.VERTICAL,false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new MusicSearchAdapter(MusicSearchActivity.this,null,this);
         mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -175,7 +178,8 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
                 tagTextView.setText(searchHistroy.getKey());
                 tagTextView.setGravity(Gravity.CENTER);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    tagTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.music_search_tag_bg));
+                    tagTextView.setBackground(ContextCompat.getDrawable(this,
+                            R.drawable.music_search_tag_bg));
                 }
                 tagTextView.setTag(searchHistroy.getKey());
                 tagTextView.setOnClickListener(new View.OnClickListener() {
@@ -252,7 +256,9 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
                     return;
                 }
                 if(null!=mPresenter&&!mPresenter.isRequsting()){
-                    mPresenter.getPathBkKey(searchResultInfo.getHash(), new TypeToken<ResultData<SearchMusicData>>() {}.getType(), new MusicNetUtils.OnRequstCallBack<SearchMusicData>() {
+                    mPresenter.getPathBkKey(searchResultInfo.getHash(),
+                            new TypeToken<ResultData<SearchMusicData>>() {}.getType(),
+                            new MusicNetUtils.OnRequstCallBack<SearchMusicData>() {
                         @Override
                         public void onResponse(ResultData<SearchMusicData> data) {
                             if(null!=mAdapter&&null!=data.getData()){
@@ -285,7 +291,8 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
             }else{
                 //Menu
                 final AudioInfo audioInfo = getaudioInfo(searchResultInfo);
-                MusicMusicDetailsDialog.getInstance(MusicSearchActivity.this,audioInfo,MusicMusicDetailsDialog.DialogScene.SCENE_SEARCH)
+                MusicMusicDetailsDialog.getInstance(MusicSearchActivity.this,
+                        audioInfo,MusicMusicDetailsDialog.DialogScene.SCENE_SEARCH)
                         .setMusicOnItemClickListener(new MusicOnItemClickListener() {
                             /**
                              * @param view
@@ -330,17 +337,20 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
                         Intent sendIntent = new Intent();
                         //sendIntent.setPackage("com.tencent.mm")
                         sendIntent.setAction(Intent.ACTION_SEND);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, "来自iMusic的音乐分享:《"+audioInfo.getSongname()+"》-"+audioInfo.getSingername());
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, "来自iMusic的音乐分享:《"
+                                +audioInfo.getSongname()+"》-"+audioInfo.getSingername());
                         sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(audioInfo.getSource()));
                         sendIntent.setType("audio/*");
                         startActivity(Intent.createChooser(sendIntent, "iMusic分享"));
                     }
                 }else{
-                    Toast.makeText(MusicSearchActivity.this,"此歌曲已被下架",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MusicSearchActivity.this,"此歌曲已被下架",
+                            Toast.LENGTH_SHORT).show();
                 }
             }catch (RuntimeException e){
                 e.printStackTrace();
-                Toast.makeText(MusicSearchActivity.this,"分享失败："+e.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(MusicSearchActivity.this,"分享失败："+e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
             }
         }else if(itemId==MusicDetails.ITEM_ID_COLLECT){
             AudioInfo cacheAudioInfo = getaudioInfo(audioInfo);
@@ -350,11 +360,13 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
             if(!TextUtils.isEmpty(cacheAudioInfo.getAudioPath())){
                 boolean toCollect = MusicUtils.getInstance().putMusicToCollect(cacheAudioInfo);
                 if(toCollect){
-                    Toast.makeText(MusicSearchActivity.this,"已添加至收藏列表",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MusicSearchActivity.this,"已添加至收藏列表",
+                            Toast.LENGTH_SHORT).show();
                     MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
                 }
             }else{
-                Toast.makeText(MusicSearchActivity.this,"添加失败，此歌曲不支持收藏",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MusicSearchActivity.this,"添加失败，此歌曲不支持收藏",
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -419,7 +431,8 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
                 }
             }else{
                 mAdapter.notifyDataSetChanged();
-                int position = MediaUtils.getInstance().getNetCurrentPlayIndexInThis(mAdapter.getData(), MusicPlayerManager.getInstance().getCurrentPlayerID());
+                int position = MediaUtils.getInstance().getNetCurrentPlayIndexInThis(mAdapter.getData(),
+                        MusicPlayerManager.getInstance().getCurrentPlayerID());
                 mAdapter.setCurrentPosition(position);
             }
         }
@@ -512,7 +525,8 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
                     }
                 }else{
                     mAdapter.onLoadEnd();
-                    Toast.makeText(MusicSearchActivity.this,"暂未搜索到相关音乐",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MusicSearchActivity.this,"暂未搜索到相关音乐",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         }

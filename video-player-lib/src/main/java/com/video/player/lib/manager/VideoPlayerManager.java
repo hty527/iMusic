@@ -295,7 +295,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
             //播放进度实时回调
             if(null!=mOnPlayerEventListeners){
                 if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
-                    mOnPlayerEventListeners.currentPosition(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition(),mBufferPercent);
+                    mOnPlayerEventListeners.currentPosition(mMediaPlayer.getDuration(),
+                            mMediaPlayer.getCurrentPosition(),mBufferPercent);
                 }else{
                     mOnPlayerEventListeners.currentPosition(-1,-1,mBufferPercent);
                 }
@@ -304,8 +305,9 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
             if(TIMER_RUN_COUNT%10==0){
                 if(null!=mOnPlayerEventListeners){
                     if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
-                        //至于为什么在CurrentPosition上+500毫秒，是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
-                        mOnPlayerEventListeners.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition()+500,mBufferPercent);
+                        //+500毫秒是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
+                        mOnPlayerEventListeners.onTaskRuntime(mMediaPlayer.getDuration(),
+                                mMediaPlayer.getCurrentPosition()+500,mBufferPercent);
                     }else{
                         mOnPlayerEventListeners.onTaskRuntime(-1,-1,mBufferPercent);
                     }
@@ -388,7 +390,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
             }
             return;
         }
-        if(VideoPlayerManager.this.mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PREPARE)&&mDataSource.equals(dataSource)){
+        if(VideoPlayerManager.this.mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PREPARE)
+                &&mDataSource.equals(dataSource)){
             Logger.d(TAG,"startVideoPlayer-->重复调用");
             return;
         }
@@ -397,7 +400,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
         if(null!=context){
             this.mContext=context;
             if(null!=mContext){
-                mWifiLock = ((WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "MUSIC_LOCK");
+                mWifiLock = ((WifiManager) mContext.getApplicationContext().getSystemService(
+                        Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "MUSIC_LOCK");
             }
         }
         reset();
@@ -413,7 +417,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
             if(null==mAudioFocusManager){
                 mAudioFocusManager= new VideoAudioFocusManager(mContext.getApplicationContext());
             }
-            int requestAudioFocus = mAudioFocusManager.requestAudioFocus(new VideoAudioFocusManager.OnAudioFocusListener() {
+            int requestAudioFocus = mAudioFocusManager.requestAudioFocus(
+                    new VideoAudioFocusManager.OnAudioFocusListener() {
 
                 @Override
                 public void onFocusGet() {
@@ -573,7 +578,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public void play() {
-        if(mMusicPlayerState == VideoPlayerState.MUSIC_PLAYER_START ||mMusicPlayerState == VideoPlayerState.MUSIC_PLAYER_PREPARE
+        if(mMusicPlayerState == VideoPlayerState.MUSIC_PLAYER_START ||mMusicPlayerState ==
+                VideoPlayerState.MUSIC_PLAYER_PREPARE
                 ||mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PLAY)){
             return;
         }
@@ -680,7 +686,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
         try {
             if(null!=mMediaPlayer){
                 //非暂停状态下置为加载中状态
-                if(!VideoPlayerManager.getInstance().getVideoPlayerState().equals(VideoPlayerState.MUSIC_PLAYER_PAUSE)){
+                if(!VideoPlayerManager.getInstance().getVideoPlayerState().equals(
+                        VideoPlayerState.MUSIC_PLAYER_PAUSE)){
                     VideoPlayerManager.this.mMusicPlayerState= VideoPlayerState.MUSIC_PLAYER_SEEK;
                     if(null!=mOnPlayerEventListeners){
                         mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
@@ -750,7 +757,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
     /**
      * 尝试弹射退出，若当前播放器处于迷你小窗口、全屏窗口下，则只是退出小窗口\全屏至常规窗口播放
      * 若播放器处于常规状态下，则立即销毁播放器，销毁时内部检测了悬浮窗状态，若正在悬浮窗状态下播放，则啥也不做
-     * @param destroy 是否直接销毁，比如说MainActivity返回逻辑还有询问用户是否退出，给定destroy为false，则只是尝试弹射，并不会去销毁播放器
+     * @param destroy 是否直接销毁，比如说MainActivity返回逻辑还有询问用户是否退出，给定destroy为false，
+     *                则只是尝试弹射，并不会去销毁播放器
      * @return 是否可以销毁界面
      */
     @Override

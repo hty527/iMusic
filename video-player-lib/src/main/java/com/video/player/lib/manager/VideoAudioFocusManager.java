@@ -29,7 +29,8 @@ public final class VideoAudioFocusManager {
             this.mFocusListener=focusListener;
         }
         if(null!=mAudioManager){
-            int requestAudioFocus = mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            int requestAudioFocus = mAudioManager.requestAudioFocus(onAudioFocusChangeListener,
+                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
             return requestAudioFocus;
         }
         return 1;
@@ -86,7 +87,8 @@ public final class VideoAudioFocusManager {
                         volume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                         if (volume > 0) {
                             mVolumeWhenFocusLossTransientCanDuck = volume;
-                            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mVolumeWhenFocusLossTransientCanDuck / 2,
+                            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+                                    mVolumeWhenFocusLossTransientCanDuck / 2,
                                     AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
                         }
                     }

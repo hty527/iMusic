@@ -55,11 +55,13 @@ public class MusicCommentTitleView extends LinearLayout implements View.OnClickL
             }
             //标题
             String titleText = typedArray.getString(R.styleable.MusicCommentTitleView_musicCommentTitle);
-            int titleColor = typedArray.getColor(R.styleable.MusicCommentTitleView_musicCommentTitleColor,Color.parseColor("#FFFFFF"));
+            int titleColor = typedArray.getColor(R.styleable.MusicCommentTitleView_musicCommentTitleColor,
+                    Color.parseColor("#FFFFFF"));
             float titleSize = typedArray.getDimensionPixelSize(R.styleable.MusicCommentTitleView_musicCommentTitleSize, 18);
             //副标题
             String subTitleText = typedArray.getString(R.styleable.MusicCommentTitleView_musicCommentSubTitle);
-            int subTitleColor = typedArray.getColor(R.styleable.MusicCommentTitleView_musicCommentSubTitleColor,Color.parseColor("#EFEFEF"));
+            int subTitleColor = typedArray.getColor(R.styleable.MusicCommentTitleView_musicCommentSubTitleColor,
+                    Color.parseColor("#EFEFEF"));
             float subTitleSize = typedArray.getDimensionPixelSize(R.styleable.MusicCommentTitleView_musicCommentSubTitleSize, 14);
             //标题
             mTitleView.setText(titleText);

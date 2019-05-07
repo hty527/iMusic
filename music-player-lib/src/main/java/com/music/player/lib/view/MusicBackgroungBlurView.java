@@ -57,10 +57,12 @@ public class MusicBackgroungBlurView extends View {
     public MusicBackgroungBlurView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicBackgroungBlurView);
-		mBlurRadius = typedArray.getDimension(R.styleable.MusicBackgroungBlurView_blurBlurRadius,TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, context.getResources().getDisplayMetrics()));
+		mBlurRadius = typedArray.getDimension(R.styleable.MusicBackgroungBlurView_blurBlurRadius,
+				TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, context.getResources().getDisplayMetrics()));
 		mDownsampleFactor = typedArray.getFloat(R.styleable.MusicBackgroungBlurView_blurDownsampleFactor, 5);
 		mOverlayColor = typedArray.getColor(R.styleable.MusicBackgroungBlurView_blurOverlayColor, 0xAA3A1B59);
-        mFramRadius = typedArray.getDimension(R.styleable.MusicBackgroungBlurView_blurFramRadius, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, context.getResources().getDisplayMetrics()));
+        mFramRadius = typedArray.getDimension(R.styleable.MusicBackgroungBlurView_blurFramRadius,
+				TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, context.getResources().getDisplayMetrics()));
         mTopLeft = typedArray.getBoolean(R.styleable.MusicBackgroungBlurView_blurTopLeft,false);
         mTopRight = typedArray.getBoolean(R.styleable.MusicBackgroungBlurView_blurTopRight,false);
         mBottomRight = typedArray.getBoolean(R.styleable.MusicBackgroungBlurView_blurBottomRight,false);
@@ -91,7 +93,8 @@ public class MusicBackgroungBlurView extends View {
         float bottomRightRadius = getRadiusToDirection(mBottomRight,radius);
 //        mRoundPath.addRoundRect(mRectF, radius, radius, Path.Direction.CW);//绘制四个方向圆角
         //绘制指定方向圆角
-        mRoundPath.addRoundRect(mRectF, new float[]{topLeftRadius,topLeftRadius,topRightRadius,topRightRadius,bottomLeftRadius,bottomLeftRadius,bottomRightRadius,bottomRightRadius}, Path.Direction.CW);
+        mRoundPath.addRoundRect(mRectF, new float[]{topLeftRadius,topLeftRadius,topRightRadius,
+				topRightRadius,bottomLeftRadius,bottomLeftRadius,bottomRightRadius,bottomRightRadius}, Path.Direction.CW);
     }
 
     private float getRadiusToDirection(boolean direction,float framRadius) {
@@ -260,7 +263,8 @@ public class MusicBackgroungBlurView extends View {
 				mIsRendering = true;
 				RENDERING_COUNT++;
 				try {
-					mBlurringCanvas.scale(1.f * mBlurredBitmap.getWidth() / getWidth(), 1.f * mBlurredBitmap.getHeight() / getHeight());
+					mBlurringCanvas.scale(1.f * mBlurredBitmap.getWidth() / getWidth(),
+							1.f * mBlurredBitmap.getHeight() / getHeight());
 					mBlurringCanvas.translate(-x, -y);
 					decor.draw(mBlurringCanvas);
 				} catch (StopException e) {

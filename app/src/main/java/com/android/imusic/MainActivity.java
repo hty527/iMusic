@@ -50,7 +50,8 @@ public class MainActivity extends MusicBaseActivity {
 
         //视频播放器初始化
         VideoPlayerManager.getInstance()
-                //悬浮窗中打开播放器的绝对路径，可选的参数,若需要支持从悬浮窗中还原到APP的播放器界面，则必须设定此参数
+                //悬浮窗中打开播放器的绝对路径，可选的参数,若需要支持从悬浮窗中还原到APP的播放器界面，
+                // 则必须设定此参数
                 .setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
 
         //音乐播放器初始化
@@ -62,7 +63,8 @@ public class MainActivity extends MusicBaseActivity {
             .setWindownStyle(MusicWindowStyle.TRASH);//悬浮窗播放器样式
         MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
         //设置点击通知栏打开的播放器界面,需开启setLockForeground(true);
-        MusicPlayerManager.getInstance().setMusicPlayerActivityClassName(MusicPlayerActivity.class.getCanonicalName())
+        MusicPlayerManager.getInstance().setMusicPlayerActivityClassName(
+                MusicPlayerActivity.class.getCanonicalName())
             //设置锁屏界面,需开启setScreenOffEnable(true);
             .setLockActivityName(MusicLockActivity.class.getCanonicalName());
         //初始化音频媒体服务
@@ -99,7 +101,7 @@ public class MainActivity extends MusicBaseActivity {
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels){
 
             }
 
@@ -152,12 +154,14 @@ public class MainActivity extends MusicBaseActivity {
             if(MusicUtils.getInstance().getInt(MusicConstants.SP_FIRST_START,0)==0){
                 new android.support.v7.app.AlertDialog.Builder(MainActivity.this)
                         .setTitle("使用提示")
-                        .setMessage("iMusic默认关闭了'本地音乐'列表音乐封面加载功能，如需开启或关闭，请双击标题栏'iMusic'开启或关闭封面加载")
+                        .setMessage("iMusic默认关闭了'本地音乐'列表音乐封面加载功能，如需开启或关闭，请双击" +
+                                "标题栏'iMusic'开启或关闭封面加载")
                         .setNegativeButton("现在开启",new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 MediaUtils.getInstance().setLocalImageEnable(true);
-                                Toast.makeText(MainActivity.this,"本地音乐封面加载已开启",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this,"本地音乐封面加载已开启",
+                                        Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setPositiveButton("知道了", null).setCancelable(false).show();

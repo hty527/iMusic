@@ -80,7 +80,8 @@ public class MusicArcMenuView extends FrameLayout implements View.OnTouchListene
             mCreateMenus = typedArray.getBoolean(R.styleable.MusicArcMenuView_arcAutoCreateDefaultMenus, false);
             typedArray.recycle();
         }
-        Logger.d(TAG,"mRadius:"+mRadius+",default:"+MusicUtils.getInstance().dpToPxInt(context,88f)+",gravity:"+mGravity);
+        Logger.d(TAG,"mRadius:"+mRadius+",default:"+MusicUtils.getInstance()
+                .dpToPxInt(context,88f)+",gravity:"+mGravity);
         if(mRadius<=0){
             mRadius=MusicUtils.getInstance().dpToPxInt(context,88f);
         }
@@ -227,7 +228,8 @@ public class MusicArcMenuView extends FrameLayout implements View.OnTouchListene
         int marginTop = MusicUtils.getInstance().dpToPxInt(getContext(),5f);
         mViews=new ArrayList<>();
         if(createRes){
-            resID=new int[]{R.drawable.ic_music_window_next,R.drawable.ic_music_window_last,R.drawable.ic_music_window_play,R.drawable.ic_music_window_home};
+            resID=new int[]{R.drawable.ic_music_window_next,R.drawable.ic_music_window_last,
+                    R.drawable.ic_music_window_play,R.drawable.ic_music_window_home};
         }
         for (int i = 0; i < resID.length; i++) {
             ImageView imageView=new ImageView(getContext());
@@ -403,21 +405,25 @@ public class MusicArcMenuView extends FrameLayout implements View.OnTouchListene
                 for (int i = 0; i < mViews.size(); i++) {
                     int avgAngle = (mArcAngle / (mViews.size() - 1));
                     int angle = 0;
-                    if(mPoint.equals(ArcPoint.LEFT_TOP)||mPoint.equals(ArcPoint.CENTER)||mPoint.equals(ArcPoint.LEFT_BOTTOM)||mPoint.equals(ArcPoint.BOTTOM)){
+                    if(mPoint.equals(ArcPoint.LEFT_TOP)||mPoint.equals(ArcPoint.CENTER)
+                            ||mPoint.equals(ArcPoint.LEFT_BOTTOM)||mPoint.equals(ArcPoint.BOTTOM)){
                         angle = avgAngle * i;
                     }else if(mPoint.equals(ArcPoint.RIGHT_TOP)){
                         angle = avgAngle * i + 270;
-                    }else if(mPoint.equals(ArcPoint.RIGHT_BOTTOM)||mPoint.equals(ArcPoint.RIGHT)||mPoint.equals(ArcPoint.LEFT)){
+                    }else if(mPoint.equals(ArcPoint.RIGHT_BOTTOM)||mPoint.equals(ArcPoint.RIGHT)
+                            ||mPoint.equals(ArcPoint.LEFT)){
                         angle = avgAngle * i + 90;
                     }else if(mPoint.equals(ArcPoint.TOP)){
                         angle = avgAngle * i+180;
                     }
                     float startX = 0,startY = 0;
                     //计算扇形边界到圆点运动轨迹
-                    if(mPoint.equals(ArcPoint.LEFT_TOP)||mPoint.equals(ArcPoint.CENTER)||mPoint.equals(ArcPoint.RIGHT)){
+                    if(mPoint.equals(ArcPoint.LEFT_TOP)||mPoint.equals(ArcPoint.CENTER)
+                            ||mPoint.equals(ArcPoint.RIGHT)){
                         startX= (float) (mRadius*Math.cos(angle*(Math.PI/180)));
                         startY= (float) (mRadius*Math.sin(angle*(Math.PI/180)));
-                    }else if(mPoint.equals(ArcPoint.LEFT_BOTTOM)||mPoint.equals(ArcPoint.RIGHT_BOTTOM)||mPoint.equals(ArcPoint.TOP)){
+                    }else if(mPoint.equals(ArcPoint.LEFT_BOTTOM)||mPoint.equals(ArcPoint.RIGHT_BOTTOM)
+                            ||mPoint.equals(ArcPoint.TOP)){
                         startX= (float) (mRadius*Math.cos(angle*(Math.PI/180)));
                         startY= (float) (mRadius*-Math.sin(angle*(Math.PI/180)));
                     }else if(mPoint.equals(ArcPoint.RIGHT_TOP)||mPoint.equals(ArcPoint.BOTTOM)){

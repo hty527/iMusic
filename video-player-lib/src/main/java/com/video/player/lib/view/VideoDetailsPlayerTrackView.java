@@ -16,7 +16,8 @@ import com.video.player.lib.controller.DetailsCoverController;
  * Video Default Controller
  */
 
-public class VideoDetailsPlayerTrackView extends BaseVideoPlayer<DefaultVideoController,DetailsCoverController,DefaultGestureController>{
+public class VideoDetailsPlayerTrackView extends BaseVideoPlayer<DefaultVideoController,
+        DetailsCoverController,DefaultGestureController>{
 
     @Override
     protected int getLayoutID() {

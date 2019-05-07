@@ -41,7 +41,8 @@ import java.util.List;
  * Video List
  */
 
-public class VideoListActivity extends MusicBaseActivity<IndexVideoPersenter> implements MusicOnItemClickListener, IndexVideoContract.View {
+public class VideoListActivity extends MusicBaseActivity<IndexVideoPersenter>
+        implements MusicOnItemClickListener, IndexVideoContract.View {
 
     private VideoIndexVideoAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -63,7 +64,8 @@ public class VideoListActivity extends MusicBaseActivity<IndexVideoPersenter> im
             finish();
             return;
         }
-        mTitleView.setTitle(VideoUtils.getInstance().formatTitleByTitle(getIntent().getStringExtra(VideoConstants.KEY_VIDEO_TITLE)));
+        mTitleView.setTitle(VideoUtils.getInstance().formatTitleByTitle(
+                getIntent().getStringExtra(VideoConstants.KEY_VIDEO_TITLE)));
         mPresenter=new IndexVideoPersenter();
         mPresenter.attachView(this);
         mPresenter.getVideosByUrl(mUrl,mPage);
@@ -81,7 +83,8 @@ public class VideoListActivity extends MusicBaseActivity<IndexVideoPersenter> im
             }
         });
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(VideoListActivity.this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager=new LinearLayoutManager(
+                VideoListActivity.this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
@@ -208,7 +211,8 @@ public class VideoListActivity extends MusicBaseActivity<IndexVideoPersenter> im
         if(startY< MusicUtils.getInstance().getStatusBarHeight(VideoListActivity.this)){
             startY=locations[1]+(clickView.getMeasuredHeight()/2);
         }
-        Logger.d(TAG,"showPropupMenu-->viewX:"+locations[0]+",viewY:"+locations[1]+",startX:"+startX+",startY:"+startY+",viewW:"+mMeasuredWidth+",viewH:"+mMeasuredHeight);
+        Logger.d(TAG,"showPropupMenu-->viewX:"+locations[0]+",viewY:"+locations[1]
+                +",startX:"+startX+",startY:"+startY+",viewW:"+mMeasuredWidth+",viewH:"+mMeasuredHeight);
         if(null==mTitleView){
             mTitleView=findViewById(R.id.title_view);
         }

@@ -152,7 +152,8 @@ public class MusicRoundImageView extends AppCompatImageView {
                 canvas.drawRect(0, roundRect.bottom - borderRadius, borderRadius, roundRect.bottom, bitmapPaint);
             }
             if (!corners_bottom_right) {
-                canvas.drawRect(roundRect.right - borderRadius, roundRect.bottom - borderRadius, roundRect.right, roundRect.bottom, bitmapPaint);
+                canvas.drawRect(roundRect.right - borderRadius, roundRect.bottom -
+                        borderRadius, roundRect.right, roundRect.bottom, bitmapPaint);
             }
         } else {
             canvas.drawCircle(radius, radius, radius, bitmapPaint);

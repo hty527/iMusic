@@ -17,7 +17,8 @@ import com.video.player.lib.controller.DefaultVideoController;
  * 示例视频播放器
  */
 
-public class VideoPlayerTrackView extends BaseVideoPlayer<DefaultVideoController,DefaultCoverController, DefaultGestureController> {
+public class VideoPlayerTrackView extends BaseVideoPlayer<DefaultVideoController,
+        DefaultCoverController, DefaultGestureController> {
 
     @Override
     protected int getLayoutID() {

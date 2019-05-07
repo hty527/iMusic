@@ -163,7 +163,8 @@ public class MusicSildingLayout extends RelativeLayout implements OnTouchListene
                 // 则当手指滑动，取消item的点击事件，不然我们滑动也伴随着item点击事件的发生  
                 if (isTouchOnAbsListView()) {  
                     MotionEvent cancelEvent = MotionEvent.obtain(event);
-                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (event.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
+                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (event.getActionIndex()
+                            << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
                     v.onTouchEvent(cancelEvent);  
                 }  
             }

@@ -285,9 +285,11 @@ public class MusicJukeBoxView extends RelativeLayout{
                     if(mEchoPageSelectedEnable){
                         mEchoPageSelectedEnable=false;
                         Logger.d(TAG,"onPageSelected-->onPageSelected(index)遭到禁用，只处理回显");
-                        mPlayerInfoListener.onJukeBoxObjectChanged(position,(BaseAudioInfo) mMusicDatas.get(position),true);
+                        mPlayerInfoListener.onJukeBoxObjectChanged(position,(BaseAudioInfo)
+                                mMusicDatas.get(position),true);
                     }else{
-                        mPlayerInfoListener.onJukeBoxObjectChanged(position,(BaseAudioInfo) mMusicDatas.get(position),false);
+                        mPlayerInfoListener.onJukeBoxObjectChanged(position,(BaseAudioInfo)
+                                mMusicDatas.get(position),false);
                     }
                 }
             }
@@ -465,8 +467,11 @@ public class MusicJukeBoxView extends RelativeLayout{
      * @param isPlayAnimator 是否直接开始指针、唱片机动画
      * @param echoPageSelectedEnable 是否禁用回调onPageSelected(int position);方法
      */
-    public void setCurrentMusicItem(int position,boolean smoothScroll,boolean isPlayAnimator,boolean echoPageSelectedEnable) {
-        Logger.d(TAG,"setCurrentMusicItem:CurrentPosition"+mViewPager.getCurrentItem()+",position:"+position+",smoothScroll:"+smoothScroll+",isPlayAnimator:"+isPlayAnimator+",isEchoCurrentIndex:"+echoPageSelectedEnable);
+    public void setCurrentMusicItem(int position,boolean smoothScroll,boolean isPlayAnimator,boolean
+            echoPageSelectedEnable) {
+        Logger.d(TAG,"setCurrentMusicItem:CurrentPosition"+mViewPager.getCurrentItem()
+                +",position:"+position+",smoothScroll:"+smoothScroll+",isPlayAnimator:"
+                +isPlayAnimator+",isEchoCurrentIndex:"+echoPageSelectedEnable);
         if(null!=mScroller) {
             mScroller.setScroller(smoothScroll);//不需要缓慢滚动落地
         }

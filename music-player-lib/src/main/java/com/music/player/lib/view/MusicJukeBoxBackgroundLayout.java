@@ -169,7 +169,8 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
      */
     public synchronized void setBackgroundCover(String imageUrl,long delayMillis,boolean isBlur,int blurRadius,boolean shadeEnable) {
         if(null!=mLayerDrawable&&Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if(null!=mBackgroundRunnable&&!TextUtils.isEmpty(mBackgroundRunnable.getImageUrl())&&mBackgroundRunnable.getImageUrl().equals(imageUrl)){
+            if(null!=mBackgroundRunnable&&!TextUtils.isEmpty(mBackgroundRunnable.getImageUrl())
+                    &&mBackgroundRunnable.getImageUrl().equals(imageUrl)){
                 //重复的，不做任何处理
                 return;
             }
@@ -239,9 +240,11 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
                                     if(mIsBlur){
                                         Drawable foregroundDrawable=null;
                                         if(mShadeEnable){
-                                            foregroundDrawable = MusicUtils.getInstance().getForegroundDrawable(bitmap, mScreenWidth, mScreenHeight, mBlurRadius, Color.parseColor("#FF999999"));
+                                            foregroundDrawable = MusicUtils.getInstance().getForegroundDrawable(bitmap,
+                                                    mScreenWidth, mScreenHeight, mBlurRadius, Color.parseColor("#FF999999"));
                                         }else{
-                                            foregroundDrawable = MusicUtils.getInstance().getForegroundDrawable(bitmap, mScreenWidth, mScreenHeight, mBlurRadius, Color.parseColor("#00000000"));
+                                            foregroundDrawable = MusicUtils.getInstance().getForegroundDrawable(bitmap,
+                                                    mScreenWidth, mScreenHeight, mBlurRadius, Color.parseColor("#00000000"));
                                         }
                                         if(null==foregroundDrawable){
                                             foregroundDrawable = ContextCompat.getDrawable(getContext(),R.drawable.music_default_music_bg);
@@ -271,7 +274,8 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
                     if(null==bitmap){
                         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.music_default_music_bg);
                     }
-                    Drawable foregroundDrawable = MusicUtils.getInstance().getForegroundDrawable(bitmap, mScreenWidth, mScreenHeight, 5,Color.parseColor("#FF999999"));
+                    Drawable foregroundDrawable = MusicUtils.getInstance().getForegroundDrawable(bitmap, mScreenWidth,
+                            mScreenHeight, 5,Color.parseColor("#FF999999"));
                     if(null==foregroundDrawable){
                         foregroundDrawable = ContextCompat.getDrawable(getContext(),R.drawable.music_default_music_bg);
                     }

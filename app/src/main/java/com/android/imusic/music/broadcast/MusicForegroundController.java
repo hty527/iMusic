@@ -26,7 +26,8 @@ public class MusicForegroundController extends BroadcastReceiver {
         if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW)){
             if(intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0)>0){
                 Intent startIntent=new Intent(context.getApplicationContext(), MusicPlayerActivity.class);
-                startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0));
+                startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, intent.getLongExtra(
+                        MusicConstants.MUSIC_KEY_MEDIA_ID,0));
                 //如果播放器组件未启用，创建新的实例
                 //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
                 //反之则清除播放器之上的所有栈，让播放器组件显示在最顶层

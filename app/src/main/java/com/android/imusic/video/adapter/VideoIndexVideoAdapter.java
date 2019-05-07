@@ -37,7 +37,8 @@ public class VideoIndexVideoAdapter extends BaseAdapter<OpenEyesIndexItemBean,Re
     private final int mScreenWidth;
     private final MusicOnItemClickListener mItemClickListener;
 
-    public VideoIndexVideoAdapter(Context context, @Nullable List<OpenEyesIndexItemBean> data, MusicOnItemClickListener onItemClickListener) {
+    public VideoIndexVideoAdapter(Context context, @Nullable List<OpenEyesIndexItemBean> data,
+                                  MusicOnItemClickListener onItemClickListener) {
         super(context,data);
         this.mItemClickListener=onItemClickListener;
         mScreenWidth = MusicUtils.getInstance().getScreenWidth(context);
@@ -142,7 +143,8 @@ public class VideoIndexVideoAdapter extends BaseAdapter<OpenEyesIndexItemBean,Re
                     int itemHeight = (mScreenWidth - MusicUtils.getInstance().dpToPxInt(getContext(), 30f)) * 9 / 16;
                     bannerViewHolder.itemBannerCover.getLayoutParams().height=itemHeight;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        bannerViewHolder.itemBannerRoot.setOutlineProvider(new VideoTextrueProvider(VideoUtils.getInstance().dpToPxInt(getContext(),8f)));
+                        bannerViewHolder.itemBannerRoot.setOutlineProvider(new VideoTextrueProvider(
+                                VideoUtils.getInstance().dpToPxInt(getContext(),8f)));
                     }
                     OpenEyesIndexItemBean itemDataData = itemData.getData();
                     itemDataData.setItemType(OpenEyesIndexItemBean.ITEM_BANNER);
@@ -169,14 +171,16 @@ public class VideoIndexVideoAdapter extends BaseAdapter<OpenEyesIndexItemBean,Re
      * @param videoViewHolder
      * @param indexItemBean
      */
-    private void setItemVideoData(final VideoVideoViewHolder videoViewHolder, OpenEyesIndexItemBean indexItemBean, final int position) {
+    private void setItemVideoData(final VideoVideoViewHolder videoViewHolder,
+                                  OpenEyesIndexItemBean indexItemBean, final int position) {
         int itemHeight = (mScreenWidth - MusicUtils.getInstance().dpToPxInt(getContext(), 30f)) * 9 / 16;
         videoViewHolder.trackVideo.setWorking(false);
         videoViewHolder.trackVideo.setScrrenOrientation(VideoConstants.SCREEN_ORIENTATION_PORTRAIT);
         videoViewHolder.trackVideo.getLayoutParams().height=itemHeight;
         videoViewHolder.trackVideo.setGlobaEnable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            videoViewHolder.itemRoomItem.setOutlineProvider(new VideoTextrueProvider(VideoUtils.getInstance().dpToPxInt(getContext(),8f)));
+            videoViewHolder.itemRoomItem.setOutlineProvider(new VideoTextrueProvider(
+                    VideoUtils.getInstance().dpToPxInt(getContext(),8f)));
         }
         //这里将条目View抛出，界面处理无缝衔接播放
         videoViewHolder.itemView.setTag(indexItemBean);
@@ -188,15 +192,18 @@ public class VideoIndexVideoAdapter extends BaseAdapter<OpenEyesIndexItemBean,Re
                 }
             }
         });
-        videoViewHolder.trackVideo.setDataSource(indexItemBean.getPlayUrl(),indexItemBean.getTitle(),indexItemBean.getId()+"");
+        videoViewHolder.trackVideo.setDataSource(indexItemBean.getPlayUrl(),indexItemBean.getTitle(),
+                indexItemBean.getId()+"");
         VideoParams videoParams= MediaUtils.getInstance().formatVideoParams(indexItemBean);
         videoViewHolder.trackVideo.setParamsTag(videoParams);
         if(null!=videoViewHolder.trackVideo.getCoverController()){
             //视频时长
-            videoViewHolder.trackVideo.getCoverController().mPreDurtion.setText(MusicUtils.getInstance().stringForAudioTime(indexItemBean.getDuration()*1000));
+            videoViewHolder.trackVideo.getCoverController().mPreDurtion.setText(
+                    MusicUtils.getInstance().stringForAudioTime(indexItemBean.getDuration()*1000));
             //观看人次
             if(null!=indexItemBean.getConsumption()){
-                videoViewHolder.trackVideo.getCoverController().mPreCount.setText(indexItemBean.getConsumption().getReplyCount()+"人观看");
+                videoViewHolder.trackVideo.getCoverController().mPreCount.setText(
+                        indexItemBean.getConsumption().getReplyCount()+"人观看");
             }
         }
         videoViewHolder.itemMenu.setTag(null);

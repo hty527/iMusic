@@ -35,11 +35,13 @@ public class MusicCommenListAdapter extends BaseAdapter<BaseAudioInfo,MusicListV
     private MusicOnItemClickListener mListener;
     private int mCurrentPosition;
 
-    public MusicCommenListAdapter(Context context, List<BaseAudioInfo> data, MusicOnItemClickListener listener) {
+    public MusicCommenListAdapter(Context context, List<BaseAudioInfo> data,
+                                  MusicOnItemClickListener listener) {
         this(context,data,listener,false);
     }
 
-    public MusicCommenListAdapter(Context context, List<BaseAudioInfo> data, MusicOnItemClickListener listener,boolean isAlbum) {
+    public MusicCommenListAdapter(Context context, List<BaseAudioInfo> data,
+                                  MusicOnItemClickListener listener,boolean isAlbum) {
         super(context,data);
         this.mListener=listener;
         int processors = Runtime.getRuntime().availableProcessors();
@@ -104,7 +106,8 @@ public class MusicCommenListAdapter extends BaseAdapter<BaseAudioInfo,MusicListV
                         viewHolder.imageCover.setImageBitmap(bitmap);
                     }else{
                         if(null!=mExecutorService){
-                            new MusicAlbumCoverTask(viewHolder.imageCover,itemData.getAudioPath()).executeOnExecutor(mExecutorService);
+                            new MusicAlbumCoverTask(viewHolder.imageCover,itemData.getAudioPath()).
+                                    executeOnExecutor(mExecutorService);
                         }
                     }
                 }else{

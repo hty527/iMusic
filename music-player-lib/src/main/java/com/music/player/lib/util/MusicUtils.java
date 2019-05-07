@@ -161,7 +161,8 @@ public class MusicUtils {
     @SuppressLint("CommitPrefEdits")
     public synchronized void initSharedPreferencesConfig(Context context) {
         if(null==mSharedPreferences){
-            mSharedPreferences = context.getSharedPreferences(context.getPackageName() + MusicConstants.SP_KEY_NAME, Context.MODE_MULTI_PROCESS);
+            mSharedPreferences = context.getSharedPreferences(context.getPackageName()
+                    + MusicConstants.SP_KEY_NAME, Context.MODE_MULTI_PROCESS);
             mEditor = mSharedPreferences.edit();
         }
     }
@@ -396,7 +397,8 @@ public class MusicUtils {
                 //切割部分图片
                 Bitmap cropBitmap = Bitmap.createBitmap(bitmap, cropBitmapWidthX, 0, cropBitmapWidth, bitmap.getHeight());
                 //缩小图片
-                Bitmap scaleBitmap = Bitmap.createScaledBitmap(cropBitmap, bitmap.getWidth() / 50, bitmap.getHeight() / 50, false);
+                Bitmap scaleBitmap = Bitmap.createScaledBitmap(cropBitmap, bitmap.getWidth()
+                        / 50, bitmap.getHeight() / 50, false);
                 //模糊化
                 final Bitmap blurBitmap = doBlur(scaleBitmap, radius, true);
                 final Drawable foregroundDrawable = new BitmapDrawable(blurBitmap);
@@ -995,7 +997,8 @@ public class MusicUtils {
                                     bitmap=drawRoundBitmap(bitmap);
                                 }
                                 if(null!=bitmap){
-                                    LayerDrawable discDrawable = composeJukeBoxDrawable(context,bitmap,frontBgSize,frontCoverSize,jukeBoxBgCover);
+                                    LayerDrawable discDrawable = composeJukeBoxDrawable(context,bitmap,
+                                            frontBgSize,frontCoverSize,jukeBoxBgCover);
                                     if(null!=discDrawable){
                                         musicCover.setImageDrawable(discDrawable);
                                     }
@@ -1009,7 +1012,8 @@ public class MusicUtils {
                             if(null!=bitmap){
                                 bitmap=drawRoundBitmap(bitmap);
                                 if(null!=bitmap){
-                                    LayerDrawable discDrawable = composeJukeBoxDrawable(context,bitmap,frontBgSize,frontCoverSize,jukeBoxBgCover);
+                                    LayerDrawable discDrawable = composeJukeBoxDrawable(context,bitmap,
+                                            frontBgSize,frontCoverSize,jukeBoxBgCover);
                                     if(null!=discDrawable){
                                         musicCover.setImageDrawable(discDrawable);
                                     }
@@ -1073,7 +1077,8 @@ public class MusicUtils {
      * @param jukeBoxBgCover 唱片背景封面
      * @return LayerDrawable
      */
-    public LayerDrawable composeJukeBoxDrawable(Context context, Bitmap bitmap, float frontJukeBoxScale, float frontCoverScale, int jukeBoxBgCover) {
+    public LayerDrawable composeJukeBoxDrawable(Context context, Bitmap bitmap, float frontJukeBoxScale,
+                                                float frontCoverScale, int jukeBoxBgCover) {
         if(frontJukeBoxScale<=0||frontCoverScale<=0){
             return null;
         }
@@ -1083,7 +1088,8 @@ public class MusicUtils {
         //封面大小
         int jukeBoxCoverFgSize = (int) (screenWidth * frontCoverScale);
         //生成一张去除锯齿的背景位图
-        Bitmap bgBitmapDisc = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), jukeBoxBgCover), jukeBoxCoverBgSize, jukeBoxCoverBgSize, true);
+        Bitmap bgBitmapDisc = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+                context.getResources(), jukeBoxBgCover), jukeBoxCoverBgSize, jukeBoxCoverBgSize, true);
         BitmapDrawable bgDiscDrawable = new BitmapDrawable(bgBitmapDisc);
         //适配大小
         Bitmap finalBitmap = scalePicSize(jukeBoxCoverFgSize,bitmap);

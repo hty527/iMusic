@@ -97,7 +97,8 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                 boolean isVisible=false;
                 if(!TextUtils.isEmpty(itemData.getTag_id())){
                     if(itemData.getTag_id().equals(AudioInfo.TAG_LOCATION)){
-                        if(MusicPlayerManager.getInstance().getPlayingChannel().equals(MusicPlayingChannel.CHANNEL_LOCATION)){
+                        if(MusicPlayerManager.getInstance().getPlayingChannel().equals(
+                                MusicPlayingChannel.CHANNEL_LOCATION)){
                             isVisible=true;
                         }
                         //本地音频个数获取
@@ -108,7 +109,8 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                             defaultViewHolder.textDesp.setText("(0)");
                         }
                     }else if(itemData.getTag_id().equals(AudioInfo.TAG_LAST_PLAYING)){
-                        if(MusicPlayerManager.getInstance().getPlayingChannel().equals(MusicPlayingChannel.CHANNEL_HISTROY)){
+                        if(MusicPlayerManager.getInstance().getPlayingChannel().equals(
+                                MusicPlayingChannel.CHANNEL_HISTROY)){
                             isVisible=true;
                         }
                         //优先拿播放器内部的，处理播放过程中切换了对象
@@ -125,7 +127,8 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                             }
                         }
                     }else if(itemData.getTag_id().equals(AudioInfo.TAG_COLLECT)){
-                        if(MusicPlayerManager.getInstance().getPlayingChannel().equals(MusicPlayingChannel.CHANNEL_COLLECT)){
+                        if(MusicPlayerManager.getInstance().getPlayingChannel().equals(
+                                MusicPlayingChannel.CHANNEL_COLLECT)){
                             isVisible=true;
                         }
                         //收藏记录
@@ -149,12 +152,14 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                             .fitCenter()
                             .into(defaultViewHolder.imageCover);
                 }
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) defaultViewHolder.itemLine.getLayoutParams();
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)
+                        defaultViewHolder.itemLine.getLayoutParams();
                 int margin = 0;//MusicUtils.getInstance().dpToPxInt(getContext(), 5f)
                 if(itemData.getTag_id().equals(AudioInfo.TAG_COLLECT)){
                     layoutParams.setMargins(margin,0,margin,0);
                 }else{
-                    layoutParams.setMargins(MusicUtils.getInstance().dpToPxInt(getContext(),39f),0,margin,0);
+                    layoutParams.setMargins(MusicUtils.getInstance().dpToPxInt(
+                            getContext(),39f),0,margin,0);
                 }
                 defaultViewHolder.itemLine.setLayoutParams(layoutParams);
                 //标题
@@ -189,7 +194,8 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                 musicViewHolder.imageCover.getLayoutParams().height=mItemWidth;
                 musicViewHolder.textTitle.setText(itemData.getAudioName());
                 musicViewHolder.textAnchor.setText(itemData.getNickname());
-                String cover= TextUtils.isEmpty(itemData.getAudioCover())?itemData.getAvatar():itemData.getAudioCover();
+                String cover= TextUtils.isEmpty(itemData.getAudioCover())
+                        ?itemData.getAvatar():itemData.getAudioCover();
                 if(!TextUtils.isEmpty(cover)){
                     Glide.with(getContext())
                             .load(cover)

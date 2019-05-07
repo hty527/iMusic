@@ -115,7 +115,8 @@ public class MusicNetUtils <T> {
                                     @Override
                                     public void run() {
                                         try {
-                                            callBack.onError(urlConnection.getResponseCode(),urlConnection.getResponseMessage());
+                                            callBack.onError(urlConnection.getResponseCode(),
+                                                    urlConnection.getResponseMessage());
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                             callBack.onError(MusicNetUtils.API_RESULT_ERROR,"请求失败"+e.getMessage());
@@ -228,7 +229,8 @@ public class MusicNetUtils <T> {
                                     @Override
                                     public void run() {
                                         try {
-                                            callBack.onError(urlConnection.getResponseCode(),urlConnection.getResponseMessage());
+                                            callBack.onError(urlConnection.getResponseCode(),
+                                                    urlConnection.getResponseMessage());
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                             callBack.onError(MusicNetUtils.API_RESULT_ERROR,"请求失败"+e.getMessage());

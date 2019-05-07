@@ -72,7 +72,8 @@ public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
         if(null!=attrs){
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicJukeBoxViewSmall);
             boolean enable = typedArray.getBoolean(R.styleable.MusicJukeBoxViewSmall_musicMiniJukeEnable, true);
-            mRotationDurtion = typedArray.getInteger(R.styleable.MusicJukeBoxViewSmall_musicMiniJukeRotationDurtion, MusicConstants.BOX_MINI_REVOLVE_MINUTE);
+            mRotationDurtion = typedArray.getInteger(R.styleable.MusicJukeBoxViewSmall_musicMiniJukeRotationDurtion,
+                    MusicConstants.BOX_MINI_REVOLVE_MINUTE);
             if(enable){
                 mViewCover.setOnClickListener(new OnClickListener() {
                     @Override
@@ -200,7 +201,8 @@ public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
                     readyPlay=false;
                     pausAnimator();
                     //播放
-                }else if(MusicStatus.PLAYER_STATUS_START==musicStatus.getPlayerStatus()||MusicStatus.PLAYER_STATUS_PREPARED==musicStatus.getPlayerStatus()){
+                }else if(MusicStatus.PLAYER_STATUS_START==musicStatus.getPlayerStatus()
+                        ||MusicStatus.PLAYER_STATUS_PREPARED==musicStatus.getPlayerStatus()){
                     Logger.d(TAG,"update，播放器开始");
                     readyPlay=true;
                     startAnimator();

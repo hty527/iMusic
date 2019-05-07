@@ -8,7 +8,8 @@ import com.android.imusic.music.net.MusicNetUtils;
  * MVP Base P
  */
 
-public abstract class BasePresenter<V extends BaseContract.BaseView,M extends MusicNetUtils> implements BaseContract.BasePresenter<V>{
+public abstract class BasePresenter<V extends BaseContract.BaseView,M extends MusicNetUtils>
+        implements BaseContract.BasePresenter<V>{
 
     //MVP中的V
     protected V mView;

@@ -89,7 +89,8 @@ public class DefaultGestureController extends BaseGestureController {
     public void setVideoProgress(long totalTime, long speedTime, int progress) {
         Logger.d(TAG,"setVideoProgress-->"+progress);
         if(null!=mProgressText){
-            String progressText = VideoUtils.getInstance().stringForAudioTime(speedTime) + "/" + VideoUtils.getInstance().stringForAudioTime(totalTime);
+            String progressText = VideoUtils.getInstance().stringForAudioTime(speedTime)
+                    + "/" + VideoUtils.getInstance().stringForAudioTime(totalTime);
             mProgressText.setText(progressText);
         }
         if(null!=mProgressBar){
@@ -174,7 +175,8 @@ public class DefaultGestureController extends BaseGestureController {
         @Override
         public void run() {
             if(null!=mCurrentView){
-                ObjectAnimator animator = ObjectAnimator.ofFloat(mCurrentView, "alpha", 1.0f, 0.0f).setDuration(300);
+                ObjectAnimator animator = ObjectAnimator.ofFloat(mCurrentView,
+                        "alpha", 1.0f, 0.0f).setDuration(300);
                 animator.setInterpolator(new LinearInterpolator());
                 animator.addListener(new AnimatorListenerAdapter() {
                     @Override

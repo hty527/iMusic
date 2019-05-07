@@ -95,7 +95,8 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
 			if(MusicPlayerManager.getInstance().isTrashEnable()){
 				//手势垃圾桶,在用户手指上下滑动10个像素触发垃圾桶
 				if(Math.abs(xInScreen-xDownInScreen)>=SCROLL_PIXEL||Math.abs(yInScreen-yDownInScreen)>=SCROLL_PIXEL){
-					int[] trashToWindown = MusicWindowManager.getInstance().addMiniJukeBoxTrashToWindown(getContext().getApplicationContext());
+					int[] trashToWindown = MusicWindowManager.getInstance().
+							addMiniJukeBoxTrashToWindown(getContext().getApplicationContext());
 					if(null!=trashToWindown){
 						MusicWindowManager.getInstance().startTrashWindowAnimation();
 						//确定垃圾桶的顶部起点轴在屏幕中的Y轴位置
@@ -135,7 +136,8 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
 			int[] locations=new int[2];
 			getLocationOnScreen(locations);
             //单击事件
-            if (isVisible&&null!=mListener&&Math.abs(xInScreen - xDownInScreen) < SCROLL_PIXEL && Math.abs(yInScreen - yDownInScreen) < SCROLL_PIXEL) {
+            if (isVisible&&null!=mListener&&Math.abs(xInScreen - xDownInScreen) < SCROLL_PIXEL
+					&& Math.abs(yInScreen - yDownInScreen) < SCROLL_PIXEL) {
                 //取消事件只在默认样式生效
                 if(MusicPlayerManager.getInstance().getWindownStyle().equals(MusicWindowStyle.DEFAULT)){
                     //删除按钮的位置：X：宽度的后1/3段像素内，Y：高度的前1/3段像素内
@@ -212,7 +214,8 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
         if(currentRowX>(mScreenWidth/2)){
             toPixelX=mScreenWidth;
         }
-        //Logger.d(TAG,"scrollToPixel:pixelX:"+viewCurrentPixelX+",pixelY:"+viewCurrentPixelY+",currentRowX:"+currentRowX+",scrollDurtion:"+scrollDurtion+",toPixelX:"+toPixelX);
+        //Logger.d(TAG,"scrollToPixel:pixelX:"+viewCurrentPixelX+",pixelY:"+viewCurrentPixelY+",
+		// currentRowX:"+currentRowX+",scrollDurtion:"+scrollDurtion+",toPixelX:"+toPixelX);
         if(null!=mWindowManager){
             if(scrollDurtion<=0){
                 mParams.x = toPixelX;

@@ -117,7 +117,8 @@ public class MusicRomUtil {
                 StringBuilder stringBuilder2 = new StringBuilder();
                 stringBuilder2.append("getprop ");
                 stringBuilder2.append(str);
-                bufferedReader = new BufferedReader(new InputStreamReader(runtime.exec(stringBuilder2.toString()).getInputStream()), 1024);
+                bufferedReader = new BufferedReader(new InputStreamReader(runtime.exec
+                        (stringBuilder2.toString()).getInputStream()), 1024);
                 try {
                     String readLine = bufferedReader.readLine();
                     bufferedReader.close();

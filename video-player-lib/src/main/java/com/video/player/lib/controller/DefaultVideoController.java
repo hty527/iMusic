@@ -26,9 +26,11 @@ import com.video.player.lib.utils.VideoUtils;
  * 此控制器已适配适用于常规、全屏、Mini窗口、悬浮窗窗口 四种场景交互
  */
 
-public class DefaultVideoController extends BaseVideoController implements SeekBar.OnSeekBarChangeListener {
+public class DefaultVideoController extends BaseVideoController implements
+        SeekBar.OnSeekBarChangeListener {
 
-    private View mTopBarLayout,mBottomBarLayout,mErrorLayout,mMobileLayout,mVideoStart,mBtnBackTiny,mBtnFullWindow,mBtnFull;
+    private View mTopBarLayout,mBottomBarLayout,mErrorLayout,mMobileLayout,mVideoStart,
+            mBtnBackTiny,mBtnFullWindow,mBtnFull;
     private TextView mVideoTitle,mVideoCurrent,mVideoTotal;
     private ProgressBar mBottomProgressBar,mProgressBar;
     private SeekBar mSeekBar;
@@ -97,7 +99,8 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
                     }
                 }else if(id == R.id.video_full_window){
                     if(null!=mOnFuctionListener){
-                        mOnFuctionListener.onStartGlobalWindown(new VideoWindowController(getContext()),true);
+                        mOnFuctionListener.onStartGlobalWindown(
+                                new VideoWindowController(getContext()),true);
                     }
                 }
             }
@@ -176,7 +179,8 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         if(fromUser){
             long durtion = VideoPlayerManager.getInstance().getDurtion();
             if(durtion>0){
-                mVideoCurrent.setText(VideoUtils.getInstance().stringForAudioTime(progress * durtion / 100));
+                mVideoCurrent.setText(VideoUtils.getInstance().stringForAudioTime(
+                        progress * durtion / 100));
             }
         }
     }
@@ -221,13 +225,16 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         removeCallbacks(View.INVISIBLE);
         //小窗口
         if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
         //悬浮窗
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_WINDOW){
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
         //常规、全屏
         }else{
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         }
     }
 
@@ -241,12 +248,15 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         //removeCallbacks(View.INVISIBLE);
         //小窗口
         if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_WINDOW){
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
             //常规、全屏
         }else{
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         }
     }
 
@@ -257,14 +267,18 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     public void endBuffer() {
         Logger.d(TAG,"endBuffer："+mScrrenOrientation);
         if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
         }else{
             if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_PORTRAIT){
-                updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.VISIBLE);
+                updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                        View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.VISIBLE);
             }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_WINDOW){
-                updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE);
+                updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                        View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE);
             }else{
-                updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+                updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                        View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
             }
         }
     }
@@ -279,13 +293,17 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
             mBtnStart.setImageResource(R.drawable.ic_video_controller_pause);
         }
         if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_WINDOW){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_PORTRAIT){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.VISIBLE);
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_FULL){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         }
     }
 
@@ -301,14 +319,18 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         }
         removeCallbacks(View.VISIBLE);
         if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_WINDOW){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_PORTRAIT){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
             removeCallbacks(View.INVISIBLE);
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.GONE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.VISIBLE,View.GONE,View.GONE);
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_FULL){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         }
     }
 
@@ -323,13 +345,17 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
             mBtnStart.setImageResource(R.drawable.ic_video_controller_pause);
         }
         if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_WINDOW){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_PORTRAIT){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.VISIBLE);
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.GONE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.VISIBLE,View.GONE,View.GONE);
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_FULL){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         }
         changeControllerState(mScrrenOrientation,false);
     }
@@ -342,9 +368,11 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         Logger.d(TAG,"mobileWorkTips："+mScrrenOrientation);
         removeCallbacks(View.INVISIBLE);
         if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,
+                    View.VISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
         }else{
-            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,
+                    View.VISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         }
     }
 
@@ -361,7 +389,8 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
             mBtnStart.setImageResource(R.drawable.ic_video_controller_play);
         }
         removeCallbacks(View.INVISIBLE);
-        updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+        updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,
+                View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
     }
 
     /**
@@ -371,7 +400,8 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     public void reset() {
         Logger.d(TAG,"reset："+mScrrenOrientation);
         removeCallbacks(View.INVISIBLE);
-        updateVideoControllerUI(View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+        updateVideoControllerUI(View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,
+                View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         if(null!=mVideoTotal){
             mVideoTotal.setText("00:00");
             mVideoCurrent.setText("00:00");
@@ -402,7 +432,8 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     public void startTiny() {
         Logger.d(TAG,"startTiny："+mScrrenOrientation);
         removeCallbacks(View.INVISIBLE);
-        updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
+        updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,
+                View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
     }
 
     /**
@@ -412,7 +443,8 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     public void startGlobalWindow() {
         removeCallbacks(View.INVISIBLE);
         Logger.d(TAG,"startWindow");
-        updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE);
+        updateVideoControllerUI(View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.INVISIBLE,
+                View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE);
     }
 
     /**
@@ -435,12 +467,15 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
         Logger.d(TAG,"startSeek："+mScrrenOrientation);
         //小窗口
         if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.VISIBLE,View.GONE,View.VISIBLE);
         }else if(mScrrenOrientation==VideoConstants.SCREEN_ORIENTATION_WINDOW){
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.GONE);
             //常规、全屏
         }else{
-            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
+            updateVideoControllerUI(View.INVISIBLE,View.VISIBLE,View.INVISIBLE,View.INVISIBLE,
+                    View.INVISIBLE,View.INVISIBLE,View.GONE,View.VISIBLE);
         }
     }
 
@@ -461,7 +496,8 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
      */
     @Override
     public void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent) {
-        Logger.d("播放实时进度","onTaskRuntime-->totalDurtion:"+totalDurtion+",currentDurtion:"+currentDurtion);
+        Logger.d("播放实时进度","onTaskRuntime-->totalDurtion:"+totalDurtion
+                +",currentDurtion:"+currentDurtion);
         if(totalDurtion>-1){
             mOldPlayProgress=currentDurtion;
             if(null!=mVideoTotal){
@@ -596,7 +632,8 @@ public class DefaultVideoController extends BaseVideoController implements SeekB
     @Override
     public void changeControllerState(int scrrenOrientation,boolean isInterceptIntent) {
         if(null==mBottomBarLayout) return;
-        Logger.d(TAG,"changeControllerState-->"+scrrenOrientation+",isInterceptIntent:"+isInterceptIntent);
+        Logger.d(TAG,"changeControllerState-->"+scrrenOrientation
+                +",isInterceptIntent:"+isInterceptIntent);
         //小窗口样式不处理任何事件
         if(scrrenOrientation==VideoConstants.SCREEN_ORIENTATION_TINY){
             return;

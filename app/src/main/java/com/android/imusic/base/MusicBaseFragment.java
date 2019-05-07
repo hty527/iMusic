@@ -26,7 +26,8 @@ public abstract class MusicBaseFragment<P extends BasePresenter> extends Fragmen
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(getLayoutID(),null,false);
     }
 

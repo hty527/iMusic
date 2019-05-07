@@ -14,7 +14,8 @@ import java.lang.reflect.Type;
  * Search Presenter
  */
 
-public class MusicSearchPersenter extends BasePresenter<MusicSearchContract.View,MusicSearchEngin> implements MusicSearchContract.Presenter<MusicSearchContract.View>{
+public class MusicSearchPersenter extends BasePresenter<MusicSearchContract.View,MusicSearchEngin>
+        implements MusicSearchContract.Presenter<MusicSearchContract.View>{
 
     @Override
     protected MusicSearchEngin createEngin() {

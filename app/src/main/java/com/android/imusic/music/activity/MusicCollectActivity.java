@@ -83,7 +83,8 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
                 createMiniJukeboxWindow();
             }else{
                 //Menu
-                MusicMusicDetailsDialog.getInstance(MusicCollectActivity.this,audioInfo,MusicMusicDetailsDialog.DialogScene.SCENE_COLLECT)
+                MusicMusicDetailsDialog.getInstance(MusicCollectActivity.this,audioInfo,
+                        MusicMusicDetailsDialog.DialogScene.SCENE_COLLECT)
                         .setMusicOnItemClickListener(new MusicOnItemClickListener() {
                             /**
                              * @param view
@@ -142,7 +143,8 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
             }else{
                 //播放器对象发生了变化
                 mAdapter.notifyDataSetChanged();
-                int position = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(), MusicPlayerManager.getInstance().getCurrentPlayerID());
+                int position = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
+                        MusicPlayerManager.getInstance().getCurrentPlayerID());
                 mAdapter.setCurrentPosition(position);
             }
         }

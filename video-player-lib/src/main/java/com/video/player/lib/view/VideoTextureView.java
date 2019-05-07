@@ -74,7 +74,8 @@ public class VideoTextureView extends TextureView {
         int parentWidth = ((View) getParent()).getMeasuredWidth();
         if (parentWidth != 0 && parentHeight != 0 && videoWidth != 0 && videoHeight != 0) {
             //铺满延申至全屏，可能会有画面变形
-            if (VideoConstants.VIDEO_DISPLAY_TYPE_PARENT== VideoPlayerManager.getInstance().getVideoDisplayType()) {
+            if (VideoConstants.VIDEO_DISPLAY_TYPE_PARENT==
+                    VideoPlayerManager.getInstance().getVideoDisplayType()) {
                 Logger.d(TAG,"缩放延伸");
                 videoHeight = videoWidth * parentHeight / parentWidth;
             }
@@ -140,12 +141,14 @@ public class VideoTextureView extends TextureView {
         }
         if (parentWidth != 0 && parentHeight != 0 && videoWidth != 0 && videoHeight != 0) {
             //原始大小居中显示，不做任何裁剪和缩放
-            if (VideoConstants.VIDEO_DISPLAY_TYPE_ORIGINAL== VideoPlayerManager.getInstance().getVideoDisplayType()) {
+            if (VideoConstants.VIDEO_DISPLAY_TYPE_ORIGINAL==
+                    VideoPlayerManager.getInstance().getVideoDisplayType()) {
                 Logger.d(TAG,"原始大小");
                 height = videoHeight;
                 width = videoWidth;
                 //缩放至控件宽高，会裁剪超出比例的画面
-            } else if (VideoConstants.VIDEO_DISPLAY_TYPE_CUT== VideoPlayerManager.getInstance().getVideoDisplayType()) {
+            } else if (VideoConstants.VIDEO_DISPLAY_TYPE_CUT==
+                    VideoPlayerManager.getInstance().getVideoDisplayType()) {
                 Logger.d(TAG,"裁剪铺满");
                 if (videoHeight / videoWidth > parentHeight / parentWidth) {
                     height = parentWidth / width * height;
@@ -155,7 +158,8 @@ public class VideoTextureView extends TextureView {
                     height = parentHeight;
                 }
              //缩放宽度至控件最大宽度，高度按比例缩放
-            } else if (VideoConstants.VIDEO_DISPLAY_TYPE_ZOOM== VideoPlayerManager.getInstance().getVideoDisplayType()) {
+            } else if (VideoConstants.VIDEO_DISPLAY_TYPE_ZOOM==
+                    VideoPlayerManager.getInstance().getVideoDisplayType()) {
                 Logger.d(TAG,"缩放延伸等比例");
                 width=parentWidth;
                 height = parentWidth / width * height;

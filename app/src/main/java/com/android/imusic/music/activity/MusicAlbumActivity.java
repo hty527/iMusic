@@ -57,7 +57,8 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * Album-Songs
  */
 
-public class MusicAlbumActivity extends MusicBaseActivity<MusicListPersenter> implements MusicOnItemClickListener, Observer, AppBarLayout.OnOffsetChangedListener, MusicPlayerEventListener, MusicListContract.View {
+public class MusicAlbumActivity extends MusicBaseActivity<MusicListPersenter> implements
+        MusicOnItemClickListener, Observer, AppBarLayout.OnOffsetChangedListener, MusicPlayerEventListener, MusicListContract.View {
 
     private MusicCommenListAdapter mAdapter;
     private String mTagID,mTitle;
@@ -100,7 +101,8 @@ public class MusicAlbumActivity extends MusicBaseActivity<MusicListPersenter> im
         //测量头部、标题栏高度
         mTopBar.measure(width,width);
         //设定最小停靠距离
-        collapsingToolbarLayout.setMinimumHeight(mTopBar.getMeasuredHeight()+MusicUtils.getInstance().dpToPxInt(this,7f));
+        collapsingToolbarLayout.setMinimumHeight(mTopBar.getMeasuredHeight()
+                +MusicUtils.getInstance().dpToPxInt(this,7f));
         //Head样式距离顶部巨鹿
         findViewById(R.id.music_empty_view).getLayoutParams().height= mTopBar.getMeasuredHeight();
 
@@ -111,7 +113,8 @@ public class MusicAlbumActivity extends MusicBaseActivity<MusicListPersenter> im
         //背景封面高度最终确定
         mMusicTopBg.getLayoutParams().height=topBatLayoutHeight;
         //滚动阈值高度
-        mHeaderViewHeight=(topBatLayoutHeight-mTopBar.getMeasuredHeight()-MusicUtils.getInstance().dpToPxInt(this,7f));
+        mHeaderViewHeight=(topBatLayoutHeight-mTopBar.getMeasuredHeight()
+                -MusicUtils.getInstance().dpToPxInt(this,7f));
         mSongCover = (MusicRoundImageView) findViewById(R.id.music_song_cover);
         TextView  tvPlay = (TextView) findViewById(R.id.music_tv_play);
         tvPlay.setText("全部播放");
@@ -235,7 +238,8 @@ public class MusicAlbumActivity extends MusicBaseActivity<MusicListPersenter> im
         if(null==singer) return;
         mTitle=singer.getSong_title();
         //预览人数
-        ((TextView) findViewById(R.id.music_preview_count)).setText(MusicUtils.getInstance().formatNumToWan(singer.getPreview_num(),true));
+        ((TextView) findViewById(R.id.music_preview_count)).setText(
+                MusicUtils.getInstance().formatNumToWan(singer.getPreview_num(),true));
         //歌单名称
         ((TextView) findViewById(R.id.music_song_title)).setText(singer.getSong_title());
 
@@ -297,7 +301,8 @@ public class MusicAlbumActivity extends MusicBaseActivity<MusicListPersenter> im
                 createMiniJukeboxWindow();
             }else{
                 //Menu
-                MusicMusicDetailsDialog.getInstance(MusicAlbumActivity.this,audioInfo, MusicMusicDetailsDialog.DialogScene.SCENE_ALBUM,mTitle)
+                MusicMusicDetailsDialog.getInstance(MusicAlbumActivity.this,audioInfo,
+                        MusicMusicDetailsDialog.DialogScene.SCENE_ALBUM,mTitle)
                         .setMusicOnItemClickListener(new MusicOnItemClickListener() {
                             /**
                              * @param view
@@ -361,7 +366,8 @@ public class MusicAlbumActivity extends MusicBaseActivity<MusicListPersenter> im
                 }
             }else{
                 mAdapter.notifyDataSetChanged();
-                int position = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(), MusicPlayerManager.getInstance().getCurrentPlayerID());
+                int position = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
+                        MusicPlayerManager.getInstance().getCurrentPlayerID());
                 mAdapter.setCurrentPosition(position);
             }
         }

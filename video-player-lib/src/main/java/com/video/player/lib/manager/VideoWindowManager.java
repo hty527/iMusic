@@ -52,7 +52,8 @@ public class VideoWindowManager {
      * @param viewWidth 播放器宽
      * @param viewHeight 播放器高
      */
-	public synchronized FrameLayout addVideoPlayerToWindow(Context context, int offsetPixelX, int offsetPixelY, int viewWidth, int viewHeight) {
+	public synchronized FrameLayout addVideoPlayerToWindow(Context context, int offsetPixelX,
+                                    int offsetPixelY, int viewWidth, int viewHeight) {
         if(!isWindowShowing()){
             if (Build.VERSION.SDK_INT >= 23) {
                 if (!Settings.canDrawOverlays(context)) {
@@ -80,7 +81,8 @@ public class VideoWindowManager {
      * @param viewHeight
      * @param viewHeight
      */
-    private synchronized FrameLayout addMiniVideoPlayerToWindown(Context context, int offsetPixelX, int offsetPixelY, int viewWidth, int viewHeight) {
+    private synchronized FrameLayout addMiniVideoPlayerToWindown(Context context, int offsetPixelX,
+                                     int offsetPixelY, int viewWidth, int viewHeight) {
         if (null!= mVideoWindowPlayerGroup) {
             removeMiniVideoPlayerFromWindow(context);
         }

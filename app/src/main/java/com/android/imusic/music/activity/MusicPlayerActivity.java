@@ -63,7 +63,8 @@ import java.util.List;
  * MusicPlayerListDialog：默认当前正在播放的列表
  */
 
-public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeBoxStatusListener, MusicPlayerEventListener {
+public class MusicPlayerActivity extends AppCompatActivity implements
+        MusicJukeBoxStatusListener, MusicPlayerEventListener {
 
     private static final String TAG = "MusicPlayerActivity";
     private MusicJukeBoxView mMusicJukeBoxView;
@@ -88,8 +89,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }
@@ -143,7 +146,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
             final List<AudioInfo> thisMusicLists=new ArrayList<>();
             thisMusicLists.addAll(audioInfos);
             final int index=MusicUtils.getInstance().getCurrentPlayIndex(thisMusicLists,musicID);
-            if(null!=currentPlayerMusic&&currentPlayerMusic.getAudioId()==musicID&&MusicPlayerManager.getInstance().getPlayerState()==MusicPlayerState.MUSIC_PLAYER_PLAYING){
+            if(null!=currentPlayerMusic&&currentPlayerMusic.getAudioId()==musicID&&
+                    MusicPlayerManager.getInstance().getPlayerState()==MusicPlayerState.MUSIC_PLAYER_PLAYING){
                 Logger.d(TAG,"RESET PLAY,musicID:"+musicID);
                 //更新播放器内部数据
                 MusicPlayerManager.getInstance().updateMusicPlayerData(thisMusicLists,index);
@@ -209,9 +213,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
                             int lastPosition = MusicPlayerManager.getInstance().playLastIndex();
                             if(-1!=lastPosition){
                                 if(Math.abs(mMusicJukeBoxView.getCurrentItem()-lastPosition)>2){
-                                    mMusicJukeBoxView.setCurrentMusicItem(lastPosition,false,true);
+                                    mMusicJukeBoxView.setCurrentMusicItem(lastPosition,
+                                            false,true);
                                 }else{
-                                    mMusicJukeBoxView.setCurrentMusicItem(lastPosition,true,true);
+                                    mMusicJukeBoxView.setCurrentMusicItem(lastPosition,
+                                            true,true);
                                 }
                             }
                         }
@@ -228,16 +234,19 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
                             int nextPosition = MusicPlayerManager.getInstance().playNextIndex();
                             if(-1!=nextPosition){
                                 if(Math.abs(mMusicJukeBoxView.getCurrentItem()-nextPosition)>2){
-                                    mMusicJukeBoxView.setCurrentMusicItem(nextPosition,false,true);
+                                    mMusicJukeBoxView.setCurrentMusicItem(nextPosition,
+                                            false,true);
                                 }else{
-                                    mMusicJukeBoxView.setCurrentMusicItem(nextPosition,true,true);
+                                    mMusicJukeBoxView.setCurrentMusicItem(nextPosition,
+                                            true,true);
                                 }
                             }
                         }
                         break;
                     //菜单
                     case R.id.music_btn_menu:
-                        MusicPlayerListDialog.getInstance(MusicPlayerActivity.this).setMusicOnItemClickListener(new MusicOnItemClickListener() {
+                        MusicPlayerListDialog.getInstance(MusicPlayerActivity.this).
+                                setMusicOnItemClickListener(new MusicOnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int posotion,long musicID) {
                                 if(Math.abs(mMusicJukeBoxView.getCurrentItem()-posotion)>2){
@@ -250,10 +259,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
                         break;
                     //闹钟定时
                     case R.id.music_btn_alarm:
-                        MusicAlarmSettingDialog.getInstance(MusicPlayerActivity.this).setOnAlarmModelListener(new MusicAlarmSettingDialog.OnAlarmModelListener() {
+                        MusicAlarmSettingDialog.getInstance(MusicPlayerActivity.this).
+                                setOnAlarmModelListener(new MusicAlarmSettingDialog.OnAlarmModelListener() {
                             @Override
                             public void onAlarmModel(MusicAlarmModel alarmModel) {
-                                final MusicAlarmModel musicAlarmModel = MusicPlayerManager.getInstance().setPlayerAlarmModel(alarmModel);
+                                final MusicAlarmModel musicAlarmModel =
+                                        MusicPlayerManager.getInstance().setPlayerAlarmModel(alarmModel);
                                 getHandler().post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -272,7 +283,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
                         if(null!=mMusicJukeBoxView&&null!=mMusicJukeBoxView.getCurrentMedia()){
                             BaseAudioInfo currentMedia = mMusicJukeBoxView.getCurrentMedia();
                             if(mBtnCollect.isSelected()){
-                                boolean isSuccess = MusicUtils.getInstance().removeMusicCollectById(currentMedia.getAudioId());
+                                boolean isSuccess = MusicUtils.getInstance()
+                                        .removeMusicCollectById(currentMedia.getAudioId());
                                 if(isSuccess){
                                     mBtnCollect.setSelected(false);
                                 }
@@ -318,7 +330,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
                 if(fromUser){
                     long durtion = MusicPlayerManager.getInstance().getDurtion();
                     if(durtion>0){
-                        mCurrentTime.setText(MusicUtils.getInstance().stringForAudioTime(progress * durtion / 100));
+                        mCurrentTime.setText(MusicUtils.getInstance().stringForAudioTime(
+                                progress * durtion / 100));
                     }
                 }
             }
@@ -348,7 +361,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
         isVisibility=true;
         //收藏状态,针对可能在锁屏界面收藏的同步
         if(null!=mBtnCollect&&null!=mMusicJukeBoxView&&null!=mMusicJukeBoxView.getCurrentMedia()){
-            boolean isExist = MusicUtils.getInstance().isExistCollectHistroy(mMusicJukeBoxView.getCurrentMedia().getAudioId());
+            boolean isExist = MusicUtils.getInstance().isExistCollectHistroy(
+                    mMusicJukeBoxView.getCurrentMedia().getAudioId());
             mBtnCollect.setSelected(isExist);
         }
         if(MusicPlayerManager.getInstance().getPlayerState()==MusicPlayerState.MUSIC_PLAYER_PLAYING){
@@ -420,7 +434,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
      */
     @Override
     public void onJukeBoxObjectChanged(final int position, BaseAudioInfo audioInfo, boolean isEchoDisplay) {
-        Logger.d(TAG,"onJukeBoxObjectChanged-->POSITION:"+position+",MUSIC_INFO:"+audioInfo.getAudioId()+",isEchoDisplay:"+isEchoDisplay);
+        Logger.d(TAG,"onJukeBoxObjectChanged-->POSITION:"+position+",MUSIC_INFO:"
+                +audioInfo.getAudioId()+",isEchoDisplay:"+isEchoDisplay);
         //清空唱片机播放器
         if(null!=audioInfo){
             mViewTitle.setText(audioInfo.getAudioName());
@@ -481,12 +496,15 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
                 }
                 switch (playerState) {
                     case MUSIC_PLAYER_PREPARE:
-                        if (null != mMusicAlarm && !MusicPlayerManager.getInstance().getPlayerAlarmModel().equals(MusicAlarmModel.MUSIC_ALARM_MODEL_0)) {
+                        if (null != mMusicAlarm && !MusicPlayerManager.getInstance().getPlayerAlarmModel().
+                                equals(MusicAlarmModel.MUSIC_ALARM_MODEL_0)) {
                             Drawable drawable = getResources().getDrawable(R.drawable.ic_music_alarm_pre);
-                            mMusicAlarm.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                            mMusicAlarm.setCompoundDrawablesWithIntrinsicBounds(drawable,
+                                    null, null, null);
                             mMusicAlarm.setTextColor(Color.parseColor("#F8E71C"));
                         }
-                        if (null != mMusicBtnPlayPause) mMusicBtnPlayPause.setImageResource(R.drawable.music_player_pause_selector);
+                        if (null != mMusicBtnPlayPause) mMusicBtnPlayPause.setImageResource(
+                                R.drawable.music_player_pause_selector);
                         if (null != mMusicJukeBoxView) mMusicJukeBoxView.onStart();
                         break;
                     case MUSIC_PLAYER_BUFFER:
@@ -503,7 +521,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
                         if (null != mMusicJukeBoxView) mMusicJukeBoxView.onPause();
                         break;
                     case MUSIC_PLAYER_STOP:
-                        if (null != mMusicBtnPlayPause) mMusicBtnPlayPause.setImageResource(R.drawable.music_player_play_selector);
+                        if (null != mMusicBtnPlayPause) mMusicBtnPlayPause.setImageResource(
+                                R.drawable.music_player_play_selector);
                         if (null != mCurrentTime) mCurrentTime.setText("00:00");
                         if(null!=mSeekBar){
                             mSeekBar.setSecondaryProgress(0);
@@ -608,7 +627,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
             @Override
             public void run() {
                 if(null!= mMusicJukeBoxView){
-                    mMusicJukeBoxView.setCurrentMusicItem(position,false,false,true);
+                    mMusicJukeBoxView.setCurrentMusicItem(position,false,
+                            false,true);
                 }
             }
         });
@@ -635,7 +655,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
      * @param alarmResidueDurtion
      */
     @Override
-    public void onTaskRuntime(final long totalDurtion, final long currentDurtion, final long alarmResidueDurtion,int bufferProgress) {
+    public void onTaskRuntime(final long totalDurtion, final long currentDurtion,
+                              final long alarmResidueDurtion,int bufferProgress) {
         updataPlayerParams(totalDurtion,currentDurtion,alarmResidueDurtion,bufferProgress);
     }
 
@@ -646,7 +667,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
      * @param isToast 是否吐司提示
      */
     @Override
-    public void onPlayerConfig(final MusicPlayModel playModel, final MusicAlarmModel alarmModel, final boolean isToast) {
+    public void onPlayerConfig(final MusicPlayModel playModel, final MusicAlarmModel alarmModel,
+                               final boolean isToast) {
         Logger.d(TAG,"onPlayerConfig--:playModel"+playModel+",alarmModel:"+alarmModel);
         getHandler().post(new Runnable() {
             @Override
@@ -667,7 +689,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
      * @param playModel
      * @param alarmModel
      */
-    private synchronized void setPlayerConfig(MusicPlayModel playModel, MusicAlarmModel alarmModel,boolean isToast) {
+    private synchronized void setPlayerConfig(MusicPlayModel playModel, MusicAlarmModel alarmModel,
+                                              boolean isToast) {
         if(null!=playModel&&null!=mMusicPlayerModel){
             mMusicPlayerModel.setImageResource(getResToPlayModel(playModel,isToast));
         }
@@ -706,7 +729,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
      * @param alarmResidueDurtion
      * @param bufferProgress
      */
-    private synchronized void updataPlayerParams(final long totalDurtion, final long currentDurtion, final long alarmResidueDurtion, final int bufferProgress) {
+    private synchronized void updataPlayerParams(final long totalDurtion, final long currentDurtion,
+                                                 final long alarmResidueDurtion, final int bufferProgress) {
         if(isVisibility&&null!=mSeekBar){
             getHandler().post(new Runnable() {
                 @Override
@@ -775,7 +799,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.setData(Uri.parse( "package:"+MusicUtils.getInstance().getPackageName(MusicPlayerActivity.this)));
+                                    intent.setData(Uri.parse( "package:"+
+                                            MusicUtils.getInstance().getPackageName(MusicPlayerActivity.this)));
                                     MusicPlayerActivity.this.startActivityForResult(intent,MusicConstants.REQUST_WINDOWN_PERMISSION);
                                 } else {
                                     Toast.makeText(MusicPlayerActivity.this,"请在设置中手动开启",Toast.LENGTH_SHORT).show();
@@ -802,14 +827,18 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
         if(!MusicWindowManager.getInstance().isWindowShowing()){
             if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                 BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(MusicPlayerActivity.this.getApplicationContext(),MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,80f),MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,170f));
+                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(MusicPlayerActivity.this.getApplicationContext(),
+                        MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,80f),
+                        MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,170f));
                 MusicStatus musicStatus=new MusicStatus();
                 musicStatus.setId(musicInfo.getAudioId());
                 String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);
                 musicStatus.setCover(frontPath);
                 musicStatus.setTitle(musicInfo.getAudioName());
                 MusicPlayerState playerState = MusicPlayerManager.getInstance().getPlayerState();
-                boolean playing = playerState.equals(MusicPlayerState.MUSIC_PLAYER_PLAYING) || playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE) || playerState.equals(MusicPlayerState.MUSIC_PLAYER_BUFFER);
+                boolean playing = playerState.equals(MusicPlayerState.MUSIC_PLAYER_PLAYING)
+                        || playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE)
+                        || playerState.equals(MusicPlayerState.MUSIC_PLAYER_BUFFER);
                 musicStatus.setPlayerStatus(playing?MusicStatus.PLAYER_STATUS_START:MusicStatus.PLAYER_STATUS_PAUSE);
                 MusicWindowManager.getInstance().updateWindowStatus(musicStatus);
             }

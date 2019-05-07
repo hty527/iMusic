@@ -49,7 +49,8 @@ public class IndexVideoEngin extends MusicNetUtils {
      * @param callBack
      */
     public void getIndexVideoList(int page,Type type, OnOtherRequstCallBack callBack){
-        requstOtherApi("http://baobab.kaiyanapp.com/api/v5/index/tab/allRec?page="+page+"&udid=a53873ffaa4430bbb41ea178c1187e97c4b3c4a",type,callBack);
+        requstOtherApi("http://baobab.kaiyanapp.com/api/v5/index/tab/allRec?page="
+                +page+"&udid=a53873ffaa4430bbb41ea178c1187e97c4b3c4a",type,callBack);
     }
 
     /**
@@ -59,7 +60,8 @@ public class IndexVideoEngin extends MusicNetUtils {
      * @param callBack
      */
     public void getRecommendVideoList(String videoID,Type type, OnOtherRequstCallBack callBack){
-        requstOtherApi("http://baobab.kaiyanapp.com/api/v4/video/related?id="+videoID+"&udid=a53873ffaa4430bbb41ea178c1187e97c4b3c4a",type,callBack);
+        requstOtherApi("http://baobab.kaiyanapp.com/api/v4/video/related?id="+videoID
+                +"&udid=a53873ffaa4430bbb41ea178c1187e97c4b3c4a",type,callBack);
     }
 
     /**
@@ -70,6 +72,7 @@ public class IndexVideoEngin extends MusicNetUtils {
      * @param callBack
      */
     public void getVideoByUrl(String url,int page,Type type, OnOtherRequstCallBack callBack){
-        requstOtherApi("http://baobab.kaiyanapp.com/api/v2/"+url+"/?page="+page+"&udid=a53873ffaa4430bbb41ea178c1187e97c4b3c4a",type,callBack);
+        requstOtherApi("http://baobab.kaiyanapp.com/api/v2/"+url+"/?page="+page
+                +"&udid=a53873ffaa4430bbb41ea178c1187e97c4b3c4a",type,callBack);
     }
 }

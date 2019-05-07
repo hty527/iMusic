@@ -162,7 +162,8 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
             mMusicCollect.setTag(audioInfo);
             mMusicTitle.setText(audioInfo.getAudioName());
             mMusicAnchor.setText(audioInfo.getNickname());
-            MusicUtils.getInstance().setMusicComposeFront(MusicLockActivity.this,mMusicCover,MusicUtils.getInstance().getMusicFrontPath(audioInfo),MusicConstants.SCALE_DISC_LOCK_SIZE
+            MusicUtils.getInstance().setMusicComposeFront(MusicLockActivity.this,mMusicCover,
+                    MusicUtils.getInstance().getMusicFrontPath(audioInfo),MusicConstants.SCALE_DISC_LOCK_SIZE
                     ,MusicConstants.SCALE_MUSIC_PIC_LOCK_SIZE,R.drawable.ic_music_lock_cover_plate,R.drawable.ic_music_juke_default_cover);
         }
     }
@@ -342,7 +343,8 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
                     if(null!=mMusicPause){
                         mMusicPause.setImageResource(getPauseIcon(playerState));
                     }
-                    if(playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE)||playerState.equals(MusicPlayerState.MUSIC_PLAYER_PLAYING)){
+                    if(playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE)||playerState.equals(
+                            MusicPlayerState.MUSIC_PLAYER_PLAYING)){
                         jukeBoxResume();
                     }else if(playerState.equals(MusicPlayerState.MUSIC_PLAYER_PAUSE)
                             ||playerState.equals(MusicPlayerState.MUSIC_PLAYER_ERROR)

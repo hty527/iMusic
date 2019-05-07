@@ -12,7 +12,8 @@ import com.android.imusic.video.ui.contract.IndexVideoContract;
  * Video Presenter
  */
 
-public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,IndexVideoEngin> implements IndexVideoContract.Presenter<IndexVideoContract.View>{
+public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,IndexVideoEngin>
+        implements IndexVideoContract.Presenter<IndexVideoContract.View>{
 
     @Override
     protected IndexVideoEngin createEngin() {

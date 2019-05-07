@@ -137,7 +137,8 @@ public class MediaUtils {
      * @param albumName 专辑昵称
      * @return
      */
-    public List<MusicDetails> getMusicDetails(BaseAudioInfo audioInfo, MusicMusicDetailsDialog.DialogScene sceneMode, String albumName) {
+    public List<MusicDetails> getMusicDetails(BaseAudioInfo audioInfo,
+                                              MusicMusicDetailsDialog.DialogScene sceneMode, String albumName) {
         List<MusicDetails> musicDetailsList=new ArrayList<>();
         if(!sceneMode.equals(MusicMusicDetailsDialog.DialogScene.SCENE_COLLECT)){
             MusicDetails musicDetails0=new MusicDetails();
@@ -185,7 +186,8 @@ public class MediaUtils {
         }
         if(audioInfo.getAudioDurtion()>0){
             MusicDetails musicDetails=new MusicDetails();
-            musicDetails.setTitle("时长：<font color='#333333'>"+MusicUtils.getInstance().stringForAudioTime(audioInfo.getAudioDurtion())+"</font>");
+            musicDetails.setTitle("时长：<font color='#333333'>"+MusicUtils.getInstance().
+                    stringForAudioTime(audioInfo.getAudioDurtion())+"</font>");
             musicDetails.setIcon(R.drawable.ic_music_details_durtion);
             musicDetailsList.add(musicDetails);
         }

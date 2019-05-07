@@ -39,7 +39,8 @@ import java.util.List;
  * 主页视频列表，采用“开眼视频”的API做数据支持，演示列表播放的功能
  */
 
-public class IndexVideoFragment extends MusicBaseFragment<IndexVideoPersenter> implements MusicOnItemClickListener, IndexVideoContract.View {
+public class IndexVideoFragment extends MusicBaseFragment<IndexVideoPersenter>
+        implements MusicOnItemClickListener, IndexVideoContract.View {
 
     private static final String TAG = "IndexVideoFragment";
     private VideoIndexVideoAdapter mAdapter;
@@ -59,7 +60,8 @@ public class IndexVideoFragment extends MusicBaseFragment<IndexVideoPersenter> i
     @Override
     protected void initViews() {
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager=new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
@@ -130,7 +132,8 @@ public class IndexVideoFragment extends MusicBaseFragment<IndexVideoPersenter> i
             OpenEyesIndexItemBean indexItemBean = (OpenEyesIndexItemBean) view.getTag();
             Logger.d(TAG,"ITEM_TYPE:"+indexItemBean.getItemType());
             if(indexItemBean.getItemType()==OpenEyesIndexItemBean.ITEM_TITLE){
-                if(TextUtils.equals(VideoConstants.ITEM_TITLE_FOOTER,indexItemBean.getType())&&!TextUtils.isEmpty(indexItemBean.getActionUrl())){
+                if(TextUtils.equals(VideoConstants.ITEM_TITLE_FOOTER,indexItemBean.getType())
+                        &&!TextUtils.isEmpty(indexItemBean.getActionUrl())){
                     String url=VideoUtils.getInstance().formatActionUrl(indexItemBean.getActionUrl());
                     VideoPlayerManager.getInstance().onReset();
                     Intent intent=new Intent(getActivity(), VideoListActivity.class);
@@ -219,7 +222,8 @@ public class IndexVideoFragment extends MusicBaseFragment<IndexVideoPersenter> i
         if(startY< MusicUtils.getInstance().getStatusBarHeight(getActivity())){
             startY=locations[1]+(clickView.getMeasuredHeight()/2);
         }
-        Logger.d(TAG,"showPropupMenu-->viewX:"+locations[0]+",viewY:"+locations[1]+",startX:"+startX+",startY:"+startY+",viewW:"+mMeasuredWidth+",viewH:"+mMeasuredHeight);
+        Logger.d(TAG,"showPropupMenu-->viewX:"+locations[0]+",viewY:"+locations[1]
+                +",startX:"+startX+",startY:"+startY+",viewW:"+mMeasuredWidth+",viewH:"+mMeasuredHeight);
         if(null==mAnchorView){
             mAnchorView=getView().findViewById(R.id.view_anchor);
         }

@@ -267,7 +267,8 @@ public class VideoWindowController extends BaseVideoController implements SeekBa
      */
     @Override
     public void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent) {
-        Logger.d("播放实时进度","onTaskRuntime-->totalDurtion:"+totalDurtion+",currentDurtion:"+currentDurtion);
+        Logger.d("播放实时进度","onTaskRuntime-->totalDurtion:"
+                +totalDurtion+",currentDurtion:"+currentDurtion);
         if(totalDurtion>-1){
             if(null!=mVideoTotal){
                 mVideoTotal.setText(VideoUtils.getInstance().stringForAudioTime(totalDurtion));
@@ -362,7 +363,8 @@ public class VideoWindowController extends BaseVideoController implements SeekBa
     @Override
     public void changeControllerState(int scrrenOrientation,boolean isInterceptIntent) {
         if(null==mBottomBarLayout) return;
-        Logger.d(TAG,"changeControllerState-->"+scrrenOrientation+",isInterceptIntent:"+isInterceptIntent);
+        Logger.d(TAG,"changeControllerState-->"+scrrenOrientation
+                +",isInterceptIntent:"+isInterceptIntent);
         //重复显示
         if(isInterceptIntent&&mBottomBarLayout.getVisibility()==View.VISIBLE){
             removeCallbacks(View.INVISIBLE);

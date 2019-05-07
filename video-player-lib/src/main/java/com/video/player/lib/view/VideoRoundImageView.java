@@ -146,13 +146,16 @@ public class VideoRoundImageView extends AppCompatImageView {
                 canvas.drawRect(0, 0, borderRadius, borderRadius, bitmapPaint);
             }
             if (!corners_top_right) {
-                canvas.drawRect(roundRect.right - borderRadius, 0, roundRect.right, borderRadius, bitmapPaint);
+                canvas.drawRect(roundRect.right - borderRadius, 0, roundRect.right,
+                        borderRadius, bitmapPaint);
             }
             if (!corners_bottom_left) {
-                canvas.drawRect(0, roundRect.bottom - borderRadius, borderRadius, roundRect.bottom, bitmapPaint);
+                canvas.drawRect(0, roundRect.bottom - borderRadius, borderRadius,
+                        roundRect.bottom, bitmapPaint);
             }
             if (!corners_bottom_right) {
-                canvas.drawRect(roundRect.right - borderRadius, roundRect.bottom - borderRadius, roundRect.right, roundRect.bottom, bitmapPaint);
+                canvas.drawRect(roundRect.right - borderRadius, roundRect.bottom -
+                        borderRadius, roundRect.right, roundRect.bottom, bitmapPaint);
             }
         } else {
             canvas.drawCircle(radius, radius, radius, bitmapPaint);
@@ -240,6 +243,7 @@ public class VideoRoundImageView extends AppCompatImageView {
     }
 
     private int dp2px(int dpVal) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpVal, getResources().getDisplayMetrics());
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpVal,
+                getResources().getDisplayMetrics());
     }
 }

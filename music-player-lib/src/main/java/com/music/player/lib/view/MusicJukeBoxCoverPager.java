@@ -44,7 +44,8 @@ public class MusicJukeBoxCoverPager extends LinearLayout{
         View.inflate(context, R.layout.music_view_cover_pager,this);
         if(null!=attrs){
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicJukeBoxCoverPager);
-            mRotationDurtion = typedArray.getInteger(R.styleable.MusicJukeBoxCoverPager_musicJukeRotationDurtion, MusicConstants.BOX_REVOLVE_MINUTE);
+            mRotationDurtion = typedArray.getInteger(R.styleable.MusicJukeBoxCoverPager_musicJukeRotationDurtion,
+                    MusicConstants.BOX_REVOLVE_MINUTE);
             typedArray.recycle();
         }
         mDiseCover = (ImageView) findViewById(R.id.view_dise_cover);
@@ -57,7 +58,8 @@ public class MusicJukeBoxCoverPager extends LinearLayout{
     public void setMusicCover(Drawable drawable){
         if(null!=drawable){
             BitmapDrawable bitmapDrawable= (BitmapDrawable) drawable;
-            MusicUtils.getInstance().setMusicComposeFront(getContext(),mDiseCover,bitmapDrawable.getBitmap(),MusicConstants.SCALE_DISC_SIZE
+            MusicUtils.getInstance().setMusicComposeFront(getContext(),mDiseCover,bitmapDrawable.getBitmap(),
+                    MusicConstants.SCALE_DISC_SIZE
                     ,MusicConstants.SCALE_MUSIC_PIC_SIZE,R.drawable.ic_music_disc,R.drawable.ic_music_juke_default_cover);
         }
     }

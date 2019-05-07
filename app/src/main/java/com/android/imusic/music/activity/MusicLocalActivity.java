@@ -105,7 +105,8 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
             mAdapter.setNewData(medias);
             //定位至正在播放的任务
             if(null!=mLayoutManager){
-                int playIndexInThis = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(), MusicPlayerManager.getInstance().getCurrentPlayerID());
+                int playIndexInThis = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
+                        MusicPlayerManager.getInstance().getCurrentPlayerID());
                 mLayoutManager.scrollToPositionWithOffset(playIndexInThis,MusicUtils.getInstance().dpToPxInt(MusicLocalActivity.this,69f));
             }
             return;
@@ -142,7 +143,8 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
                     mAdapter.setNewData(data);
                     //定位至正在播放的任务
                     if(null!=mLayoutManager){
-                        int playIndexInThis = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(), MusicPlayerManager.getInstance().getCurrentPlayerID());
+                        int playIndexInThis = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
+                                MusicPlayerManager.getInstance().getCurrentPlayerID());
                         mLayoutManager.scrollToPositionWithOffset(playIndexInThis,0);
                     }
                 }
@@ -232,7 +234,8 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
                 }
             }else{
                 mAdapter.notifyDataSetChanged();
-                int position = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(), MusicPlayerManager.getInstance().getCurrentPlayerID());
+                int position = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
+                        MusicPlayerManager.getInstance().getCurrentPlayerID());
                 mAdapter.setCurrentPosition(position);
             }
         }

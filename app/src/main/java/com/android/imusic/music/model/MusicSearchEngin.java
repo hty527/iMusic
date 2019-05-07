@@ -39,7 +39,8 @@ public class MusicSearchEngin extends MusicNetUtils {
      * @param callBack
      */
     public void queryMusicToKey(String key, int page, Type type, OnRequstCallBack callBack){
-        requstApi("http://mobilecdn.kugou.com/api/v3/search/song?format=json&keyword="+key+"&page="+page+"&pagesize=20&showtype=1",type,callBack);
+        requstApi("http://mobilecdn.kugou.com/api/v3/search/song?format=json&keyword="+key
+                +"&page="+page+"&pagesize=20&showtype=1",type,callBack);
     }
 
     /**

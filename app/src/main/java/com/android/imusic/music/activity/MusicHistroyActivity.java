@@ -121,7 +121,8 @@ public class MusicHistroyActivity extends MusicBaseActivity implements MusicOnIt
                 createMiniJukeboxWindow();
             }else{
                 //Menu
-                MusicMusicDetailsDialog.getInstance(MusicHistroyActivity.this,audioInfo,MusicMusicDetailsDialog.DialogScene.SCENE_HISTROY)
+                MusicMusicDetailsDialog.getInstance(MusicHistroyActivity.this,audioInfo,
+                        MusicMusicDetailsDialog.DialogScene.SCENE_HISTROY)
                         .setMusicOnItemClickListener(new MusicOnItemClickListener() {
                             /**
                              * @param view
@@ -177,7 +178,8 @@ public class MusicHistroyActivity extends MusicBaseActivity implements MusicOnIt
                 }
             }else{
                 mAdapter.notifyDataSetChanged();
-                int position = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(), MusicPlayerManager.getInstance().getCurrentPlayerID());
+                int position = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
+                        MusicPlayerManager.getInstance().getCurrentPlayerID());
                 mAdapter.setCurrentPosition(position);
             }
         }

@@ -122,7 +122,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         MusicUtils.getInstance().initSharedPreferencesConfig(this.getApplication());
         initPlayerConfig();
         initAlarmConfig();
-        mWifiLock = ((WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "MUSIC_LOCK");
+        mWifiLock = ((WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE))
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "MUSIC_LOCK");
         IntentFilter intentFilter=new IntentFilter();
         intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -146,7 +147,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      * 初始化播放器配置
      */
     private void initPlayerConfig(){
-        String value = MusicUtils.getInstance().getString(MusicConstants.SP_KEY_PLAYER_MODEL, MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
+        String value = MusicUtils.getInstance().getString(MusicConstants.SP_KEY_PLAYER_MODEL,
+                MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
         MusicPlayModel model = MusicPlayerManager.getInstance().getDefaultPlayModel();
         if(value.equals(MusicConstants.SP_VALUE_MUSIC_MODEL_SINGLE)){
             mLoop=true;
@@ -170,7 +172,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      */
     private void initAlarmConfig() {
         if(TIMER_DURTION<=0){
-            String value = MusicUtils.getInstance().getString(MusicConstants.SP_KEY_ALARM_MODEL, MusicConstants.SP_VALUE_ALARM_MODE_0);
+            String value = MusicUtils.getInstance().getString(MusicConstants.SP_KEY_ALARM_MODEL,
+                    MusicConstants.SP_VALUE_ALARM_MODE_0);
             Logger.d(TAG,"initAlarmConfig--VALUE:"+value);
             setPlayerAlarmModel(getPlayerAlarmModel(value));
         }
@@ -439,16 +442,20 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         this.mPlayModel=model;
         Logger.d(TAG,"setPlayerModel:MODEL:"+mPlayModel);
         if(model.equals(MusicPlayModel.MUSIC_MODEL_SINGLE)){
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL, MusicConstants.SP_VALUE_MUSIC_MODEL_SINGLE);
+            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
+                    MusicConstants.SP_VALUE_MUSIC_MODEL_SINGLE);
             mLoop=true;
         }else if(model.equals(MusicPlayModel.MUSIC_MODEL_LOOP)){
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL, MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
+            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
+                    MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
             mLoop=false;
         }else if(model.equals(MusicPlayModel.MUSIC_MODEL_ORDER)){
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL, MusicConstants.SP_VALUE_MUSIC_MODEL_ORDER);
+            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
+                    MusicConstants.SP_VALUE_MUSIC_MODEL_ORDER);
             mLoop=false;
         }else if(model.equals(MusicPlayModel.MUSIC_MODEL_RANDOM)){
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL, MusicConstants.SP_VALUE_MUSIC_MODEL_RANDOM);
+            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
+                    MusicConstants.SP_VALUE_MUSIC_MODEL_RANDOM);
             mLoop=false;
         }
         if(mLoop&&null!=mMediaPlayer){
@@ -477,26 +484,32 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         switch (model) {
             case MUSIC_ALARM_MODEL_10:
                 TIMER_DURTION = 10 * 60;
-                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL, MusicConstants.SP_VALUE_ALARM_MODE_10);
+                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL,
+                        MusicConstants.SP_VALUE_ALARM_MODE_10);
                 break;
             case MUSIC_ALARM_MODEL_15:
                 TIMER_DURTION = 15 * 60;
-                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL, MusicConstants.SP_VALUE_ALARM_MODE_15);
+                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL,
+                        MusicConstants.SP_VALUE_ALARM_MODE_15);
                 break;
             case MUSIC_ALARM_MODEL_30:
                 TIMER_DURTION = 30 * 60;
-                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL, MusicConstants.SP_VALUE_ALARM_MODE_30);
+                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL,
+                        MusicConstants.SP_VALUE_ALARM_MODE_30);
                 break;
             case MUSIC_ALARM_MODEL_60:
                 TIMER_DURTION = 60 * 60;
-                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL, MusicConstants.SP_VALUE_ALARM_MODE_60);
+                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL,
+                        MusicConstants.SP_VALUE_ALARM_MODE_60);
                 break;
             case MUSIC_ALARM_MODEL_0:
                 TIMER_DURTION = Long.MAX_VALUE;
-                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL, MusicConstants.SP_VALUE_ALARM_MODE_0);
+                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL,
+                        MusicConstants.SP_VALUE_ALARM_MODE_0);
                 break;
             case MUSIC_ALARM_MODEL_CURRENT:
-                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL, MusicConstants.SP_VALUE_ALARM_MODE_CURRENT);
+                MusicUtils.getInstance().putString(MusicConstants.SP_KEY_ALARM_MODEL,
+                        MusicConstants.SP_VALUE_ALARM_MODE_CURRENT);
                 try {
                     if(null!=mMediaPlayer){
                         TIMER_DURTION = (mMediaPlayer.getDuration()-mMediaPlayer.getCurrentPosition()) / 1000;
@@ -884,8 +897,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     onPlayerEventListener.onPlayMusiconInfo(musicInfo,mCurrentPlayIndex);
                     if(null!=mMediaPlayer){
                         try {
-                            //至于为什么在CurrentPosition上+500毫秒，是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
-                            onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition()+500,TIMER_DURTION,mBufferProgress);
+                            //+500毫秒是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
+                            onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),
+                                    mMediaPlayer.getCurrentPosition()+500,TIMER_DURTION,mBufferProgress);
                         }catch (RuntimeException e){
                             e.printStackTrace();
                             onPlayerEventListener.onTaskRuntime(0,0,TIMER_DURTION,mBufferProgress);
@@ -1045,15 +1059,18 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     public void changedPlayerPlayModel() {
         if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_SINGLE)){
             mPlayModel=MusicPlayModel.MUSIC_MODEL_LOOP;
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL, MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
+            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
+                    MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
             mLoop=false;
         }else if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_LOOP)){
             mPlayModel=MusicPlayModel.MUSIC_MODEL_SINGLE;
             mLoop=true;
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL, MusicConstants.SP_VALUE_MUSIC_MODEL_SINGLE);
+            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
+                    MusicConstants.SP_VALUE_MUSIC_MODEL_SINGLE);
         }else if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_RANDOM)){
             mPlayModel=MusicPlayModel.MUSIC_MODEL_LOOP;
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL, MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
+            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
+                    MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
             mLoop=false;
         }
         Logger.d(TAG,"changedPlayerPlayModel:"+mPlayModel);
@@ -1080,14 +1097,16 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_LOOP)){
             mPlayModel=MusicPlayModel.MUSIC_MODEL_SINGLE;
             mLoop=true;
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL, MusicConstants.SP_VALUE_MUSIC_MODEL_SINGLE);
+            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
+                    MusicConstants.SP_VALUE_MUSIC_MODEL_SINGLE);
             //随机模式不保存至本地，影响花颜项目逻辑
         }else if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_SINGLE)){
             mPlayModel=MusicPlayModel.MUSIC_MODEL_RANDOM;
             mLoop=false;
         }else if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_RANDOM)){
             mPlayModel=MusicPlayModel.MUSIC_MODEL_LOOP;
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL, MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
+            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
+                    MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
             mLoop=false;
         }
         try {
@@ -1240,8 +1259,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             if(TIMER_DURTION<=0){
                 for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
                     if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
-                        //至于为什么在CurrentPosition上+500毫秒，是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
-                        onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition()+500,TIMER_DURTION,mBufferProgress);
+                        //+500毫秒是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
+                        onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),
+                                mMediaPlayer.getCurrentPosition()+500,TIMER_DURTION,mBufferProgress);
                     }else{
                         onPlayerEventListener.onTaskRuntime(-1,-1,TIMER_DURTION,mBufferProgress);
                     }
@@ -1252,7 +1272,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             if(null!= mOnPlayerEventListeners){
                 for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
                     if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
-                        onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),mMediaPlayer.getCurrentPosition()+500,TIMER_DURTION,mBufferProgress);
+                        onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),
+                                mMediaPlayer.getCurrentPosition()+500,TIMER_DURTION,mBufferProgress);
                     }else{
                         onPlayerEventListener.onTaskRuntime(-1,-1,TIMER_DURTION,mBufferProgress);
                     }
@@ -1335,7 +1356,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     Class<MediaPlayer> clazz = MediaPlayer.class;
                     Method method = clazz.getDeclaredMethod("setDataSource", String.class, Map.class);
                     String path=getPlayPath(musicInfo.getAudioPath());
-                    Logger.e(TAG, "startPlay-->: ID:" + musicInfo.getAudioId() + ",TITLE:" + musicInfo.getAudioName() + ",PATH:" + path);
+                    Logger.e(TAG, "startPlay-->: ID:" + musicInfo.getAudioId() + ",TITLE:"
+                            + musicInfo.getAudioName() + ",PATH:" + path);
                     method.invoke(mMediaPlayer, path, null);
                     if (null != mOnPlayerEventListeners) {
                         for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
@@ -1355,7 +1377,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                             onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,"播放失败，"+e.getMessage());
                         }
                     }
-                    MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_STOP,musicInfo.getAudioId()));
+                    MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_STOP,
+                            musicInfo.getAudioId()));
                     startServiceForeground();
                 }
             }else{
@@ -1365,7 +1388,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                         onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,"未成功获取音频输出焦点");
                     }
                 }
-                MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_STOP,musicInfo.getAudioId()));
+                MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_STOP,
+                        musicInfo.getAudioId()));
                 startServiceForeground();
             }
         }else{
@@ -1381,7 +1405,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                 MusicPlayerManager.getInstance().setReBrowse(true);
             }
             stopServiceForeground();
-            MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_ERROR,musicInfo.getAudioId()));
+            MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_ERROR,
+                    musicInfo.getAudioId()));
         }
     }
 
@@ -1665,7 +1690,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             //屏幕点亮
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
                 //用户需要开启锁屏控制才生效
-                if(MusicPlayerManager.getInstance().isScreenOffEnable()&&!TextUtils.isEmpty(MusicPlayerManager.getInstance().getLockActivityName())){
+                if(MusicPlayerManager.getInstance().isScreenOffEnable()&&
+                        !TextUtils.isEmpty(MusicPlayerManager.getInstance().getLockActivityName())){
                     MusicPlayerState playerState = getPlayerState();
                     if(playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE)
                             ||playerState.equals(MusicPlayerState.MUSIC_PLAYER_PLAYING)){
@@ -1736,15 +1762,20 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             //通知栏根点击意图
             Intent clickIntent = new Intent(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW);
             clickIntent.putExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,audioInfo.getAudioId());
-            PendingIntent pendClickIntent = PendingIntent.getBroadcast(this, 1, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendClickIntent = PendingIntent.getBroadcast(this, 1,
+                    clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             //上一首
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_last, getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_LAST));
+            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_last,
+                    getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_LAST));
             //下一首
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_next, getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_NEXT));
+            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_next,
+                    getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_NEXT));
             //暂停、开始
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_pause, getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_PAUSE));
+            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_pause,
+                    getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_PAUSE));
             //关闭
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_close, getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_CLOSE));
+            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_close,
+                    getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_CLOSE));
             //大样式布局
 //        RemoteViews bigRemoteViews=new RemoteViews(getPackageName(),R.layout.music_notify_big_controller);
             builder.setContent(defaultremoteviews)
@@ -1771,7 +1802,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      */
     private PendingIntent getClickPending(String action) {
         Intent lastIntent = new Intent(action);
-        PendingIntent lastPendIntent = PendingIntent.getBroadcast(MusicPlayerService.this, 1, lastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent lastPendIntent = PendingIntent.getBroadcast(MusicPlayerService.this,
+                1, lastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         return lastPendIntent;
     }
 
@@ -1782,7 +1814,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setNotificationChannelID(String channelID) {
         NotificationManager  notificationManager = (android.app.NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
-        NotificationChannel channel = new NotificationChannel(channelID, "COM_IMUSIC_MEDIA_PLAYER", android.app.NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel channel = new NotificationChannel(channelID, "COM_IMUSIC_MEDIA_PLAYER",
+                android.app.NotificationManager.IMPORTANCE_DEFAULT);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         channel.setSound(null,null);
         notificationManager.createNotificationChannel(channel);

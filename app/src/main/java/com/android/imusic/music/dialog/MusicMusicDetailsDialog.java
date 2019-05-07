@@ -67,7 +67,8 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
      * @param sceneMode
      * @return
      */
-    public static MusicMusicDetailsDialog getInstance(Context context, BaseAudioInfo audioInfo, DialogScene sceneMode) {
+    public static MusicMusicDetailsDialog getInstance(Context context, BaseAudioInfo audioInfo,
+                                                      DialogScene sceneMode) {
         return new MusicMusicDetailsDialog(context,audioInfo,sceneMode,null);
     }
 
@@ -79,23 +80,28 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
      * @param albumName
      * @return
      */
-    public static MusicMusicDetailsDialog getInstance(Context context, BaseAudioInfo audioInfo,DialogScene sceneMode,String albumName) {
+    public static MusicMusicDetailsDialog getInstance(Context context, BaseAudioInfo audioInfo,
+                                                      DialogScene sceneMode,String albumName) {
         return new MusicMusicDetailsDialog(context,audioInfo,sceneMode,albumName);
     }
 
-    public MusicMusicDetailsDialog(@NonNull Context context,BaseAudioInfo audioInfo,DialogScene sceneMode,String albumName) {
+    public MusicMusicDetailsDialog(@NonNull Context context,BaseAudioInfo audioInfo,
+                                   DialogScene sceneMode,String albumName) {
         this(context, R.style.MusicButtomAnimationStyle,audioInfo,sceneMode,albumName);
     }
 
-    public MusicMusicDetailsDialog(@NonNull Context context, int theme,BaseAudioInfo audioInfo,DialogScene sceneMode,String albumName) {
+    public MusicMusicDetailsDialog(@NonNull Context context, int theme,BaseAudioInfo audioInfo,
+                                   DialogScene sceneMode,String albumName) {
         super(context, theme);
         setContentView(R.layout.music_dialog_details);
         this.mSceneMode=sceneMode;
         ((TextView) findViewById(R.id.view_item_title)).setText("歌曲："+audioInfo.getAudioName());
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        List<MusicDetails> musicDetails= MediaUtils.getInstance().getMusicDetails(audioInfo,mSceneMode,albumName);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false));
+        List<MusicDetails> musicDetails=
+                MediaUtils.getInstance().getMusicDetails(audioInfo,mSceneMode,albumName);
         mAdapter = new MusicDetailsAdapter(context,musicDetails);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -172,7 +178,8 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
 
     private MusicOnItemClickListener mMusicOnItemClickListener;
 
-    public MusicMusicDetailsDialog setMusicOnItemClickListener(MusicOnItemClickListener musicOnItemClickListener) {
+    public MusicMusicDetailsDialog setMusicOnItemClickListener(
+            MusicOnItemClickListener musicOnItemClickListener) {
         mMusicOnItemClickListener = musicOnItemClickListener;
         return MusicMusicDetailsDialog.this;
     }
@@ -194,7 +201,8 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
     @Override
     public void onMusicPathInvalid(BaseAudioInfo musicInfo, int position) {}
     @Override
-    public void onTaskRuntime(long totalDurtion, long currentDurtion, long alarmResidueDurtion,int bufferProgress) {}
+    public void onTaskRuntime(long totalDurtion, long currentDurtion,
+                              long alarmResidueDurtion,int bufferProgress) {}
 
     @Override
     public void onPlayerConfig(MusicPlayModel playModel, MusicAlarmModel alarmModel, boolean isToast) {

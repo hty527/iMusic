@@ -46,7 +46,8 @@ public class TransformerMoiveItem extends FrameLayout {
 //            TextView tvDurtion = (TextView) findViewById(R.id.music_tr_item_durtion);
 //            tvDurtion.setText(MusicUtils.getInstance().stringForAudioTime(data.getDuration()*1000));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                findViewById(R.id.view_root_item).setOutlineProvider(new VideoTextrueProvider(MusicUtils.getInstance().dpToPxInt(getContext(),8f)));
+                findViewById(R.id.view_root_item).setOutlineProvider(
+                        new VideoTextrueProvider(MusicUtils.getInstance().dpToPxInt(getContext(),8f)));
             }
             mRoundImageView = (ImageView) findViewById(R.id.music_tr_item_cover);
             Glide.with(getContext())

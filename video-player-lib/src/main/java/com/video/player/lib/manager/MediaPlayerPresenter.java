@@ -126,7 +126,8 @@ public interface MediaPlayerPresenter {
 
     /**
      * 是否可以直接返回
-     * @param destroy 是否直接销毁，比如说MainActivity返回逻辑还有询问用户是否退出，给定destroy为false，则只是尝试弹射，并不会去销毁播放器
+     * @param destroy 是否直接销毁，比如说MainActivity返回逻辑还有询问用户是否退出，给定destroy为false，
+     *                则只是尝试弹射，并不会去销毁播放器
      * @return true：可以直接返回 false：存在全屏或小窗口
      */
     boolean isBackPressed(boolean destroy);

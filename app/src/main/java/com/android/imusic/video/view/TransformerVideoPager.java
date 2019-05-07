@@ -22,7 +22,8 @@ import java.util.List;
  * 带有手势缩放的 Banner
  * 无限循环原理：
  * 1：PagerAdapter 中的 getCount() 方法返回 data.size()+2，意在真实的数据加上头部和尾部，使其永远触达不到边界
- * 2：PagerAdapter 中的 instantiateItem 实例化ViewGroup时，应获取真实的的position,position=position%data.size()得到真实position
+ * 2：PagerAdapter 中的 instantiateItem 实例化ViewGroup时，
+ * 应获取真实的的position,position=position%data.size()得到真实position
  * 3：PagerAdapter 中的 finishUpdate 方法中处理滚动结束后边界交换逻辑,详见 finishUpdate 方法注释
  * 4：如果关心onPageSelected事件，还需要注意获取真实的position
  *
@@ -88,7 +89,8 @@ public class TransformerVideoPager extends RelativeLayout{
             OpenEyesIndexItemBean indexItemBean = mDataBeans.get(position).getData().getContent().getData();
             mVideoIndexNum.setText((position + 1) + "/" + mDataBeans.size());
             if(null!=mBackgroundLayout){
-                mBackgroundLayout.setBackgroundCover(indexItemBean.getCover().getBlurred(),100,false,8,false);
+                mBackgroundLayout.setBackgroundCover(indexItemBean.getCover().getBlurred(),
+                        100,false,8,false);
             }
         }
     }

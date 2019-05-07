@@ -43,7 +43,8 @@ import java.util.Observer;
  * Index Music
  */
 
-public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter> implements Observer, MusicListContract.View {
+public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter>
+        implements Observer, MusicListContract.View {
 
     private static final String TAG = "IndexMusicFragment";
     private MusicIndexDataAdapter mAdapter;
@@ -107,7 +108,8 @@ public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter> im
                         List<AudioInfo> newData=new ArrayList<>();
                         for (int i = 0; i < data.size(); i++) {
                             AudioInfo dunAudioInfo = data.get(i);
-                            if(!TextUtils.isEmpty(dunAudioInfo.getClass_enty())&&dunAudioInfo.getClass_enty().equals(AudioInfo.ITEM_CLASS_TYPE_MUSIC)){
+                            if(!TextUtils.isEmpty(dunAudioInfo.getClass_enty())
+                                    &&dunAudioInfo.getClass_enty().equals(AudioInfo.ITEM_CLASS_TYPE_MUSIC)){
                                 newData.add(dunAudioInfo);
                             }
                         }
@@ -146,7 +148,8 @@ public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter> im
             public void onTitleClick(View view, boolean doubleClick) {
                 if(doubleClick){
                     boolean imageEnable = MediaUtils.getInstance().changeLocalImageEnable();
-                    Toast.makeText(getContext(),imageEnable?"本地音乐封面加载已开启":"本地音乐封面加载已关闭",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),imageEnable?
+                            "本地音乐封面加载已开启":"本地音乐封面加载已关闭",Toast.LENGTH_SHORT).show();
                 }
             }
         });

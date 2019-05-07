@@ -32,7 +32,8 @@ public class MusicSearchAdapter extends BaseAdapter<SearchResultInfo,MusicListVi
     private int mCurrentPosition;
     private String mCurrentKey;
 
-    public MusicSearchAdapter(Context context, @Nullable List<SearchResultInfo> data, MusicOnItemClickListener listener) {
+    public MusicSearchAdapter(Context context, @Nullable List<SearchResultInfo> data,
+                              MusicOnItemClickListener listener) {
         super(context,data);
         this.mListener=listener;
     }
@@ -54,7 +55,8 @@ public class MusicSearchAdapter extends BaseAdapter<SearchResultInfo,MusicListVi
         if(null!=itemData){
             viewHolder.textTitle.setText(Html.fromHtml(MusicUtils.getInstance().formatSearchContent(
                     TextUtils.isEmpty(itemData.getSongname())?itemData.getFilename():itemData.getSongname(),mCurrentKey)));
-            String anchorContent = MusicUtils.getInstance().formatSearchContent(itemData.getSingername()+" "+itemData.getAlbum_name(),mCurrentKey);
+            String anchorContent = MusicUtils.getInstance().formatSearchContent(
+                    itemData.getSingername()+" "+itemData.getAlbum_name(),mCurrentKey);
             viewHolder.textAnchor.setText(Html.fromHtml(anchorContent));
             //封面设置
             if(!TextUtils.isEmpty(itemData.getAlbum_img())){
@@ -75,7 +77,8 @@ public class MusicSearchAdapter extends BaseAdapter<SearchResultInfo,MusicListVi
             }
             boolean isPlaying=false;
             BaseAudioInfo currentPlayerMusic = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-            if(null!=currentPlayerMusic&&!TextUtils.isEmpty(currentPlayerMusic.getAudioHashKey())&&currentPlayerMusic.getAudioHashKey().equals(itemData.getHash())){
+            if(null!=currentPlayerMusic&&!TextUtils.isEmpty(currentPlayerMusic.getAudioHashKey())
+                    &&currentPlayerMusic.getAudioHashKey().equals(itemData.getHash())){
                 isPlaying=true;
                 mCurrentPosition =viewHolder.getAdapterPosition();
             }
