@@ -26,27 +26,25 @@ public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,I
      */
     @Override
     public void getIndexVideos(int page) {
-        if(null!=mNetEngin){
-            if(null!=mView){
-                mView.showLoading();
-            }
-            mNetEngin.getIndexVideos(page, new MusicNetUtils.OnOtherRequstCallBack<OpenEyesIndexInfo>() {
+        if(null!=mViewRef&&null!=mViewRef.get()){
+            mViewRef.get().showLoading();
+            getNetEngin().get().getIndexVideos(page, new MusicNetUtils.OnOtherRequstCallBack<OpenEyesIndexInfo>() {
 
                 @Override
                 public void onResponse(OpenEyesIndexInfo data) {
-                    if(null!=mView){
+                    if(null!=mViewRef&&null!=mViewRef.get()){
                         if(null!=data.getItemList()&&data.getItemList().size()>0){
-                            mView.showVideos(data.getItemList());
+                            mViewRef.get().showVideos(data.getItemList());
                         }else{
-                            mView.showError(MusicNetUtils.API_RESULT_EMPTY,MusicNetUtils.API_EMPTY);
+                            mViewRef.get().showError(MusicNetUtils.API_RESULT_EMPTY,MusicNetUtils.API_EMPTY);
                         }
                     }
                 }
 
                 @Override
                 public void onError(int code, String errorMsg) {
-                    if(null!=mView){
-                        mView.showError(code,errorMsg);
+                    if(null!=mViewRef&&null!=mViewRef.get()){
+                        mViewRef.get().showError(code,errorMsg);
                     }
                 }
             });
@@ -60,27 +58,25 @@ public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,I
      */
     @Override
     public void getVideosByUrl(String url, int page) {
-        if(null!=mNetEngin){
-            if(null!=mView){
-                mView.showLoading();
-            }
-            mNetEngin.getVideosByUrl(url,page, new MusicNetUtils.OnOtherRequstCallBack<OpenEyesIndexInfo>() {
+        if(null!=mViewRef&&null!=mViewRef.get()){
+            mViewRef.get().showLoading();
+            getNetEngin().get().getVideosByUrl(url,page, new MusicNetUtils.OnOtherRequstCallBack<OpenEyesIndexInfo>() {
 
                 @Override
                 public void onResponse(OpenEyesIndexInfo data) {
-                    if(null!=mView){
+                    if(null!=mViewRef&&null!=mViewRef.get()){
                         if(null!=data.getItemList()&&data.getItemList().size()>0){
-                            mView.showVideos(data.getItemList());
+                            mViewRef.get().showVideos(data.getItemList());
                         }else{
-                            mView.showError(MusicNetUtils.API_RESULT_EMPTY,MusicNetUtils.API_EMPTY);
+                            mViewRef.get().showError(MusicNetUtils.API_RESULT_EMPTY,MusicNetUtils.API_EMPTY);
                         }
                     }
                 }
 
                 @Override
                 public void onError(int code, String errorMsg) {
-                    if(null!=mView){
-                        mView.showError(code,errorMsg);
+                    if(null!=mViewRef&&null!=mViewRef.get()){
+                        mViewRef.get().showError(code,errorMsg);
                     }
                 }
             });
@@ -93,27 +89,25 @@ public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,I
      */
     @Override
     public void getVideosByVideo(String videoID) {
-        if(null!=mNetEngin){
-            if(null!=mView){
-                mView.showLoading();
-            }
-            mNetEngin.getVideosByVideo(videoID,new MusicNetUtils.OnOtherRequstCallBack<OpenEyesIndexInfo>() {
+        if(null!=mViewRef&&null!=mViewRef.get()){
+            mViewRef.get().showLoading();
+            getNetEngin().get().getVideosByVideo(videoID,new MusicNetUtils.OnOtherRequstCallBack<OpenEyesIndexInfo>() {
 
                 @Override
                 public void onResponse(OpenEyesIndexInfo data) {
-                    if(null!=mView){
+                    if(null!=mViewRef&&null!=mViewRef.get()){
                         if(null!=data.getItemList()&&data.getItemList().size()>0){
-                            mView.showVideos(data.getItemList());
+                            mViewRef.get().showVideos(data.getItemList());
                         }else{
-                            mView.showError(MusicNetUtils.API_RESULT_EMPTY,MusicNetUtils.API_EMPTY);
+                            mViewRef.get().showError(MusicNetUtils.API_RESULT_EMPTY,MusicNetUtils.API_EMPTY);
                         }
                     }
                 }
 
                 @Override
                 public void onError(int code, String errorMsg) {
-                    if(null!=mView){
-                        mView.showError(code,errorMsg);
+                    if(null!=mViewRef&&null!=mViewRef.get()){
+                        mViewRef.get().showError(code,errorMsg);
                     }
                 }
             });

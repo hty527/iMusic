@@ -29,24 +29,22 @@ public class MusicSearchPersenter extends BasePresenter<MusicSearchContract.View
      */
     @Override
     public void queryMusicToKey(String key, int page) {
-        if(null!=mNetEngin){
-            if(null!=mView){
-                mView.showLoading();
-            }
-            mNetEngin.queryMusicToKey(key, page, new MusicNetUtils.OnRequstCallBack<SearchResult>() {
+        if(null!=mViewRef&&null!=mViewRef.get()){
+            mViewRef.get().showLoading();
+            getNetEngin().get().queryMusicToKey(key, page, new MusicNetUtils.OnRequstCallBack<SearchResult>() {
                 @Override
                 public void onResponse(ResultData<SearchResult> data) {
-                    if(null!=mView){
+                    if(null!=mViewRef&&null!=mViewRef.get()){
                         if(null!=data.getData()){
-                            mView.showResult(data.getData());
+                            mViewRef.get().showResult(data.getData());
                         }
                     }
                 }
 
                 @Override
                 public void onError(int code, String errorMsg) {
-                    if(null!=mView){
-                        mView.showError(code,errorMsg);
+                    if(null!=mViewRef&&null!=mViewRef.get()){
+                        mViewRef.get().showError(code,errorMsg);
                     }
                 }
             });
@@ -61,11 +59,9 @@ public class MusicSearchPersenter extends BasePresenter<MusicSearchContract.View
      */
     @Override
     public void getPathBkKey(String hashKey, Type type, MusicNetUtils.OnRequstCallBack callBack) {
-        if(null!=mNetEngin){
-            if(null!=mView){
-                mView.showLoading();
-            }
-            mNetEngin.getPathBkKey(hashKey, type,callBack);
+        if(null!=mViewRef&&null!=mViewRef.get()){
+            mViewRef.get().showLoading();
+            getNetEngin().get().getPathBkKey(hashKey, type,callBack);
         }
     }
 }

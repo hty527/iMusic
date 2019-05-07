@@ -1,6 +1,7 @@
 package com.android.imusic.base;
 
 import com.android.imusic.music.net.MusicNetUtils;
+import java.lang.ref.WeakReference;
 
 /**
  * hty_Yuye@Outlook.com
@@ -12,15 +13,15 @@ public abstract class BasePresenter<V extends BaseContract.BaseView,M extends Mu
         implements BaseContract.BasePresenter<V>{
 
     //MVP中的V
-    protected V mView;
+    protected WeakReference<V> mViewRef;
     //MVP中的M
-    protected M mNetEngin;
+    protected WeakReference<M> mNetEnginRef;
 
     /**
      * 初始化构造
      */
     protected BasePresenter(){
-        mNetEngin=createEngin();
+        mNetEnginRef=new WeakReference<M>(createEngin());
     }
 
     /**
@@ -30,12 +31,23 @@ public abstract class BasePresenter<V extends BaseContract.BaseView,M extends Mu
     protected abstract M createEngin();
 
     /**
+     * 返回 Date Model
+     * @return DataModel
+     */
+    public synchronized WeakReference<M> getNetEngin(){
+        if(null==mNetEnginRef||null==mNetEnginRef.get()){
+            mNetEnginRef=new WeakReference<M>(createEngin());
+        }
+        return mNetEnginRef;
+    }
+
+    /**
      * 是否正在请求中
      * @return true:请求中，false:未工作
      */
     public boolean isRequsting() {
-        if(null!=mNetEngin){
-            return mNetEngin.isRequsting();
+        if(null!=mNetEnginRef&&null!=mNetEnginRef.get()){
+            return mNetEnginRef.get().isRequsting();
         }
         return false;
     }
@@ -46,7 +58,7 @@ public abstract class BasePresenter<V extends BaseContract.BaseView,M extends Mu
      */
     @Override
     public void attachView(V view) {
-        this.mView=view;
+        this.mViewRef=new WeakReference<V>(view);
     }
 
     /**
@@ -54,10 +66,14 @@ public abstract class BasePresenter<V extends BaseContract.BaseView,M extends Mu
      */
     @Override
     public void detachView() {
-        mView=null;
-        if(null!=mNetEngin){
-            mNetEngin.onDestroy();
-            mNetEngin=null;
+        if(null!=mViewRef&&null!=mViewRef.get()){
+            mViewRef.clear();
         }
+        mViewRef=null;
+        if(null!=mNetEnginRef&&null!=mNetEnginRef.get()){
+            mNetEnginRef.get().onDestroy();
+            mNetEnginRef.clear();
+        }
+        mNetEnginRef=null;
     }
 }

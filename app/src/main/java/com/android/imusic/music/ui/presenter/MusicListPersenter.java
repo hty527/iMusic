@@ -27,27 +27,25 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
      */
     @Override
     public void getIndexAudios() {
-        if(null!=mNetEngin){
-            if(null!=mView){
-                mView.showLoading();
-            }
-            mNetEngin.getAudios(new MusicNetUtils.OnRequstCallBack<ResultList<AudioInfo>>() {
+        if(null!=mViewRef&&null!=mViewRef.get()){
+            mViewRef.get().showLoading();
+            getNetEngin().get().getAudios(new MusicNetUtils.OnRequstCallBack<ResultList<AudioInfo>>() {
                 @Override
                 public void onResponse(ResultData<ResultList<AudioInfo>> data) {
-                    if(null!=mView){
+                    if(null!=mViewRef&&null!=mViewRef.get()){
                         if(null!=data.getData()&&null!=data.getData().getList()
                                 &&data.getData().getList().size()>0){
-                            mView.showAudios(data.getData().getList());
+                            mViewRef.get().showAudios(data.getData().getList());
                         }else{
-                            mView.showError(data.getCode(),data.getMsg());
+                            mViewRef.get().showError(data.getCode(),data.getMsg());
                         }
                     }
                 }
 
                 @Override
                 public void onError(int code, String errorMsg) {
-                    if(null!=mView){
-                        mView.showError(code,errorMsg);
+                    if(null!=mViewRef&&null!=mViewRef.get()){
+                        mViewRef.get().showError(code,errorMsg);
                     }
                 }
             });
@@ -60,26 +58,24 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
      */
     @Override
     public void getAudiosByTag(String tagID) {
-        if(null!=mNetEngin){
-            if(null!=mView){
-                mView.showLoading();
-            }
-            mNetEngin.getAudiosByTag(tagID,new MusicNetUtils.OnRequstCallBack<AlbumInfo>() {
+        if(null!=mViewRef&&null!=mViewRef.get()){
+            mViewRef.get().showLoading();
+            getNetEngin().get().getAudiosByTag(tagID,new MusicNetUtils.OnRequstCallBack<AlbumInfo>() {
                 @Override
                 public void onResponse(ResultData<AlbumInfo> data) {
-                    if(null!=mView){
+                    if(null!=mViewRef&&null!=mViewRef.get()){
                         if(null!=data.getData()){
-                            mView.showAudiosFromTag(data.getData());
+                            mViewRef.get().showAudiosFromTag(data.getData());
                         }else{
-                            mView.showError(data.getCode(),data.getMsg());
+                            mViewRef.get().showError(data.getCode(),data.getMsg());
                         }
                     }
                 }
 
                 @Override
                 public void onError(int code, String errorMsg) {
-                    if(null!=mView){
-                        mView.showError(code,errorMsg);
+                    if(null!=mViewRef&&null!=mViewRef.get()){
+                        mViewRef.get().showError(code,errorMsg);
                     }
                 }
             });
