@@ -66,9 +66,12 @@ public class VideoListActivity extends MusicBaseActivity<IndexVideoPersenter>
         }
         mTitleView.setTitle(VideoUtils.getInstance().formatTitleByTitle(
                 getIntent().getStringExtra(VideoConstants.KEY_VIDEO_TITLE)));
-        mPresenter=new IndexVideoPersenter();
-        mPresenter.attachView(this);
         mPresenter.getVideosByUrl(mUrl,mPage);
+    }
+
+    @Override
+    protected IndexVideoPersenter createPresenter() {
+        return new IndexVideoPersenter();
     }
 
     /**

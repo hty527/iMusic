@@ -39,7 +39,8 @@ import java.util.List;
  * 2019/3/22
  */
 
-public class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivity{
+public abstract class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivity
+        implements BaseContract.BaseView {
 
     protected static final String TAG = "MusicBaseActivity";
     protected P mPresenter;
@@ -63,7 +64,25 @@ public class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivit
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }
+        //初始化Presenter
+        mPresenter=createPresenter();
+        if(null!=mPresenter){
+            mPresenter.attachView(this);
+        }
     }
+
+    /**
+     * 交由子类实现自己指定的Presenter,可以为空
+     * @return 子类持有的继承自BasePresenter的Presenter
+     */
+    protected abstract P createPresenter();
+
+
+    @Override
+    public void showLoading() {}
+
+    @Override
+    public void showError(int code, String errorMsg) {}
 
     //============================================权限处理===========================================
     /**

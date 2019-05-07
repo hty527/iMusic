@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
@@ -124,6 +125,11 @@ public class MainActivity extends MusicBaseActivity {
         mPagerAdapter = new MusicFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         mViewPager.setAdapter(mPagerAdapter);
         requstPermissions();
+    }
+
+    @Override
+    protected BasePresenter createPresenter() {
+        return null;
     }
 
     @Override

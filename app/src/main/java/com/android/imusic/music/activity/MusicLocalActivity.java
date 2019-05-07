@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 import com.android.imusic.R;
+import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
 import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.bean.MusicDetails;
@@ -72,6 +73,11 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
         recyclerView.setAdapter(mAdapter);
         MusicPlayerManager.getInstance().addObservable(this);
         requstPermissions();
+    }
+
+    @Override
+    protected BasePresenter createPresenter() {
+        return null;
     }
 
     @Override

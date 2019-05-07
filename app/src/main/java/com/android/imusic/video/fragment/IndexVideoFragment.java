@@ -116,8 +116,11 @@ public class IndexVideoFragment extends MusicBaseFragment<IndexVideoPersenter>
                 loadData();
             }
         });
-        mPresenter=new IndexVideoPersenter();
-        mPresenter.attachView(this);
+    }
+
+    @Override
+    protected IndexVideoPersenter createPresenter() {
+        return new IndexVideoPersenter();
     }
 
     /**

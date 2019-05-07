@@ -18,7 +18,7 @@ import java.util.List;
  * 2019/4/8
  */
 
-public abstract class MusicBaseFragment<P extends BasePresenter> extends Fragment{
+public abstract class MusicBaseFragment<P extends BasePresenter> extends Fragment implements BaseContract.BaseView {
 
     protected P mPresenter;
     protected abstract int getLayoutID();
@@ -34,8 +34,18 @@ public abstract class MusicBaseFragment<P extends BasePresenter> extends Fragmen
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mPresenter=createPresenter();
+        if(null!=mPresenter){
+            mPresenter.attachView(this);
+        }
         initViews();
     }
+
+    /**
+     * 交由子类实现自己指定的Presenter,可以为空
+     * @return 子类持有的继承自BasePresenter的Presenter
+     */
+    protected abstract P createPresenter();
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -85,4 +95,10 @@ public abstract class MusicBaseFragment<P extends BasePresenter> extends Fragmen
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getContext().getApplicationContext().startActivity(intent);
     }
+
+    @Override
+    public void showLoading() {}
+
+    @Override
+    public void showError(int code, String errorMsg) {}
 }

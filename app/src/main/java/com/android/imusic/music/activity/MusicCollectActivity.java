@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 import com.android.imusic.R;
+import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
 import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.bean.MusicDetails;
@@ -56,6 +57,11 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
         mAdapter = new MusicCommenListAdapter(MusicCollectActivity.this,null,this);
         recyclerView.setAdapter(mAdapter);
         MusicPlayerManager.getInstance().addObservable(this);
+    }
+
+    @Override
+    protected BasePresenter createPresenter() {
+        return null;
     }
 
     /**

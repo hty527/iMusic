@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 import com.android.imusic.R;
+import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
 import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.bean.MusicDetails;
@@ -94,6 +95,11 @@ public class MusicHistroyActivity extends MusicBaseActivity implements MusicOnIt
                 }
             }
         },100);
+    }
+
+    @Override
+    protected BasePresenter createPresenter() {
+        return null;
     }
 
     /**

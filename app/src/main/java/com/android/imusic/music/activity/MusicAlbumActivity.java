@@ -161,9 +161,12 @@ public class MusicAlbumActivity extends MusicBaseActivity<MusicListPersenter> im
         mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         mAppBarLayout.addOnOffsetChangedListener(this);
         MusicPlayerManager.getInstance().addObservable(this);
-        mPresenter=new MusicListPersenter();
-        mPresenter.attachView(this);
         loadData();
+    }
+
+    @Override
+    protected MusicListPersenter createPresenter() {
+        return new MusicListPersenter();
     }
 
     @Override

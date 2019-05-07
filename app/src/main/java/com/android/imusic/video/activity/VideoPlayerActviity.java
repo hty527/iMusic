@@ -66,6 +66,11 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexVideoPersenter>
         getIntentParams(getIntent(),true);
     }
 
+    @Override
+    protected IndexVideoPersenter createPresenter() {
+        return new IndexVideoPersenter();
+    }
+
     private void initViews() {
         //播放器控件宽高
         mVideoPlayer = (VideoDetailsPlayerTrackView) findViewById(R.id.video_player);
@@ -142,8 +147,6 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexVideoPersenter>
             finish();
             return;
         }
-        mPresenter=new IndexVideoPersenter();
-        mPresenter.attachView(this);
         initVideoParams(isCreate);
     }
 

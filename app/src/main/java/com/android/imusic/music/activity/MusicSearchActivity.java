@@ -154,11 +154,14 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
             }
         },mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
-        mPresenter=new MusicSearchPersenter();
-        mPresenter.attachView(this);
         MusicPlayerManager.getInstance().addObservable(this);
         //搜索记录回显
         createSearchCache();
+    }
+
+    @Override
+    protected MusicSearchPersenter createPresenter() {
+        return new MusicSearchPersenter();
     }
 
     /**

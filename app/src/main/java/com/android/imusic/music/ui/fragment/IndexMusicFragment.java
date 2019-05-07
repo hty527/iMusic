@@ -178,9 +178,12 @@ public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter>
         });
         //关注播放器内部状态和渠道状态
         MusicPlayerManager.getInstance().addObservable(this);
-        mPresenter=new MusicListPersenter();
-        mPresenter.attachView(this);
         mPresenter.getIndexAudios();
+    }
+
+    @Override
+    protected MusicListPersenter createPresenter() {
+        return new MusicListPersenter();
     }
 
     /**
