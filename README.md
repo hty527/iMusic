@@ -7,6 +7,7 @@
 **视频播放器:**[Android视频播放器封装]
 
 基于原生MediaPlayer解码器封装的音乐播放器和视频播放器功能库。极简接入、功能全面、体积甚小。欢迎Star！欢迎下载apk体验！<br/>
+iMusic示例工程主要界面遵循MVP思想开发，搜索音乐API取自《酷狗音乐》开放API，视频资源API取自《开眼视频》。<br/>
 ___
 ## 功能演示及概述:
 #### 功能演示:(更多功能快照在结尾处)
@@ -194,7 +195,6 @@ ___
 **[点击查看Video自定义交互和其他功能Wiki文档]**
 ## iMusic预览及下载:
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
-* 此示例工程音乐搜索API取自《酷狗音乐》开放API，视频资源API取自《开眼视频》。<br/>
 #### 功能快照预览:
 <div align="center">
     <img src="https://github.com/Yuye584312311/IMusic/blob/master/Doc/screenshot/20190417_162033.jpg" height="480" width="270">
