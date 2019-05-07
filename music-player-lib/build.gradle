@@ -32,7 +32,7 @@ publish {
     publishVersion = '1.0.3'
     //项目介绍，可以不写
     desc = 'Android MusicPlayer Library'
-    //项目主页，可以不写
+    //项目主页，最好写上，方便add to jcenter
     website = 'https://github.com/Yuye584312311/IMusic'
 }
 

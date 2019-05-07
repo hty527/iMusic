@@ -37,6 +37,12 @@ allprojects {
         options.addStringOption('encoding', 'UTF-8')
         options.addStringOption('charSet', 'UTF-8')
     }
+    //跳过构建时link检查
+    tasks.whenTaskAdded { task ->
+        if (task.name.equals("lint")) {
+            task.enabled = false
+        }
+    }
 }
 
 task clean(type: Delete) {
