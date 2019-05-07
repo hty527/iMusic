@@ -148,7 +148,7 @@ public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter>
                         .setNegativeButton("赏赐",new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String userSing="tsx07156kgzd8yafw8bi628";
+                                String userSing="tsx05608jpga1ccy7yeej90%3F_s";
                                 try {
                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("alipays://platformapi/startapp?saId=10000007&clientVersion=3.7.0.0718&qrcode=https%3A%2F%2Fqr.alipay.com%2F"+userSing+"%3Dweb-other"));
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
