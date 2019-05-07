@@ -50,8 +50,6 @@ public class MainActivity extends MusicBaseActivity {
 
         //视频播放器初始化
         VideoPlayerManager.getInstance()
-                //循环模式
-                .setLoop(true)
                 //悬浮窗中打开播放器的绝对路径，可选的参数,若需要支持从悬浮窗中还原到APP的播放器界面，则必须设定此参数
                 .setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
 
