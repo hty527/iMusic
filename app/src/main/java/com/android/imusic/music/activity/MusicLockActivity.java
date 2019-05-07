@@ -309,6 +309,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
         }
         if(null!=mHandler){
             mHandler.removeMessages(0);
+            mHandler.removeCallbacksAndMessages(null);
             mHandler=null;
         }
         mClickControler=null;

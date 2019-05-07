@@ -833,6 +833,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicJukeB
         isVisibility=false;
         if(null!=mHandler){
             mHandler.removeMessages(0);
+            mHandler.removeCallbacksAndMessages(null);
             mHandler=null;
         }
         MusicPlayerManager.getInstance().removePlayerListener(this);

@@ -328,6 +328,7 @@ public class MusicNetUtils <T> {
     public void onDestroy(){
         if(null!=mHandler){
             mHandler.removeMessages(0);
+            mHandler.removeCallbacksAndMessages(null);
             mHandler=null;
         }
     }
