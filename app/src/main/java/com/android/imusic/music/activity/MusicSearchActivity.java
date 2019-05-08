@@ -20,23 +20,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
+import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicSearchAdapter;
-import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
-import com.android.imusic.music.bean.ResultData;
 import com.android.imusic.music.bean.SearchHistroy;
 import com.android.imusic.music.bean.SearchMusicAnchor;
 import com.android.imusic.music.bean.SearchMusicData;
 import com.android.imusic.music.bean.SearchResult;
 import com.android.imusic.music.bean.SearchResultInfo;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
-import com.android.imusic.music.net.MusicNetUtils;
 import com.android.imusic.music.ui.contract.MusicSearchContract;
 import com.android.imusic.music.ui.presenter.MusicSearchPersenter;
 import com.android.imusic.music.utils.MediaUtils;
 import com.google.android.flexbox.FlexboxLayout;
-import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.adapter.base.OnLoadMoreListener;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.listener.MusicOnItemClickListener;
@@ -56,7 +53,7 @@ import java.util.Observer;
  * 音频搜索界面，使用酷狗API做数据支持
  */
 
-public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
+public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
         implements MusicOnItemClickListener, Observer, MusicSearchContract.View {
 
     private View mBtnClean;
@@ -259,37 +256,7 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
                     return;
                 }
                 if(null!=mPresenter&&!mPresenter.isRequsting()){
-                    mPresenter.getPathBkKey(searchResultInfo.getHash(),
-                            new TypeToken<ResultData<SearchMusicData>>() {}.getType(),
-                            new MusicNetUtils.OnRequstCallBack<SearchMusicData>() {
-                        @Override
-                        public void onResponse(ResultData<SearchMusicData> data) {
-                            if(null!=mAdapter&&null!=data.getData()){
-                                //准备播放，并将当前列表Item对象更新，方便收藏
-                                if(!TextUtils.isEmpty(data.getData().getPlay_url())){
-                                    SearchMusicData musicData = data.getData();
-                                    searchResultInfo.setAlbum_img(musicData.getImg());
-                                    searchResultInfo.setSource(musicData.getPlay_url());
-                                    mAdapter.notifyDataSetChanged(posotion);
-                                    AudioInfo audioInfo=getaudioInfo(musicData,searchResultInfo.getAudio_id());
-                                    MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_SEARCH);
-                                    MusicPlayerManager.getInstance().addPlayMusicToTop(audioInfo);
-                                    //如果悬浮窗权限未给定
-                                    createMiniJukeboxWindow();
-                                }else{
-                                    Toast.makeText(MusicSearchActivity.this,"此歌曲已被下架",Toast.LENGTH_SHORT).show();
-                                }
-                            }else{
-                                Toast.makeText(MusicSearchActivity.this,data.getMsg(),Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onError(int code, String errorMsg) {
-                            Logger.d(TAG,"onError-->code:"+code+",errorMsg:"+errorMsg);
-                            Toast.makeText(MusicSearchActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    mPresenter.getPathBkKey(posotion,searchResultInfo,searchResultInfo.getHash());
                 }
             }else{
                 //Menu
@@ -532,6 +499,46 @@ public class MusicSearchActivity extends MusicBaseActivity<MusicSearchPersenter>
                             Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    }
+
+
+    /**
+     * 音频详细信息
+     * @param position ITEM Position
+     * @param item 音频相关的ITEM
+     * @param data 音频信息
+     */
+    @Override
+    public void showAudioData(int position, SearchResultInfo item, SearchMusicData data) {
+        if(!MusicSearchActivity.this.isFinishing()){
+            if(!TextUtils.isEmpty(data.getPlay_url())){
+                if(null!=item){
+                    item.setAlbum_img(data.getImg());
+                    item.setSource(data.getPlay_url());
+                    mAdapter.notifyDataSetChanged(position);
+                    AudioInfo audioInfo=getaudioInfo(data,item.getAudio_id());
+                    MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_SEARCH);
+                    MusicPlayerManager.getInstance().addPlayMusicToTop(audioInfo);
+                    //如果悬浮窗权限未给定
+                    createMiniJukeboxWindow();
+                }
+            }else{
+                Toast.makeText(MusicSearchActivity.this,"此歌曲已被下架",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * 获取音频信息失败
+     * @param code 错误码
+     * @param errorMsg 描述信息
+     */
+    @Override
+    public void showAudioDataError(int code, String errorMsg) {
+        Logger.d(TAG,"showAudioDataError-->code:"+code+",errorMsg:"+errorMsg);
+        if(!MusicSearchActivity.this.isFinishing()){
+            Toast.makeText(MusicSearchActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
         }
     }
 }

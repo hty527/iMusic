@@ -2,15 +2,16 @@ package com.android.imusic.music.ui.presenter;
 
 import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.bean.ResultData;
+import com.android.imusic.music.bean.SearchMusicData;
 import com.android.imusic.music.bean.SearchResult;
+import com.android.imusic.music.bean.SearchResultInfo;
 import com.android.imusic.music.model.MusicSearchEngin;
-import com.android.imusic.music.net.MusicNetUtils;
+import com.android.imusic.net.OkHttpUtils;
 import com.android.imusic.music.ui.contract.MusicSearchContract;
-import java.lang.reflect.Type;
 
 /**
  * TinyHung@Outlook.com
- * 2019/3/23
+ * 2019/5/6
  * Search Presenter
  */
 
@@ -31,7 +32,9 @@ public class MusicSearchPersenter extends BasePresenter<MusicSearchContract.View
     public void queryMusicToKey(String key, int page) {
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
-            getNetEngin().get().queryMusicToKey(key, page, new MusicNetUtils.OnRequstCallBack<SearchResult>() {
+
+            getNetEngin().get().queryMusicToKey(key, page, new OkHttpUtils.OnResultCallBack<ResultData<SearchResult>>() {
+
                 @Override
                 public void onResponse(ResultData<SearchResult> data) {
                     if(null!=mViewRef&&null!=mViewRef.get()){
@@ -53,15 +56,33 @@ public class MusicSearchPersenter extends BasePresenter<MusicSearchContract.View
 
     /**
      * 根据HashKey获取播放地址
+     * @param position ITEM Position
+     * @param item ITEM
      * @param hashKey Music hashKay
-     * @param type Data Type
-     * @param callBack 回调
      */
     @Override
-    public void getPathBkKey(String hashKey, Type type, MusicNetUtils.OnRequstCallBack callBack) {
+    public void getPathBkKey(final int position, final SearchResultInfo item, String hashKey) {
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
-            getNetEngin().get().getPathBkKey(hashKey, type,callBack);
+
+            getNetEngin().get().getPathBkKey(hashKey,new OkHttpUtils.OnResultCallBack<ResultData<SearchMusicData>>() {
+
+                @Override
+                public void onResponse(ResultData<SearchMusicData> data) {
+                    if(null!=mViewRef&&null!=mViewRef.get()){
+                        if(null!=data.getData()){
+                            mViewRef.get().showAudioData(position,item,data.getData());
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(int code, String errorMsg) {
+                    if(null!=mViewRef&&null!=mViewRef.get()){
+                        mViewRef.get().showError(code,errorMsg);
+                    }
+                }
+            });
         }
     }
 }

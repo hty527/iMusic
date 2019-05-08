@@ -1,17 +1,21 @@
 package com.android.imusic.music.ui.presenter;
 
+import android.content.Context;
 import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.bean.AlbumInfo;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.ResultData;
 import com.android.imusic.music.bean.ResultList;
 import com.android.imusic.music.model.MusicListEngin;
-import com.android.imusic.music.net.MusicNetUtils;
 import com.android.imusic.music.ui.contract.MusicListContract;
+import com.android.imusic.net.OkHttpUtils;
+import com.music.player.lib.bean.BaseAudioInfo;
+import java.util.List;
 
 /**
  * TinyHung@Outlook.com
- * 2019/3/23
+ * 2019/5/6
+ * Index Music Presenter
  */
 
 public class MusicListPersenter extends BasePresenter<MusicListContract.View,MusicListEngin>
@@ -29,7 +33,9 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
     public void getIndexAudios() {
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
-            getNetEngin().get().getAudios(new MusicNetUtils.OnRequstCallBack<ResultList<AudioInfo>>() {
+
+            getNetEngin().get().getAudios(new OkHttpUtils.OnResultCallBack<ResultData<ResultList<AudioInfo>>>() {
+
                 @Override
                 public void onResponse(ResultData<ResultList<AudioInfo>> data) {
                     if(null!=mViewRef&&null!=mViewRef.get()){
@@ -60,7 +66,9 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
     public void getAudiosByTag(String tagID) {
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
-            getNetEngin().get().getAudiosByTag(tagID,new MusicNetUtils.OnRequstCallBack<AlbumInfo>() {
+
+            getNetEngin().get().getAudiosByTag(tagID,new OkHttpUtils.OnResultCallBack<ResultData<AlbumInfo>>() {
+
                 @Override
                 public void onResponse(ResultData<AlbumInfo> data) {
                     if(null!=mViewRef&&null!=mViewRef.get()){
@@ -69,6 +77,34 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
                         }else{
                             mViewRef.get().showError(data.getCode(),data.getMsg());
                         }
+                    }
+                }
+
+                @Override
+                public void onError(int code, String errorMsg) {
+                    if(null!=mViewRef&&null!=mViewRef.get()){
+                        mViewRef.get().showError(code,errorMsg);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 查询本地音频列表
+     * @param context Activity上下文
+     */
+    @Override
+    public void getLocationAudios(Context context) {
+        if(null!=mViewRef&&null!=mViewRef.get()){
+            mViewRef.get().showLoading();
+
+            getNetEngin().get().getLocationAudios(context,new OkHttpUtils.OnResultCallBack<List<BaseAudioInfo>>() {
+
+                @Override
+                public void onResponse(List<BaseAudioInfo> data) {
+                    if(null!=mViewRef&&null!=mViewRef.get()){
+                        mViewRef.get().showLocationAudios(data);
                     }
                 }
 

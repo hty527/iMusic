@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +15,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 import com.android.imusic.R;
-import com.android.imusic.base.MusicBaseFragment;
+import com.android.imusic.base.BaseFragment;
 import com.android.imusic.music.activity.MusicAlbumActivity;
 import com.android.imusic.music.activity.MusicCollectActivity;
 import com.android.imusic.music.activity.MusicHistroyActivity;
@@ -45,12 +46,12 @@ import java.util.Observer;
  * Index Music
  */
 
-public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter>
+public class IndexMusicFragment extends BaseFragment<MusicListPersenter>
         implements Observer, MusicListContract.View {
 
-    private static final String TAG = "IndexMusicFragment";
     private MusicIndexDataAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private int QUERY_LOCATION_MUSIC=0;
 
     @Override
     protected int getLayoutID() {
@@ -182,6 +183,15 @@ public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter>
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //权限获取到后，此界面可能还未初始化完成，检查标记是否需要更新本地音乐库
+        if(QUERY_LOCATION_MUSIC>0&&null!=mPresenter){
+            mPresenter.getLocationAudios(getActivity());
+        }
+    }
+
+    @Override
     protected MusicListPersenter createPresenter() {
         return new MusicListPersenter();
     }
@@ -205,28 +215,12 @@ public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter>
             Toast.makeText(getContext(),"无法读取SD卡，请检查SD卡使用权限！",Toast.LENGTH_SHORT).show();
             return;
         }
-        new AsyncTask<Void, Void, List<BaseAudioInfo>>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-            @Override
-            protected List<BaseAudioInfo> doInBackground(final Void... unused) {
-                ArrayList<BaseAudioInfo> audioInfos = MediaUtils.getInstance().queryLocationMusics(context);
-                return audioInfos;
-            }
-
-            @Override
-            protected void onPostExecute(List<BaseAudioInfo> data) {
-                if(null!=data&&null!=mAdapter){
-                    MediaUtils.getInstance().setLocationMusic(data);
-                    if(mAdapter.getData().size()>0){
-                        mAdapter.getData().get(0).setDesp("("+data.size()+"首)");
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        }.execute();
+        if(null!=mPresenter){
+            mPresenter.getLocationAudios(context);
+        }else{
+            //标记为需要获取本机音乐，待界面初始化完成后，再查询本地音乐
+            QUERY_LOCATION_MUSIC=1;
+        }
     }
 
     /**
@@ -252,6 +246,21 @@ public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter>
 
     @Override
     public void showAudiosFromTag(AlbumInfo data) {}
+
+    /**
+     * 显示本地音频列表
+     * @param data 本地音频列表
+     */
+    @Override
+    public void showLocationAudios(List<BaseAudioInfo> data) {
+        if(null!=mAdapter){
+            MediaUtils.getInstance().setLocationMusic(data);
+            if(mAdapter.getData().size()>0){
+                mAdapter.getData().get(0).setDesp("("+data.size()+"首)");
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     /**
      * 加载中
@@ -301,6 +310,7 @@ public class IndexMusicFragment extends MusicBaseFragment<MusicListPersenter>
     @Override
     public void onDestroy() {
         super.onDestroy();
+        QUERY_LOCATION_MUSIC=0;
         if(null!=mSwipeRefreshLayout){
             mSwipeRefreshLayout.setRefreshing(false);
             mSwipeRefreshLayout=null;

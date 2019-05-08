@@ -8,12 +8,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
+
 import com.android.imusic.R;
-import com.android.imusic.base.BasePresenter;
+import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
-import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
+import com.android.imusic.music.ui.contract.MusicHistroyContract;
+import com.android.imusic.music.ui.presenter.MusicHistroyPersenter;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.listener.MusicOnItemClickListener;
@@ -22,6 +24,7 @@ import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.model.MusicPlayingChannel;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicCommentTitleView;
+
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -32,7 +35,8 @@ import java.util.Observer;
  * Music Collect
  */
 
-public class MusicCollectActivity extends MusicBaseActivity implements MusicOnItemClickListener, Observer {
+public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> implements
+        MusicOnItemClickListener, Observer,MusicHistroyContract.View {
 
     private MusicCommenListAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
@@ -60,8 +64,8 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
     }
 
     @Override
-    protected BasePresenter createPresenter() {
-        return null;
+    protected MusicHistroyPersenter createPresenter() {
+        return new MusicHistroyPersenter();
     }
 
     /**
@@ -135,6 +139,17 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
         }
     }
 
+    /**
+     * 显示用户收藏列表
+     * @param data 收藏、历史播放 记录
+     */
+    @Override
+    public void showAudios(List<BaseAudioInfo> data) {
+        if(null!=mAdapter){
+            mAdapter.setNewData(data);
+        }
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         if(null!=mAdapter&&o instanceof MusicSubjectObservable && null!=arg && arg instanceof MusicStatus){
@@ -159,14 +174,8 @@ public class MusicCollectActivity extends MusicBaseActivity implements MusicOnIt
     @Override
     protected void onResume() {
         super.onResume();
-        if(null!=mAdapter){
-            new android.os.Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    List<BaseAudioInfo> playListByHistroy = MusicUtils.getInstance().getMusicsByCollect();
-                    mAdapter.setNewData(playListByHistroy);
-                }
-            },100);
+        if(null!=mAdapter&&null!=mPresenter){
+            mPresenter.getCollectAudios();
         }
     }
 

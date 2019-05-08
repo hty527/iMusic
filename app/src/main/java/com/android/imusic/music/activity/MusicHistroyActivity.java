@@ -9,11 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 import com.android.imusic.R;
-import com.android.imusic.base.BasePresenter;
+import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
-import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
+import com.android.imusic.music.ui.contract.MusicHistroyContract;
+import com.android.imusic.music.ui.presenter.MusicHistroyPersenter;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.listener.MusicOnItemClickListener;
@@ -34,7 +35,8 @@ import java.util.Observer;
  * 使用此功能，必须先初始化：MusicUtils.getInstance().initACache(this);
  */
 
-public class MusicHistroyActivity extends MusicBaseActivity implements MusicOnItemClickListener, Observer {
+public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> implements
+        MusicOnItemClickListener, Observer,MusicHistroyContract.View {
 
     private static final String TAG = "LocationMusicActivity";
     private MusicCommenListAdapter mAdapter;
@@ -81,25 +83,12 @@ public class MusicHistroyActivity extends MusicBaseActivity implements MusicOnIt
         mAdapter = new MusicCommenListAdapter(MusicHistroyActivity.this,null,this);
         recyclerView.setAdapter(mAdapter);
         MusicPlayerManager.getInstance().addObservable(this);
-        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                List<BaseAudioInfo> playListByHistroy = MusicUtils.getInstance().getMusicsByHistroy();
-                mAdapter.setNewData(playListByHistroy);
-                if(null==playListByHistroy||playListByHistroy.size()==0){
-                    Toast.makeText(MusicHistroyActivity.this,"播放记录空空如也",Toast.LENGTH_SHORT).show();
-                }else{
-                    if(null!=mTitleView){
-                        mTitleView.setSubTitle("清空");
-                    }
-                }
-            }
-        },100);
+        mPresenter.getHistroyAudios();
     }
 
     @Override
-    protected BasePresenter createPresenter() {
-        return null;
+    protected MusicHistroyPersenter createPresenter() {
+        return new MusicHistroyPersenter();
     }
 
     /**
@@ -171,6 +160,32 @@ public class MusicHistroyActivity extends MusicBaseActivity implements MusicOnIt
                     }).setCancelable(false).show();
         }
     }
+
+    @Override
+    public void showError(int code, String errorMsg) {
+        super.showError(code,errorMsg);
+        Toast.makeText(MusicHistroyActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 显示本地播放记录
+     * @param data 收藏、历史播放 记录
+     */
+    @Override
+    public void showAudios(List<BaseAudioInfo> data) {
+        if(null!=mAdapter){
+            mAdapter.setNewData(data);
+        }
+        if(null!=mTitleView){
+            mTitleView.setSubTitle("清空");
+        }
+    }
+
+    @Override
+    public void showLoading() {
+        super.showLoading();
+    }
+
 
     @Override
     public void update(Observable o, Object arg) {

@@ -1,6 +1,5 @@
 package com.android.imusic.base;
 
-import com.android.imusic.music.net.MusicNetUtils;
 import java.lang.ref.WeakReference;
 
 /**
@@ -9,9 +8,10 @@ import java.lang.ref.WeakReference;
  * MVP Base P
  */
 
-public abstract class BasePresenter<V extends BaseContract.BaseView,M extends MusicNetUtils>
+public abstract class BasePresenter<V extends BaseContract.BaseView,M extends BaseEngin>
         implements BaseContract.BasePresenter<V>{
 
+    protected static final String TAG = "BasePresenter";
     //MVP中的V
     protected WeakReference<V> mViewRef;
     //MVP中的M

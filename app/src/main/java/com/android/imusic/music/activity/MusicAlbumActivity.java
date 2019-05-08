@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
-import com.android.imusic.base.MusicBaseActivity;
+import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
 import com.android.imusic.music.bean.AlbumInfo;
 import com.android.imusic.music.bean.AudioInfo;
@@ -57,7 +57,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * Album-Songs
  */
 
-public class MusicAlbumActivity extends MusicBaseActivity<MusicListPersenter> implements
+public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> implements
         MusicOnItemClickListener, Observer, AppBarLayout.OnOffsetChangedListener, MusicPlayerEventListener, MusicListContract.View {
 
     private MusicCommenListAdapter mAdapter;
@@ -341,6 +341,9 @@ public class MusicAlbumActivity extends MusicBaseActivity<MusicListPersenter> im
             updateHead(data.getSinger());
         }
     }
+
+    @Override
+    public void showLocationAudios(List<BaseAudioInfo> data) {}
 
     @Override
     public void showLoading() {}

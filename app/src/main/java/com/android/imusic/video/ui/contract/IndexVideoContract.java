@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * hty_Yuye@Outlook.com
  * 2019/5/6
- * Index Video Presenter
+ * Index Video Contract
  */
 
 public interface IndexVideoContract {

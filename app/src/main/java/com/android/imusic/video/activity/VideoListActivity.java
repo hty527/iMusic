@@ -16,8 +16,8 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 import com.android.imusic.R;
-import com.android.imusic.base.MusicBaseActivity;
-import com.android.imusic.music.net.MusicNetUtils;
+import com.android.imusic.base.BaseActivity;
+import com.android.imusic.base.BaseEngin;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.adapter.VideoIndexVideoAdapter;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
@@ -41,7 +41,7 @@ import java.util.List;
  * Video List
  */
 
-public class VideoListActivity extends MusicBaseActivity<IndexVideoPersenter>
+public class VideoListActivity extends BaseActivity<IndexVideoPersenter>
         implements MusicOnItemClickListener, IndexVideoContract.View {
 
     private VideoIndexVideoAdapter mAdapter;
@@ -253,7 +253,7 @@ public class VideoListActivity extends MusicBaseActivity<IndexVideoPersenter>
                     }
                 });
             }
-            if(code==MusicNetUtils.API_RESULT_EMPTY){
+            if(code==BaseEngin.API_RESULT_EMPTY){
                 mAdapter.onLoadEnd();
             }else{
                 if(mPage>-1){

@@ -39,10 +39,10 @@ import java.util.List;
  * 2019/3/22
  */
 
-public abstract class MusicBaseActivity<P extends BasePresenter> extends AppCompatActivity
+public abstract class BaseActivity<P extends BasePresenter> extends AppCompatActivity
         implements BaseContract.BaseView {
 
-    protected static final String TAG = "MusicBaseActivity";
+    protected static final String TAG = "BaseActivity";
     protected P mPresenter;
     //权限处理
     private final static int READ_EXTERNAL_STORAGE_CODE = 100;//SD卡
@@ -174,7 +174,7 @@ public abstract class MusicBaseActivity<P extends BasePresenter> extends AppComp
                     if (PackageManager.PERMISSION_GRANTED != grantResults[0]) {
                         //用户拒绝过其中一个权限
                         if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
-                            new android.support.v7.app.AlertDialog.Builder(MusicBaseActivity.this)
+                            new android.support.v7.app.AlertDialog.Builder(BaseActivity.this)
                                     .setTitle("获取本地音乐失败")
                                     .setMessage(findPermissionExplain(permissions[0]))
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -191,7 +191,7 @@ public abstract class MusicBaseActivity<P extends BasePresenter> extends AppComp
                                     }).setCancelable(false).show();
                         } else {
                             //用户勾选了不再询问，手动开启
-                            new android.support.v7.app.AlertDialog.Builder(MusicBaseActivity.this)
+                            new android.support.v7.app.AlertDialog.Builder(BaseActivity.this)
                                     .setTitle("获取本地音乐失败")
                                     .setMessage("读取本地存储权限被拒绝，请点击‘去设置’手动开启读取本地存储权限")
                                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -274,9 +274,8 @@ public abstract class MusicBaseActivity<P extends BasePresenter> extends AppComp
     @Override
     protected void onResume() {
         super.onResume();
-        Logger.d(TAG,"onResume:");
         if(isWindowEnable&&requstCode>0&&requstCode== MusicConstants.REQUST_WINDOWN_PERMISSION&&
-                MusicWindowManager.getInstance().checkAlertWindowsPermission(MusicBaseActivity.this)){
+                MusicWindowManager.getInstance().checkAlertWindowsPermission(BaseActivity.this)){
             requstCode=0;
             createMiniJukeBoxToWindown();
         }
@@ -286,8 +285,8 @@ public abstract class MusicBaseActivity<P extends BasePresenter> extends AppComp
      * 即将退出播放器
      */
     protected void createMiniJukeboxWindow() {
-        if(!MusicWindowManager.getInstance().checkAlertWindowsPermission(MusicBaseActivity.this)){
-            new android.support.v7.app.AlertDialog.Builder(MusicBaseActivity.this)
+        if(!MusicWindowManager.getInstance().checkAlertWindowsPermission(BaseActivity.this)){
+            new android.support.v7.app.AlertDialog.Builder(BaseActivity.this)
                     .setTitle("播放提示")
                     .setMessage("前往开启悬浮窗，更好的体验播放功能")
                     .setNegativeButton("暂不开启", new DialogInterface.OnClickListener() {
@@ -304,10 +303,10 @@ public abstract class MusicBaseActivity<P extends BasePresenter> extends AppComp
                                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.setData(Uri.parse( "package:"+MusicUtils.getInstance()
-                                        .getPackageName(MusicBaseActivity.this)));
-                                MusicBaseActivity.this.startActivityForResult(intent,MusicConstants.REQUST_WINDOWN_PERMISSION);
+                                        .getPackageName(BaseActivity.this)));
+                                BaseActivity.this.startActivityForResult(intent,MusicConstants.REQUST_WINDOWN_PERMISSION);
                             } else {
-                                Toast.makeText(MusicBaseActivity.this,"请在设置中手动开启",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(BaseActivity.this,"请在设置中手动开启",Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent();
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
@@ -328,9 +327,9 @@ public abstract class MusicBaseActivity<P extends BasePresenter> extends AppComp
         if(!MusicWindowManager.getInstance().isWindowShowing()){
             if(null!= MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                 BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(MusicBaseActivity.this.
-                                getApplicationContext(), MusicUtils.getInstance().dpToPxInt(MusicBaseActivity.this,80f)
-                        ,MusicUtils.getInstance().dpToPxInt(MusicBaseActivity.this,170f));
+                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(BaseActivity.this.
+                                getApplicationContext(), MusicUtils.getInstance().dpToPxInt(BaseActivity.this,80f)
+                        ,MusicUtils.getInstance().dpToPxInt(BaseActivity.this,170f));
                 MusicStatus musicStatus=new MusicStatus();
                 musicStatus.setId(musicInfo.getAudioId());
                 String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);
@@ -351,7 +350,7 @@ public abstract class MusicBaseActivity<P extends BasePresenter> extends AppComp
      * @param message 提示MSG
      */
     public void showProgressDialog(String message){
-        if(!MusicBaseActivity.this.isFinishing()){
+        if(!BaseActivity.this.isFinishing()){
             if(null==mLoadingView){
                 mLoadingView = new MusicLoadingView(this);
             }
@@ -365,7 +364,7 @@ public abstract class MusicBaseActivity<P extends BasePresenter> extends AppComp
      */
     public void closeProgressDialog(){
         try {
-            if(!MusicBaseActivity.this.isFinishing()){
+            if(!BaseActivity.this.isFinishing()){
                 if(null!=mLoadingView){
                     mLoadingView.dismiss();
                 }
@@ -406,16 +405,16 @@ public abstract class MusicBaseActivity<P extends BasePresenter> extends AppComp
                         startActivity(Intent.createChooser(sendIntent, "iMusic分享"));
                     }
                 }else{
-                    Toast.makeText(MusicBaseActivity.this,"此歌曲已被下架",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BaseActivity.this,"此歌曲已被下架",Toast.LENGTH_SHORT).show();
                 }
             }catch (RuntimeException e){
                 e.printStackTrace();
-                Toast.makeText(MusicBaseActivity.this,"分享失败："+e.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(BaseActivity.this,"分享失败："+e.getMessage(),Toast.LENGTH_SHORT).show();
             }
         }else if(itemId==MusicDetails.ITEM_ID_COLLECT){
             boolean toCollect = MusicUtils.getInstance().putMusicToCollect(audioInfo);
             if(toCollect){
-                Toast.makeText(MusicBaseActivity.this,"已添加至收藏列表",Toast.LENGTH_SHORT).show();
+                Toast.makeText(BaseActivity.this,"已添加至收藏列表",Toast.LENGTH_SHORT).show();
                 MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
             }
         }

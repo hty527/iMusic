@@ -18,7 +18,7 @@ import java.util.List;
  * 2019/4/8
  */
 
-public abstract class MusicBaseFragment<P extends BasePresenter> extends Fragment implements BaseContract.BaseView {
+public abstract class BaseFragment<P extends BasePresenter> extends Fragment implements BaseContract.BaseView {
 
     protected P mPresenter;
     protected abstract int getLayoutID();

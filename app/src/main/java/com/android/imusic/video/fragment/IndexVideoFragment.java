@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 import com.android.imusic.R;
-import com.android.imusic.base.MusicBaseFragment;
-import com.android.imusic.music.net.MusicNetUtils;
+import com.android.imusic.base.BaseFragment;
+import com.android.imusic.base.BaseEngin;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.activity.VideoListActivity;
 import com.android.imusic.video.activity.VideoPlayerActviity;
@@ -21,11 +21,11 @@ import com.android.imusic.video.adapter.VideoIndexVideoAdapter;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
 import com.android.imusic.video.ui.contract.IndexVideoContract;
 import com.android.imusic.video.ui.presenter.IndexVideoPersenter;
-import com.video.player.lib.bean.VideoParams;
 import com.music.player.lib.adapter.base.OnLoadMoreListener;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
+import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.utils.VideoUtils;
@@ -39,7 +39,7 @@ import java.util.List;
  * 主页视频列表，采用“开眼视频”的API做数据支持，演示列表播放的功能
  */
 
-public class IndexVideoFragment extends MusicBaseFragment<IndexVideoPersenter>
+public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
         implements MusicOnItemClickListener, IndexVideoContract.View {
 
     private static final String TAG = "IndexVideoFragment";
@@ -289,7 +289,7 @@ public class IndexVideoFragment extends MusicBaseFragment<IndexVideoPersenter>
                 }
             });
         }
-        if(code==MusicNetUtils.API_RESULT_EMPTY){
+        if(code== BaseEngin.API_RESULT_EMPTY){
             mAdapter.onLoadEnd();
         }else{
             if(mPage>-1){

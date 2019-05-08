@@ -1,14 +1,14 @@
 package com.android.imusic.music.ui.contract;
 
 import com.android.imusic.base.BaseContract;
+import com.android.imusic.music.bean.SearchMusicData;
 import com.android.imusic.music.bean.SearchResult;
-import com.android.imusic.music.net.MusicNetUtils;
-import java.lang.reflect.Type;
+import com.android.imusic.music.bean.SearchResultInfo;
 
 /**
  * hty_Yuye@Outlook.com
  * 2019/5/6
- * Index Presenter
+ * Index Contract
  */
 
 public interface MusicSearchContract {
@@ -18,6 +18,21 @@ public interface MusicSearchContract {
          * @param data 搜索结果
          */
         void showResult(SearchResult data);
+
+        /**
+         * 音频详细信息
+         * @param position ITEM Position
+         * @param item 音频相关的ITEM
+         * @param data 音频信息
+         */
+        void showAudioData(int position,SearchResultInfo item,SearchMusicData data);
+
+        /**
+         * 获取音频信息失败、为空
+         * @param code 错误码
+         * @param errorMsg 描述信息
+         */
+        void showAudioDataError(int code,String errorMsg);
     }
 
     interface Presenter<V> extends BaseContract.BasePresenter<V>{
@@ -30,10 +45,10 @@ public interface MusicSearchContract {
 
         /**
          * 根据hashKey获取播放地址
+         * @param position ITEM Position
+         * @param item ITEM
          * @param hashKey Music hashKay
-         * @param type Data Type
-         * @param callBack 回调
          */
-        void getPathBkKey(String hashKey, Type type, MusicNetUtils.OnRequstCallBack callBack);
+        void getPathBkKey(int position,SearchResultInfo item,String hashKey);
     }
 }

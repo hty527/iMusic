@@ -13,11 +13,11 @@ import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
-import com.android.imusic.base.MusicBaseActivity;
+import com.android.imusic.base.BaseActivity;
+import com.android.imusic.net.OkHttpUtils;
 import com.android.imusic.music.ui.fragment.IndexMusicFragment;
 import com.android.imusic.video.activity.VideoPlayerActviity;
 import com.android.imusic.video.fragment.IndexVideoFragment;
-import com.android.imusic.music.net.MusicNetUtils;
 import com.android.imusic.music.utils.MediaUtils;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
@@ -35,7 +35,7 @@ import java.util.List;
  * Music Player示例
  */
 
-public class MainActivity extends MusicBaseActivity {
+public class MainActivity extends BaseActivity {
 
     private long currentMillis=0;
     private TextView mBtnMusic,mBtnVideo;
@@ -47,8 +47,7 @@ public class MainActivity extends MusicBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //网络日志
-        MusicNetUtils.DEBUG=false;
-
+        OkHttpUtils.DEBUG=false;
         //视频播放器初始化
         VideoPlayerManager.getInstance()
                 //悬浮窗中打开播放器的绝对路径，可选的参数,若需要支持从悬浮窗中还原到APP的播放器界面，
@@ -248,6 +247,7 @@ public class MainActivity extends MusicBaseActivity {
         VideoWindowManager.getInstance().onDestroy();
         MusicWindowManager.getInstance().onDestroy();
         MusicPlayerManager.getInstance().unInitialize(MainActivity.this);
+        OkHttpUtils.onDestroy();
         if(null!=mPagerAdapter){
             mPagerAdapter.onDestroy();
             mPagerAdapter=null;

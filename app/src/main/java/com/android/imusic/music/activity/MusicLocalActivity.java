@@ -2,7 +2,6 @@ package com.android.imusic.music.activity;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -12,11 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 import com.android.imusic.R;
-import com.android.imusic.base.BasePresenter;
+import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
-import com.android.imusic.base.MusicBaseActivity;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
+import com.android.imusic.music.ui.contract.MusicLocationContract;
+import com.android.imusic.music.ui.presenter.MusicLocationPersenter;
 import com.android.imusic.music.utils.MediaUtils;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
@@ -26,7 +26,6 @@ import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.model.MusicPlayingChannel;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicCommentTitleView;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -37,7 +36,8 @@ import java.util.Observer;
  * Location Music
  */
 
-public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItemClickListener, Observer {
+public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> implements
+        MusicOnItemClickListener,Observer,MusicLocationContract.View{
 
     private MusicCommenListAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
@@ -61,7 +61,7 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
                 if(null!=mAdapter&&null!=mAdapter.getData()&&mAdapter.getData().size()>0){
                     MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_LOCATION);
                     List<BaseAudioInfo> audioInfos = mAdapter.getData();
-                    startToMusicPlayer(audioInfos.get(0).getAudioId(),audioInfos);
+                    startMusicPlayer(audioInfos.get(0).getAudioId(),audioInfos);
                 }
             }
         });
@@ -76,8 +76,8 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
     }
 
     @Override
-    protected BasePresenter createPresenter() {
-        return null;
+    protected MusicLocationPersenter createPresenter() {
+        return new MusicLocationPersenter();
     }
 
     @Override
@@ -89,12 +89,7 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
             return;
         }
         if(resultCode==PREMISSION_SUCCESS){
-            new android.os.Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    queryLocationMusic();
-                }
-            },100);
+            queryLocationMusic();
         }
     }
 
@@ -103,20 +98,6 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
      */
     @SuppressLint("StaticFieldLeak")
     private void queryLocationMusic() {
-        if(null!=MediaUtils.getInstance().getLocationMusic()&&MediaUtils.getInstance().getLocationMusic().size()>0){
-            mTitleView.setSubTitle("播放全部");
-            List<BaseAudioInfo> audioInfos = MediaUtils.getInstance().getLocationMusic();
-            List<BaseAudioInfo> medias=new ArrayList<>();
-            medias.addAll(audioInfos);
-            mAdapter.setNewData(medias);
-            //定位至正在播放的任务
-            if(null!=mLayoutManager){
-                int playIndexInThis = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
-                        MusicPlayerManager.getInstance().getCurrentPlayerID());
-                mLayoutManager.scrollToPositionWithOffset(playIndexInThis,MusicUtils.getInstance().dpToPxInt(MusicLocalActivity.this,69f));
-            }
-            return;
-        }
         String status = Environment.getExternalStorageState();
         if (status.equals(Environment.MEDIA_MOUNTED_READ_ONLY)) {
             Toast.makeText(this,"SD存储卡准备中",Toast.LENGTH_SHORT).show();
@@ -130,32 +111,10 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
             Toast.makeText(this,"无法读取SD卡，请检查SD卡使用权限！",Toast.LENGTH_SHORT).show();
             return;
         }
-        new AsyncTask<Void, Void, List<BaseAudioInfo>>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-            @Override
-            protected List<BaseAudioInfo> doInBackground(final Void... unused) {
-                ArrayList<BaseAudioInfo> audioInfos = MediaUtils.getInstance().queryLocationMusics(MusicLocalActivity.this);
-                return audioInfos;
-            }
-
-            @Override
-            protected void onPostExecute(List<BaseAudioInfo> data) {
-                if(null!=data&&null!=mAdapter){
-                    mTitleView.setSubTitle("播放全部");
-                    MediaUtils.getInstance().setLocationMusic(data);
-                    mAdapter.setNewData(data);
-                    //定位至正在播放的任务
-                    if(null!=mLayoutManager){
-                        int playIndexInThis = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
-                                MusicPlayerManager.getInstance().getCurrentPlayerID());
-                        mLayoutManager.scrollToPositionWithOffset(playIndexInThis,0);
-                    }
-                }
-            }
-        }.execute();
+        //查询本机音乐
+        if(null!=mPresenter){
+            mPresenter.getLocationAudios(MusicLocalActivity.this);
+        }
     }
 
     /**
@@ -225,6 +184,35 @@ public class MusicLocalActivity extends MusicBaseActivity implements MusicOnItem
                             Toast.makeText(MusicLocalActivity.this,"已删除",Toast.LENGTH_SHORT).show();
                         }
                     }).setCancelable(false).show();
+        }
+    }
+
+    @Override
+    public void showLoading() {
+        super.showLoading();
+    }
+
+    @Override
+    public void showError(int code, String errorMsg) {
+        super.showError(code, errorMsg);
+    }
+
+    /**
+     * 显示本地音频列表
+     * @param data 本地音频列表
+     */
+    @Override
+    public void showAudios(List<BaseAudioInfo> data) {
+        if(null!=mAdapter){
+            mTitleView.setSubTitle("播放全部");
+            MediaUtils.getInstance().setLocationMusic(data);
+            mAdapter.setNewData(data);
+            //定位至正在播放的任务
+            if(null!=mLayoutManager){
+                int playIndexInThis = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
+                        MusicPlayerManager.getInstance().getCurrentPlayerID());
+                mLayoutManager.scrollToPositionWithOffset(playIndexInThis,0);
+            }
         }
     }
 

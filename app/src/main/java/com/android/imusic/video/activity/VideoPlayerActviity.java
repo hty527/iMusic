@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import com.android.imusic.R;
-import com.android.imusic.base.MusicBaseActivity;
-import com.android.imusic.music.net.MusicNetUtils;
+import com.android.imusic.base.BaseActivity;
+import com.android.imusic.base.BaseEngin;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.video.adapter.VideoDetailsAdapter;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
@@ -46,7 +46,7 @@ import java.util.List;
  * false：不作处理  打开迷你小窗口参见 ID btn_tiny的点击事件示例代码
  */
 
-public class VideoPlayerActviity extends MusicBaseActivity<IndexVideoPersenter>
+public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
         implements IndexVideoContract.View {
 
     private static final String TAG = "VideoPlayerActviity";
@@ -215,7 +215,7 @@ public class VideoPlayerActviity extends MusicBaseActivity<IndexVideoPersenter>
     @Override
     public void showError(int code, String errorMsg) {
         if(!VideoPlayerActviity.this.isFinishing()){
-            if(code==MusicNetUtils.API_RESULT_EMPTY){
+            if(code== BaseEngin.API_RESULT_EMPTY){
                 mAdapter.onLoadEnd();
             }else{
                 mAdapter.onLoadError();
