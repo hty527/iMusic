@@ -28,13 +28,13 @@ publish {
     //开源协议
     licences = rootProject.ext.licences
     //项目名称
-    artifactId = 'video-player'
+    artifactId = "video-player"
     //版本号
-    publishVersion = '1.0.2'
+    publishVersion = rootProject.ext.video.versionName
     //项目介绍，可以不写
-    desc = 'Android VideoPlayer Library'
+    desc = "Android VideoPlayer Library"
     //项目主页，最好写上，方便add to jecenter
-    website = 'https://github.com/Yuye584312311/IMusic'
+    website = "https://github.com/Yuye584312311/IMusic"
 }
 
 uploadArchives{

@@ -27,13 +27,13 @@ publish {
     //开源协议
     licences = rootProject.ext.licences
     //项目名称
-    artifactId = 'music-player'
+    artifactId = "music-player"
     //版本号
-    publishVersion = '1.0.4'
+    publishVersion = rootProject.ext.music.versionName
     //项目介绍，可以不写
-    desc = 'Android MusicPlayer Library'
+    desc = "Android MusicPlayer Library"
     //项目主页，最好写上，方便add to jecenter
-    website = 'https://github.com/Yuye584312311/IMusic'
+    website = "https://github.com/Yuye584312311/IMusic"
 }
 
 //生成到本地Maven仓库的task
