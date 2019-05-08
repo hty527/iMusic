@@ -6,11 +6,11 @@ android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
     buildToolsVersion rootProject.ext.android.buildToolsVersion
     defaultConfig {
-        applicationId rootProject.ext.imusic.applicationId
+        applicationId rootProject.ext.app.applicationId
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode rootProject.ext.imusic.versionCode
-        versionName rootProject.ext.imusic.versionName
+        versionCode rootProject.ext.app.versionCode
+        versionName rootProject.ext.app.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -36,10 +36,10 @@ android {
             manifestPlaceholders = [
                     scheme  : "imusic"
             ]
-            applicationId rootProject.ext.imusic.applicationId
+            applicationId rootProject.ext.app.applicationId
             signingConfig signingConfigs.debug
-            versionCode rootProject.ext.imusic.versionCode
-            versionName rootProject.ext.imusic.versionName
+            versionCode rootProject.ext.app.versionCode
+            versionName rootProject.ext.app.versionName
             dimension "app"
         }
         //开发版
@@ -88,6 +88,7 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.squareup.okhttp3:okhttp:3.4.1'
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation 'jp.wasabeef:glide-transformations:2.0.1'

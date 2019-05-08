@@ -6,9 +6,17 @@ ext {
          targetSdkVersion  : 26,
          devMinSdk         : 16
     ]
-    imusic=[
+    app=[
          applicationId  : "com.android.imusic",
          versionCode    : 10010,
          versionName    : "1.0.1"
+    ]
+    music=[
+            versionCode    : 10040,
+            versionName    : "1.0.4"
+    ]
+    video=[
+            versionCode    : 10020,
+            versionName    : "1.0.2"
     ]
 }
