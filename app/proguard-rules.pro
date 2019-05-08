@@ -152,3 +152,7 @@
 -keep class com.android.imusic.music.bean.**{*;}
 -keep class com.music.player.lib.bean.**{*;}
 -keep class com.android.imusic.video.bean.**{*;}
+
+#okhttp
+-dontwarn okhttp3.**
+-keep class okhttp3.**{*;}
