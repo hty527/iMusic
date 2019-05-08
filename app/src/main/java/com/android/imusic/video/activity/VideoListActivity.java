@@ -46,7 +46,6 @@ public class VideoListActivity extends BaseActivity<IndexVideoPersenter>
 
     private VideoIndexVideoAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private int mPage=0;
     private PopupWindow mPopupWindow;
     private int mMeasuredWidth;
     private int mMeasuredHeight;
@@ -66,7 +65,7 @@ public class VideoListActivity extends BaseActivity<IndexVideoPersenter>
         }
         mTitleView.setTitle(VideoUtils.getInstance().formatTitleByTitle(
                 getIntent().getStringExtra(VideoConstants.KEY_VIDEO_TITLE)));
-        mPresenter.getVideosByUrl(mUrl,mPage);
+        mPresenter.getVideosByUrl(mUrl,true);
     }
 
     @Override
@@ -125,8 +124,7 @@ public class VideoListActivity extends BaseActivity<IndexVideoPersenter>
             @Override
             public void onRefresh() {
                 if(null!=mPresenter){
-                    mPage=0;
-                    mPresenter.getVideosByUrl(mUrl,mPage);
+                    mPresenter.getVideosByUrl(mUrl,true);
                 }
             }
         });
@@ -227,7 +225,7 @@ public class VideoListActivity extends BaseActivity<IndexVideoPersenter>
      */
     @Override
     public void showLoading() {
-        if(0==mPage&&null!=mSwipeRefreshLayout&&!mSwipeRefreshLayout.isRefreshing()){
+        if(null!=mSwipeRefreshLayout&&!mSwipeRefreshLayout.isRefreshing()){
             mSwipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
@@ -256,9 +254,6 @@ public class VideoListActivity extends BaseActivity<IndexVideoPersenter>
             if(code==BaseEngin.API_RESULT_EMPTY){
                 mAdapter.onLoadEnd();
             }else{
-                if(mPage>-1){
-                    mPage--;
-                }
                 mAdapter.onLoadError();
             }
             Toast.makeText(VideoListActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
@@ -268,9 +263,10 @@ public class VideoListActivity extends BaseActivity<IndexVideoPersenter>
     /**
      * 显示视频列表
      * @param data 视频列表
+     * @param isRestart 是否从第一页开始加载的
      */
     @Override
-    public void showVideos(List<OpenEyesIndexItemBean> data) {
+    public void showVideos(List<OpenEyesIndexItemBean> data,boolean isRestart) {
         if(!VideoListActivity.this.isFinishing()){
             if(null!=mSwipeRefreshLayout){
                 mSwipeRefreshLayout.post(new Runnable() {
@@ -282,7 +278,7 @@ public class VideoListActivity extends BaseActivity<IndexVideoPersenter>
             }
             if(null!=mAdapter){
                 mAdapter.onLoadComplete();
-                if(mPage==0){
+                if(isRestart){
                     mAdapter.setNewData(data);
                 }else{
                     mAdapter.addData(data);

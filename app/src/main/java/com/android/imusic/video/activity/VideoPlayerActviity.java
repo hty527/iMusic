@@ -227,9 +227,10 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
     /**
      * 显示视频列表
      * @param data 视频列表
+     * @param isRestart 是否从第一页开始加载的
      */
     @Override
-    public void showVideos(List<OpenEyesIndexItemBean> data) {
+    public void showVideos(List<OpenEyesIndexItemBean> data, boolean isRestart) {
         if(!VideoPlayerActviity.this.isFinishing()){
             if(null!=mAdapter){
                 mAdapter.onLoadComplete();
