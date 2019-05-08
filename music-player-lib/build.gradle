@@ -29,7 +29,7 @@ publish {
     //项目名称
     artifactId = 'music-player'
     //版本号
-    publishVersion = rootProject.ext.music.versionName
+    publishVersion = '1.0.4'
     //项目介绍，可以不写
     desc = 'Android MusicPlayer Library'
     //项目主页，最好写上，方便add to jecenter
