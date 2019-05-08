@@ -212,7 +212,7 @@ ___
 [前往fir下载]: https://fir.im/iMusic "fir下载"
 **fir托管下载：** **[前往fir下载]**
 
-[或点此直接下载Apk]: https://raw.githubusercontent.com/Yuye584312311/IMusic/master/Doc/apk/iMusic-1.0.1.apk "apk下载"
+[或点此直接下载Apk]: https://raw.githubusercontent.com/Yuye584312311/IMusic/master/Doc/apk/iMusic-1.0.11.apk "apk下载"
 **[或点此直接下载Apk]**<br/>
 <br/>
 **或者扫描二维码下载<br/>**

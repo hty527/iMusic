@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -19,23 +19,23 @@ android {
     }
 }
 
-//推送到Bintray配置
-publish {
-    //你的账户bintray下某个组织id
-    userOrg = rootProject.ext.userOrg
-    //Maven仓库下库的包名,一本与包名相同
-    groupId = rootProject.ext.groupId
-    //开源协议
-    licences = rootProject.ext.licences
-    //项目名称
-    artifactId = "video-player"
-    //版本号
-    publishVersion = rootProject.ext.video.versionName
-    //项目介绍，可以不写
-    desc = "Android VideoPlayer Library"
-    //项目主页，最好写上，方便add to jecenter
-    website = "https://github.com/Yuye584312311/IMusic"
-}
+////推送到Bintray配置
+//publish {
+//    //你的账户bintray下某个组织id
+//    userOrg = rootProject.ext.userOrg
+//    //Maven仓库下库的包名,一本与包名相同
+//    groupId = rootProject.ext.groupId
+//    //开源协议
+//    licences = rootProject.ext.licences
+//    //项目名称
+//    artifactId = "video-player"
+//    //版本号
+//    publishVersion = rootProject.ext.video.versionName
+//    //项目介绍，可以不写
+//    desc = "Android VideoPlayer Library"
+//    //项目主页，最好写上，方便add to jecenter
+//    website = "https://github.com/Yuye584312311/IMusic"
+//}
 
 uploadArchives{
     repositories.mavenDeployer{
