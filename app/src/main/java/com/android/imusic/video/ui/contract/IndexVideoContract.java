@@ -17,24 +17,25 @@ public interface IndexVideoContract {
         /**
          * 显示视频列表
          * @param data 视频列表
+         * @param isRestart 是否从第一页开始加载的
          */
-        void showVideos(List<OpenEyesIndexItemBean> data);
+        void showVideos(List<OpenEyesIndexItemBean> data,boolean isRestart);
     }
 
     interface Presenter<V> extends BaseContract.BasePresenter<V>{
 
         /**
          * 获取主页的视频列表
-         * @param page 页眉
+         * @param isRestart 是否重新开始？
          */
-        void getIndexVideos(int page);
+        void getIndexVideos(boolean isRestart);
 
         /**
          * 根据URL获取视频列表
          * @param url url
-         * @param page 页眉
+         * @param isRestart 是否从第一页开始加载的
          */
-        void getVideosByUrl(String url,int page);
+        void getVideosByUrl(String url,boolean isRestart);
 
         /**
          * 根据视频ID获取推荐列表

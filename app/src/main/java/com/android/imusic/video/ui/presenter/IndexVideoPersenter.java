@@ -15,6 +15,8 @@ import com.android.imusic.video.ui.contract.IndexVideoContract;
 
 public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,IndexVideoEngin>
         implements IndexVideoContract.Presenter<IndexVideoContract.View>{
+    //已经加载得页眉
+    private int mPage;
 
     @Override
     protected IndexVideoEngin createEngin() {
@@ -23,19 +25,28 @@ public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,I
 
     /**
      * 获取视频列表
-     * @param page 页眉
+     * @param isRestart 是否重新开始？
      */
     @Override
-    public void getIndexVideos(int page) {
+    public void getIndexVideos(boolean isRestart) {
+        if(isRequsting()){
+           return;
+        }
+        mPage++;
+        if(isRestart){
+            mPage=0;
+        }
         if(null!=mViewRef&&null!=mViewRef.get()){
-            mViewRef.get().showLoading();
-            getNetEngin().get().getIndexVideos(page, new OkHttpUtils.OnResultCallBack<OpenEyesIndexInfo>() {
+            if(0==mPage){
+                mViewRef.get().showLoading();
+            }
+            getNetEngin().get().getIndexVideos(mPage, new OkHttpUtils.OnResultCallBack<OpenEyesIndexInfo>() {
 
                 @Override
                 public void onResponse(OpenEyesIndexInfo data) {
                     if(null!=mViewRef&&null!=mViewRef.get()){
                         if(null!=data.getItemList()&&data.getItemList().size()>0){
-                            mViewRef.get().showVideos(data.getItemList());
+                            mViewRef.get().showVideos(data.getItemList(),0==mPage);
                         }else{
                             mViewRef.get().showError(BaseEngin.API_RESULT_EMPTY,BaseEngin.API_EMPTY);
                         }
@@ -44,6 +55,11 @@ public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,I
 
                 @Override
                 public void onError(int code, String errorMsg) {
+                    if(code!=BaseEngin.API_RESULT_EMPTY){
+                        if(mPage>-1){
+                            mPage--;
+                        }
+                    }
                     if(null!=mViewRef&&null!=mViewRef.get()){
                         mViewRef.get().showError(code,errorMsg);
                     }
@@ -55,19 +71,28 @@ public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,I
     /**
      * 根据URL获取视频列表
      * @param url url
-     * @param page 页眉
+     * @param isRestart 是否从第一页开始加载的
      */
     @Override
-    public void getVideosByUrl(String url, int page) {
+    public void getVideosByUrl(String url,boolean isRestart) {
+        if(isRequsting()){
+            return;
+        }
+        mPage++;
+        if(isRestart){
+            mPage=0;
+        }
         if(null!=mViewRef&&null!=mViewRef.get()){
-            mViewRef.get().showLoading();
-            getNetEngin().get().getVideosByUrl(url, page, new OkHttpUtils.OnResultCallBack<OpenEyesIndexInfo>() {
+            if(0==mPage){
+                mViewRef.get().showLoading();
+            }
+            getNetEngin().get().getVideosByUrl(url, mPage, new OkHttpUtils.OnResultCallBack<OpenEyesIndexInfo>() {
 
                 @Override
                 public void onResponse(OpenEyesIndexInfo data) {
                     if(null!=mViewRef&&null!=mViewRef.get()){
-                        if(null!=data.getItemList()&&data.getItemList().size()>0){
-                            mViewRef.get().showVideos(data.getItemList());
+                        if(null!=data.getVideoList()&&data.getVideoList().size()>0){
+                            mViewRef.get().showVideos(data.getVideoList(),0==mPage);
                         }else{
                             mViewRef.get().showError(BaseEngin.API_RESULT_EMPTY,BaseEngin.API_EMPTY);
                         }
@@ -76,6 +101,11 @@ public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,I
 
                 @Override
                 public void onError(int code, String errorMsg) {
+                    if(code!=BaseEngin.API_RESULT_EMPTY){
+                        if(mPage>-1){
+                            mPage--;
+                        }
+                    }
                     if(null!=mViewRef&&null!=mViewRef.get()){
                         mViewRef.get().showError(code,errorMsg);
                     }
@@ -98,7 +128,7 @@ public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,I
                 public void onResponse(OpenEyesIndexInfo data) {
                     if(null!=mViewRef&&null!=mViewRef.get()){
                         if(null!=data.getItemList()&&data.getItemList().size()>0){
-                            mViewRef.get().showVideos(data.getItemList());
+                            mViewRef.get().showVideos(data.getItemList(),false);
                         }else{
                             mViewRef.get().showError(BaseEngin.API_RESULT_EMPTY,BaseEngin.API_EMPTY);
                         }

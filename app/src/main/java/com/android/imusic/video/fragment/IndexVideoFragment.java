@@ -46,7 +46,6 @@ public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
     private VideoIndexVideoAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private boolean refreshFinish=false;
-    private int mPage=0;
     private PopupWindow mPopupWindow;
     private int mMeasuredWidth;
     private int mMeasuredHeight;
@@ -97,10 +96,7 @@ public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
         mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                if(null!=mPresenter&&!mPresenter.isRequsting()){
-                    mPage++;
-                    loadData();
-                }
+                loadData(false);
             }
         },recyclerView);
         recyclerView.setAdapter(mAdapter);
@@ -112,8 +108,7 @@ public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPage=0;
-                loadData();
+                loadData(true);
             }
         });
     }
@@ -237,8 +232,7 @@ public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
     protected void onVisible() {
         super.onVisible();
         if(!refreshFinish&&null!=mAdapter&&null!=mPresenter&&!mPresenter.isRequsting()){
-            mPage=0;
-            loadData();
+            loadData(true);
         }else{
             VideoPlayerManager.getInstance().onResume();
         }
@@ -253,9 +247,9 @@ public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
     /**
      * 加载音频列表
      */
-    private void loadData() {
+    private void loadData(boolean isRestart) {
         if(null!=mPresenter) {
-            mPresenter.getIndexVideos(mPage);
+            mPresenter.getIndexVideos(isRestart);
         }
     }
 
@@ -264,7 +258,7 @@ public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
      */
     @Override
     public void showLoading() {
-        if(0==mPage&&null!=mSwipeRefreshLayout&&!mSwipeRefreshLayout.isRefreshing()){
+        if(null!=mSwipeRefreshLayout&&!mSwipeRefreshLayout.isRefreshing()){
             mSwipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
@@ -292,9 +286,6 @@ public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
         if(code== BaseEngin.API_RESULT_EMPTY){
             mAdapter.onLoadEnd();
         }else{
-            if(mPage>-1){
-                mPage--;
-            }
             mAdapter.onLoadError();
         }
         Toast.makeText(getContext(),errorMsg,Toast.LENGTH_SHORT).show();
@@ -305,7 +296,7 @@ public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
      * @param data 视频列表
      */
     @Override
-    public void showVideos(List<OpenEyesIndexItemBean> data) {
+    public void showVideos(List<OpenEyesIndexItemBean> data,boolean isRestart) {
         refreshFinish=true;
         if(null!=mSwipeRefreshLayout){
             mSwipeRefreshLayout.post(new Runnable() {
@@ -317,7 +308,7 @@ public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
         }
         if(null!=mAdapter){
             mAdapter.onLoadComplete();
-            if(mPage==0){
+            if(isRestart){
                 mAdapter.setNewData(data);
             }else{
                 mAdapter.addData(data);
