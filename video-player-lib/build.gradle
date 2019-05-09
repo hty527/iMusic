@@ -3,13 +3,13 @@ apply plugin: 'maven'
 apply plugin: 'com.novoda.bintray-release'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 10020
-        versionName "1.0.2"
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.video.versionCode
+        versionName rootProject.ext.video.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -30,7 +30,7 @@ publish {
     //项目名称
     artifactId = "video-player"
     //版本号
-    publishVersion = '1.0.2'
+    publishVersion = rootProject.ext.video.versionName
     //项目介绍，可以不写
     desc = "Android VideoPlayer Library"
     //项目主页，最好写上，方便add to jecenter
@@ -46,7 +46,7 @@ uploadArchives{
         // 项目名称（一般为模块名称 也可其他
         pom.artifactId = "video-player"
         // 发布的版本号
-        pom.version = "1.0.2"
+        pom.version = rootProject.ext.video.versionName
     }
 }
 
