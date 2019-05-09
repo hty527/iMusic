@@ -2,12 +2,10 @@ package com.android.imusic.music.model;
 
 import android.content.Context;
 import android.os.AsyncTask;
-
 import com.android.imusic.base.BaseEngin;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.net.OkHttpUtils;
 import com.music.player.lib.bean.BaseAudioInfo;
-
 import java.util.ArrayList;
 import java.util.List;
 
