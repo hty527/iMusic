@@ -1,7 +1,7 @@
 package com.android.imusic.music.model;
 
 import com.android.imusic.base.BaseEngin;
-import com.android.imusic.net.OkHttpUtils;
+import com.android.imusic.net.OnResultCallBack;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.util.MusicUtils;
 import java.util.List;
@@ -18,7 +18,7 @@ public class MusicHistroyEngin extends BaseEngin {
      * 获取历史播放记录
      * @param callBack 回调监听器
      */
-    public void getMusicsByHistroy(final OkHttpUtils.OnResultCallBack callBack){
+    public void getMusicsByHistroy(final OnResultCallBack callBack){
         getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -38,7 +38,7 @@ public class MusicHistroyEngin extends BaseEngin {
      * 获取收藏记录
      * @param callBack 回调监听器
      */
-    public void getMusicsByCollect(final OkHttpUtils.OnResultCallBack callBack){
+    public void getMusicsByCollect(final OnResultCallBack callBack){
         getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {

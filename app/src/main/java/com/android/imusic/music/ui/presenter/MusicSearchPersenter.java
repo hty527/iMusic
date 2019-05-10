@@ -6,8 +6,8 @@ import com.android.imusic.music.bean.SearchMusicData;
 import com.android.imusic.music.bean.SearchResult;
 import com.android.imusic.music.bean.SearchResultInfo;
 import com.android.imusic.music.model.MusicSearchEngin;
-import com.android.imusic.net.OkHttpUtils;
 import com.android.imusic.music.ui.contract.MusicSearchContract;
+import com.android.imusic.net.OnResultCallBack;
 
 /**
  * TinyHung@Outlook.com
@@ -33,7 +33,7 @@ public class MusicSearchPersenter extends BasePresenter<MusicSearchContract.View
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
 
-            getNetEngin().get().queryMusicToKey(key, page, new OkHttpUtils.OnResultCallBack<ResultData<SearchResult>>() {
+            getNetEngin().get().queryMusicToKey(key, page, new OnResultCallBack<ResultData<SearchResult>>() {
 
                 @Override
                 public void onResponse(ResultData<SearchResult> data) {
@@ -65,7 +65,7 @@ public class MusicSearchPersenter extends BasePresenter<MusicSearchContract.View
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
 
-            getNetEngin().get().getPathBkKey(hashKey,new OkHttpUtils.OnResultCallBack<ResultData<SearchMusicData>>() {
+            getNetEngin().get().getPathBkKey(hashKey,new OnResultCallBack<ResultData<SearchMusicData>>() {
 
                 @Override
                 public void onResponse(ResultData<SearchMusicData> data) {

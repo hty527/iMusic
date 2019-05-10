@@ -2,10 +2,12 @@ package com.android.imusic.music.model;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
 import com.android.imusic.base.BaseEngin;
 import com.android.imusic.music.utils.MediaUtils;
-import com.android.imusic.net.OkHttpUtils;
+import com.android.imusic.net.OnResultCallBack;
 import com.music.player.lib.bean.BaseAudioInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class MusicLocationEngin extends BaseEngin {
      * 获取音频列表
      * @param callBack 回调监听器
      */
-    public void getLocationAudios(final Context context, final OkHttpUtils.OnResultCallBack callBack){
+    public void getLocationAudios(final Context context, final OnResultCallBack callBack){
         //如果本地已存在，不再重复查询
         List<BaseAudioInfo> audioInfos = MediaUtils.getInstance().getLocationMusic();
         if(null!=audioInfos&&audioInfos.size()>0){

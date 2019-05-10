@@ -1,7 +1,6 @@
 package com.android.imusic.net;
 
 import android.os.Handler;
-import com.android.imusic.music.bean.ResultData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.util.Logger;
@@ -21,7 +20,7 @@ import java.net.URL;
  * ModelBase 基类本应该不适合直接和网路交互的，但本项目只是个小的示例项目，所以不要见外，不封装出去了
  */
 @Deprecated
-public class SimpleNetUtils <T> {
+public class SimpleNetUtils {
 
     private static final String TAG = "MusicNetUtils";
     private Handler mHandler;
@@ -39,20 +38,12 @@ public class SimpleNetUtils <T> {
         mHandler = new Handler();
     }
 
-    public interface OnRequstCallBack<T>{
-        void onResponse(ResultData<T> data);
-        void onError(int code,String errorMsg);
-    }
-
-    public interface OnOtherRequstCallBack<T>{
-        void onResponse(T data);
-        void onError(int code,String errorMsg);
-    }
-
+    @Deprecated
     public void setTimeOutTime(int timeOutTime) {
         this.TIME_OUT_TIME = timeOutTime;
     }
 
+    @Deprecated
     public boolean isRequsting() {
         return isRequst;
     }
@@ -62,7 +53,8 @@ public class SimpleNetUtils <T> {
      * @param apiUrl
      * @param callBack
      */
-    protected void requstApi(final String apiUrl, final Type type, final OnRequstCallBack<T> callBack) {
+    @Deprecated
+    public void requstApi(final String apiUrl, final OnResultCallBack callBack) {
         if(isRequst){
             return;
         }
@@ -82,7 +74,8 @@ public class SimpleNetUtils <T> {
                         urlConnection.setReadTimeout(TIME_OUT_TIME);
                         urlConnection.setConnectTimeout(TIME_OUT_TIME);
                         urlConnection.setDoInput(true);
-                        if(urlConnection.getResponseCode()==200){
+
+                        if(urlConnection.getResponseCode()==200&&null!=callBack){
                             InputStream inputStream = urlConnection.getInputStream();
                             final StringBuilder out = new StringBuilder();
                             char[] buffer = new char[1024];
@@ -99,7 +92,7 @@ public class SimpleNetUtils <T> {
                             if(DEBUG){
                                 Logger.d(TAG,"URL返回数据-->"+content);
                             }
-                            final ResultData<T> resultInfo = getResultInfo(content, type);
+                            final Object resultInfo = getResultInfo(content, callBack.getType());
                             isRequst=false;
                             if(null!=mHandler&&null!=callBack){
                                 mHandler.post(new Runnable() {
@@ -172,7 +165,8 @@ public class SimpleNetUtils <T> {
      * @param apiUrl
      * @param callBack
      */
-    protected void requstOtherApi(final String apiUrl, final Type type, final OnOtherRequstCallBack<T> callBack) {
+    @Deprecated
+    protected void requstOtherApi(final String apiUrl,final OnResultCallBack callBack) {
         if(isRequst){
             return;
         }
@@ -192,7 +186,7 @@ public class SimpleNetUtils <T> {
                         urlConnection.setReadTimeout(TIME_OUT_TIME);
                         urlConnection.setConnectTimeout(TIME_OUT_TIME);
                         urlConnection.setDoInput(true);
-                        if(urlConnection.getResponseCode()==200){
+                        if(urlConnection.getResponseCode()==200&&null!=callBack){
                             InputStream inputStream = urlConnection.getInputStream();
                             final StringBuilder out = new StringBuilder();
                             char[] buffer = new char[1024];
@@ -209,7 +203,7 @@ public class SimpleNetUtils <T> {
                             if(DEBUG){
                                 Logger.d(TAG,"URL返回数据-->"+content);
                             }
-                            final T resultInfo = getOtherResultInfo(content, type);
+                            final Object resultInfo = getResultInfo(content, callBack.getType());
                             isRequst=false;
                             if(null!=mHandler&&null!=callBack){
                                 mHandler.post(new Runnable() {
@@ -282,52 +276,30 @@ public class SimpleNetUtils <T> {
     }
 
     /**
-     * JSON解析
-     * @param jsonContent
-     * @param type
-     * @return
+     * JSON解析,这里不再返回T了，直接Object
+     * @param json json字符串
+     * @param type 指定class
+     * @return 泛型实体对象
      */
-    public ResultData<T> getResultInfo(String jsonContent,Type type){
-        ResultData<T> resultData;
+    @Deprecated
+    public Object getResultInfo(String json,Type type){
+        Object resultData = null;
+
         try {
             if(null!=type){
-                resultData=new Gson().fromJson(jsonContent, type);
+                resultData=new Gson().fromJson(json, type);
             }else{
-                resultData=new Gson().fromJson(jsonContent, new TypeToken<ResultData<T>>(){}.getType());
+                //如果用户没有指定Type,则直接使用String.class
+                resultData=new Gson().fromJson(json, new TypeToken<String>(){}.getType());
             }
             return resultData;
         }catch (RuntimeException e){
             e.printStackTrace();
-            ResultData errorResultData=new ResultData();
-            errorResultData.setCode(-1);
-            errorResultData.setMsg("解析Json失败,Error:"+e);
-            errorResultData.setError("解析Json失败,Error:"+e);
-            return errorResultData;
-        }
-    }
-
-
-    /**
-     * JSON解析
-     * @param jsonContent
-     * @param type
-     * @return
-     */
-    public T getOtherResultInfo(String jsonContent,Type type){
-        T resultData;
-        try {
-            if(null!=type){
-                resultData=new Gson().fromJson(jsonContent, type);
-            }else{
-                resultData=new Gson().fromJson(jsonContent, new TypeToken<ResultData<T>>(){}.getType());
-            }
             return resultData;
-        }catch (RuntimeException e){
-            e.printStackTrace();
-            return null;
         }
     }
 
+    @Deprecated
     public void onDestroy(){
         if(null!=mHandler){
             mHandler.removeMessages(0);

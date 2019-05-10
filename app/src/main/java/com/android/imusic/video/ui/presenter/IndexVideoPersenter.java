@@ -1,8 +1,8 @@
 package com.android.imusic.video.ui.presenter;
 
-import com.android.imusic.base.BasePresenter;
 import com.android.imusic.base.BaseEngin;
-import com.android.imusic.net.OkHttpUtils;
+import com.android.imusic.base.BasePresenter;
+import com.android.imusic.net.OnResultCallBack;
 import com.android.imusic.video.bean.OpenEyesIndexInfo;
 import com.android.imusic.video.model.IndexVideoEngin;
 import com.android.imusic.video.ui.contract.IndexVideoContract;
@@ -40,7 +40,7 @@ public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,I
             if(0==mPage){
                 mViewRef.get().showLoading();
             }
-            getNetEngin().get().getIndexVideos(mPage, new OkHttpUtils.OnResultCallBack<OpenEyesIndexInfo>() {
+            getNetEngin().get().getIndexVideos(mPage, new OnResultCallBack<OpenEyesIndexInfo>() {
 
                 @Override
                 public void onResponse(OpenEyesIndexInfo data) {
@@ -86,7 +86,7 @@ public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,I
             if(0==mPage){
                 mViewRef.get().showLoading();
             }
-            getNetEngin().get().getVideosByUrl(url, mPage, new OkHttpUtils.OnResultCallBack<OpenEyesIndexInfo>() {
+            getNetEngin().get().getVideosByUrl(url, mPage, new OnResultCallBack<OpenEyesIndexInfo>() {
 
                 @Override
                 public void onResponse(OpenEyesIndexInfo data) {
@@ -123,7 +123,7 @@ public class IndexVideoPersenter extends BasePresenter<IndexVideoContract.View,I
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
 
-            getNetEngin().get().getVideosByVideo(videoID, new OkHttpUtils.OnResultCallBack<OpenEyesIndexInfo>() {
+            getNetEngin().get().getVideosByVideo(videoID, new OnResultCallBack<OpenEyesIndexInfo>() {
                 @Override
                 public void onResponse(OpenEyesIndexInfo data) {
                     if(null!=mViewRef&&null!=mViewRef.get()){

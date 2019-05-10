@@ -1,7 +1,7 @@
 package com.android.imusic.music.model;
 
 import com.android.imusic.base.BaseEngin;
-import com.android.imusic.net.OkHttpUtils;
+import com.android.imusic.net.OnResultCallBack;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +19,7 @@ public class MusicSearchEngin extends BaseEngin {
      * @param page 页眉
      * @param callBack 回调
      */
-    public void queryMusicToKey(String key,int page,OkHttpUtils.OnResultCallBack callBack){
+    public void queryMusicToKey(String key,int page,OnResultCallBack callBack){
         Map<String ,String> params=new HashMap<>();
         params.put("format","json");
         params.put("keyword",key);
@@ -34,7 +34,7 @@ public class MusicSearchEngin extends BaseEngin {
      * @param hashKey key
      * @param callBack 回调
      */
-    public void getPathBkKey(String hashKey,OkHttpUtils.OnResultCallBack callBack){
+    public void getPathBkKey(String hashKey,OnResultCallBack callBack){
         Map<String ,String> params=new HashMap<>();
         params.put("r","play/getdata");
         params.put("hash",hashKey);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import com.android.imusic.net.OkHttpUtils;
+import com.android.imusic.net.OnResultCallBack;
 import java.util.Map;
 
 /**
@@ -37,7 +38,7 @@ public class BaseEngin{
      * @param url URL
      * @param callBack CALL BACK
      */
-    protected void sendGetRequst(String url,OkHttpUtils.OnResultCallBack callBack){
+    protected void sendGetRequst(String url,OnResultCallBack callBack){
         OkHttpUtils.get(url,null,null,callBack);
     }
 
@@ -47,8 +48,7 @@ public class BaseEngin{
      * @param params PARAMS
      * @param callBack CALL BACK
      */
-    protected void sendGetRequst(String url, Map<String,String> params,
-                                 OkHttpUtils.OnResultCallBack callBack){
+    protected void sendGetRequst(String url, Map<String,String> params, OnResultCallBack callBack){
         OkHttpUtils.get(url,params,null,callBack);
     }
 
@@ -60,7 +60,7 @@ public class BaseEngin{
      * @param callBack CALL BACK
      */
     protected void sendGetRequst(String url, Map<String,String> params,Map<String,String> headers,
-                                 OkHttpUtils.OnResultCallBack callBack){
+                                 OnResultCallBack callBack){
         OkHttpUtils.get(url,params,headers,callBack);
     }
 
@@ -72,7 +72,7 @@ public class BaseEngin{
      * @param callBack CALL BACK
      */
     protected void sendGetSynchroRequst(String url, Map<String,String> params,Map<String,String> headers,
-                                        OkHttpUtils.OnResultCallBack callBack){
+                                        OnResultCallBack callBack){
         OkHttpUtils.getSynchro(url,params,headers,callBack);
     }
 
@@ -81,7 +81,7 @@ public class BaseEngin{
      * @param url URL
      * @param callBack CALL BACK
      */
-    protected void sendPostRequst(String url, OkHttpUtils.OnResultCallBack callBack){
+    protected void sendPostRequst(String url, OnResultCallBack callBack){
         OkHttpUtils.post(url,null,null,callBack);
     }
 
@@ -91,8 +91,7 @@ public class BaseEngin{
      * @param params PARAMS
      * @param callBack CALL BACK
      */
-    protected void sendPostRequst(String url, Map<String,String> params,
-                                  OkHttpUtils.OnResultCallBack callBack){
+    protected void sendPostRequst(String url, Map<String,String> params, OnResultCallBack callBack){
         OkHttpUtils.post(url,params,null,callBack);
     }
 
@@ -104,7 +103,7 @@ public class BaseEngin{
      * @param callBack CALL BACK
      */
     protected void sendPostRequst(String url, Map<String,String> params,Map<String,String> headers,
-                                  OkHttpUtils.OnResultCallBack callBack){
+                                  OnResultCallBack callBack){
         OkHttpUtils.post(url,params,headers,callBack);
     }
 
@@ -116,7 +115,7 @@ public class BaseEngin{
      * @param callBack CALL BACK
      */
     protected void sendPostSynchroRequst(String url, Map<String,String> params,Map<String,String> headers,
-                                         OkHttpUtils.OnResultCallBack callBack){
+                                         OnResultCallBack callBack){
         OkHttpUtils.postSynchro(url,params,headers,callBack);
     }
 

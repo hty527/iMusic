@@ -4,7 +4,7 @@ import android.content.Context;
 import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.model.MusicLocationEngin;
 import com.android.imusic.music.ui.contract.MusicLocationContract;
-import com.android.imusic.net.OkHttpUtils;
+import com.android.imusic.net.OnResultCallBack;
 import com.music.player.lib.bean.BaseAudioInfo;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class MusicLocationPersenter extends BasePresenter<MusicLocationContract.
     public void getLocationAudios(Context context) {
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
-            getNetEngin().get().getLocationAudios(context,new OkHttpUtils.OnResultCallBack<List<BaseAudioInfo>>() {
+            getNetEngin().get().getLocationAudios(context,new OnResultCallBack<List<BaseAudioInfo>>() {
 
                 @Override
                 public void onResponse(List<BaseAudioInfo> data) {

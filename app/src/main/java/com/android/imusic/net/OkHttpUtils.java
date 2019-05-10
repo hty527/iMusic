@@ -4,11 +4,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import com.google.gson.Gson;
-import com.google.gson.internal.$Gson$Types;
 import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.util.Logger;
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,7 +26,7 @@ import okhttp3.Response;
  * 简单的 OkHttpUtils 实现
  */
 
-public final class OkHttpUtils<T> {
+public final class OkHttpUtils {
 
     private static final String TAG = "OkHttpUtils";
     private static volatile OkHttpUtils mInstance;
@@ -49,7 +47,6 @@ public final class OkHttpUtils<T> {
     public static final int ERROR_EMPTY = 3002;
     //JSON解析失败
     public static final int ERROR_JSON_FORMAT = 3003;
-
 
     public static OkHttpUtils getInstance(){
         if(null==mInstance){
@@ -92,54 +89,6 @@ public final class OkHttpUtils<T> {
         mDefaultParams=defaultParams;
     }
 
-    /**
-     * 抽象类代替回调，方便取泛型对象
-     * @param <T> 实体数据类型
-     */
-    public abstract static class OnResultCallBack<T>{
-
-        //用户指定的数据类型
-        private final Type mType;
-
-        public OnResultCallBack(){
-            mType = getClassTypeParameter(getClass());
-        }
-
-        /**
-         *
-         * @param subclass
-         * @return
-         */
-        private Type getClassTypeParameter(Class<?> subclass) {
-            Type superclass = subclass.getGenericSuperclass();
-            if (superclass instanceof Class) {
-                throw new RuntimeException("Missing type parameter.");
-            }
-            ParameterizedType parameterized = (ParameterizedType) superclass;
-            return $Gson$Types.canonicalize(parameterized.getActualTypeArguments()[0]);
-        }
-
-        /**
-         * 返回实体Type
-         * @return 实体类Type
-         */
-        private Type getType(){
-            return mType;
-        }
-
-        /**
-         * 响应成功
-         * @param data 实体对象,没有传泛型默认是String.class类型
-         */
-        public abstract void onResponse(T data);
-
-        /**
-         * 响应、解析失败
-         * @param code 错误码
-         * @param errorMsg 描述信息
-         */
-        public abstract void onError(int code,String errorMsg);
-    }
 
     /**
      * 对外的异步方法  GET Requst
@@ -426,8 +375,7 @@ public final class OkHttpUtils<T> {
      * @param response response响应体
      * @param callBack callBack回调
      */
-    private void formatResponse(final Response response,final OnResultCallBack<T>
-            callBack) {
+    private void formatResponse(final Response response,final OnResultCallBack callBack) {
         isRequst=false;
         if(null!=mHandler&&null!=callBack){
             if(null!=response){
@@ -438,7 +386,7 @@ public final class OkHttpUtils<T> {
                             if(DEBUG){
                                 Logger.d(TAG,"服务端返回数据-->"+string);
                             }
-                            final T resultInfo = getResultInfo(string, callBack.getType());
+                            final Object resultInfo = getResultInfo(string, callBack.getType());
                             if(null!=mHandler&&null!=callBack){
                                 if(null!=resultInfo){
                                     mHandler.post(new Runnable() {
@@ -516,13 +464,13 @@ public final class OkHttpUtils<T> {
     }
 
     /**
-     * JSON解析
+     * JSON解析,这里不再返回T了，直接Object
      * @param json json字符串
      * @param type 指定class
      * @return 泛型实体对象
      */
-    public T getResultInfo(String json,Type type){
-        T resultData = null;
+    public Object getResultInfo(String json,Type type){
+        Object resultData = null;
         if(null==mGson){
             mGson=new Gson();
         }

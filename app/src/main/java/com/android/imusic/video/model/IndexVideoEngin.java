@@ -1,7 +1,7 @@
 package com.android.imusic.video.model;
 
 import com.android.imusic.base.BaseEngin;
-import com.android.imusic.net.OkHttpUtils;
+import com.android.imusic.net.OnResultCallBack;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +18,7 @@ public class IndexVideoEngin extends BaseEngin {
      * @param page 页眉
      * @param callBack 回调
      */
-    public void getIndexVideos(int page,OkHttpUtils.OnResultCallBack callBack){
+    public void getIndexVideos(int page,OnResultCallBack callBack){
         Map<String ,String> params=new HashMap<>();
         params.put("page",page+"");
         params.put("udid","a53873ffaa4430bbb41ea178c1187e97c4b3c4a");
@@ -31,7 +31,7 @@ public class IndexVideoEngin extends BaseEngin {
      * @param page 页眉
      * @param callBack 回调
      */
-    public void getVideosByUrl(String url,int page,OkHttpUtils.OnResultCallBack callBack){
+    public void getVideosByUrl(String url,int page,OnResultCallBack callBack){
         Map<String ,String> params=new HashMap<>();
         params.put("page",page+"");
         params.put("udid","a53873ffaa4430bbb41ea178c1187e97c4b3c4a");
@@ -43,7 +43,7 @@ public class IndexVideoEngin extends BaseEngin {
      * @param videoID 视频ID
      * @param callBack 回调
      */
-    public void getVideosByVideo(String videoID,OkHttpUtils.OnResultCallBack callBack){
+    public void getVideosByVideo(String videoID,OnResultCallBack callBack){
         Map<String ,String> params=new HashMap<>();
         params.put("id",videoID);
         params.put("udid","a53873ffaa4430bbb41ea178c1187e97c4b3c4a");

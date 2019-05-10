@@ -8,7 +8,7 @@ import com.android.imusic.music.bean.ResultData;
 import com.android.imusic.music.bean.ResultList;
 import com.android.imusic.music.model.MusicListEngin;
 import com.android.imusic.music.ui.contract.MusicListContract;
-import com.android.imusic.net.OkHttpUtils;
+import com.android.imusic.net.OnResultCallBack;
 import com.music.player.lib.bean.BaseAudioInfo;
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
 
-            getNetEngin().get().getAudios(new OkHttpUtils.OnResultCallBack<ResultData<ResultList<AudioInfo>>>() {
+            getNetEngin().get().getAudios(new OnResultCallBack<ResultData<ResultList<AudioInfo>>>() {
 
                 @Override
                 public void onResponse(ResultData<ResultList<AudioInfo>> data) {
@@ -67,7 +67,7 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
 
-            getNetEngin().get().getAudiosByTag(tagID,new OkHttpUtils.OnResultCallBack<ResultData<AlbumInfo>>() {
+            getNetEngin().get().getAudiosByTag(tagID,new OnResultCallBack<ResultData<AlbumInfo>>() {
 
                 @Override
                 public void onResponse(ResultData<AlbumInfo> data) {
@@ -99,7 +99,7 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
 
-            getNetEngin().get().getLocationAudios(context,new OkHttpUtils.OnResultCallBack<List<BaseAudioInfo>>() {
+            getNetEngin().get().getLocationAudios(context,new OnResultCallBack<List<BaseAudioInfo>>() {
 
                 @Override
                 public void onResponse(List<BaseAudioInfo> data) {
