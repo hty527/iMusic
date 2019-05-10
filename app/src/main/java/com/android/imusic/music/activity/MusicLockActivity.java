@@ -121,7 +121,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
                             }
                         }
                     }else if(id==R.id.music_lock_model){
-                        MusicPlayerManager.getInstance().changedPlayerPlayFullModel();
+                        MusicPlayerManager.getInstance().changedPlayerPlayModel();
                     }
                 }
             }

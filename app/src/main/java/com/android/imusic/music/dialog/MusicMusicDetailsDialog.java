@@ -124,7 +124,7 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
         mBtnPlayModel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MusicPlayerManager.getInstance().changedPlayerPlayFullModel();
+                MusicPlayerManager.getInstance().changedPlayerPlayModel();
         }
         });
         MusicPlayModel playerModel = MusicPlayerManager.getInstance().getPlayerModel();

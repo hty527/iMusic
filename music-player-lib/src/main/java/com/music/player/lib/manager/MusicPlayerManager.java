@@ -37,8 +37,6 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     private static MusicSubjectObservable cMMusicSubjectObservable;
     private static MusicPlayerServiceConnection mConnection;
     private static MusicPlayerBinder mBinder;
-    //这里是我项目中业务逻辑用到，请忽略
-    private boolean reBrowse = false;
     //播放器配置
     private static MusicPlayerConfig mMusicPlayerConfig;
     private static String mActivityPlayerClassName, mActivityLockClassName;
@@ -94,14 +92,6 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
         }else{
             new IllegalStateException("Must pass in Activity type Context!");
         }
-    }
-    //这里是我项目中业务逻辑用到，请忽略
-    public boolean isReBrowse() {
-        return reBrowse;
-    }
-    //这里是我项目中业务逻辑用到，请忽略
-    public void setReBrowse(boolean reBrowse) {
-        this.reBrowse = reBrowse;
     }
 
     /**
@@ -680,22 +670,12 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
     /**
-     * 尝试改变播放模式,只在 单曲、列表循环 两种模式之间切换
+     * 尝试改变播放模式, 单曲、列表循环、随机 三种模式之间切换
      */
     @Override
     public void changedPlayerPlayModel() {
         if(null!=mBinder&&mBinder.pingBinder()){
             mBinder.changedPlayerPlayModel();
-        }
-    }
-
-    /**
-     * 尝试改变播放模式, 单曲、列表循环、随机 三种模式之间切换
-     */
-    @Override
-    public void changedPlayerPlayFullModel() {
-        if(null!=mBinder&&mBinder.pingBinder()){
-            mBinder.changedPlayerPlayFullModel();
         }
     }
 
@@ -863,7 +843,7 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
         removeAllPlayerListener();
         //音频悬浮窗口释放
         MusicWindowManager.getInstance().onDestroy();
-        mConnection=null;mBinder=null;cMMusicSubjectObservable=null;mInstance=null;reBrowse=false;
+        mConnection=null;mBinder=null;cMMusicSubjectObservable=null;mInstance=null;
         mActivityPlayerClassName =null;mActivityLockClassName=null;mMusicPlayerConfig=null;
     }
 }

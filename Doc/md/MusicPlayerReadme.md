@@ -556,16 +556,10 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     public void removeAllPlayerListener();
 
     /**
-     * 尝试改变播放模式,只在 单曲、列表循环 两种模式之间切换
-     */
-    @Override
-    public void changedPlayerPlayModel();
-
-    /**
      * 尝试改变播放模式, 单曲、列表循环、随机 三种模式之间切换
      */
     @Override
-    public void changedPlayerPlayFullModel();
+    public void changedPlayerPlayModel();
 
     /**
      * 创建迷你悬浮播放器窗口，内部已过滤重复创建

@@ -221,14 +221,9 @@ public interface MusicPlayerPresenter {
     void removeAllPlayerListener();
 
     /**
-     * 顺序改变播放器播放模式，调用此方法不包含随机模式
+     * 顺序改变播放器播放模式
      */
     void changedPlayerPlayModel();
-
-    /**
-     * 顺序改变播放器播放模式，包含所有模式
-     */
-    void changedPlayerPlayFullModel();
 
     /**
      * 创建一个播放器悬浮窗口至Window

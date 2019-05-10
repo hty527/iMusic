@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //网络日志
-        OkHttpUtils.DEBUG=false;
+        OkHttpUtils.DEBUG=true;
         //视频播放器初始化
         VideoPlayerManager.getInstance()
                 //悬浮窗中打开播放器的绝对路径，可选的参数,若需要支持从悬浮窗中还原到APP的播放器界面，

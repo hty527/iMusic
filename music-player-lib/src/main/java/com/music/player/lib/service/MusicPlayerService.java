@@ -441,6 +441,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     public MusicPlayModel setPlayerModel(MusicPlayModel model) {
         this.mPlayModel=model;
         Logger.d(TAG,"setPlayerModel:MODEL:"+mPlayModel);
+        mLoop=false;
         if(model.equals(MusicPlayModel.MUSIC_MODEL_SINGLE)){
             MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
                     MusicConstants.SP_VALUE_MUSIC_MODEL_SINGLE);
@@ -448,15 +449,12 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         }else if(model.equals(MusicPlayModel.MUSIC_MODEL_LOOP)){
             MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
                     MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
-            mLoop=false;
         }else if(model.equals(MusicPlayModel.MUSIC_MODEL_ORDER)){
             MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
                     MusicConstants.SP_VALUE_MUSIC_MODEL_ORDER);
-            mLoop=false;
         }else if(model.equals(MusicPlayModel.MUSIC_MODEL_RANDOM)){
             MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
                     MusicConstants.SP_VALUE_MUSIC_MODEL_RANDOM);
-            mLoop=false;
         }
         if(mLoop&&null!=mMediaPlayer){
             mMediaPlayer.setLooping(mLoop);
@@ -1053,56 +1051,23 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
-     * 改变播放模式,调用此方法，没有随机模式
+     * 改变播放模式,调用此方法
      */
     @Override
     public void changedPlayerPlayModel() {
-        if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_SINGLE)){
-            mPlayModel=MusicPlayModel.MUSIC_MODEL_LOOP;
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
-                    MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
-            mLoop=false;
-        }else if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_LOOP)){
-            mPlayModel=MusicPlayModel.MUSIC_MODEL_SINGLE;
-            mLoop=true;
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
-                    MusicConstants.SP_VALUE_MUSIC_MODEL_SINGLE);
-        }else if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_RANDOM)){
-            mPlayModel=MusicPlayModel.MUSIC_MODEL_LOOP;
-            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
-                    MusicConstants.SP_VALUE_MUSIC_MODEL_LOOP);
-            mLoop=false;
-        }
-        Logger.d(TAG,"changedPlayerPlayModel:"+mPlayModel);
-        try {
-            if(null!=mMediaPlayer){
-                mMediaPlayer.setLooping(mLoop);
-            }
-        }catch (RuntimeException e){
-
-        }finally {
-            if (null != mOnPlayerEventListeners) {
-                for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
-                    onPlayerEventListener.onPlayerConfig(mPlayModel,mMusicAlarmModel,true);
-                }
-            }
-        }
-    }
-
-    /**
-     * 切换播放模式，调用次方法，允许随机模式
-     */
-    @Override
-    public void changedPlayerPlayFullModel() {
+        //列表循环
         if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_LOOP)){
             mPlayModel=MusicPlayModel.MUSIC_MODEL_SINGLE;
             mLoop=true;
             MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
                     MusicConstants.SP_VALUE_MUSIC_MODEL_SINGLE);
-            //随机模式不保存至本地，影响花颜项目逻辑
+        //单曲循环
         }else if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_SINGLE)){
             mPlayModel=MusicPlayModel.MUSIC_MODEL_RANDOM;
             mLoop=false;
+            MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
+                    MusicConstants.SP_VALUE_MUSIC_MODEL_RANDOM);
+        //随机播放
         }else if(mPlayModel.equals(MusicPlayModel.MUSIC_MODEL_RANDOM)){
             mPlayModel=MusicPlayModel.MUSIC_MODEL_LOOP;
             MusicUtils.getInstance().putString(MusicConstants.SP_KEY_PLAYER_MODEL,
@@ -1400,9 +1365,6 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,null);
                     onPlayerEventListener.onMusicPathInvalid(musicInfo,mCurrentPlayIndex);
                 }
-            } else {
-                //这里是我项目中业务逻辑用到，请忽略
-                MusicPlayerManager.getInstance().setReBrowse(true);
             }
             stopServiceForeground();
             MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_ERROR,

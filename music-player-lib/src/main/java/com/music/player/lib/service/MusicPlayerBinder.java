@@ -224,12 +224,6 @@ public class MusicPlayerBinder extends Binder{
         }
     }
 
-    public void changedPlayerPlayFullModel(){
-        if(null!=mPresenter){
-            mPresenter.changedPlayerPlayFullModel();
-        }
-    }
-
     public void setOnPlayerEventListener(MusicPlayerEventListener listener) {
         if(null!=mPresenter) mPresenter.addOnPlayerEventListener(listener);
     }

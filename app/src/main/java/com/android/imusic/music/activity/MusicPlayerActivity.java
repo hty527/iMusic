@@ -205,7 +205,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                 switch (v.getId()) {
                     //播放模式
                     case R.id.music_btn_model:
-                        MusicPlayerManager.getInstance().changedPlayerPlayFullModel();
+                        MusicPlayerManager.getInstance().changedPlayerPlayModel();
                         break;
                     //上一首
                     case R.id.music_btn_last:

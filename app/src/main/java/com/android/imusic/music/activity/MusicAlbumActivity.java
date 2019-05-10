@@ -135,7 +135,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
                         }
                         break;
                     case R.id.btn_play_model:
-                        MusicPlayerManager.getInstance().changedPlayerPlayFullModel();
+                        MusicPlayerManager.getInstance().changedPlayerPlayModel();
                         break;
                 }
             }
