@@ -104,7 +104,18 @@ ___
 ```
 **添加混淆**
 ```
+    -keep public class * extends android.app.Service
+    -keep public class * extends android.content.BroadcastReceiver
+    #java bean
     -keep class com.music.player.lib.bean.**{*;}
+    #保持自定义控件类不被混淆
+    -keepclasseswithmembers class * {
+        public <init>(android.content.Context, android.util.AttributeSet);
+    }
+    #保持自定义控件类不被混淆
+    -keepclasseswithmembers class * {
+        public <init>(android.content.Context, android.util.AttributeSet, int);
+    }
 ```
 * Demo内置一套完整的UI交互播放器，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);并参照MusicPlayerActivity集成。<br/>
 
