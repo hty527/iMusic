@@ -8,13 +8,18 @@ import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.util.Logger;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -75,6 +80,19 @@ public final class OkHttpUtils {
                         .connectTimeout(15, TimeUnit.SECONDS)
                         .writeTimeout(15, TimeUnit.SECONDS)
                         .readTimeout(15, TimeUnit.SECONDS)
+                        .cookieJar(new CookieJar() {
+                            private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
+
+                            @Override
+                            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                                cookieStore.put(url.host(), cookies);
+                            }
+                            @Override
+                            public List<Cookie> loadForRequest(HttpUrl url) {
+                                List<Cookie> cookies = cookieStore.get(url.host());
+                                return cookies != null ? cookies : new ArrayList<Cookie>();
+                            }
+                        })
                         .build();
             }
         }
@@ -306,7 +324,7 @@ public final class OkHttpUtils {
      * @param callBack callBack
      * @param isSynchro 是否同步调用
      */
-    private void setdRequst(Request request, final OnResultCallBack callBack,
+    private void setdRequst(final Request request, final OnResultCallBack callBack,
                             boolean isSynchro) {
         if(DEBUG){
             Logger.d(TAG,"setdRequst-->URL:"+request.url());
@@ -316,33 +334,38 @@ public final class OkHttpUtils {
         }
         //同步请求
         if(isSynchro){
-            try {
-                isRequst=true;
-                Response response = createHttpUtils().newCall(request).execute();
-                formatResponse(response,callBack);
-            } catch (final IOException e) {
-                e.printStackTrace();
-                isRequst=false;
-                if(null!=mHandler&&null!=callBack){
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callBack.onError(ERROR_IO,e.getMessage());
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        isRequst=true;
+                        Response response = createHttpUtils().newCall(request).execute();
+                        formatResponse(response,callBack);
+                    } catch (final IOException e) {
+                        e.printStackTrace();
+                        isRequst=false;
+                        if(null!=mHandler&&null!=callBack){
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callBack.onError(ERROR_IO,e.getMessage());
+                                }
+                            });
                         }
-                    });
-                }
-            }catch (final RuntimeException e){
-                e.printStackTrace();
-                isRequst=false;
-                if(null!=mHandler&&null!=callBack){
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callBack.onError(ERROR_IO,e.getMessage());
+                    }catch (final RuntimeException e){
+                        e.printStackTrace();
+                        isRequst=false;
+                        if(null!=mHandler&&null!=callBack){
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callBack.onError(ERROR_IO,e.getMessage());
+                                }
+                            });
                         }
-                    });
+                    }
                 }
-            }
+            }).start();
             return;
         }
         //异步请求
@@ -350,6 +373,9 @@ public final class OkHttpUtils {
         createHttpUtils().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, final IOException e) {
+                if(DEBUG){
+                    Logger.d(TAG,"onFailure-->e:"+e.getMessage()+call.toString());
+                }
                 isRequst=false;
                 if(null!=callBack&&null!=mHandler){
                     mHandler.post(new Runnable() {
