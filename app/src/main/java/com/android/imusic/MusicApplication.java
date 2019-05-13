@@ -53,6 +53,10 @@ public class MusicApplication extends Application {
             public void onWindownCancel(View view) {}
         });
         CrashReport.initCrashReport(getApplicationContext(), "da36e5e1da", false);
+        if(BuildConfig.FLAVOR.equals("imusicPublish")){
+            com.music.player.lib.util.Logger .IS_DEBUG=false;
+            com.video.player.lib.utils.Logger.IS_DEBUG=false;
+        }
     }
 
     @Override
