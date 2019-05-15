@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            tools:text="版本更新：V2.1.03"
+            tools:text="发现新版本：V1.0.0"
             android:textSize="18dp"
             android:textColor="#EF0763"
             android:layout_gravity="center_horizontal"
@@ -45,7 +45,7 @@
                 android:layout_marginRight="20dp"
                 android:scrollbars="vertical"
                 android:scrollbarSize="0dp"
-                android:textColor="#333333"
+                android:textColor="#555555"
                 android:textSize="16dp"
                 android:lineSpacingMultiplier="1.3"
                 android:visibility="visible"/>
@@ -102,8 +102,8 @@
                 android:textSize="15dp"
                 android:gravity="center"
                 android:textColor="#FFFFFF"
-                app:shapeBackgroundColor="#FFCCCCCC"
-                app:shapeBackgroundSelectorColor="#FFEAEAEA"
+                app:shapeBackgroundColor="#AAAAAA"
+                app:shapeBackgroundSelectorColor="#CCCCCC"
                 app:shapeRadius="5dp"
                 android:clickable="true"/>
             <com.android.imusic.music.view.ShapeTextView

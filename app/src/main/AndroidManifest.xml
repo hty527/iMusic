@@ -74,5 +74,17 @@
             android:launchMode="singleTask"/>
         <activity android:name=".music.activity.TestActivity"
             android:screenOrientation="portrait"/>
+
+        <!--版本升级,适配6.0及以上-->
+        <provider
+            android:name="com.android.imusic.music.model.ApkFileProvider"
+            android:authorities="${applicationId}.apkprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <!--元数据-->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 </manifest>

@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -158,20 +159,30 @@ public class MainActivity extends BaseActivity {
                     }).setCancelable(false).show();
         }else{
             if(MusicUtils.getInstance().getInt(MusicConstants.SP_FIRST_START,0)==0){
-                new android.support.v7.app.AlertDialog.Builder(MainActivity.this)
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
                         .setTitle("使用提示")
                         .setMessage("iMusic默认关闭了'本地音乐'列表音乐封面加载功能，如需开启或关闭，请双击" +
                                 "标题栏'iMusic'开启或关闭封面加载")
-                        .setNegativeButton("现在开启",new DialogInterface.OnClickListener() {
+                        .setNegativeButton("现在开启", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 MediaUtils.getInstance().setLocalImageEnable(true);
-                                Toast.makeText(MainActivity.this,"本地音乐封面加载已开启",
+                                Toast.makeText(MainActivity.this, "本地音乐封面加载已开启",
                                         Toast.LENGTH_SHORT).show();
                             }
                         })
-                        .setPositiveButton("知道了", null).setCancelable(false).show();
+                        .setPositiveButton("知道了", null).setCancelable(false);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        //弹窗消息检查版本更新
+                        VersionUpdateManager.getInstance().checkAppVersion();
+                    }
+                });
+                builder.show();
                 MusicUtils.getInstance().putInt(MusicConstants.SP_FIRST_START,1);
+            }else{
+                VersionUpdateManager.getInstance().checkAppVersion();
             }
         }
     }
@@ -253,9 +264,5 @@ public class MainActivity extends BaseActivity {
             mPagerAdapter.onDestroy();
             mPagerAdapter=null;
         }
-    }
-
-    public void download(View view) {
-        VersionUpdateManager.getInstance().checkAppVersion();
     }
 }

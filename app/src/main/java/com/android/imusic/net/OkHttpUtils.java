@@ -4,12 +4,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-
+import com.android.imusic.music.utils.FileUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.util.Logger;
-import com.music.player.lib.util.MusicUtils;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,7 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Cookie;
@@ -61,6 +58,8 @@ public final class OkHttpUtils {
     public static final int ERROR_EMPTY = 3002;
     //JSON解析失败
     public static final int ERROR_JSON_FORMAT = 3003;
+    //是否继续下载
+    private static boolean mDownload=true;
 
     public static OkHttpUtils getInstance(){
         if(null==mInstance){
@@ -256,9 +255,10 @@ public final class OkHttpUtils {
         }
         //初始化文件名
         if(TextUtils.isEmpty(outPutFileName)){
-            outPutFileName=MusicUtils.getInstance().getFileName(path);
+            outPutFileName=FileUtils.getInstance().getFileName(path);
         }
         final String finalOutPutFileName = outPutFileName;
+        mDownload=true;
         createHttpUtils().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, final IOException e) {
@@ -285,6 +285,7 @@ public final class OkHttpUtils {
                         if(200==response.code()){
                             try {
                                 final File apkDownloadPath = new File(file, finalOutPutFileName);
+                                FileUtils.getInstance().deleteFile(apkDownloadPath);
                                 Logger.d(TAG,"目标存储路径："+apkDownloadPath.getAbsolutePath());
                                 ResponseBody responseBody = response.body();
                                 //已读长度
@@ -316,7 +317,7 @@ public final class OkHttpUtils {
                                             break;
                                         }
                                         outputStream.write(buffer,0,read);
-                                    }while (true);
+                                    }while (mDownload);
                                     inputStream.close();
                                     outputStream.close();
                                     if(null!=listener&&null!=mHandler){
@@ -705,6 +706,13 @@ public final class OkHttpUtils {
             e.printStackTrace();
             return resultData;
         }
+    }
+
+    /**
+     * 取消下载
+     */
+    public static void cancelDownload() {
+        mDownload=false;
     }
 
     /**

@@ -3,6 +3,7 @@ package com.android.imusic.music.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -19,6 +20,7 @@ import com.android.imusic.base.BaseActivity;
 import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.bean.VersionInfo;
 import com.android.imusic.music.manager.VersionUpdateManager;
+import com.android.imusic.music.utils.FileUtils;
 import com.android.imusic.music.view.ShapeTextView;
 import com.android.imusic.net.OnDownloadListener;
 import com.music.player.lib.util.Logger;
@@ -77,7 +79,7 @@ public class VersionUpdateActivity extends BaseActivity{
                     case R.id.btn_next:
                         if(null!=v.getTag()){
                             VersionInfo versionInfo= (VersionInfo) v.getTag();
-                            startDownloadApk(versionInfo.getDown_url());
+                            startDownloadApk(versionInfo);
                         }
                         break;
                 }
@@ -129,11 +131,21 @@ public class VersionUpdateActivity extends BaseActivity{
             finish();
             return;
         }
+        //必须在下载前设置
+        VersionUpdateManager.getInstance().setOutPutFileName(FileUtils.getInstance().getFileName(versionInfo.getDown_url()));
         TextView title = (TextView) findViewById(R.id.tv_update_title);
         mUpdateContent = (TextView) findViewById(R.id.tv_update_content);
+        mUpdateContent.setMovementMethod(ScrollingMovementMethod.getInstance());
         title.setText(String.format("发现新版本：%s",versionInfo.getVersion()));
+        mTvDownloadProgress.setText(String.format("%sM/%sM","0",versionInfo.getSize()));
         mUpdateContent.setText(versionInfo.getUpdate_log());
-        mBtnNext.setText("立即更新");
+        boolean existApk = VersionUpdateManager.getInstance().isExistApk(versionInfo.getVersion_code(), versionInfo.getDown_url());
+        if(existApk){
+            mBtnCancel.setVisibility(View.GONE);
+            mBtnNext.setText("已下载，点击安装");
+        }else {
+            mBtnNext.setText("立即更新");
+        }
         mBtnCancel.setText("下次更新");
         mBtnNext.setTag(versionInfo);
         //是否强制更新
@@ -148,9 +160,17 @@ public class VersionUpdateActivity extends BaseActivity{
 
     /**
      * 开始下载
-     * @param path 文件绝对路径
+     * @param versionInfo 版本信息
      */
-    private void startDownloadApk(String path) {
+    private void startDownloadApk(VersionInfo versionInfo) {
+        boolean existApk = VersionUpdateManager.getInstance().isExistApk(versionInfo.getVersion_code(), versionInfo.getDown_url());
+        Logger.d(TAG,"startDownloadApk-->existApk:"+existApk);
+        if(existApk){
+            mTvDownloadTips.setText("已下载");
+            mBtnNext.setText("已下载，点击安装");
+            VersionUpdateManager.getInstance().instanllApk(versionInfo.getDown_url());
+            return;
+        }
         mBtnCancel.setVisibility(View.GONE);
         mBtnClose.setVisibility(View.GONE);
         mDownloadView.setVisibility(View.VISIBLE);
@@ -160,7 +180,7 @@ public class VersionUpdateActivity extends BaseActivity{
         mBtnNext.setEnabled(false);
         mBtnNext.setText("下载中，请稍后...");
         mTvDownloadTips.setText("下载中");
-        VersionUpdateManager.getInstance().downloadAPK(path, new OnDownloadListener() {
+        VersionUpdateManager.getInstance().downloadAPK(versionInfo.getDown_url(), new OnDownloadListener() {
             @Override
             public void progress(int progress, final long totloLength, final long readLength) {
                 Logger.d(TAG,"progress-->progress:"+progress+",totloLength:"+totloLength+",readLength:"+readLength);
@@ -171,8 +191,8 @@ public class VersionUpdateActivity extends BaseActivity{
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mTvDownloadProgress.setText(MusicUtils.getInstance().formatSizeToString(readLength)
-                                    +"/"+MusicUtils.getInstance().formatSizeToString(totloLength));
+                            mTvDownloadProgress.setText(FileUtils.getInstance().formatSizeToString(readLength)
+                                    +"/"+FileUtils.getInstance().formatSizeToString(totloLength));
                         }
                     });
                 }
@@ -188,7 +208,6 @@ public class VersionUpdateActivity extends BaseActivity{
                     mBtnNext.setEnabled(true);
                     mBtnNext.setText("下载完成，点击安装");
                 }
-                VersionUpdateManager.getInstance().instanllApk(file);
             }
 
             @Override
@@ -229,5 +248,11 @@ public class VersionUpdateActivity extends BaseActivity{
             super.onBackPressed();
         }
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VersionUpdateManager.getInstance().onDestroy();
     }
 }
