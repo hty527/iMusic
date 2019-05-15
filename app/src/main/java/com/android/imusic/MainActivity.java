@@ -9,16 +9,18 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.imusic.base.BaseActivity;
 import com.android.imusic.base.BasePresenter;
+import com.android.imusic.music.manager.VersionUpdateManager;
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
-import com.android.imusic.base.BaseActivity;
-import com.android.imusic.net.OkHttpUtils;
 import com.android.imusic.music.ui.fragment.IndexMusicFragment;
+import com.android.imusic.music.utils.MediaUtils;
+import com.android.imusic.net.OkHttpUtils;
 import com.android.imusic.video.activity.VideoPlayerActviity;
 import com.android.imusic.video.fragment.IndexVideoFragment;
-import com.android.imusic.music.utils.MediaUtils;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
@@ -28,6 +30,7 @@ import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.manager.VideoWindowManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +49,6 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //网络日志
-        OkHttpUtils.DEBUG=false;
         //视频播放器初始化
         VideoPlayerManager.getInstance()
                 //悬浮窗中打开播放器的绝对路径，可选的参数,若需要支持从悬浮窗中还原到APP的播放器界面，
@@ -252,5 +253,9 @@ public class MainActivity extends BaseActivity {
             mPagerAdapter.onDestroy();
             mPagerAdapter=null;
         }
+    }
+
+    public void download(View view) {
+        VersionUpdateManager.getInstance().checkAppVersion();
     }
 }

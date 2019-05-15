@@ -1,4 +1,4 @@
-package com.android.imusic.music.bean;
+package com.android.imusic.net.bean;
 
 /**
  * TinyHung@Outlook.com
@@ -9,7 +9,7 @@ public class ResultData<T> {
 
     private T data;
     private int code;//200
-    private String msg;
+    private String err;
     //酷狗API
     private int status;//1
     private int errcode;
@@ -31,12 +31,12 @@ public class ResultData<T> {
         this.code = code;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getErr() {
+        return err;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setErr(String err) {
+        this.err = err;
     }
 
     public int getStatus() {
@@ -68,7 +68,7 @@ public class ResultData<T> {
         return "ResultData{" +
                 "data=" + data +
                 ", code=" + code +
-                ", msg='" + msg + '\'' +
+                ", err='" + err + '\'' +
                 ", status=" + status +
                 ", errcode=" + errcode +
                 ", error='" + error + '\'' +

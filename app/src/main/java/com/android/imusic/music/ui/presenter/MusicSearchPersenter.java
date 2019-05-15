@@ -1,7 +1,7 @@
 package com.android.imusic.music.ui.presenter;
 
 import com.android.imusic.base.BasePresenter;
-import com.android.imusic.music.bean.ResultData;
+import com.android.imusic.net.bean.ResultData;
 import com.android.imusic.music.bean.SearchMusicData;
 import com.android.imusic.music.bean.SearchResult;
 import com.android.imusic.music.bean.SearchResultInfo;

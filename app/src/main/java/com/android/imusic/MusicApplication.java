@@ -1,11 +1,13 @@
 package com.android.imusic;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.manager.AppBackgroundManager;
 import com.android.imusic.music.manager.ForegroundManager;
+import com.android.imusic.net.OkHttpUtils;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicWindowClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
@@ -19,9 +21,12 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 public class MusicApplication extends Application {
 
+    private static Context sContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        sContext=getApplicationContext();
         ForegroundManager.getInstance().init(this);
         //全局初始化
         MusicPlayerManager.getInstance().init(getApplicationContext());
@@ -53,15 +58,22 @@ public class MusicApplication extends Application {
             public void onWindownCancel(View view) {}
         });
         CrashReport.initCrashReport(getApplicationContext(), "da36e5e1da", false);
+
         if(BuildConfig.FLAVOR.equals("imusicPublish")){
             com.music.player.lib.util.Logger .IS_DEBUG=false;
             com.video.player.lib.utils.Logger.IS_DEBUG=false;
+            OkHttpUtils.DEBUG=false;
         }
+    }
+
+    public static Context getContext() {
+        return sContext;
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
         ForegroundManager.getInstance().onDestroy(this);
+        sContext=null;
     }
 }

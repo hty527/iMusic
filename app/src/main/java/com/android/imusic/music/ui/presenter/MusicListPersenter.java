@@ -4,8 +4,8 @@ import android.content.Context;
 import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.bean.AlbumInfo;
 import com.android.imusic.music.bean.AudioInfo;
-import com.android.imusic.music.bean.ResultData;
-import com.android.imusic.music.bean.ResultList;
+import com.android.imusic.net.bean.ResultData;
+import com.android.imusic.net.bean.ResultList;
 import com.android.imusic.music.model.MusicListEngin;
 import com.android.imusic.music.ui.contract.MusicListContract;
 import com.android.imusic.net.OnResultCallBack;
@@ -43,7 +43,7 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
                                 &&data.getData().getList().size()>0){
                             mViewRef.get().showAudios(data.getData().getList());
                         }else{
-                            mViewRef.get().showError(data.getCode(),data.getMsg());
+                            mViewRef.get().showError(data.getCode(),data.getErr());
                         }
                     }
                 }
@@ -75,7 +75,7 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
                         if(null!=data.getData()){
                             mViewRef.get().showAudiosFromTag(data.getData());
                         }else{
-                            mViewRef.get().showError(data.getCode(),data.getMsg());
+                            mViewRef.get().showError(data.getCode(),data.getErr());
                         }
                     }
                 }

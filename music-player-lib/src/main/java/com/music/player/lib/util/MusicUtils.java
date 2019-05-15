@@ -34,6 +34,7 @@ import android.provider.Settings;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewConfiguration;
 import android.view.animation.Animation;
@@ -42,6 +43,7 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -52,6 +54,7 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.model.MusicAlarmModel;
 import com.music.player.lib.model.MusicGlideCircleTransform;
+
 import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -1973,5 +1976,55 @@ public class MusicUtils {
             return url;
         }
         return url.substring(0,url.indexOf("?"));
+    }
+
+    /**
+     * 根据格式化URL的文件名
+     * @param filePath 带有后缀的绝对路径地址
+     * @return 文件名
+     */
+    public String getFileName(String filePath) {
+        if (filePath.isEmpty()) {
+            return filePath;
+        }
+        int filePosi = filePath.lastIndexOf(File.separator);
+        return (filePosi == -1) ? filePath : filePath.substring(filePosi + 1);
+    }
+
+    /**
+     * 获取设备密度
+     * @param context 上下文
+     * @return 屏幕密度
+     */
+    public int getScreenDensity(Context context) {
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        return dm.densityDpi;
+    }
+
+    /**
+     * 格式化字节
+     * @param size 源字节大小
+     * @return 格式化后的大小字符串
+     */
+    public String formatSizeToString(long size) {
+        //获取到的size为：1705230
+        int GB = 1024 * 1024 * 1024;//定义GB的计算常量
+        int MB = 1024 * 1024;//定义MB的计算常量
+        int KB = 1024;//定义KB的计算常量
+        DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+        String resultSize;
+        if (size / GB >= 1) {
+            //如果当前Byte的值大于等于1GB
+            resultSize = df.format(size / (float) GB) + "GB";
+        } else if (size / MB >= 1) {
+            //如果当前Byte的值大于等于1MB
+            resultSize = df.format(size / (float) MB) + "MB";
+        } else if (size / KB >= 1) {
+            //如果当前Byte的值大于等于1KB
+            resultSize = df.format(size / (float) KB) + "KB";
+        } else {
+            resultSize = size + "B";
+        }
+        return resultSize;
     }
 }

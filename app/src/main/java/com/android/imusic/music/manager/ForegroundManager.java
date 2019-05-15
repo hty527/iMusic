@@ -14,7 +14,7 @@ import com.music.player.lib.util.Logger;
 public class ForegroundManager implements Application.ActivityLifecycleCallbacks{
 
     private static final String TAG = "ForegroundManager";
-    private static ForegroundManager mInstance;
+    private static volatile ForegroundManager mInstance;
     private Activity mRunActivity;
     private int activityAount = 0;
     private boolean isForeground;//是否进入后台

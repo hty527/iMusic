@@ -2,12 +2,10 @@ package com.android.imusic.music.model;
 
 import android.content.Context;
 import android.os.AsyncTask;
-
 import com.android.imusic.base.BaseEngin;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.net.OnResultCallBack;
 import com.music.player.lib.bean.BaseAudioInfo;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class MusicListEngin extends BaseEngin {
      * @param callBack 回调监听器
      */
     public void getAudios(OnResultCallBack callBack){
-        sendGetRequst("https://gitee.com/hty_Yuye/OpenFile/raw/master/index/index_list.json",null,callBack);
+        sendGetRequst("https://raw.githubusercontent.com/Yuye584312311/ConfigFile/master/index/index_list.json",null,callBack);
     }
 
     /**
@@ -33,7 +31,7 @@ public class MusicListEngin extends BaseEngin {
      * @param callBack 回调监听器
      */
     public void getAudiosByTag(String tagID,OnResultCallBack callBack){
-        sendGetRequst("https://gitee.com/hty_Yuye/OpenFile/raw/master/index/"+tagID+".json",null,callBack);
+        sendGetRequst("https://raw.githubusercontent.com/Yuye584312311/ConfigFile/master/index/"+tagID+".json",null,callBack);
     }
 
     /**

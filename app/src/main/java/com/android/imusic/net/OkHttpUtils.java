@@ -1,12 +1,19 @@
 package com.android.imusic.net;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.util.Logger;
+import com.music.player.lib.util.MusicUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Cookie;
@@ -24,6 +32,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Created by TinyHung@outlook.com
@@ -37,7 +46,7 @@ public final class OkHttpUtils {
     private static volatile OkHttpUtils mInstance;
     private static OkHttpClient mHttpClient;
     //调试模式开关
-    public static boolean DEBUG=false;
+    public static boolean DEBUG=true;
     //是否正在请求
     public static boolean isRequst=false;
     //共有参数
@@ -196,6 +205,190 @@ public final class OkHttpUtils {
                                    OnResultCallBack callBack){
         OkHttpUtils.getInstance().sendPostRequst(url,params,headers,callBack,true);
     }
+
+    /**
+     * 下载文件
+     * @param path http\https 文件绝对路径地址
+     * @param listener 监听器
+     */
+    public static void downloadFile(String path,OnDownloadListener listener) {
+        OkHttpUtils.getInstance().download(path,null,null,listener);
+    }
+
+    /**
+     * 下载文件
+     * @param path http\https 文件绝对路径地址
+     * @param outPutPath 文件输出路径
+     * @param listener 监听器
+     */
+    public static void downloadFile(String path,String outPutPath,OnDownloadListener listener) {
+        OkHttpUtils.getInstance().download(path,outPutPath,null,listener);
+    }
+
+    /**
+     * 下载文件
+     * @param path http\https 文件绝对路径地址
+     * @param outPutPath 文件输出路径
+     * @param outPutFileName 文件名称
+     * @param listener 监听器
+     */
+    public static void downloadFile(String path,String outPutPath,String outPutFileName,OnDownloadListener listener) {
+        OkHttpUtils.getInstance().download(path,outPutPath,outPutFileName,listener);
+    }
+
+    /**
+     * 下载文件
+     * @param path http\https 文件绝对路径地址
+     * @param outPutPath 文件输出路径
+     * @param outPutFileName 文件名称
+     * @param listener 监听器
+     */
+    private void download(final String path, String outPutPath, String outPutFileName, final OnDownloadListener listener) {
+        Request request = new Request.Builder().url(path).build();
+        //初始化路径
+        if(TextUtils.isEmpty(outPutPath)){
+            outPutPath = Environment.getExternalStorageDirectory().getAbsoluteFile()
+                    + File.separator + "iMusic" + File.separator + "Download" + File.separator;
+        }
+        final File file=new File(outPutPath);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        //初始化文件名
+        if(TextUtils.isEmpty(outPutFileName)){
+            outPutFileName=MusicUtils.getInstance().getFileName(path);
+        }
+        final String finalOutPutFileName = outPutFileName;
+        createHttpUtils().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                if(DEBUG){
+                    Logger.d(TAG,"onFailure-->e:"+e.getMessage()+call.toString());
+                }
+                isRequst=false;
+                if(null!=listener&&null!=mHandler){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(null!=listener){
+                                listener.onError(ERROR_IO,e.getMessage());
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) {
+                if(null!=mHandler&&null!=listener){
+                    if(null!=response){
+                        if(200==response.code()){
+                            try {
+                                final File apkDownloadPath = new File(file, finalOutPutFileName);
+                                Logger.d(TAG,"目标存储路径："+apkDownloadPath.getAbsolutePath());
+                                ResponseBody responseBody = response.body();
+                                //已读长度
+                                long laterate=0;
+                                if(null!=responseBody){
+                                    //总长度
+                                    long length = responseBody.contentLength();
+                                    //已读长度
+                                    long readCount = 0;
+                                    //输入流
+                                    InputStream inputStream = responseBody.byteStream();
+                                    //输出流
+                                    FileOutputStream outputStream=new FileOutputStream(apkDownloadPath);
+                                    byte[] buffer = new byte[1024];
+                                    do {
+                                        int read = inputStream.read(buffer);
+                                        readCount+=read;
+                                        // 得到当前进度
+                                        final int progress = (int) (((float) readCount / length) * 100);
+                                        // 只有当前进度比上一次进度大于等于1，才可以更新进度,避免无效重复刷新
+                                        if (progress >= laterate + 1) {
+                                            laterate = progress;
+                                            if(null!=listener){
+                                                listener.progress(progress,length,readCount);
+                                            }
+                                        }
+                                        //下载完毕
+                                        if (read <= 0) {
+                                            break;
+                                        }
+                                        outputStream.write(buffer,0,read);
+                                    }while (true);
+                                    inputStream.close();
+                                    outputStream.close();
+                                    if(null!=listener&&null!=mHandler){
+                                        mHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if(null!=listener){
+                                                    listener.onSuccess(apkDownloadPath);
+                                                }
+                                            }
+                                        });
+                                    }
+                                }else{
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if(null!=listener){
+                                                listener.onError(response.code(),"body is empty");
+                                            }
+                                        }
+                                    });
+                                }
+                            } catch (final IOException e) {
+                                e.printStackTrace();
+                                if(null!=mHandler){
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if(null!=listener){
+                                                listener.onError(ERROR_JSON_FORMAT,e.getMessage());
+                                            }
+                                        }
+                                    });
+                                }
+                            }catch (final RuntimeException e){
+                                e.printStackTrace();
+                                if(null!=mHandler){
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if(null!=listener){
+                                                listener.onError(ERROR_JSON_FORMAT,e.getMessage());
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }else{
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(null!=listener){
+                                        listener.onError(response.code(),response.message());
+                                    }
+                                }
+                            });
+                        }
+                    }else{
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(null!=listener){
+                                    listener.onError(ERROR_EMPTY,"response is empty");
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
 
     /**
      * 发送GET请求

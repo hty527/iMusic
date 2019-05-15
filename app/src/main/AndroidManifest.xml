@@ -67,6 +67,11 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"/>
+        <!--版本更新-->
+        <activity android:name="com.android.imusic.music.activity.VersionUpdateActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityCenterDialogAnimation"
+            android:launchMode="singleTask"/>
         <activity android:name=".music.activity.TestActivity"
             android:screenOrientation="portrait"/>
     </application>

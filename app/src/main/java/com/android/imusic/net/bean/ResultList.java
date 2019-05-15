@@ -1,4 +1,4 @@
-package com.android.imusic.music.bean;
+package com.android.imusic.net.bean;
 
 import java.util.List;
 

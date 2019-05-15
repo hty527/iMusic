@@ -6,6 +6,19 @@
         <item name="colorPrimaryDark">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <!--中间弹窗式Activity-->
+    <style name="ActivityCenterDialogAnimation" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <!-- 是否有标题-->
+        <item name="android:windowNoTitle">true</item>
+        <!--背景颜色及透明程度-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否模糊-->
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
     <!--播放器时间进度条样式 paddingStart只扎在>=API17生效-->
     <style name="MusicSeekBarStyle">
         <item name="android:layout_width">0dp</item>
