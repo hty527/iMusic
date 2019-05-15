@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -73,6 +74,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
     public Bitmap mCoverBitmap;
     private ImageView mBtnBack;
     private LinearLayout mBtnFunction;
+    private SwipeRefreshLayout mRefreshLayout;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -160,6 +162,15 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
         //滚动交互
         mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         mAppBarLayout.addOnOffsetChangedListener(this);
+        mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipre_layout);
+        mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mRefreshLayout.setProgressViewOffset(false,0,200);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+            }
+        });
         MusicPlayerManager.getInstance().addObservable(this);
         loadData();
     }
@@ -172,6 +183,14 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         int abs = Math.abs(verticalOffset);
+        //下拉刷新是否可用
+        if(null!=mRefreshLayout){
+            if(abs<=0){
+                mRefreshLayout.setEnabled(true);
+            }else{
+                mRefreshLayout.setEnabled(false);
+            }
+        }
         if(oldVerticalOffset==abs) return;
         float scale = (float) abs / mHeaderViewHeight;
         float alpha = (255 * scale);
@@ -331,6 +350,14 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
      */
     @Override
     public void showAudiosFromTag(AlbumInfo data) {
+        if(null!=mRefreshLayout){
+            mRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
         if(null!=mAdapter&&null!=data.getList()&&data.getList().size()>0){
             mAdapter.setNewData(data.getList());
             if(null!=mTvSubPlay){
@@ -346,7 +373,16 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
     public void showLocationAudios(List<BaseAudioInfo> data) {}
 
     @Override
-    public void showLoading() {}
+    public void showLoading() {
+        if(null!=mRefreshLayout&&!mRefreshLayout.isRefreshing()){
+            mRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mRefreshLayout.setRefreshing(true);
+                }
+            });
+        }
+    }
 
     /**
      * 错误获取音频列表错误信息
@@ -356,6 +392,14 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
     @Override
     public void showError(int code, String errorMsg) {
         Logger.d(TAG,"onError-->code:"+code+",errorMsg:"+errorMsg);
+        if(null!=mRefreshLayout){
+            mRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
         Toast.makeText(MusicAlbumActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
     }
 

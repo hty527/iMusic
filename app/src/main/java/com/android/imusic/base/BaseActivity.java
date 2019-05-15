@@ -29,7 +29,6 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.model.MusicPlayerState;
-import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import java.io.Serializable;
 import java.util.List;
