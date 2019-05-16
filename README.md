@@ -13,12 +13,12 @@ ___
 #### 功能演示:(更多功能快照在结尾处)
 * 音乐播放器预览(如播放不流畅请点击图片查看)</br>
 <div>
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Doc/video/Music.gif" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/video/Music.gif" height="480" width="270">
 </div>
 
 * 视频播放器预览</br>
 <div>
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Doc/video/Video.gif" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/video/Video.gif" height="480" width="270">
 </div>
 
 #### 功能概述:
@@ -53,7 +53,7 @@ ___
 * 已对视频输出焦点管理作处理<br/>
 
 ## 历史版本
-[查看历史版本]: https://github.com/Yuye584312311/IMusic/wiki/HistoryVersion "历史版本"
+[查看历史版本]: https://github.com/Yuye584312311/iMusic/wiki/HistoryVersion "历史版本"
 **[查看历史版本]**
 
 ## 一.音乐播放器集成:
@@ -119,7 +119,7 @@ ___
 ```
 * Demo内置一套完整的UI交互播放器，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);并参照MusicPlayerActivity集成。<br/>
 
-[点击查看Music自定义交互及其他功能Wiki]: https://github.com/Yuye584312311/IMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
+[点击查看Music自定义交互及其他功能Wiki]: https://github.com/Yuye584312311/iMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
 **[点击查看Music自定义交互及其他功能Wiki]**
 ___
 
@@ -139,7 +139,7 @@ ___
         app:video_autoSetCoverController="true"
         app:video_autoSetVideoController="true"/>
 ```
-[视频播放器Wiki介绍]: https://github.com/Yuye584312311/IMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
+[视频播放器Wiki介绍]: https://github.com/Yuye584312311/iMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
 你也可以在java代码中创建播放器，前往[视频播放器Wiki文档]<br/>
 
 **3.播放器初始化及基本数据设置**
@@ -202,20 +202,20 @@ ___
 ```
 至此基础的视频播放器项目集成完毕，更多高级功能和API请阅读文档。<br/>
 
-[点击查看Video自定义交互和其他功能Wiki文档]: https://github.com/Yuye584312311/IMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
+[点击查看Video自定义交互和其他功能Wiki文档]: https://github.com/Yuye584312311/iMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
 **[点击查看Video自定义交互和其他功能Wiki文档]**
 ## iMusic预览及下载:
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
 #### 功能快照预览:
 <div align="center">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Doc/screenshot/20190417_162033.jpg" height="480" width="270">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Doc/screenshot/20190417_162126.jpg" height="480" width="270">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Doc/screenshot/20190417_162237.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162033.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162126.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162237.jpg" height="480" width="270">
 </div>
 <div align="center">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Doc/screenshot/20190418_135654.jpg" height="480" width="270">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Doc/screenshot/20190417_162345.jpg" height="480" width="270">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Doc/screenshot/20190417_162453.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190418_135654.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162345.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162453.jpg" height="480" width="270">
 </div>
 
 #### 下载地址:
@@ -228,7 +228,7 @@ ___
 <br/>
 **或者扫描二维码下载<br/>**
 <div align="center">
-    <img src="https://github.com/Yuye584312311/IMusic/blob/master/Doc/screenshot/code.png" height="300" width="300">
+    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/code.png" height="300" width="300">
 </div>
 <br/>
 
