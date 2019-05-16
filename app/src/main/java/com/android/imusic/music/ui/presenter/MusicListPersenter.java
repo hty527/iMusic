@@ -97,8 +97,6 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
     @Override
     public void getLocationAudios(Context context) {
         if(null!=mViewRef&&null!=mViewRef.get()){
-            mViewRef.get().showLoading();
-
             getNetEngin().get().getLocationAudios(context,new OnResultCallBack<List<BaseAudioInfo>>() {
 
                 @Override

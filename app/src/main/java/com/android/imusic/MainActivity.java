@@ -13,10 +13,10 @@ import android.widget.Toast;
 
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.base.BasePresenter;
-import com.android.imusic.music.manager.VersionUpdateManager;
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
+import com.android.imusic.music.manager.VersionUpdateManager;
 import com.android.imusic.music.ui.fragment.IndexMusicFragment;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.net.OkHttpUtils;
@@ -175,13 +175,14 @@ public class MainActivity extends BaseActivity {
                 builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        //弹窗消息检查版本更新
+                        //检查版本更新
                         VersionUpdateManager.getInstance().checkAppVersion();
                     }
                 });
                 builder.show();
                 MusicUtils.getInstance().putInt(MusicConstants.SP_FIRST_START,1);
             }else{
+                //检查版本更新
                 VersionUpdateManager.getInstance().checkAppVersion();
             }
         }
