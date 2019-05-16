@@ -505,7 +505,21 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      */
     @Override
     public boolean isWorking();
+	
+   /**
+     * 返回当前视频宽
+     * @return 播放器实例
+     */
+    @Override
+    public int getVideoWidth();
 
+    /**
+     * 返回当前视频高
+     * @return 播放器实例
+     */
+    @Override
+    public int getVideoHeight();
+	
     /**
      * 开始、暂停 播放
      */
