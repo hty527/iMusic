@@ -4,14 +4,14 @@ apply plugin: 'com.novoda.bintray-release'
 
 android {
 
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion     16
-        targetSdkVersion  26
-        versionCode       10040
-        versionName       "1.0.4"
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.music.versionCode
+        versionName rootProject.ext.music.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -24,19 +24,19 @@ android {
 //推送到Bintray配置
 publish {
     //你的账户bintray下某个组织id
-    userOrg = 'htyopen'
+    userOrg = rootProject.ext.userOrg
     //Maven仓库下库的包名,一本与包名相同
-    groupId = 'com.imusic.player'
+    groupId = rootProject.ext.groupId
     //开源协议
-    licences = ['Apache-2.0']
+    licences = rootProject.ext.licences
     //项目名称
-    artifactId = 'music-player'
+    artifactId = rootProject.ext.msuicModule
     //版本号
-    publishVersion = '1.0.4'
+    publishVersion = rootProject.ext.music.bintrayVersion
     //项目介绍，可以不写
-    desc = 'Android MusicPlayer Library'
+    desc = rootProject.ext.musicDesc
     //项目主页，最好写上，方便add to jecenter
-    website = 'https://github.com/Yuye584312311/IMusic'
+    website = rootProject.ext.musicWebsite
 }
 
 //生成到本地Maven仓库的task
@@ -47,9 +47,9 @@ uploadArchives{
         // 唯一标识 一般为模块包名 也可其他
         pom.groupId = "com.android.player.lib"
         // 项目名称（一般为模块名称 也可其他
-        pom.artifactId = "music-player"
+        pom.artifactId = rootProject.ext.msuicModule
         // 发布的版本号
-        pom.version = "1.0.4"
+        pom.version = rootProject.ext.music.bintrayVersion
     }
 }
 

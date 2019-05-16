@@ -1,7 +1,16 @@
 //编译并推送到Bintray命令
 //gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false
+//music\video build.gradle 配置
 ext{
     userOrg = 'htyopen'
     groupId = 'com.imusic.player'
     licences = ['Apache-2.0']
+
+    msuicModule = 'music-player'
+    musicDesc = 'Android MusicPlayer Library'
+    musicWebsite = 'https://github.com/Yuye584312311/IMusic'
+
+    videoModule = 'video-player'
+    videoDesc = 'Android VideoPlayer Library'
+    videoWebsite = 'https://github.com/Yuye584312311/IMusic'
 }
