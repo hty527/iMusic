@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import com.video.player.lib.R;
+import com.video.player.lib.base.IMediaPlayer;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.base.BaseVideoController;
 import com.video.player.lib.manager.VideoPlayerManager;
@@ -77,10 +78,10 @@ public class DefaultVideoController extends BaseVideoController implements
             public void onClick(View v) {
                 int id = v.getId();
                 if (id == R.id.error_layout) {
-                    VideoPlayerManager.getInstance().reStartVideoPlayer(mOldPlayProgress);
+                    IMediaPlayer.getInstance().reStartVideoPlayer(mOldPlayProgress);
                 }else if(id == R.id.video_btn_reset_play){
                     VideoPlayerManager.getInstance().setMobileWorkEnable(true);
-                    VideoPlayerManager.getInstance().reStartVideoPlayer(0);
+                    IMediaPlayer.getInstance().reStartVideoPlayer(0);
                 }else if(id == R.id.video_btn_back_tiny){
                     if(null!=mOnFuctionListener){
                         mOnFuctionListener.onQuiteMiniWindow();

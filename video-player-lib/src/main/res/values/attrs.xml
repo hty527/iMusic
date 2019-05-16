@@ -29,7 +29,5 @@
         <attr name="video_autoSetVideoController" format="boolean"/>
         <!--是否自动设置封面控制器-->
         <attr name="video_autoSetCoverController" format="boolean"/>
-        <!--循环播放-->
-        <attr name="video_loop" format="boolean"/>
     </declare-styleable>
 </resources>

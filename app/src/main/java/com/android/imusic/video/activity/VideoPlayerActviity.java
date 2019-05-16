@@ -28,6 +28,7 @@ import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.base.BaseVideoPlayer;
+import com.video.player.lib.base.IMediaPlayer;
 import com.video.player.lib.bean.VideoParams;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.controller.DetailsCoverController;
@@ -157,7 +158,6 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
     private void initVideoParams(boolean isCreate) {
         if(null!=mVideoParams){
             mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
-            mVideoPlayer.setLoop(true);
             mVideoPlayer.setWorking(true);
             mVideoPlayer.setParamsTag(mVideoParams);
             //封面
@@ -172,11 +172,11 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
                         .into(mVideoPlayer.getCoverController().mVideoCover);
             }
             //无缝衔接外部播放任务
-            if(mIsPlaying&&null!=VideoPlayerManager.getInstance().getTextureView()){
+            if(mIsPlaying&&null!= IMediaPlayer.getInstance().getTextureView()){
                 addTextrueViewToView(mVideoPlayer);
-                VideoPlayerManager.getInstance().addOnPlayerEventListener(mVideoPlayer);
+                IMediaPlayer.getInstance().addOnPlayerEventListener(mVideoPlayer);
                 //手动检查播放器内部状态，同步常规播放器状态至全屏播放器
-                VideoPlayerManager.getInstance().checkedVidepPlayerState();
+                IMediaPlayer.getInstance().checkedVidepPlayerState();
             }else{
                 //开始全新播放任务
                 mVideoPlayer.startPlayVideo();
@@ -195,14 +195,14 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
      */
     private void addTextrueViewToView(BaseVideoPlayer videoPlayer) {
         //先移除存在的TextrueView
-        if(null!=VideoPlayerManager.getInstance().getTextureView()){
-            VideoTextureView textureView = VideoPlayerManager.getInstance().getTextureView();
+        if(null!=IMediaPlayer.getInstance().getTextureView()){
+            VideoTextureView textureView = IMediaPlayer.getInstance().getTextureView();
             if(null!=textureView.getParent()){
                 ((ViewGroup) textureView.getParent()).removeView(textureView);
             }
         }
-        if(null!=VideoPlayerManager.getInstance().getTextureView()){
-            videoPlayer.mSurfaceView.addView(VideoPlayerManager.getInstance().getTextureView(),
+        if(null!=IMediaPlayer.getInstance().getTextureView()){
+            videoPlayer.mSurfaceView.addView(IMediaPlayer.getInstance().getTextureView(),
                     new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
         }
     }

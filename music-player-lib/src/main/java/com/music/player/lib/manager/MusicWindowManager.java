@@ -65,7 +65,7 @@ public class MusicWindowManager {
      */
 	public synchronized void createMiniJukeBoxToWindown(Context context, int offsetPixelX, int offsetPixelY) {
         if(!isWindowShowing()){
-            if (Build.VERSION.SDK_INT >= 23) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(context)) {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -93,12 +93,11 @@ public class MusicWindowManager {
             int screenHeight = MusicUtils.getInstance().getScreenHeight(context);
             mMusicWindowMiniJukebox = new MusicWindowMiniJukebox(context,windowManager,mListener);
             WindowManager.LayoutParams miniJukeBoxLayoutParams = new WindowManager.LayoutParams();
-            Logger.d(TAG,"addMiniJukeBoxToWindown-->SDK:"+Build.VERSION.SDK_INT);
-            if (Build.VERSION.SDK_INT >= 26) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            } else if(Build.VERSION.SDK_INT >= 23){
+            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-            }else if(Build.VERSION.SDK_INT >=19){
+            }else if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.KITKAT){
                 miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
             }else{
                 miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
@@ -163,12 +162,11 @@ public class MusicWindowManager {
             mMusicWindowTrash = new MusicWindowTrash(context);
             int height = MusicUtils.getInstance().dpToPxInt(context, 66f);
             WindowManager.LayoutParams trachLayoutParams = new WindowManager.LayoutParams();
-            Logger.d(TAG,"addMiniJukeBoxTrashToWindown-->SDK:"+Build.VERSION.SDK_INT);
-            if (Build.VERSION.SDK_INT >= 26) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 trachLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            } else if(Build.VERSION.SDK_INT >= 23){
+            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 trachLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-            }else if(Build.VERSION.SDK_INT >=19){
+            }else if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.KITKAT){
                 trachLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
             }else{
                 trachLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
@@ -247,7 +245,7 @@ public class MusicWindowManager {
      * @return 为true表示拥有悬浮窗权限
      */
 	public boolean haveWindownPermission(Context context){
-	    if(Build.VERSION.SDK_INT>=23){
+	    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
 	        return Settings.canDrawOverlays(context);
         }
         return true;
@@ -259,7 +257,7 @@ public class MusicWindowManager {
      * @return true 允许  false禁止
      */
     public boolean checkAlertWindowsPermission(Context context) {
-        if (Build.VERSION.SDK_INT < 21) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return true;
         }
         try {

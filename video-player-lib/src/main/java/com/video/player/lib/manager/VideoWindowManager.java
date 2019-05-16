@@ -12,7 +12,6 @@ import android.provider.Settings;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
 import com.video.player.lib.view.VideoWindowPlayerGroup;
 import java.lang.reflect.Method;
@@ -27,7 +26,7 @@ public class VideoWindowManager {
 
 	private static final String TAG = "VideoWindowManager";
 	private static volatile VideoWindowManager mInstance;
-	//迷你唱片机
+	//悬浮窗口容器
 	private VideoWindowPlayerGroup mVideoWindowPlayerGroup;
 	private static WindowManager mWindowManager;
 
@@ -55,7 +54,7 @@ public class VideoWindowManager {
 	public synchronized FrameLayout addVideoPlayerToWindow(Context context, int offsetPixelX,
                                     int offsetPixelY, int viewWidth, int viewHeight) {
         if(!isWindowShowing()){
-            if (Build.VERSION.SDK_INT >= 23) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(context)) {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -89,12 +88,11 @@ public class VideoWindowManager {
         WindowManager windowManager = getWindowManager(context);
         mVideoWindowPlayerGroup = new VideoWindowPlayerGroup(context,windowManager);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        Logger.d(TAG,"addMiniVideoPlayerToWindown-->SDK:"+Build.VERSION.SDK_INT);
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        } else if(Build.VERSION.SDK_INT >= 23){
+        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-        }else if(Build.VERSION.SDK_INT >=19){
+        }else if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.KITKAT){
             layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         }else{
             layoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
@@ -105,7 +103,7 @@ public class VideoWindowManager {
                 | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
         //背景透明
         layoutParams.format = PixelFormat.RGBA_8888;
-        //坑：需要默认位于屏幕的左上角，不然手指托动会有问题，具体定位用x,y轴
+        //需要默认位于屏幕的左上角，具体定位用x,y轴
         layoutParams.gravity = Gravity.LEFT | Gravity.TOP;
         layoutParams.width = viewWidth;
         layoutParams.height = viewHeight;
@@ -135,7 +133,7 @@ public class VideoWindowManager {
      * @return 是否拥有悬浮窗权限？
      */
 	public boolean haveWindownPermission(Context context){
-	    if(Build.VERSION.SDK_INT>=23){
+	    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
 	        return Settings.canDrawOverlays(context);
         }
         return true;
@@ -147,7 +145,7 @@ public class VideoWindowManager {
      * @return true 允许  false禁止
      */
     public boolean checkAlertWindowsPermission(Context context) {
-        if (Build.VERSION.SDK_INT < 21) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return true;
         }
         try {

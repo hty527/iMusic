@@ -1,7 +1,5 @@
 package com.video.player.lib.manager;
 
-import android.content.Context;
-import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.model.VideoPlayerState;
 
 /**
@@ -26,42 +24,10 @@ public interface MediaPlayerPresenter {
     void setMobileWorkEnable(boolean enable);
 
     /**
-     * 添加监听器
-     * @param listener 监听器
-     */
-    void addOnPlayerEventListener(VideoPlayerEventListener listener);
-
-    /**
-     * 移除监听器
-     */
-    void removePlayerListener();
-
-    /**
-     * 开始准备并播放
-     * @param dataSource 播放资源地址，支持file、https、http 等协议
-     * @param context
-     */
-    void startVideoPlayer(String dataSource,Context context);
-
-    /**
-     * 开始播放
-     * @param dataSource 播放资源地址，支持file、https、http 等协议
-     * @param context
-     * @param percentIndex 尝试从指定位置开始播放
-     */
-    void startVideoPlayer(String dataSource,Context context,int percentIndex);
-
-    /**
      * 设置视频画面显示缩放类型
      * @param displayType 详见VideoConstants常量定义
      */
     void setVideoDisplayType(int displayType);
-
-    /**
-     * 尝试重新播放
-     * @param percentIndex 尝试从指定位置重新开始
-     */
-    void reStartVideoPlayer(long percentIndex);
 
     /**
      * 返回播放器内部播放状态
@@ -137,11 +103,6 @@ public interface MediaPlayerPresenter {
      * @return 内部播放状态
      */
     VideoPlayerState getVideoPlayerState();
-
-    /**
-     * 检查播放器内部状态
-     */
-    void checkedVidepPlayerState();
 
     /**
      * 此标记标识跳转至目标Activity是否衔接播放

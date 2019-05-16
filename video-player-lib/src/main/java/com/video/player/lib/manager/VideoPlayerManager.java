@@ -1,27 +1,7 @@
 package com.video.player.lib.manager;
 
-import android.content.Context;
-import android.graphics.SurfaceTexture;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.wifi.WifiManager;
-import android.os.Build;
-import android.os.PowerManager;
-import android.text.TextUtils;
-import android.view.Surface;
-import android.view.TextureView;
-import android.view.ViewGroup;
-import com.video.player.lib.base.BaseVideoPlayer;
 import com.video.player.lib.constants.VideoConstants;
-import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.model.VideoPlayerState;
-import com.video.player.lib.utils.Logger;
-import com.video.player.lib.utils.VideoUtils;
-import com.video.player.lib.view.VideoTextureView;
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * TinyHung@Outlook.com
@@ -29,50 +9,21 @@ import java.util.TimerTask;
  * VideoPlayerManager 与播放器直接交互代理者
  */
 
-public final class VideoPlayerManager implements MediaPlayerPresenter, TextureView.SurfaceTextureListener,
-        MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener,
-        MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnSeekCompleteListener,
-        MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, MediaPlayer.OnVideoSizeChangedListener {
+public final class VideoPlayerManager implements MediaPlayerPresenter {
 
-    private static final String TAG = "VideoPlayerManager";
     private static volatile VideoPlayerManager mInstance;
-    private static Context mContext;
-    private MediaPlayer mMediaPlayer;
-    //画面渲染
-    private VideoTextureView mTextureView;
-    private Surface mSurface;
-    private SurfaceTexture mSurfaceTexture;
-    //播放源
-    private String mDataSource;
-    //音频焦点管理者
-    private static VideoAudioFocusManager mAudioFocusManager;
-    //播放器组件监听器
-    private static VideoPlayerEventListener mOnPlayerEventListeners;
-    //内部播放状态
-    private static VideoPlayerState mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_STOP;
-    //息屏下WIFI锁
-    private static WifiManager.WifiLock mWifiLock;
+    //交互实现类
+    private static MediaPlayerPresenter mIMediaPlayer;
     //是否循环播放
-    private boolean mLoop=false;
-    //进度计时器
-    private PlayTimerTask mPlayTimerTask;
-    private Timer mTimer;
+    private boolean mLoop;
+    //移动网络下是否允许播放
+    private boolean mobileWorkEnable;
     //缩放类型,默认是等比缩放
     private int VIDEO_DISPLAY_TYPE = VideoConstants.VIDEO_DISPLAY_TYPE_CUT;
-    //实时播放位置
-    private int mPercentIndex;
-    //移动网络下是否已经提示用户流量播放
-    private static boolean mobileWorkEnable = false;
-    private BaseVideoPlayer mNoimalPlayer,mFullScrrenPlayer, mMiniWindowPlayer,mWindownPlayer;
-    //视频宽高
-    private int mVideoWidth,mVideoHeight;
-    //缓冲进度
-    private int mBufferPercent;
-    private boolean mContinuePlay;
     //悬浮窗点击展开的目标Activity
     private static String mActivityClassName=null;
-    //TASK执行次数计时
-    private long TIMER_RUN_COUNT=0;
+    //是否衔接播放的
+    private boolean mContinuePlay;
 
     public static VideoPlayerManager getInstance(){
         if(null==mInstance){
@@ -84,236 +35,14 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
         }
         return mInstance;
     }
-
     private VideoPlayerManager(){}
 
     /**
-     * 画面渲染图层初始化
-     * @param textureView 自定义画面渲染器
+     * 绑定IMediaPlayer
+     * @param iMediaPlayer 具体的实现类
      */
-    public void initTextureView(VideoTextureView textureView) {
-        this.mTextureView=textureView;
-        textureView.setSurfaceTextureListener(this);
-    }
-
-    /**
-     * 返回承载画面渲染器
-     * @return textureView
-     */
-    public VideoTextureView getTextureView() {
-        return mTextureView;
-    }
-
-    /**
-     * 清空画面渲染图层
-     */
-    private void removeTextureView() {
-        if(null!=mTextureView){
-            mTextureView.setSurfaceTextureListener(null);
-            if(null!=mTextureView.getParent()){
-                ((ViewGroup) mTextureView.getParent()).removeView(mTextureView);
-            }
-            mTextureView=null;
-        }
-        if(null!=mSurface){
-            mSurface.release();
-            mSurface=null;
-        }
-        mSurfaceTexture=null;
-    }
-
-    /**
-     * 保存常规播放器
-     * @param videoPlayer 播放器实例
-     */
-    public void setNoimalPlayer(BaseVideoPlayer videoPlayer) {
-        this.mNoimalPlayer=videoPlayer;
-    }
-
-    /**
-     * 保存全屏窗口播放器
-     * @param videoPlayer 播放器实例
-     */
-    public void setFullScrrenPlayer(BaseVideoPlayer videoPlayer) {
-        this.mFullScrrenPlayer=videoPlayer;
-    }
-
-    /**
-     * 保存小窗口播放器实例
-     * @param videoPlayer 播放器实例
-     */
-    public void setMiniWindowPlayer(BaseVideoPlayer videoPlayer) {
-        this.mMiniWindowPlayer =videoPlayer;
-    }
-
-    /**
-     * 保存悬浮窗窗口实例
-     * @param windownPlayer 播放器实例
-     */
-    public void setWindownPlayer(BaseVideoPlayer windownPlayer) {
-        mWindownPlayer = windownPlayer;
-    }
-
-    /**
-     * 返回常规播放器实例
-     * @return 播放器实例
-     */
-    public BaseVideoPlayer getNoimalPlayer() {
-        return mNoimalPlayer;
-    }
-
-    /**
-     * 返回全屏播放器实例
-     * @return 播放器实例
-     */
-    public BaseVideoPlayer getFullScrrenPlayer() {
-        return mFullScrrenPlayer;
-    }
-
-    /**
-     * 返回小窗口实例
-     * @return 播放器实例
-     */
-    public BaseVideoPlayer getMiniWindowPlayer() {
-        return mMiniWindowPlayer;
-    }
-
-    /**
-     * 返回悬浮窗窗口实例
-     * @return 播放器实例
-     */
-    public BaseVideoPlayer getWindownPlayer() {
-        return mWindownPlayer;
-    }
-
-    /**
-     * 返回当前视频宽
-     * @return 播放器实例
-     */
-    public int getVideoWidth() {
-        return mVideoWidth;
-    }
-
-    /**
-     * 返回当前视频高
-     * @return 播放器实例
-     */
-    public int getVideoHeight() {
-        return mVideoHeight;
-    }
-
-    /**
-     * 只是释放播放器
-     */
-    private void reset() {
-        try {
-            if(null!=mMediaPlayer){
-                if(mMediaPlayer.isPlaying()){
-                    mMediaPlayer.stop();
-                }
-                mMediaPlayer.reset();
-                mMediaPlayer.release();
-                mMediaPlayer=null;
-            }
-        }catch (RuntimeException e){
-            e.printStackTrace();
-        }finally {
-            mBufferPercent=0;
-            if(null!=mAudioFocusManager){
-                mAudioFocusManager.releaseAudioFocus();
-            }
-        }
-    }
-
-    /**
-     * 视频宽高
-     * @param mp 播放器实例
-     * @param width 视频宽 单位：分辨率
-     * @param height 视频高 单位：分辨率
-     */
-    @Override
-    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-        this.mVideoWidth=width;
-        this.mVideoHeight=height;
-        if(null!=mTextureView){
-            mTextureView.setVideoSize(width,height);
-        }
-    }
-
-    /**
-     * 指定点击通知栏后打开的Activity对象绝对路径
-     * @param className Activity绝对路径
-     */
-    public VideoPlayerManager setVideoPlayerActivityClassName(String className) {
-        mActivityClassName = className;
-        return mInstance;
-    }
-
-    /**
-     * 返回点击通知栏后打开的Activity对象绝对路径
-     * @return VideoPlayerActivity绝对路径
-     */
-    public String getVideoPlayerActivityClassName() {
-        return mActivityClassName;
-    }
-
-
-    /**
-     * 开始计时任务
-     */
-    private void startTimer() {
-        if(null==mPlayTimerTask){
-            mTimer = new Timer();
-            mPlayTimerTask = new PlayTimerTask();
-            mTimer.schedule(mPlayTimerTask, 0, 100);
-        }
-    }
-
-    /**
-     * 结束计时任务
-     */
-    private void stopTimer() {
-        if (null != mPlayTimerTask) {
-            mPlayTimerTask.cancel();
-            mPlayTimerTask = null;
-        }
-        if (null != mTimer) {
-            mTimer.cancel();
-            mTimer = null;
-        }
-        TIMER_RUN_COUNT=0;
-    }
-
-    /**
-     * 播放进度、闹钟倒计时进度 计时器
-     */
-    private class PlayTimerTask extends TimerTask {
-        @Override
-        public void run() {
-            TIMER_RUN_COUNT++;
-            Logger.i(TAG,"TIMER_RUN_COUNT:"+TIMER_RUN_COUNT+"%:"+TIMER_RUN_COUNT%10);
-            //播放进度实时回调
-            if(null!=mOnPlayerEventListeners){
-                if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
-                    mOnPlayerEventListeners.currentPosition(mMediaPlayer.getDuration(),
-                            mMediaPlayer.getCurrentPosition(),mBufferPercent);
-                }else{
-                    mOnPlayerEventListeners.currentPosition(-1,-1,mBufferPercent);
-                }
-            }
-            //每隔1秒播放进度回调，主要用于更新Text和SEEK BAR
-            if(TIMER_RUN_COUNT%10==0){
-                if(null!=mOnPlayerEventListeners){
-                    if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
-                        //+500毫秒是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
-                        mOnPlayerEventListeners.onTaskRuntime(mMediaPlayer.getDuration(),
-                                mMediaPlayer.getCurrentPosition()+500,mBufferPercent);
-                    }else{
-                        mOnPlayerEventListeners.onTaskRuntime(-1,-1,mBufferPercent);
-                    }
-                }
-            }
-        }
+    public void setIMediaPlayer(MediaPlayerPresenter iMediaPlayer){
+        mIMediaPlayer=iMediaPlayer;
     }
 
     /**
@@ -324,10 +53,18 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
     @Override
     public VideoPlayerManager setLoop(boolean loop) {
         this.mLoop=loop;
-        if(null!=mMediaPlayer){
-            mMediaPlayer.setLooping(loop);
+        if(null!=mIMediaPlayer){
+            mIMediaPlayer.setLoop(loop);
         }
         return mInstance;
+    }
+
+    /**
+     * 返回循环播放模式
+     * @return true:循环播放，false:不循环
+     */
+    public boolean isLoop() {
+        return mLoop;
     }
 
     /**
@@ -348,150 +85,14 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
     }
 
     /**
-     * 注册播放器工作状态监听器
-     * @param listener 实现VideoPlayerEventListener的对象
-     */
-    @Override
-    public void addOnPlayerEventListener(VideoPlayerEventListener listener) {
-        this.mOnPlayerEventListeners=listener;
-    }
-
-    /**
-     * 移除播放器工作状态监听器
-     */
-    @Override
-    public void removePlayerListener() {
-        mOnPlayerEventListeners=null;
-    }
-
-    /**
-     * 开始异步准备缓冲播放
-     * @param dataSource 播放资源地址，支持file、https、http 等协议
-     * @param context 全局上下文
-     */
-    @Override
-    public void startVideoPlayer(String dataSource, Context context) {
-        startVideoPlayer(dataSource,context,0);
-    }
-
-    /**
-     * 开始异步准备缓冲播放
-     * @param dataSource 播放资源地址，支持file、https、http 等协议
-     * @param context 全局上下文
-     * @param percentIndex 尝试从指定位置开始播放
-     */
-    @Override
-    public void startVideoPlayer(String dataSource, Context context, int percentIndex) {
-        if(TextUtils.isEmpty(dataSource)){
-            VideoPlayerManager.this.mMusicPlayerState= VideoPlayerState.MUSIC_PLAYER_STOP;
-            if(null!=mOnPlayerEventListeners){
-                mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"播放地址为空");
-                mOnPlayerEventListeners.onVideoPathInvalid();
-            }
-            return;
-        }
-        if(VideoPlayerManager.this.mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PREPARE)
-                &&mDataSource.equals(dataSource)){
-            Logger.d(TAG,"startVideoPlayer-->重复调用");
-            return;
-        }
-        this.mPercentIndex=percentIndex;
-        this.mDataSource=dataSource;
-        if(null!=context){
-            this.mContext=context;
-            if(null!=mContext){
-                mWifiLock = ((WifiManager) mContext.getApplicationContext().getSystemService(
-                        Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "MUSIC_LOCK");
-            }
-        }
-        reset();
-        if(VideoUtils.getInstance().isCheckNetwork(mContext)){
-            if(!VideoUtils.getInstance().isWifiConnected(mContext)&&!isMobileWorkEnable()){
-                VideoPlayerManager.this.mMusicPlayerState= VideoPlayerState.MUSIC_PLAYER_MOBILE;
-                if(null!=mOnPlayerEventListeners){
-                    mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"正在使用移动网络");
-                }
-                return;
-            }
-            startTimer();
-            if(null==mAudioFocusManager){
-                mAudioFocusManager= new VideoAudioFocusManager(mContext.getApplicationContext());
-            }
-            int requestAudioFocus = mAudioFocusManager.requestAudioFocus(
-                    new VideoAudioFocusManager.OnAudioFocusListener() {
-
-                @Override
-                public void onFocusGet() {
-                    play();
-                }
-
-                @Override
-                public void onFocusOut() {
-                    VideoPlayerManager.this.onStop(true);
-                }
-
-                @Override
-                public boolean isPlaying() {
-                    return VideoPlayerManager.this.isPlaying();
-                }
-            });
-
-            if(requestAudioFocus== AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
-                VideoPlayerManager.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_PREPARE;
-                try {
-                    mMediaPlayer = new MediaPlayer();
-                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    mMediaPlayer.setOnPreparedListener(this);
-                    mMediaPlayer.setOnCompletionListener(this);
-                    mMediaPlayer.setOnBufferingUpdateListener(this);
-                    mMediaPlayer.setOnSeekCompleteListener(this);
-                    mMediaPlayer.setOnErrorListener(this);
-                    mMediaPlayer.setOnInfoListener(this);
-                    mMediaPlayer.setOnVideoSizeChangedListener(this);
-                    mMediaPlayer.setLooping(mLoop);
-                    mMediaPlayer.setWakeMode(mContext, PowerManager.PARTIAL_WAKE_LOCK);
-                    Class<MediaPlayer> clazz = MediaPlayer.class;
-                    Method method = clazz.getDeclaredMethod("setDataSource", String.class, Map.class);
-                    Logger.e(TAG, "startVideoPlayer-->" + ",PATH:" + mDataSource);
-                    method.invoke(mMediaPlayer, mDataSource, null);
-                    if (null != mOnPlayerEventListeners) {
-                        mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"播放准备中");
-                    }
-                    if(null!=mWifiLock){
-                        mWifiLock.acquire();
-                    }
-                    mMediaPlayer.prepareAsync();
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Logger.e(TAG,"startPlay-->Exception--e:"+e.getMessage());
-                    VideoPlayerManager.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_ERROR;
-                    if (null != mOnPlayerEventListeners) {
-                        mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"播放失败，"+e.getMessage());
-                    }
-                }
-            }else{
-                VideoPlayerManager.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_ERROR;
-                if (null != mOnPlayerEventListeners) {
-                    mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"未成功获取音频输出焦点");
-                }
-            }
-        }else{
-            VideoPlayerManager.this.mMusicPlayerState= VideoPlayerState.MUSIC_PLAYER_STOP;
-            if(null!=mOnPlayerEventListeners){
-                mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"网络未连接");
-            }
-        }
-    }
-
-    /**
      * 设置视频画面显示缩放类型,如果正在播放，会立刻生效
      * @param displayType 详见VideoConstants常量定义
      */
     @Override
     public void setVideoDisplayType(int displayType) {
         this.VIDEO_DISPLAY_TYPE=displayType;
-        if(null!=mTextureView){
-            mTextureView.setVideoDisplayType(displayType);
+        if(null!=mIMediaPlayer){
+            mIMediaPlayer.setVideoDisplayType(displayType);
         }
     }
 
@@ -504,14 +105,19 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
     }
 
     /**
-     * 尝试重新播放
-     * @param percentIndex 尝试从指定位置重新开始
+     * 指定点击通知栏后打开的Activity对象绝对路径
+     * @param className 播放器Activity绝对路径
      */
-    @Override
-    public void reStartVideoPlayer(long percentIndex) {
-        if(!TextUtils.isEmpty(mDataSource)){
-            startVideoPlayer(mDataSource,null, (int) percentIndex);
-        }
+    public void setPlayerActivityClassName(String className) {
+        this.mActivityClassName=className;
+    }
+
+    /**
+     * 返回点击通知栏后打开的Activity对象绝对路径
+     * @return 播放器Activity绝对路径
+     */
+    public String getPlayerActivityClassName() {
+        return mActivityClassName;
     }
 
     /**
@@ -520,8 +126,10 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public boolean isPlaying() {
-        return null!=mMediaPlayer&&(mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PLAY)
-                || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_START));
+        if(null!=mIMediaPlayer){
+            return mIMediaPlayer.isPlaying();
+        }
+        return false;
     }
 
     /**
@@ -530,11 +138,10 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public boolean isWorking() {
-        return null!=mMediaPlayer&&(mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PREPARE)
-                || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_BUFFER)
-                || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_START)
-                || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PAUSE)
-                || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PLAY));
+        if(null!=mIMediaPlayer){
+            return mIMediaPlayer.isWorking();
+        }
+        return false;
     }
 
     /**
@@ -542,34 +149,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public void playOrPause() {
-        switch (getVideoPlayerState()) {
-            case MUSIC_PLAYER_STOP:
-                startVideoPlayer(mDataSource,null);
-                break;
-            case MUSIC_PLAYER_PREPARE:
-                pause();
-                break;
-            case MUSIC_PLAYER_BUFFER:
-                pause();
-                break;
-            case MUSIC_PLAYER_START:
-                pause();
-                break;
-            case MUSIC_PLAYER_PLAY:
-                pause();
-                break;
-            case MUSIC_PLAYER_PAUSE:
-                if(null!=mAudioFocusManager){
-                    mAudioFocusManager.requestAudioFocus(null);
-                }
-                play();
-                break;
-            case MUSIC_PLAYER_ERROR:
-                startVideoPlayer(mDataSource,null);
-                break;
-            case MUSIC_PLAYER_MOBILE:
-
-                break;
+        if(null!=mIMediaPlayer){
+            mIMediaPlayer.playOrPause();
         }
     }
 
@@ -578,25 +159,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public void play() {
-        if(mMusicPlayerState == VideoPlayerState.MUSIC_PLAYER_START ||mMusicPlayerState ==
-                VideoPlayerState.MUSIC_PLAYER_PREPARE
-                ||mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PLAY)){
-            return;
-        }
-        try {
-            if(null!=mMediaPlayer){
-                mMediaPlayer.start();
-            }
-        }catch (RuntimeException e){
-
-        }finally {
-            if(null!=mMediaPlayer){
-                VideoPlayerManager.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_PLAY;
-                if (null != mOnPlayerEventListeners) {
-                    mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
-                }
-                startTimer();
-            }
+        if(null!=mIMediaPlayer){
+            mIMediaPlayer.play();
         }
     }
 
@@ -605,18 +169,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public void pause() {
-        try {
-            if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){
-                mMediaPlayer.pause();
-            }
-        }catch (RuntimeException e){
-
-        }finally {
-            stopTimer();
-            VideoPlayerManager.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_PAUSE;
-            if (null != mOnPlayerEventListeners) {
-                mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
-            }
+        if(null!=mIMediaPlayer){
+            mIMediaPlayer.pause();
         }
     }
 
@@ -625,14 +179,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public void onReset() {
-        onStop(true);
-
-        mOnPlayerEventListeners=null;
-        //销毁可能存在的悬浮窗
-        VideoWindowManager.getInstance().onDestroy();
-        if(null!=mWindownPlayer){
-            mWindownPlayer.onDestroy();
-            mWindownPlayer=null;
+        if(null!=mIMediaPlayer){
+            mIMediaPlayer.onReset();
         }
     }
 
@@ -642,38 +190,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public void onStop(boolean isReset) {
-        //如果明确结束一切播放并且当前窗口无播放器则完全停止
-        if(!isReset&& VideoWindowManager.getInstance().isWindowShowing()){
-            return;
-        }
-        stopTimer();
-        try {
-            if(null!=mMediaPlayer){
-                if(mMediaPlayer.isPlaying()){
-                    mMediaPlayer.stop();
-                }
-                mMediaPlayer.reset();
-                mMediaPlayer.release();
-                mMediaPlayer=null;
-            }
-        }catch (RuntimeException e){
-            e.printStackTrace();
-        }finally {
-            mBufferPercent=0;
-            removeTextureView();
-            if(null!=mAudioFocusManager){
-                mAudioFocusManager.releaseAudioFocus();
-            }
-            //还原UI状态
-            VideoPlayerManager.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_STOP;
-            if(null!=mOnPlayerEventListeners){
-                mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
-            }
-            VideoWindowManager.getInstance().onDestroy();
-            if(null!=mWindownPlayer){
-                mWindownPlayer.onDestroy();
-                mWindownPlayer=null;
-            }
+        if(null!=mIMediaPlayer){
+            mIMediaPlayer.onStop(isReset);
         }
     }
 
@@ -683,24 +201,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public void seekTo(long currentTime) {
-        try {
-            if(null!=mMediaPlayer){
-                //非暂停状态下置为加载中状态
-                if(!VideoPlayerManager.getInstance().getVideoPlayerState().equals(
-                        VideoPlayerState.MUSIC_PLAYER_PAUSE)){
-                    VideoPlayerManager.this.mMusicPlayerState= VideoPlayerState.MUSIC_PLAYER_SEEK;
-                    if(null!=mOnPlayerEventListeners){
-                        mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
-                    }
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    mMediaPlayer.seekTo(currentTime,MediaPlayer.SEEK_CLOSEST);
-                }else{
-                    mMediaPlayer.seekTo((int) currentTime);
-                }
-            }
-        }catch (RuntimeException e){
-            e.printStackTrace();
+        if(null!=mIMediaPlayer){
+            mIMediaPlayer.seekTo(currentTime);
         }
     }
 
@@ -710,12 +212,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public long getDurtion() {
-        try {
-            if(null!=mMediaPlayer){
-                return mMediaPlayer.getDuration();
-            }
-        }catch (RuntimeException e){
-
+        if(null!=mIMediaPlayer){
+            return mIMediaPlayer.getDurtion();
         }
         return 0;
     }
@@ -726,12 +224,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public long getCurrentDurtion() {
-        try {
-            if(null!=mMediaPlayer){
-                return mMediaPlayer.getCurrentPosition();
-            }
-        }catch (RuntimeException e){
-
+        if(null!=mIMediaPlayer){
+            return mIMediaPlayer.getCurrentDurtion();
         }
         return 0;
     }
@@ -743,14 +237,9 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public boolean isBackPressed() {
-        if(null!=mNoimalPlayer){
-            boolean backPressed = mNoimalPlayer.backPressed();
-            if(backPressed){
-                onDestroy();
-            }
-            return backPressed;
+        if(null!=mIMediaPlayer){
+            return mIMediaPlayer.isBackPressed();
         }
-        onDestroy();
         return true;
     }
 
@@ -763,15 +252,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public boolean isBackPressed(boolean destroy) {
-        if(null!=mNoimalPlayer){
-            boolean backPressed = mNoimalPlayer.backPressed();
-            if(backPressed&&destroy){
-                onReset();
-            }
-            return backPressed;
-        }
-        if(destroy){
-            onReset();
+        if(null!=mIMediaPlayer){
+            return mIMediaPlayer.isBackPressed(destroy);
         }
         return true;
     }
@@ -782,18 +264,12 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public VideoPlayerState getVideoPlayerState() {
-        return mMusicPlayerState;
+        if(null!=mIMediaPlayer){
+            return mIMediaPlayer.getVideoPlayerState();
+        }
+        return VideoPlayerState.MUSIC_PLAYER_STOP;
     }
 
-    /**
-     * 检查播放器内部状态
-     */
-    @Override
-    public void checkedVidepPlayerState() {
-        if(null!=mOnPlayerEventListeners){
-            mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
-        }
-    }
 
     /**
      * 若跳转至目标Activity后需要衔接播放，则必须设置此标记，以便在生命周期切换时处理用户动作意图
@@ -805,13 +281,20 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
     }
 
     /**
+     * 返回衔接播放状态
+     * @return true:衔接播放 fasle:不衔接播放
+     */
+    public boolean isContinuePlay() {
+        return mContinuePlay;
+    }
+
+    /**
      * 组件处于可见状态
      */
     @Override
     public void onResume() {
-        Logger.d(TAG,"onResume");
-        if(!TextUtils.isEmpty(mDataSource)&&isWorking()){
-            play();
+        if(null!=mIMediaPlayer){
+            mIMediaPlayer.onResume();
         }
     }
 
@@ -820,21 +303,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public void onPause() {
-        //如果不是跳转至其它界面衔接播放，则暂停视频播放
-        Logger.d(TAG,"onPause");
-        if(!mContinuePlay){
-            //悬浮窗播放模式下不需要暂停
-            if(!VideoWindowManager.getInstance().isWindowShowing()){
-                if(isWorking()){
-                    Logger.d(TAG,"onPause");
-                    pause();
-                }else{
-                    Logger.d(TAG,"onPause-->onStop");
-                    onStop(true);
-                }
-            }
-        }else{
-            mContinuePlay=false;
+        if(null!=mIMediaPlayer){
+            mIMediaPlayer.onPause();
         }
     }
 
@@ -843,169 +313,8 @@ public final class VideoPlayerManager implements MediaPlayerPresenter, TextureVi
      */
     @Override
     public void onDestroy() {
-        Logger.d(TAG,"onDestroy");
-        //保留悬浮窗口播放器
-        if(VideoWindowManager.getInstance().isWindowShowing()){
-            return;
+        if(null!=mIMediaPlayer){
+            mIMediaPlayer.onDestroy();
         }
-        if(null!=mAudioFocusManager){
-            mAudioFocusManager.releaseAudioFocus();
-            mAudioFocusManager.onDestroy();
-            mAudioFocusManager=null;
-        }
-        onStop(true);
-        mContext=null;mDataSource=null;mInstance=null;mContinuePlay=false;
-        if(null!=mFullScrrenPlayer){
-            mFullScrrenPlayer.onDestroy();
-            mFullScrrenPlayer=null;
-        }
-        if(null!=mNoimalPlayer){
-            mNoimalPlayer.onDestroy();
-            mNoimalPlayer=null;
-        }
-        if(null!= mMiniWindowPlayer){
-            mMiniWindowPlayer.onDestroy();
-            mMiniWindowPlayer =null;
-        }
-        if(null!=mWindownPlayer){
-            mWindownPlayer.onDestroy();
-            mWindownPlayer=null;
-        }
-    }
-
-    //=========================================画面渲染状态===========================================
-
-    /**
-     * TextureView准备好了回调
-     * @param surface 内部surface
-     * @param width TextureView布局宽
-     * @param height TextureView布局高
-     */
-    @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        Logger.d(TAG,"onSurfaceTextureAvailable-->width:"+width+",height:"+height);
-        if (mSurfaceTexture == null) {
-            mSurfaceTexture = surface;
-            //prepare();
-        } else {
-            mTextureView.setSurfaceTexture(mSurfaceTexture);
-        }
-    }
-
-    /**
-     * TextureView宽高发生变化时回调
-     * @param surface 内部surface
-     * @param width 新的TextureView布局宽
-     * @param height 新的TextureView布局高
-     */
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        Logger.d(TAG,"onSurfaceTextureSizeChanged-->width:"+width+",height:"+height);
-    }
-
-    /**
-     * TextureView销毁时回调
-     * @param surface 内部surface
-     * @return Most applications should return true.
-     */
-    @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        Logger.d(TAG,"onSurfaceTextureDestroyed");
-        return null==mSurfaceTexture;
-    }
-
-    /**
-     * TextureView刷新时回调
-     * @param surface 内部surface
-     */
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-    }
-
-    //========================================播放器内部状态==========================================
-
-    /**
-     * 播放器准备好了
-     * @param mp 解码器
-     */
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        Logger.d(TAG,"onPrepared");
-        if(null!=mSurfaceTexture){
-            if(null!=mSurface){
-                mSurface.release();
-                mSurface=null;
-            }
-            mSurface =new Surface(mSurfaceTexture);
-            mp.setSurface(mSurface);
-        }
-        mp.start();
-        if(mPercentIndex>0){
-            mp.seekTo(mPercentIndex);
-            mPercentIndex=0;
-        }
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-        Logger.d(TAG,"onCompletion");
-        VideoPlayerManager.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_STOP;
-        stopTimer();
-        if(null!=mOnPlayerEventListeners){
-            mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
-        }
-    }
-
-    @Override
-    public void onBufferingUpdate(MediaPlayer mp, int percent) {
-        Logger.d(TAG,"onBufferingUpdate,percent:"+percent);
-        this.mBufferPercent=percent;
-        if(null!=mOnPlayerEventListeners){
-            mOnPlayerEventListeners.onBufferingUpdate(percent);
-        }
-    }
-
-    @Override
-    public void onSeekComplete(MediaPlayer mp) {
-        Logger.d(TAG,"onSeekComplete");
-        //非用户主动暂停下，处理为恢复播放事件
-        if(VideoPlayerManager.this.mMusicPlayerState!= VideoPlayerState.MUSIC_PLAYER_PAUSE){
-            startTimer();
-            VideoPlayerManager.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_START;
-            if(null!=mOnPlayerEventListeners){
-                mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
-            }
-        }
-    }
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        stopTimer();
-        Logger.d(TAG,"onError,what:"+what+",extra:"+extra);
-        VideoPlayerManager.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_ERROR;
-        if(null!=mOnPlayerEventListeners){
-            mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onInfo(MediaPlayer mp, int event, int extra) {
-        VideoPlayerState state=null;
-        if(event==MediaPlayer.MEDIA_INFO_BUFFERING_START){
-            state= VideoPlayerState.MUSIC_PLAYER_BUFFER;
-        }else if(event==MediaPlayer.MEDIA_INFO_BUFFERING_END){
-            state= VideoPlayerState.MUSIC_PLAYER_START;
-        }else if(event==MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START){
-            state= VideoPlayerState.MUSIC_PLAYER_START;
-        }
-        if(null!=state){
-            VideoPlayerManager.this.mMusicPlayerState =state;
-            if(null!= mOnPlayerEventListeners){
-                mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
-            }
-        }
-        return false;
     }
 }

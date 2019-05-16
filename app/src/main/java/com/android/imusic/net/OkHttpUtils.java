@@ -93,6 +93,7 @@ public final class OkHttpUtils {
     private OkHttpUtils(){
         mHttpClient=createHttpUtils();
         mGson = new Gson();
+        mHandler = new Handler(Looper.getMainLooper());
     }
 
     /**
@@ -540,9 +541,6 @@ public final class OkHttpUtils {
                             boolean isSynchro) {
         if(DEBUG){
             Logger.d(TAG,"setdRequst-->URL:"+request.url());
-        }
-        if(null==mHandler){
-            mHandler = new Handler(Looper.getMainLooper());
         }
         //同步请求
         if(isSynchro){
