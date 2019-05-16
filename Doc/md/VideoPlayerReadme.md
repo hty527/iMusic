@@ -53,7 +53,16 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
    </FrameLayout>
 ```
 ### 二、播放器通道创建
-#### 1. 播放器通道java代码创建
+#### 1. 全局初始化
+```
+    //视频播放器初始化
+    VideoPlayerManager.getInstance()
+            //循环模式
+            .setLoop(true)
+            //悬浮窗中打开播放器的绝对路径
+            .setPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
+```
+#### 2. 播放器通道java代码创建
 ```
     FrameLayout frameLayout = (FrameLayout) findViewById(R.id.xxx);
     VideoPlayerTrackView playerTrackView=new VideoPlayerTrackView(context);
@@ -62,21 +71,17 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     playerTrackView.setVideoGestureController(gestureController);
     frameLayout.addView(playerTrackView,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200dp,Gravity.CENTER));
 ```
-#### 2. xml初始化支持的自定义属性
+#### 3. xml初始化支持的自定义属性
 ```
     <declare-styleable name="BaseVideoPlayer">
             <!--是否自动设置默认控制器-->
             <attr name="video_autoSetVideoController" format="boolean"/>
             <!--是否自动设置封面控制器-->
             <attr name="video_autoSetCoverController" format="boolean"/>
-            <!--循环播放-->
-            <attr name="video_loop" format="boolean"/>
     </declare-styleable>
 ```
-#### 3. 播放器通道拓展功能初始设置
+#### 4. 播放器通道拓展功能初始设置
 ```
-    //会覆盖VideoPlayerManager的循环播放设置
-    playerTrackView.setLoop(true);
     //如需在悬浮窗中支持点击全屏切换至播放器界面，此TAG必须绑定,假如你的播放器界面入参只需一个ID则可忽略此设置并调用setDataSource的三参方法
     playerTrackView.setParamsTag(mVideoParams);
     //设置画面渲染缩放模式,默认VideoConstants.VIDEO_DISPLAY_TYPE_CUT，详见VideoConstants常量定义
@@ -84,6 +89,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     //是否支持悬浮窗播放功能，这个开关只针对入口有效，不会限制对startGlobalWindown();的调用
     playerTrackView.setGlobaEnable(true); 或 mVideoPlayer.getVideoController().setGlobaEnable(true);
 ```
+
 ### 三、自定义交互UI的具体实现
 #### 1. 自定义交互控制器
 
@@ -142,12 +148,12 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
         mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
         ...此处省去其他初始化
         //衔接播放任务
-        if(isPlaying&&null!=VideoPlayerManager.getInstance().getTextureView()){
+        if(isPlaying&&null!=IMediaPlayer.getInstance().getTextureView()){
             addTextrueViewToView(mVideoPlayer);
             //为新的播放器窗口添加监听器
-            VideoPlayerManager.getInstance().addOnPlayerEventListener(mVideoPlayer);
+            IMediaPlayer.getInstance().addOnPlayerEventListener(mVideoPlayer);
             //手动检查播放器内部状态，同步常规播放器状态至全屏播放器
-            VideoPlayerManager.getInstance().checkedVidepPlayerState();
+            IMediaPlayer.getInstance().checkedVidepPlayerState();
         }else{
             //开始全新播放任务
             mVideoPlayer.startPlayVideo();
@@ -160,14 +166,14 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      */
     private void addTextrueViewToView(BaseVideoPlayer videoPlayer) {
         //先移除存在的TextrueView
-        if(null!=VideoPlayerManager.getInstance().getTextureView()){
-            VideoTextureView textureView = VideoPlayerManager.getInstance().getTextureView();
+        if(null!=IMediaPlayer.getInstance().getTextureView()){
+            VideoTextureView textureView = IMediaPlayer.getInstance().getTextureView();
             if(null!=textureView.getParent()){
                 ((ViewGroup) textureView.getParent()).removeView(textureView);
             }
         }
         if(null!=VideoPlayerManager.getInstance().getTextureView()){
-            videoPlayer.mSurfaceView.addView(VideoPlayerManager.getInstance().getTextureView(),new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
+            videoPlayer.mSurfaceView.addView(IMediaPlayer.getInstance().getTextureView(),new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
         }
     }
 ```
@@ -205,12 +211,12 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
         mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
         ...此处省去其他初始化
         //衔接播放任务
-        if(isPlaying&&null!=VideoPlayerManager.getInstance().getTextureView()){
+        if(isPlaying&&null!=IMediaPlayer.getInstance().getTextureView()){
             addTextrueViewToView(mVideoPlayer);
             //为新的播放器窗口添加监听器
-            VideoPlayerManager.getInstance().addOnPlayerEventListener(mVideoPlayer);
+            IMediaPlayer.getInstance().addOnPlayerEventListener(mVideoPlayer);
             //手动检查播放器内部状态，同步常规播放器状态至全屏播放器
-            VideoPlayerManager.getInstance().checkedVidepPlayerState();
+            IMediaPlayer.getInstance().checkedVidepPlayerState();
         }else{
             //开始全新播放任务
             mVideoPlayer.startPlayVideo();
@@ -223,14 +229,14 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      */
     private void addTextrueViewToView(BaseVideoPlayer videoPlayer) {
         //先移除存在的TextrueView
-        if(null!=VideoPlayerManager.getInstance().getTextureView()){
-            VideoTextureView textureView = VideoPlayerManager.getInstance().getTextureView();
+        if(null!=IMediaPlayer.getInstance().getTextureView()){
+            VideoTextureView textureView = IMediaPlayer.getInstance().getTextureView();
             if(null!=textureView.getParent()){
                 ((ViewGroup) textureView.getParent()).removeView(textureView);
             }
         }
-        if(null!=VideoPlayerManager.getInstance().getTextureView()){
-            videoPlayer.mSurfaceView.addView(VideoPlayerManager.getInstance().getTextureView(),new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
+        if(null!=IMediaPlayer.getInstance().getTextureView()){
+            videoPlayer.mSurfaceView.addView(IMediaPlayer.getInstance().getTextureView(),new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
         }
     }
 ```
@@ -453,21 +459,18 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     public void onReset();
 
 ```
-#### 2. VideoPlayerManager 常用API预览及说明：
+#### 2. 视频播放器代理人VideoPlayerManager 常用API预览及说明：
 
 ```
-    /**
-     * 指定点击通知栏后打开的Activity对象绝对路径
-     * @param className VideoPlayerActivity的绝对路径
-     */
-    public VideoPlayerManager setVideoPlayerActivityClassName(String className);
 
     /**
      * 设置循环模式
-     * @param loop
+     * @param loop true:循环播放 false:反之
+     * @return 自身实例
      */
     @Override
     public VideoPlayerManager setLoop(boolean loop);
+
 
     /**
      * 设置是否允许移动网络环境下工作
@@ -477,42 +480,6 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     public void setMobileWorkEnable(boolean enable);
 
     /**
-     * 是否允许移动网络环境下工作
-     * @return
-     */
-    public boolean isMobileWorkEnable();
-
-    /**
-     * 注册播放器工作状态监听器
-     * @param listener 实现VideoPlayerEventListener的对象
-     */
-    @Override
-    public void addOnPlayerEventListener(VideoPlayerEventListener listener);
-
-    /**
-     * 移除播放器工作状态监听器
-     */
-    @Override
-    public void removePlayerListener();
-
-    /**
-     * 开始异步准备缓冲播放
-     * @param dataSource 播放资源地址，支持file、https、http 等协议
-     * @param context
-     */
-    @Override
-    public void startVideoPlayer(String dataSource, Context context);
-
-    /**
-     * 开始异步准备缓冲播放
-     * @param dataSource 播放资源地址，支持file、https、http 等协议
-     * @param context
-     * @param percentIndex 尝试从指定位置开始播放
-     */
-    @Override
-    public void startVideoPlayer(String dataSource, Context context, int percentIndex);
-
-    /**
      * 设置视频画面显示缩放类型,如果正在播放，会立刻生效
      * @param displayType 详见VideoConstants常量定义
      */
@@ -520,24 +487,18 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     public void setVideoDisplayType(int displayType);
 
     /**
-     * 返回视频画面缩放模式
-     * @return 用户设定的缩放模式
+     * 指定点击通知栏后打开的Activity对象绝对路径
+     * @param className 播放器Activity绝对路径
      */
-    public int getVideoDisplayType();
-
-    /**
-     * 尝试重新播放
-     * @param percentIndex 尝试从指定位置重新开始
-     */
-    @Override
-    public void reStartVideoPlayer(long percentIndex);
-
+    public void setPlayerActivityClassName(String className);
+	
     /**
      * 返回播放器内部播放状态
-     * @return
+     * @return 播放器内部播放状态
      */
     @Override
     public boolean isPlaying();
+
     /**
      * 返回播放器内部工作状态
      * @return true:正在工作，包含暂停、缓冲等 false:未工作
@@ -550,6 +511,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      */
     @Override
     public void playOrPause();
+
     /**
      * 恢复播放
      */
@@ -584,14 +546,14 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
 
     /**
      * 返回正在播放的对象时长
-     * @return
+     * @return 视频总时长，单位毫秒
      */
     @Override
     public long getDurtion();
 
     /**
      * 返回已播放时长
-     * @return
+     * @return 已播放的视频长度，单位毫秒
      */
     @Override
     public long getCurrentDurtion();
@@ -603,27 +565,24 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      */
     @Override
     public boolean isBackPressed();
+
     /**
      * 尝试弹射退出，若当前播放器处于迷你小窗口、全屏窗口下，则只是退出小窗口\全屏至常规窗口播放
      * 若播放器处于常规状态下，则立即销毁播放器，销毁时内部检测了悬浮窗状态，若正在悬浮窗状态下播放，则啥也不做
-     * @param destroy 是否直接销毁，比如说MainActivity返回逻辑还有询问用户是否退出，给定destroy为false，则只是尝试弹射，并不会去销毁播放器
-     * @return
+     * @param destroy 是否直接销毁，比如说MainActivity返回逻辑还有询问用户是否退出，给定destroy为false，
+     *                则只是尝试弹射，并不会去销毁播放器
+     * @return 是否可以销毁界面
      */
     @Override
     public boolean isBackPressed(boolean destroy);
 
     /**
      * 返回播放器内部播放状态
-     * @return
+     * @return 内部播放状态
      */
     @Override
     public VideoPlayerState getVideoPlayerState();
 
-    /**
-     * 检查播放器内部状态
-     */
-    @Override
-    public void checkedVidepPlayerState();
 
     /**
      * 若跳转至目标Activity后需要衔接播放，则必须设置此标记，以便在生命周期切换时处理用户动作意图
@@ -631,6 +590,12 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      */
     @Override
     public void setContinuePlay(boolean continuePlay);
+
+    /**
+     * 返回衔接播放状态
+     * @return true:衔接播放 fasle:不衔接播放
+     */
+    public boolean isContinuePlay();
 
     /**
      * 组件处于可见状态
