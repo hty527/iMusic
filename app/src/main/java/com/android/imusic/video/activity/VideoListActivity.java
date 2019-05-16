@@ -145,7 +145,7 @@ public class VideoListActivity extends BaseActivity<IndexVideoPersenter>
                 VideoParams videoParams= MediaUtils.getInstance().formatVideoParams(indexItemBean);
                 Intent intent=new Intent(VideoListActivity.this, VideoPlayerActviity.class);
                 intent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
-                if(null!=trackView&&trackView.isWorking()){
+                if(null!=trackView&&trackView.isPlayerWorking()){
                     VideoPlayerManager.getInstance().setContinuePlay(true);
                     trackView.reset();
                     intent.putExtra(VideoConstants.KEY_VIDEO_PLAYING,true);
@@ -181,7 +181,7 @@ public class VideoListActivity extends BaseActivity<IndexVideoPersenter>
                     VideoPlayerTrackView trackView = (VideoPlayerTrackView) itemView.findViewById(R.id.video_track);
                     Intent intent=new Intent(VideoListActivity.this, VideoPlayerActviity.class);
                     intent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,indexItemBean);
-                    if(null!=trackView&&trackView.isWorking()) {
+                    if(null!=trackView&&trackView.isPlayerWorking()) {
                         VideoPlayerManager.getInstance().setContinuePlay(true);
                         trackView.reset();
                         intent.putExtra(VideoConstants.KEY_VIDEO_PLAYING, true);

@@ -182,22 +182,6 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
     }
 
     /**
-     * 返回当前视频宽
-     * @return 播放器实例
-     */
-    public int getVideoWidth() {
-        return mVideoWidth;
-    }
-
-    /**
-     * 返回当前视频高
-     * @return 播放器实例
-     */
-    public int getVideoHeight() {
-        return mVideoHeight;
-    }
-
-    /**
      * 只是释放播放器
      */
     private void reset() {
@@ -483,6 +467,24 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
                 || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_START)
                 || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PAUSE)
                 || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PLAY));
+    }
+
+    /**
+     * 返回当前视频宽
+     * @return 播放器实例
+     */
+    @Override
+    public int getVideoWidth() {
+        return mVideoWidth;
+    }
+
+    /**
+     * 返回当前视频高
+     * @return 播放器实例
+     */
+    @Override
+    public int getVideoHeight() {
+        return mVideoHeight;
     }
 
     /**

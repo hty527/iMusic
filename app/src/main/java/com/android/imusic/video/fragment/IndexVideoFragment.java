@@ -147,7 +147,7 @@ public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
                     VideoParams videoParams= MediaUtils.getInstance().formatVideoParams(indexItemBean);
                     Intent intent=new Intent(getActivity(), VideoPlayerActviity.class);
                     intent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,videoParams);
-                    if(null!=trackView&&trackView.isWorking()){
+                    if(null!=trackView&&trackView.isPlayerWorking()){
                         //界面衔接播放前，一定要设置此标记，用来区分Activity的onResume();事件
                         VideoPlayerManager.getInstance().setContinuePlay(true);
                         trackView.reset();
@@ -187,7 +187,7 @@ public class IndexVideoFragment extends BaseFragment<IndexVideoPersenter>
                     VideoPlayerTrackView trackView = (VideoPlayerTrackView) itemView.findViewById(R.id.video_track);
                     Intent intent=new Intent(getActivity(), VideoPlayerActviity.class);
                     intent.putExtra(VideoConstants.KEY_VIDEO_PARAMS,indexItemBean);
-                    if(null!=trackView&&trackView.isWorking()){
+                    if(null!=trackView&&trackView.isPlayerWorking()){
                         VideoPlayerManager.getInstance().setContinuePlay(true);
                         trackView.reset();
                         intent.putExtra(VideoConstants.KEY_VIDEO_PLAYING,true);

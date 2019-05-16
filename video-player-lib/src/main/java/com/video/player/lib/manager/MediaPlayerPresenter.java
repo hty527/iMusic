@@ -42,6 +42,18 @@ public interface MediaPlayerPresenter {
     boolean isWorking();
 
     /**
+     * 返回当前正在播放的视频宽
+     * @return 视频宽（分辨率）
+     */
+    int getVideoWidth();
+
+    /**
+     * 返回当前正在播放的视频高
+     * @return 视频高（分辨率）
+     */
+    int getVideoHeight();
+
+    /**
      * 开始、暂停播放
      */
     void playOrPause();

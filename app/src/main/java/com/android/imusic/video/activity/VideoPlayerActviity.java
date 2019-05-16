@@ -158,7 +158,7 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
     private void initVideoParams(boolean isCreate) {
         if(null!=mVideoParams){
             mVideoPlayer.setDataSource(mVideoParams.getVideoUrl(),mVideoParams.getVideoTitle(),mVideoParams.getVideoiId());
-            mVideoPlayer.setWorking(true);
+            mVideoPlayer.setPlayerWorking(true);
             mVideoPlayer.setParamsTag(mVideoParams);
             //封面
             if(null!=mVideoPlayer.getCoverController()){

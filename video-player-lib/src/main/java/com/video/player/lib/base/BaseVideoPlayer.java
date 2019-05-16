@@ -82,7 +82,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
     //视频帧渲染父容器
     public FrameLayout mSurfaceView;
     //此播放器是否正在工作,配合列表滚动时，检测工作状态
-    private boolean isWorking=false;
+    private boolean isPlayerWorking =false;
     //屏幕方向、手势调节，默认未知
     private int SCRREN_ORIENTATION = 0,GESTURE_SCENE=0;
     //屏幕的方向,竖屏、横屏、窗口
@@ -445,7 +445,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         //还原可能正在进行的播放任务
         IMediaPlayer.getInstance().onReset();
         IMediaPlayer.getInstance().addOnPlayerEventListener(this);
-        setWorking(true);
+        setPlayerWorking(true);
         //准备画面渲染图层
         if(null!=mSurfaceView){
             addTextrueViewToView(BaseVideoPlayer.this);
@@ -591,7 +591,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     videoPlayer.setScrrenOrientation(SCRREN_ORIENTATION);
                     //转换为横屏方向
                     videoPlayer.mVideoController.startHorizontal();
-                    videoPlayer.setWorking(true);
+                    videoPlayer.setPlayerWorking(true);
                     //设置基础的配置
                     videoPlayer.setDataSource(mDataSource, mTitle);
                     //清除全屏控件的手势事件
@@ -1106,7 +1106,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     videoPlayer.setScrrenOrientation(SCRREN_ORIENTATION);
                     //转换为小窗口模式
                     videoPlayer.mVideoController.startTiny();
-                    videoPlayer.setWorking(true);
+                    videoPlayer.setPlayerWorking(true);
                     //清除小窗口播放器的手势事件
                     if (null != videoPlayer.mSurfaceView) {
                         videoPlayer.mSurfaceView.setOnTouchListener(null);
@@ -1373,7 +1373,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         //更新屏幕方向,这里只更新为窗口模式即可
                         videoPlayer.setScrrenOrientation(VideoConstants.SCREEN_ORIENTATION_WINDOW);
                         //转换为小窗口模式
-                        videoPlayer.setWorking(true);
+                        videoPlayer.setPlayerWorking(true);
                         //设置基础的配置
                         videoPlayer.setDataSource(mDataSource,mTitle,mVideoID);
                         if(null!=BaseVideoPlayer.this.getTag()){
@@ -1423,7 +1423,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         IMediaPlayer.getInstance().setContinuePlay(true);
         if(null!= IMediaPlayer.getInstance().getWindownPlayer()) {
             BaseVideoPlayer windownPlayer = IMediaPlayer.getInstance().getWindownPlayer();
-            if (windownPlayer.isWorking()) {
+            if (windownPlayer.isPlayerWorking()) {
                 windownPlayer.reset();
             }
             VideoWindowManager.getInstance().onDestroy();
@@ -1459,12 +1459,12 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * 此处返回此组件绑定的工作状态
      * @return true:正在工作 false反之
      */
-    public boolean isWorking() {
-        return isWorking;
+    public boolean isPlayerWorking() {
+        return isPlayerWorking;
     }
 
-    public void setWorking(boolean working) {
-        isWorking = working;
+    public void setPlayerWorking(boolean playerWorking) {
+        isPlayerWorking = playerWorking;
     }
 
     /**
@@ -1555,7 +1555,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         break;
                     //停止
                     case MUSIC_PLAYER_STOP:
-                        isWorking=false;
+                        isPlayerWorking =false;
                         if(null!=mCoverController&&mCoverController.getVisibility()!=VISIBLE){
                             mCoverController.setVisibility(VISIBLE);
                         }
@@ -1570,7 +1570,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         break;
                     //失败
                     case MUSIC_PLAYER_ERROR:
-                        isWorking=false;
+                        isPlayerWorking =false;
                         if(null!=mVideoController){
                             mVideoController.error(0,message);
                         }
@@ -1684,14 +1684,14 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
         if(null!=mCoverController){
             mCoverController.setVisibility(VISIBLE);
         }
-        setWorking(false);
+        setPlayerWorking(false);
     }
 
     /**
      * 销毁
      */
     public void onReset() {
-        if(isWorking()){
+        if(isPlayerWorking()){
             IMediaPlayer.getInstance().onReset();
         }
     }

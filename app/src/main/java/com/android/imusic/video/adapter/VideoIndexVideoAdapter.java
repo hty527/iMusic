@@ -174,7 +174,7 @@ public class VideoIndexVideoAdapter extends BaseAdapter<OpenEyesIndexItemBean,Re
     private void setItemVideoData(final VideoVideoViewHolder videoViewHolder,
                                   OpenEyesIndexItemBean indexItemBean, final int position) {
         int itemHeight = (mScreenWidth - MusicUtils.getInstance().dpToPxInt(getContext(), 30f)) * 9 / 16;
-        videoViewHolder.trackVideo.setWorking(false);
+        videoViewHolder.trackVideo.setPlayerWorking(false);
         videoViewHolder.trackVideo.setScrrenOrientation(VideoConstants.SCREEN_ORIENTATION_PORTRAIT);
         videoViewHolder.trackVideo.getLayoutParams().height=itemHeight;
         videoViewHolder.trackVideo.setGlobaEnable(true);
