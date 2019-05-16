@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
@@ -24,7 +25,7 @@ import java.io.File;
 /**
  * Created by TinyHung@outlook.com
  * 2019/5/15
- * 版本检测、更新
+ * 版本检测、更新、安装
  */
 
 public class VersionUpdateManager {
@@ -35,8 +36,11 @@ public class VersionUpdateManager {
     private String OUT_PATH= Environment.getExternalStorageDirectory().getAbsoluteFile()
             + File.separator + "iMusic" + File.separator + "Download" + File.separator;
     private String FILE_NAME;
+    //监听器
+    private OnDownloadListener mListener;
     //是否正在下载中
     private boolean isDownload=false;
+
 
     public static VersionUpdateManager getInstance(){
         if(null==mInstance){
@@ -53,47 +57,33 @@ public class VersionUpdateManager {
      * 设置输出路径
      * @param outPutPath 相对文件夹路径
      */
-    public void setOutPutPath(String outPutPath) {
+    public VersionUpdateManager setOutPutPath(String outPutPath) {
         this.OUT_PATH = outPutPath;
+        return mInstance;
     }
 
     /**
      * 设置输出文件名称,必须设置且必须在下载开始前设置
      * @param fileName 文件名称，比如：iMusic.apk
      */
-    public void setOutPutFileName(String fileName) {
+    public VersionUpdateManager setOutPutFileName(String fileName) {
         this.FILE_NAME = fileName;
         if(TextUtils.isEmpty(OUT_PATH)){
             OUT_PATH= Environment.getExternalStorageDirectory().getAbsoluteFile()
                     + File.separator + "iMusic" + File.separator + "Download" + File.separator;
         }
+        return mInstance;
     }
 
     /**
-     * 本地是否存在相同版本的APK文件
-     * @param newVersionCode 新版本CODE
-     * @param fielPath 绝对路径，
-     * @return
+     * 注册监听器
+     * @param listener 实现OnDownloadListener的对象
      */
-    public boolean isExistApk(int newVersionCode,String fielPath){
-        File file=new File(OUT_PATH,FILE_NAME);
-        Logger.d(TAG,"isExistApk-->"+file.getAbsolutePath());
-        boolean isExistApk=false;
-        if(file.exists()&&file.isFile()){
-            PackageManager packageManager = MusicApplication.getContext().getPackageManager();
-            try {
-                PackageInfo archiveInfo = packageManager.getPackageArchiveInfo(file.getAbsolutePath(),
-                        PackageManager.GET_ACTIVITIES);
-                int versionCode = archiveInfo.versionCode;
-                if(versionCode>0&&versionCode==newVersionCode){
-                    isExistApk=true;
-                }
-            }catch (RuntimeException e){
-                e.printStackTrace();
-            }
-        }
-        return isExistApk;
+    public VersionUpdateManager setDownloadListener(OnDownloadListener listener){
+        this.mListener=listener;
+        return mInstance;
     }
+
 
     /**
      * 检查版本更新
@@ -129,10 +119,11 @@ public class VersionUpdateManager {
     public void downloadAPK(String path, final OnDownloadListener listener) {
         if(isDownload){
             if(null!=listener){
-                listener.onError(0,"正在下载中，请等待下载完成");
+                listener.onError(OkHttpUtils.UPDATE_HANDLE_ERROR,"正在下载中，请等待下载完成");
             }
             return;
         }
+        this.mListener=listener;
         if(TextUtils.isEmpty(FILE_NAME)){
             FILE_NAME= FileUtils.getInstance().getFileName(path);
         }
@@ -165,6 +156,51 @@ public class VersionUpdateManager {
     }
 
     /**
+     * 本地是否存在相同版本的APK文件
+     * @param newVersionCode 新版本CODE
+     * @return true : 存在
+     */
+    public boolean isEqualNewVersion(int newVersionCode){
+        File file=new File(OUT_PATH,FILE_NAME);
+        Logger.d(TAG,"isExistApk-->"+file.getAbsolutePath());
+        boolean isExistApk=false;
+        if(file.exists()&&file.isFile()){
+            PackageManager packageManager = MusicApplication.getContext().getPackageManager();
+            try {
+                PackageInfo archiveInfo = packageManager.getPackageArchiveInfo(file.getAbsolutePath(),
+                        PackageManager.GET_ACTIVITIES);
+                int versionCode = archiveInfo.versionCode;
+                if(versionCode>0&&versionCode==newVersionCode){
+                    isExistApk=true;
+                }
+            }catch (RuntimeException e){
+                e.printStackTrace();
+            }
+        }
+        return isExistApk;
+    }
+
+    /**
+     * 检查APK文件是否是完整的，apk 打包时code必须设置>0
+     * @param file APK文件对象
+     * @return true : 存在
+     */
+    public boolean apkIsValid(File file){
+        if(null!=file&&file.exists()&&file.isFile()){
+            PackageManager packageManager = MusicApplication.getContext().getPackageManager();
+            try {
+                PackageInfo archiveInfo = packageManager.getPackageArchiveInfo(file.getAbsolutePath(),
+                        PackageManager.GET_ACTIVITIES);
+                int versionCode = archiveInfo.versionCode;
+                return versionCode>0;
+            }catch (RuntimeException e){
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    /**
      * 安装APK文件
      * @param urlPath http\https apk url绝对路径
      */
@@ -178,26 +214,57 @@ public class VersionUpdateManager {
      * @param file apk文件绝对路径
      */
     public void instanllApk(File file) {
-        if(null==file)return;
-        Logger.d(TAG,"file:"+file.getAbsolutePath());
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(Intent.ACTION_VIEW);
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N){
-            //authority:Provider主机地址 和配置文件中保持一致 ,file: 共享的文件
-            Uri uriForFile = FileProvider.getUriForFile(MusicApplication.getContext(),
-                    MusicApplication.getContext()
-                    .getApplicationContext().getPackageName() + ".apkprovider", file);
-            //添加这一句表示对目标应用临时授权该Uri所代表的文件
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
-        }else{
-            intent.setDataAndType(Uri.fromFile(file), getMIMEType(file));
+        if(!apkIsValid(file)){
+            if(null!=mListener){
+                mListener.onError(OkHttpUtils.UPDATE_APK_ERROR,"APK文件不存在或不完整");
+            }
+            return;
         }
         try {
+            Logger.d(TAG,"file:"+file.getAbsolutePath());
+            Intent intent = new Intent();
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setAction(Intent.ACTION_VIEW);
+            //6.0使用fileProvider
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                //8.0还需检查是否拥有安装外部应用的权限
+                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+                    if(MusicApplication.getContext().getPackageManager().canRequestPackageInstalls()){
+                        //authority:Provider主机地址 和配置文件中保持一致 ,file: 共享的文件
+                        Uri uriForFile = FileProvider.getUriForFile(MusicApplication.getContext(),
+                                MusicApplication.getContext()
+                                        //fileProvider必须和Manifest中的authorities配置一致
+                                        .getPackageName() + ".fileProvider", file);
+                        //添加这一句表示对目标应用临时授权该Uri所代表的文件
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
+                    }else{
+                        //如果8.0的设备未设置允许安装外部应用，则引导前往设置界面
+                        Uri parse = Uri.parse("package:" + MusicApplication.getContext().getPackageName());
+                        Intent settingIntent=new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,parse);
+                        settingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        MusicApplication.getContext().startActivity(settingIntent);
+                    }
+                }else{
+                    //介于6.0-8.0之间 authority:Provider主机地址 和配置文件中保持一致 ,file: 共享的文件
+                    Uri uriForFile = FileProvider.getUriForFile(MusicApplication.getContext(),
+                            MusicApplication.getContext()
+                                    //fileProvider必须和Manifest中的authorities配置一致
+                                    .getPackageName() + ".fileProvider", file);
+                    //添加这一句表示对目标应用临时授权该Uri所代表的文件
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
+                }
+            }else{
+                //6.0以下的
+                intent.setDataAndType(Uri.fromFile(file), getMIMEType(file));
+            }
             MusicApplication.getContext().startActivity(intent);
-        } catch (Exception var5) {
-            var5.printStackTrace();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            if(null!=mListener){
+                mListener.onError(OkHttpUtils.UPDATE_PERMISSION_ERROR,"APK文件不存在或不完整");
+            }
         }
     }
 
@@ -214,6 +281,6 @@ public class VersionUpdateManager {
      */
     public void onDestroy() {
         OkHttpUtils.cancelDownload();
-        OUT_PATH=null;FILE_NAME=null;isDownload=false;mInstance=null;
+        OUT_PATH=null;FILE_NAME=null;isDownload=false;mInstance=null;mListener=null;
     }
 }

@@ -50,6 +50,9 @@ public final class OkHttpUtils {
     private static HashMap<String, String> mDefaultParams;
     private static Handler mHandler;
     private static Gson mGson;
+    /**
+     * API错误码
+     */
     //IO异常，一般发生在同步请求下
     public static final int ERROR_IO = 3000;
     //OkHttpUtils内部异常
@@ -58,6 +61,21 @@ public final class OkHttpUtils {
     public static final int ERROR_EMPTY = 3002;
     //JSON解析失败
     public static final int ERROR_JSON_FORMAT = 3003;
+    /**
+     * 下载APK错误码
+     */
+    //IO异常
+    public static final int UPDATE_IO_ERROR = 300;
+    //网络异常
+    public static final int UPDATE_NET_ERROR = 400;
+    //APK异常
+    public static final int UPDATE_APK_ERROR = 500;
+    //操作异常
+    public static final int UPDATE_HANDLE_ERROR = 600;
+    //权限异常
+    public static final int UPDATE_PERMISSION_ERROR = 700;
+
+
     //是否继续下载
     private static boolean mDownload=true;
 
@@ -271,7 +289,7 @@ public final class OkHttpUtils {
                         @Override
                         public void run() {
                             if(null!=listener){
-                                listener.onError(ERROR_IO,e.getMessage());
+                                listener.onError(UPDATE_NET_ERROR,e.getMessage());
                             }
                         }
                     });
@@ -290,7 +308,7 @@ public final class OkHttpUtils {
                                 ResponseBody responseBody = response.body();
                                 //已读长度
                                 long laterate=0;
-                                if(null!=responseBody){
+                                if(null!=responseBody&&responseBody.contentLength()>0){
                                     //总长度
                                     long length = responseBody.contentLength();
                                     //已读长度
@@ -335,7 +353,7 @@ public final class OkHttpUtils {
                                         @Override
                                         public void run() {
                                             if(null!=listener){
-                                                listener.onError(response.code(),"body is empty");
+                                                listener.onError(UPDATE_IO_ERROR,"下载传输错误，请检查下载链接");
                                             }
                                         }
                                     });
@@ -347,7 +365,7 @@ public final class OkHttpUtils {
                                         @Override
                                         public void run() {
                                             if(null!=listener){
-                                                listener.onError(ERROR_JSON_FORMAT,e.getMessage());
+                                                listener.onError(UPDATE_IO_ERROR,e.getMessage());
                                             }
                                         }
                                     });
@@ -359,7 +377,7 @@ public final class OkHttpUtils {
                                         @Override
                                         public void run() {
                                             if(null!=listener){
-                                                listener.onError(ERROR_JSON_FORMAT,e.getMessage());
+                                                listener.onError(UPDATE_IO_ERROR,e.getMessage());
                                             }
                                         }
                                     });
@@ -380,7 +398,7 @@ public final class OkHttpUtils {
                             @Override
                             public void run() {
                                 if(null!=listener){
-                                    listener.onError(ERROR_EMPTY,"response is empty");
+                                    listener.onError(UPDATE_NET_ERROR,"response is empty");
                                 }
                             }
                         });

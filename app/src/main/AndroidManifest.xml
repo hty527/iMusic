@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!--8.0及以上请求安装APK-->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
     <application
         android:name="com.android.imusic.MusicApplication"
@@ -74,17 +76,16 @@
             android:launchMode="singleTask"/>
         <activity android:name=".music.activity.TestActivity"
             android:screenOrientation="portrait"/>
-
         <!--版本升级,适配6.0及以上-->
         <provider
-            android:name="com.android.imusic.music.model.ApkFileProvider"
-            android:authorities="${applicationId}.apkprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
-            <!--元数据-->
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"
+                />
         </provider>
     </application>
 </manifest>

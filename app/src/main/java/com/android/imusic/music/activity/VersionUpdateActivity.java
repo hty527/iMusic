@@ -139,7 +139,7 @@ public class VersionUpdateActivity extends BaseActivity{
         title.setText(String.format("发现新版本：%s",versionInfo.getVersion()));
         mTvDownloadProgress.setText(String.format("%sM/%sM","0",versionInfo.getSize()));
         mUpdateContent.setText(versionInfo.getUpdate_log());
-        boolean existApk = VersionUpdateManager.getInstance().isExistApk(versionInfo.getVersion_code(), versionInfo.getDown_url());
+        boolean existApk = VersionUpdateManager.getInstance().isEqualNewVersion(versionInfo.getVersion_code());
         if(existApk){
             mBtnCancel.setVisibility(View.GONE);
             mBtnNext.setText("已下载，点击安装");
@@ -163,7 +163,7 @@ public class VersionUpdateActivity extends BaseActivity{
      * @param versionInfo 版本信息
      */
     private void startDownloadApk(VersionInfo versionInfo) {
-        boolean existApk = VersionUpdateManager.getInstance().isExistApk(versionInfo.getVersion_code(), versionInfo.getDown_url());
+        boolean existApk = VersionUpdateManager.getInstance().isEqualNewVersion(versionInfo.getVersion_code());
         Logger.d(TAG,"startDownloadApk-->existApk:"+existApk);
         if(existApk){
             mTvDownloadTips.setText("已下载");
