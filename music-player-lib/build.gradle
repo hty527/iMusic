@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'com.novoda.bintray-release'
+//应用ZIP配置文件
+apply from: 'musiczip.gradle'
 
 android {
 
@@ -30,9 +32,9 @@ publish {
     //开源协议
     licences = rootProject.ext.licences
     //项目名称
-    artifactId = rootProject.ext.msuicModule
+    artifactId = rootProject.ext.musicModule
     //版本号
-    publishVersion = rootProject.ext.music.bintrayVersion
+    publishVersion = rootProject.ext.musicVersion
     //项目介绍，可以不写
     desc = rootProject.ext.musicDesc
     //项目主页，最好写上，方便add to jecenter
@@ -40,18 +42,18 @@ publish {
 }
 
 //生成到本地Maven仓库的task
-uploadArchives{
-    repositories.mavenDeployer{
-        // 配置本地仓库路径，这里是项目的根目录下的maven目录中
-        repository(url: uri('../maven'))
-        // 唯一标识 一般为模块包名 也可其他
-        pom.groupId = "com.android.player.lib"
-        // 项目名称（一般为模块名称 也可其他
-        pom.artifactId = rootProject.ext.msuicModule
-        // 发布的版本号
-        pom.version = rootProject.ext.music.bintrayVersion
-    }
-}
+//uploadArchives{
+//    repositories.mavenDeployer{
+//        // 配置本地仓库路径，这里是项目的根目录下的maven目录中
+//        repository(url: uri('../maven'))
+//        // 唯一标识 一般为模块包名 也可其他
+//        pom.groupId = "com.android.player.lib"
+//        // 项目名称（一般为模块名称 也可其他
+//        pom.artifactId = rootProject.ext.musicModule
+//        // 发布的版本号
+//        pom.version = rootProject.ext.musicVersion
+//    }
+//}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

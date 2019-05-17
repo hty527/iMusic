@@ -8,5 +8,4 @@ com.music.player.lib.model
 com.music.player.lib.service
 com.music.player.lib.util
 com.music.player.lib.view
-com.music.player.lib.view.activity
 com.music.player.lib.view.dialog

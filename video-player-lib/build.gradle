@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'com.novoda.bintray-release'
+//应用ZIP配置文件
+apply from: 'videozip.gradle'
 
 android {
 
@@ -32,25 +34,25 @@ publish {
     //项目名称
     artifactId = rootProject.ext.videoModule
     //版本号
-    publishVersion = rootProject.ext.video.bintrayVersion
+    publishVersion = rootProject.ext.videoVersion
     //项目介绍，可以不写
     desc = rootProject.ext.videoDesc
     //项目主页，最好写上，方便add to jecenter
     website = rootProject.ext.videoWebsite
 }
 
-uploadArchives{
-    repositories.mavenDeployer{
-        // 配置本地仓库路径，这里是项目的根目录下的maven目录中
-        repository(url: uri('../maven'))
-        // 唯一标识 一般为模块包名 也可其他
-        pom.groupId = "com.android.player.lib"
-        // 项目名称（一般为模块名称 也可其他
-        pom.artifactId = rootProject.ext.videoModule
-        // 发布的版本号
-        pom.version = rootProject.ext.video.bintrayVersion
-    }
-}
+//uploadArchives{
+//    repositories.mavenDeployer{
+//        // 配置本地仓库路径，这里是项目的根目录下的maven目录中
+//        repository(url: uri('../maven'))
+//        // 唯一标识 一般为模块包名 也可其他
+//        pom.groupId = "com.android.player.lib"
+//        // 项目名称（一般为模块名称 也可其他
+//        pom.artifactId = rootProject.ext.videoModule
+//        // 发布的版本号
+//        pom.version = rootProject.ext.videoVersion
+//    }
+//}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

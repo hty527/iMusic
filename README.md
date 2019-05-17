@@ -60,7 +60,7 @@ ___
 **1.项目build.gradle中添加**
 ```
     dependencies {
-        implementation 'com.imusic.player:music-player:1.0.3'
+        implementation 'com.imusic.player:music-player:1.0.4'
     }
 ```
 若拉取失败，请检查根build.gradle中是否对jcenter支持<br/>
@@ -127,7 +127,7 @@ ___
 **1.项目build.gradle中添加**
 ```
     dependencies {
-        implementation 'com.imusic.player:video-player:1.0.1'
+        implementation 'com.imusic.player:video-player:1.0.4'
     }
 ```
 **2.在你的项目中的.xml中引入播放器布局</br>**
@@ -223,7 +223,7 @@ ___
 [前往fir下载]: https://fir.im/iMusic "fir下载"
 **fir托管下载：** **[前往fir下载]**
 
-[或点此直接下载Apk]: https://raw.githubusercontent.com/Yuye584312311/IMusic/master/Doc/apk/iMusic-1.0.3.apk "apk下载"
+[或点此直接下载Apk]: https://raw.githubusercontent.com/Yuye584312311/IMusic/master/Doc/apk/iMusic-1.0.4.apk "apk下载"
 **[或点此直接下载Apk]**<br/>
 <br/>
 **或者扫描二维码下载<br/>**
