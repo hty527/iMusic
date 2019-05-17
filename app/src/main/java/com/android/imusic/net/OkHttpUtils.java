@@ -2,6 +2,7 @@ package com.android.imusic.net;
 
 import android.os.Environment;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.text.TextUtils;
 import com.android.imusic.music.utils.FileUtils;
@@ -48,6 +49,10 @@ public final class OkHttpUtils {
     public static boolean isRequst=false;
     //共有参数
     private static HashMap<String, String> mDefaultParams;
+    //子线程
+    private HandlerThread mHandlerThread;
+    private Handler mThreadHandler;
+    //主线程
     private static Handler mHandler;
     private static Gson mGson;
     /**
@@ -74,7 +79,6 @@ public final class OkHttpUtils {
     public static final int UPDATE_HANDLE_ERROR = 600;
     //权限异常
     public static final int UPDATE_PERMISSION_ERROR = 700;
-
 
     //是否继续下载
     private static boolean mDownload=true;
@@ -124,6 +128,19 @@ public final class OkHttpUtils {
             }
         }
         return mHttpClient;
+    }
+
+    /**
+     * 返回一个子线程Handler
+     * @return 子线程Handler
+     */
+    private Handler getThreadHandler(){
+        if(null==mHandlerThread){
+            mHandlerThread = new HandlerThread("okHttpUtils");
+            mHandlerThread.start();
+            mThreadHandler = new Handler(mHandlerThread.getLooper());
+        }
+        return mThreadHandler;
     }
 
     /**
@@ -262,6 +279,9 @@ public final class OkHttpUtils {
      * @param listener 监听器
      */
     private void download(final String path, String outPutPath, String outPutFileName, final OnDownloadListener listener) {
+        if(null==mHandler){
+            mHandler=new Handler(Looper.getMainLooper());
+        }
         Request request = new Request.Builder().url(path).build();
         //初始化路径
         if(TextUtils.isEmpty(outPutPath)){
@@ -540,11 +560,14 @@ public final class OkHttpUtils {
     private void setdRequst(final Request request, final OnResultCallBack callBack,
                             boolean isSynchro) {
         if(DEBUG){
-            Logger.d(TAG,"setdRequst-->URL:"+request.url());
+            Logger.d(TAG,"setdRequst-->URL:"+request.url()+",isSynchro:"+isSynchro);
+        }
+        if(null==mHandler){
+            mHandler=new Handler(Looper.getMainLooper());
         }
         //同步请求
         if(isSynchro){
-            new Thread(new Runnable() {
+            getThreadHandler().post(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -575,7 +598,7 @@ public final class OkHttpUtils {
                         }
                     }
                 }
-            }).start();
+            });
             return;
         }
         //异步请求
@@ -734,7 +757,7 @@ public final class OkHttpUtils {
     /**
      * 释放、销毁
      */
-    public static void onDestroy(){
+    public void onDestroy(){
         if(null!=mHttpClient){
             mHttpClient=null;
         }
@@ -743,6 +766,15 @@ public final class OkHttpUtils {
             mHandler.removeCallbacksAndMessages(null);
             mHandler.removeMessages(0);
             mHandler=null;
+        }
+        if(null!=mThreadHandler){
+            mThreadHandler.removeCallbacksAndMessages(null);
+            mThreadHandler.removeMessages(0);
+            mThreadHandler=null;
+        }
+        if(null!=mHandlerThread){
+            mHandlerThread.quit();
+            mHandlerThread=null;
         }
         mGson=null;
     }

@@ -261,7 +261,7 @@ public class MainActivity extends BaseActivity {
         VideoWindowManager.getInstance().onDestroy();
         MusicWindowManager.getInstance().onDestroy();
         MusicPlayerManager.getInstance().unInitialize(MainActivity.this);
-        OkHttpUtils.onDestroy();
+        OkHttpUtils.getInstance().onDestroy();
         if(null!=mPagerAdapter){
             mPagerAdapter.onDestroy();
             mPagerAdapter=null;

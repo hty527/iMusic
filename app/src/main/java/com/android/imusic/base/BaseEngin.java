@@ -129,6 +129,6 @@ public class BaseEngin{
             mHandler.removeMessages(0);
             mHandler=null;
         }
-        OkHttpUtils.onDestroy();
+        OkHttpUtils.getInstance().onDestroy();
     }
 }
