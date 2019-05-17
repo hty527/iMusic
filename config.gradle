@@ -17,8 +17,8 @@ ext {
             bintrayVersion    : '1.0.4'
     ]
     video=[
-            versionCode    : 10020,
-            versionName    : "1.0.2",
-            bintrayVersion    : '1.0.2'
+            versionCode    : 10030,
+            versionName    : "1.0.3",
+            bintrayVersion    : '1.0.3'
     ]
 }
