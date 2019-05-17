@@ -196,7 +196,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
 若支持此功能，需在切换至悬浮窗口播放之前，设置回跳目标Activity的绝对路径和设置目标Activity的Params参数信息。
 ```
     //设置回跳路径建议在初始化时调用，设置悬浮窗跳转至目标Activity的绝对路径
-    VideoPlayerManager.getInstance().setVideoPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
+    VideoPlayerManager.getInstance().setPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
 
     //切换至悬浮窗口播放之前需设置目标Activity所需的参数TAG，见VideoParams成员属性注释
     mVideoPlayer.setParamsTag(mVideoParams);
