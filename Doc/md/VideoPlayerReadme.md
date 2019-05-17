@@ -15,6 +15,8 @@
 
 BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道必须继承BaseVideoPlayer类，返回LayoutID交给BaseVideoPlayer。还需指定泛型控制器的类型，Layout布局中必须申明id:surface_view,如果你的播放器不需要与用户交互和封面图层，则其他ID无需申明。另外，此播放器默认封装了一套 播放器通道+三种控制器。
 播放器通道布局中需要声明的资源ID如下：
+#### 4. 代理人
+视频播放器内部架构被设计为代理模式，常规的生命周期、暂停开始等，通过VideoPlayerManager类来代理交互。有关VideoPlayerManager中的方法，请阅读下文。
 ```
     <resources>
         <!--播放器渲染ID-->
