@@ -57,7 +57,7 @@ ___
 **[查看历史版本]**
 
 ## 一.音乐播放器集成:
-**1.项目build.gradle中添加**
+**1.依赖**
 ```
     dependencies {
         implementation 'com.imusic.player:music-player:1.0.4'
@@ -119,18 +119,18 @@ ___
 ```
 * Demo内置一套完整的UI交互播放器，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);并参照MusicPlayerActivity集成。<br/>
 
-[点击查看Music自定义交互及其他功能Wiki]: https://github.com/Yuye584312311/iMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
-**[点击查看Music自定义交互及其他功能Wiki]**
+[查看自定义交互及其他功能Wiki]: https://github.com/Yuye584312311/iMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
+**[查看自定义交互及其他功能Wiki]**
 ___
 
 ## 二.视频播放器集成:
-**1.项目build.gradle中添加**
+**1.依赖**
 ```
     dependencies {
         implementation 'com.imusic.player:video-player:1.0.4'
     }
 ```
-**2.在你的项目中的.xml中引入播放器布局</br>**
+**2.xml中引入播放器通道布局</br>**
 ```
     <com.video.player.lib.view.VideoPlayerTrackView
         android:id="@+id/video_track"
@@ -140,13 +140,11 @@ ___
         app:video_autoSetVideoController="true"/>
 ```
 [视频播放器Wiki介绍]: https://github.com/Yuye584312311/iMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
-你也可以在java代码中创建播放器，前往[视频播放器Wiki文档]<br/>
+你也可以在java代码中创建播放器，前往[视频播放器Wiki介绍]<br/>
 
 **3.播放器初始化及基本数据设置**
 ```
     mVideoPlayer = (VideoPlayerTrackView) findViewById(R.id.video_player);
-     //播放器控件高度设置，默认是match_parent
-    mVideoPlayer.getLayoutParams().height=200dp;
     //开始准备播放
     mVideoPlayer.startPlayVideo(dataSource,title);
     //第二种姿势准备播放
@@ -200,10 +198,9 @@ ___
         android:configChanges="orientation|screenSize">
     </activity>
 ```
-至此基础的视频播放器项目集成完毕，更多高级功能和API请阅读文档。<br/>
+[自定义交互和其他Wiki]: https://github.com/Yuye584312311/iMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
+至此基础的视频播放器项目集成完毕，更多高级功能和API请阅读[自定义交互和其他Wiki]<br/>
 
-[点击查看Video自定义交互和其他功能Wiki文档]: https://github.com/Yuye584312311/iMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
-**[点击查看Video自定义交互和其他功能Wiki文档]**
 ## iMusic预览及下载:
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
 #### 功能快照预览:
@@ -223,8 +220,8 @@ ___
 [前往fir下载]: https://fir.im/iMusic "fir下载"
 **fir托管下载：** **[前往fir下载]**
 
-[或点此直接下载Apk]: https://raw.githubusercontent.com/Yuye584312311/IMusic/master/Doc/apk/iMusic-1.0.4.apk "apk下载"
-**[或点此直接下载Apk]**<br/>
+[点击下载Apk]: https://raw.githubusercontent.com/Yuye584312311/IMusic/master/Doc/apk/iMusic-1.0.4.apk "apk下载"
+**本地下载：** **[点击下载Apk]**<br/>
 <br/>
 **或者扫描二维码下载<br/>**
 <div align="center">
