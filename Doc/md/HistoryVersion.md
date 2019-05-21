@@ -2,11 +2,12 @@
 ### Music && APK 1.0.5
 **更新日期：** 2019-05-21<br/>
 **更新内容：**<br/>
->1. 新增 music库增加setPlayInfoListener监听播放对象。<br/>
->2. 优化 music库MusicUtils删除Cache相关方法。<br/>
+>1. 新增 music库增加setPlayInfoListener监听播放对象，支持自定义存储播放记录。<br/>
+>2. 优化 music库MusicUtils类删除Cache相关方法。<br/>
 >3. 优化 iMusic搜索记录、播放记录、收藏记录改成SQL存储，提升运行效率。<br/>
 >4. 优化 iMusic最近播放模块交互和逻辑优化。<br/>
->5. 注意，安装iMusic-1.0.5版本后搜索、最近播放、收藏记录将会丢失！<br/>
+>5. 优化 iMusic调整悬浮窗播放器显示规则。<br/>
+>6. 注意，安装iMusic-1.0.5版本后搜索、最近播放、收藏记录将会丢失！<br/>
 ___
 ### Video && Music 1.0.4 && APK
 **更新日期：** 2019-05-17<br/>
