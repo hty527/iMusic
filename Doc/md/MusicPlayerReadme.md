@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
 ```
 ### 二、音乐播放器更多功能初始化设置
+#### 1. 全局及扩展功能初始化
 ```
     //若需要实现播放器内部的悬浮窗播放按钮，则需监听悬浮窗单机事件
     MusicWindowManager.getInstance().setOnMusicWindowClickListener(new MusicWindowClickListener() {
@@ -46,6 +47,21 @@
     MusicPlayerManager.getInstance().setMusicPlayerActivityClassName(MusicPlayerActivity.class.getCanonicalName())
     //设置锁屏界面,需开启setScreenOffEnable(true);
     .setLockActivityName(MusicLockActivity.class.getCanonicalName());
+```
+#### 2. 实现自己的历史播放记录
+```
+        //全局初始化
+        MusicPlayerManager.getInstance()
+                .init(getApplicationContext())
+                //如果需要实现自己的历史播放记录，请在全局初始化或播放前注册监听器
+                .setPlayInfoListener(new MusicPlayerInfoListener() {
+
+                    @Override
+                    public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {
+                        //使用SQL存储本地播放记录
+                        SqlLiteCacheManager.getInstance().insertHistroyAudio(musicInfo);
+                    }
+                });
 ```
 ### 三、音乐播放器主界面UI和自定义锁屏、通知栏实现
 #### 1. 自定义播放器界面UI
@@ -554,6 +570,20 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      */
     @Override
     public void removeAllPlayerListener();
+
+
+    /**
+     * 监听播放器正在处理的对象
+     * @param listener 实现监听器的对象
+     */
+    @Override
+    public void setPlayInfoListener(MusicPlayerInfoListener listener);
+
+    /**
+     * 移除监听播放对象事件
+     */
+    @Override
+    public void removePlayInfoListener();
 
     /**
      * 尝试改变播放模式, 单曲、列表循环、随机 三种模式之间切换
