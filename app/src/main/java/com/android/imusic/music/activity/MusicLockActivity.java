@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
+import com.android.imusic.music.manager.SqlLiteCacheManager;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
@@ -106,13 +107,13 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
                         if(null!=mMusicCollect.getTag()){
                             BaseAudioInfo audioInfo = (BaseAudioInfo) mMusicCollect.getTag();
                             if(mMusicCollect.isSelected()){
-                                boolean isSuccess = MusicUtils.getInstance().removeMusicCollectById(audioInfo.getAudioId());
+                                boolean isSuccess = SqlLiteCacheManager.getInstance().deteleCollectByID(audioInfo.getAudioId());
                                 Logger.d(TAG,"removeState:"+isSuccess);
                                 if(isSuccess){
                                     mMusicCollect.setSelected(false);
                                 }
                             }else{
-                                boolean isSuccess = MusicUtils.getInstance().putMusicToCollect(audioInfo);
+                                boolean isSuccess = SqlLiteCacheManager.getInstance().insertCollectAudio(audioInfo);
                                 Logger.d(TAG,"addState:"+isSuccess);
                                 if(isSuccess){
                                     mMusicCollect.setSelected(true);
@@ -157,7 +158,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
     private void updateMusicData(BaseAudioInfo audioInfo) {
         if(null!=audioInfo){
             //是否已收藏
-            boolean isExist = MusicUtils.getInstance().isExistCollectHistroy(audioInfo.getAudioId());
+            boolean isExist = SqlLiteCacheManager.getInstance().isExistToCollectByID(audioInfo.getAudioId());
             mMusicCollect.setSelected(isExist);
             mMusicCollect.setTag(audioInfo);
             mMusicTitle.setText(audioInfo.getAudioName());

@@ -42,6 +42,8 @@ public class BaseAudioInfo implements Serializable {
     private String audioDescribe;
     //这个字段请忽视。。。这个标识只适用于本Demo的酷狗API，由于数据中没有合适的ID字段，故使用这个字段作为一标识
     private String audioHashKey="";
+    //本地缓存时用到
+    private long addtime;
 
     /**
      * 本地UI和历史记录交互字段
@@ -175,6 +177,14 @@ public class BaseAudioInfo implements Serializable {
         this.lastPlayTime = lastPlayTime;
     }
 
+    public long getAddtime() {
+        return addtime;
+    }
+
+    public void setAddtime(long addtime) {
+        this.addtime = addtime;
+    }
+
     @Override
     public String toString() {
         return "BaseaudioInfo{" +
@@ -193,6 +203,7 @@ public class BaseAudioInfo implements Serializable {
                 ", audioHashKey='" + audioHashKey + '\'' +
                 ", isSelected=" + isSelected +
                 ", lastPlayTime=" + lastPlayTime +
+                ", addtime=" + addtime +
                 '}';
     }
 }

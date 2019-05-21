@@ -8,12 +8,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
-
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
+import com.android.imusic.music.manager.SqlLiteCacheManager;
 import com.android.imusic.music.ui.contract.MusicHistroyContract;
 import com.android.imusic.music.ui.presenter.MusicHistroyPersenter;
 import com.music.player.lib.bean.BaseAudioInfo;
@@ -24,7 +24,6 @@ import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.model.MusicPlayingChannel;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicCommentTitleView;
-
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -127,12 +126,13 @@ public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> im
                     .setPositiveButton("删除", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            boolean flag = MusicUtils.getInstance().removeMusicCollectById(audioInfo.getAudioId());
+                            boolean flag = SqlLiteCacheManager.getInstance().deteleCollectByID(audioInfo.getAudioId());
                             if(flag){
-                                Toast.makeText(MusicCollectActivity.this,"已删除",Toast.LENGTH_SHORT).show();
-                                List<BaseAudioInfo> collectMusics = MusicUtils.getInstance().getMusicsByCollect();
-                                mAdapter.setNewData(collectMusics);
                                 MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
+                                Toast.makeText(MusicCollectActivity.this,"已删除",Toast.LENGTH_SHORT).show();
+                                if(null!=mPresenter){
+                                    mPresenter.getCollectAudios();
+                                }
                             }
                         }
                     }).setCancelable(false).show();
@@ -147,6 +147,15 @@ public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> im
     public void showAudios(List<BaseAudioInfo> data) {
         if(null!=mAdapter){
             mAdapter.setNewData(data);
+        }
+        MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
+    }
+
+    @Override
+    public void showError(int code, String errorMsg) {
+        super.showError(code, errorMsg);
+        if(null!=mAdapter){
+            mAdapter.setNewData(null);
         }
     }
 

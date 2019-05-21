@@ -7,8 +7,11 @@ import android.view.View;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.manager.AppBackgroundManager;
 import com.android.imusic.music.manager.ForegroundManager;
+import com.android.imusic.music.manager.SqlLiteCacheManager;
 import com.android.imusic.net.OkHttpUtils;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.constants.MusicConstants;
+import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.listener.MusicWindowClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
@@ -29,9 +32,22 @@ public class MusicApplication extends Application {
         sContext=getApplicationContext();
         ForegroundManager.getInstance().init(this);
         //全局初始化
-        MusicPlayerManager.getInstance().init(getApplicationContext());
+        MusicPlayerManager.getInstance()
+                .init(getApplicationContext())
+                .setPlayInfoListener(new MusicPlayerInfoListener() {
+                    /**
+                     * 播放器对象发生了变化
+                     * @param musicInfo 播放器内部正在处理的音频对象
+                     * @param position 位置
+                     */
+                    @Override
+                    public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {
+                        //使用SQL存储本地播放记录
+                        SqlLiteCacheManager.getInstance().insertHistroyAudio(musicInfo);
+                    }
+                });
         //APP前后台监测,悬浮窗的处理
-        AppBackgroundManager.getInstance().setAppStateListener(new AppBackgroundManager.IAppStateChangeListener() {
+        AppBackgroundManager.getInstance().setAppStateListener( new AppBackgroundManager.IAppStateChangeListener() {
             @Override
             public void onAppStateChanged(boolean isAppForceground) {
                 if(isAppForceground){

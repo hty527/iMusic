@@ -13,6 +13,7 @@ import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
+import com.android.imusic.music.manager.SqlLiteCacheManager;
 import com.android.imusic.music.ui.contract.MusicHistroyContract;
 import com.android.imusic.music.ui.presenter.MusicHistroyPersenter;
 import com.music.player.lib.bean.BaseAudioInfo;
@@ -21,7 +22,6 @@ import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.model.MusicPlayingChannel;
-import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicCommentTitleView;
 import java.util.List;
 import java.util.Observable;
@@ -31,14 +31,12 @@ import java.util.Observer;
  * TinyHung@Outlook.com
  * 2019/3/24
  * Histroy Music
- * 由近到远保存播放记录，默认最多50条，可调用 MusicUtils.getInstance().setMaxPlayHistroyNum(maxCount);设置存储最大数
- * 使用此功能，必须先初始化：MusicUtils.getInstance().initACache(this);
+ * 始终是由近到远列出播放记录
  */
 
 public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> implements
         MusicOnItemClickListener, Observer,MusicHistroyContract.View {
 
-    private static final String TAG = "LocationMusicActivity";
     private MusicCommenListAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private MusicCommentTitleView mTitleView;
@@ -65,8 +63,8 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
                         .setPositiveButton("清空", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                boolean flag = MusicUtils.getInstance().removeMusicHistroys();
-                                if(flag){
+                                boolean allHistroy = SqlLiteCacheManager.getInstance().deteleAllHistroy();
+                                if(allHistroy){
                                     Toast.makeText(MusicHistroyActivity.this,"已清空",Toast.LENGTH_SHORT).show();
                                     mAdapter.setNewData(null);
                                     mTitleView.setSubTitle("");
@@ -150,11 +148,12 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
                     .setPositiveButton("删除", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            boolean flag = MusicUtils.getInstance().removeMusicHistroyById(audioInfo.getAudioId());
-                            if(flag){
+                            boolean deteleHistroy = SqlLiteCacheManager.getInstance().deteleHistroyByID(audioInfo.getAudioId());
+                            if(deteleHistroy){
                                 Toast.makeText(MusicHistroyActivity.this,"已删除",Toast.LENGTH_SHORT).show();
-                                List<BaseAudioInfo> playListByHistroy = MusicUtils.getInstance().getMusicsByHistroy();
-                                mAdapter.setNewData(playListByHistroy);
+                                if(null!=mPresenter){
+                                    mPresenter.getHistroyAudios();
+                                }
                             }
                         }
                     }).setCancelable(false).show();
@@ -164,6 +163,9 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
     @Override
     public void showError(int code, String errorMsg) {
         super.showError(code,errorMsg);
+        if(null!=mAdapter){
+            mAdapter.setNewData(null);
+        }
         Toast.makeText(MusicHistroyActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
     }
 
@@ -191,17 +193,19 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
     public void update(Observable o, Object arg) {
         if(null!=mAdapter&&o instanceof MusicSubjectObservable && null!=arg && arg instanceof MusicStatus){
             MusicStatus musicStatus= (MusicStatus) arg;
+            //停止
             if(MusicStatus.PLAYER_STATUS_DESTROY==musicStatus.getPlayerStatus()
                     ||MusicStatus.PLAYER_STATUS_STOP==musicStatus.getPlayerStatus()){
                 if(null!=mAdapter.getData()&&mAdapter.getData().size()>mAdapter.getCurrentPosition()){
                     mAdapter.getData().get(mAdapter.getCurrentPosition()).setSelected(false);
                     mAdapter.notifyDataSetChanged();
                 }
+            //还在继续
             }else{
-                mAdapter.notifyDataSetChanged();
-                int position = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
-                        MusicPlayerManager.getInstance().getCurrentPlayerID());
-                mAdapter.setCurrentPosition(position);
+                //播放对象发生了变化，此时列表中可能不存在此音频对象，拉取最新的播放记录
+                if(null!=mPresenter){
+                    mPresenter.getHistroyAudios();
+                }
             }
         }
     }

@@ -138,7 +138,6 @@ public class MainActivity extends BaseActivity {
     protected void onRequstPermissionResult(int resultCode) {
         super.onRequstPermissionResult(resultCode);
         if(resultCode==PREMISSION_SUCCESS){
-            MusicUtils.getInstance().initACache(this);
             if(null!=mPagerAdapter){
                 if(mPagerAdapter.getItem(0) instanceof IndexMusicFragment){
                     ((IndexMusicFragment) mPagerAdapter.getItem(0)).queryLocationMusic(MainActivity.this);

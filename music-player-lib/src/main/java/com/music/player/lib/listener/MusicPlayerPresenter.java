@@ -221,6 +221,17 @@ public interface MusicPlayerPresenter {
     void removeAllPlayerListener();
 
     /**
+     * 设置播放对象监听
+     * @param listener 实现监听器的对象
+     */
+    void setPlayInfoListener(MusicPlayerInfoListener listener);
+
+    /**
+     * 移除监听播放对象事件
+     */
+    void removePlayInfoListener();
+
+    /**
      * 顺序改变播放器播放模式
      */
     void changedPlayerPlayModel();

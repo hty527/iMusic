@@ -7,16 +7,12 @@ import android.text.TextUtils;
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
-import com.android.imusic.music.bean.SearchHistroy;
 import com.android.imusic.music.bean.SearchResultInfo;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
 import com.music.player.lib.bean.BaseAudioInfo;
-import com.music.player.lib.util.Logger;
-import com.music.player.lib.util.MusicACache;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.bean.VideoParams;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +25,6 @@ public class MediaUtils {
 
     private static final String TAG = "MediaUtils";
     private static volatile MediaUtils mInstance;
-    private static int MAX_SEARCH_KEY_NUM = 30;
-    //搜索历史纪录
-    public static final String SEARCH_HISTORY="SEARCH_HISTORY";
     private List<BaseAudioInfo> mLocationMusic;
     private static boolean mLocalImageEnable;//本地音乐图片获取开关,默认关闭
 
@@ -47,14 +40,6 @@ public class MediaUtils {
     }
 
     private MediaUtils(){}
-
-    /**
-     * 设置最大的缓存搜索历史记录个数
-     * @param maxSearchKeyNum
-     */
-    public void setMaxPlayHistroyNum(int maxSearchKeyNum){
-        MAX_SEARCH_KEY_NUM =maxSearchKeyNum;
-    }
 
     /**
      * 获取SD卡所有音频文件
@@ -319,99 +304,5 @@ public class MediaUtils {
         videoParams.setVideoUrl(indexItemBean.getPlayUrl());
         videoParams.setDurtion(indexItemBean.getDuration());
         return videoParams;
-    }
-
-
-    public interface OnTaskCallBack{
-        void onFinlish();
-    }
-
-    /**
-     * 保存并更新搜索记录
-     * @param searchKey
-     */
-    public void putSearchKeyToHistroy(final String searchKey, final OnTaskCallBack callBack) {
-        if(null!=MusicUtils.getInstance().getACache()){
-            Logger.d(TAG,"setSearchKey-->searchKey:"+searchKey);
-            new Thread(){
-                @Override
-                public void run() {
-                    super.run();
-                    MusicACache musicACache = MusicUtils.getInstance().getACache();
-                    List<SearchHistroy> searchHistroys = (List<SearchHistroy>) musicACache.getAsObject(SEARCH_HISTORY);
-                    if(null!=searchHistroys){
-                        SearchHistroy search=new SearchHistroy();
-                        search.setKey(searchKey);
-                        search.setTime(System.currentTimeMillis());
-                        int index=-1;
-                        for (int i = 0; i < searchHistroys.size(); i++) {
-                            SearchHistroy searchHistroy = searchHistroys.get(i);
-                            if(searchHistroy.getKey().equals(searchKey)){
-                                index=i;
-                                break;
-                            }
-                        }
-                        if(index>-1){
-                            Logger.d(TAG,"本地记录存在");
-                            searchHistroys.remove(index);
-                        }
-                        searchHistroys.add(search);
-                        //冒泡排序重新排序一遍
-                        for (int i = 0; i < searchHistroys.size()-1; i++) {
-                            for (int i1 = 0; i1 < searchHistroys.size()-1-i; i1++) {
-                                if(searchHistroys.get(i1).getTime()<searchHistroys.get(i1+1).getTime()){
-                                    SearchHistroy tempMedia=searchHistroys.get(i1);
-                                    searchHistroys.set(i1,searchHistroys.get(i1+1));//和下一个交换位置
-                                    searchHistroys.set(i1+1,tempMedia);
-                                }
-                            }
-                        }
-                        if(searchHistroys.size()>MAX_SEARCH_KEY_NUM){
-                            Logger.d(TAG,"超出最大缓存数");
-                            searchHistroys.remove(searchHistroys.size()-1);
-                        }
-                        musicACache.remove(SEARCH_HISTORY);
-                        musicACache.put(SEARCH_HISTORY, (Serializable) searchHistroys);
-                        if(null!=callBack){
-                            callBack.onFinlish();
-                        }
-                    }else{
-                        Logger.d(TAG,"缓存为空");
-                        List<SearchHistroy> histroys=new ArrayList<>();
-                        SearchHistroy searchHistroy=new SearchHistroy();
-                        searchHistroy.setKey(searchKey);
-                        searchHistroy.setTime(System.currentTimeMillis());
-                        histroys.add(searchHistroy);
-                        musicACache.remove(SEARCH_HISTORY);
-                        musicACache.put(SEARCH_HISTORY, (Serializable) histroys);
-                        if(null!=callBack){
-                            callBack.onFinlish();
-                        }
-                    }
-                }
-            }.start();
-        }
-    }
-
-    /**
-     * 获取搜索缓存
-     * @return
-     */
-    public List<SearchHistroy> getSearchByHistroy() {
-        if(null==MusicUtils.getInstance().getACache()){
-            return null;
-        }
-        List<SearchHistroy> searchHistroys = (List<SearchHistroy>) MusicUtils.getInstance().getACache().getAsObject(SEARCH_HISTORY);
-        return searchHistroys;
-    }
-
-    /**
-     * 清空缓存记录
-     */
-    public void removeAllHistroySearchCache() {
-        if(null==MusicUtils.getInstance().getACache()){
-            return;
-        }
-        MusicUtils.getInstance().getACache().remove(SEARCH_HISTORY);
     }
 }

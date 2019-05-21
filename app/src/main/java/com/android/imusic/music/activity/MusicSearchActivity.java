@@ -30,6 +30,7 @@ import com.android.imusic.music.bean.SearchMusicData;
 import com.android.imusic.music.bean.SearchResult;
 import com.android.imusic.music.bean.SearchResultInfo;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
+import com.android.imusic.music.manager.SqlLiteCacheManager;
 import com.android.imusic.music.ui.contract.MusicSearchContract;
 import com.android.imusic.music.ui.presenter.MusicSearchPersenter;
 import com.android.imusic.music.utils.MediaUtils;
@@ -91,8 +92,10 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
                                     .setPositiveButton("继续清空", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            MediaUtils.getInstance().removeAllHistroySearchCache();
-                                            createSearchCache();
+                                            boolean deteleAllSearch = SqlLiteCacheManager.getInstance().deteleAllSearch();
+                                            if(deteleAllSearch){
+                                                createSearchCache();
+                                            }
                                         }
                                     }).setCancelable(false).show();
                         }else{
@@ -165,7 +168,7 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
      * 更新缓存
      */
     private void createSearchCache() {
-        List<SearchHistroy> searchByCache = MediaUtils.getInstance().getSearchByHistroy();
+        List<SearchHistroy> searchByCache = SqlLiteCacheManager.getInstance().querySearchNotes();
         FlexboxLayout flexboxLayout = (FlexboxLayout) findViewById(R.id.music_search_flags);
         if(null!=searchByCache&&searchByCache.size()>0){
             mSearchHistroyCount++;
@@ -222,17 +225,10 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
             showProgressDialog("搜索中,请稍后...");
             mAdapter.setCurrentKey(key);
             //写入搜索记录
-            MediaUtils.getInstance().putSearchKeyToHistroy(key, new MediaUtils.OnTaskCallBack() {
-                @Override
-                public void onFinlish() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            createSearchCache();
-                        }
-                    });
-                }
-            });
+            boolean searchKey = SqlLiteCacheManager.getInstance().insertSearchKey(key);
+            if(searchKey){
+                createSearchCache();
+            }
         }
         mPresenter.queryMusicToKey(key,mPage);
     }
@@ -328,7 +324,7 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
             cacheAudioInfo.setAudioCover(audioInfo.getAlbum_img());
             cacheAudioInfo.setAudioPath(audioInfo.getSource());
             if(!TextUtils.isEmpty(cacheAudioInfo.getAudioPath())){
-                boolean toCollect = MusicUtils.getInstance().putMusicToCollect(cacheAudioInfo);
+                boolean toCollect = SqlLiteCacheManager.getInstance().insertCollectAudio(cacheAudioInfo);
                 if(toCollect){
                     Toast.makeText(MusicSearchActivity.this,"已添加至收藏列表",
                             Toast.LENGTH_SHORT).show();

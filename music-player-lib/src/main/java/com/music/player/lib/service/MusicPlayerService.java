@@ -34,6 +34,7 @@ import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicPlayerEventListener;
+import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.listener.MusicPlayerPresenter;
 import com.music.player.lib.manager.MusicAudioFocusManager;
 import com.music.player.lib.manager.MusicPlayerManager;
@@ -74,6 +75,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     private static MusicPlayerBinder mPlayerBinder;
     //组件回调注册池子
     private static List<MusicPlayerEventListener> mOnPlayerEventListeners = new ArrayList<>();
+    //播放对象监听
+    private static MusicPlayerInfoListener sMusicPlayerInfoListener;
     //音频焦点Manager
     private static MusicAudioFocusManager mAudioFocusManager;
     //待播放音频队列池子
@@ -943,6 +946,23 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
+     * 监听播放器正在处理的对象
+     * @param listener 实现监听器的对象
+     */
+    @Override
+    public void setPlayInfoListener(MusicPlayerInfoListener listener) {
+        MusicPlayerService.this.sMusicPlayerInfoListener=listener;
+    }
+
+    /**
+     * 移除监听播放对象事件
+     */
+    @Override
+    public void removePlayInfoListener() {
+        MusicPlayerService.this.sMusicPlayerInfoListener=null;
+    }
+
+    /**
      * 还原MediaPlayer
      */
     @Override
@@ -1298,7 +1318,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             MusicPlayerService.this.mMusicPlayerState = MusicPlayerState.MUSIC_PLAYER_PREPARE;
             startServiceForeground();
             if(requestAudioFocus== AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
-                MusicUtils.getInstance().putMusicToHistory(musicInfo);
+                if(null!=sMusicPlayerInfoListener){
+                    sMusicPlayerInfoListener.onPlayMusiconInfo(musicInfo,mCurrentPlayIndex);
+                }
                 try {
                     mMediaPlayer = new MediaPlayer();
                     mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);

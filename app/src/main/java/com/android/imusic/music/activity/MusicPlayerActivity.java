@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
+import com.android.imusic.music.manager.SqlLiteCacheManager;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
@@ -283,13 +284,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                         if(null!=mMusicJukeBoxView&&null!=mMusicJukeBoxView.getCurrentMedia()){
                             BaseAudioInfo currentMedia = mMusicJukeBoxView.getCurrentMedia();
                             if(mBtnCollect.isSelected()){
-                                boolean isSuccess = MusicUtils.getInstance()
-                                        .removeMusicCollectById(currentMedia.getAudioId());
+                                boolean isSuccess = SqlLiteCacheManager.getInstance().deteleCollectByID(currentMedia.getAudioId());
                                 if(isSuccess){
                                     mBtnCollect.setSelected(false);
                                 }
                             }else{
-                                boolean isSuccess = MusicUtils.getInstance().putMusicToCollect(currentMedia);
+                                boolean isSuccess = SqlLiteCacheManager.getInstance().insertCollectAudio(currentMedia);
                                 if(isSuccess){
                                     mBtnCollect.setSelected(true);
                                     MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
@@ -361,8 +361,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         isVisibility=true;
         //收藏状态,针对可能在锁屏界面收藏的同步
         if(null!=mBtnCollect&&null!=mMusicJukeBoxView&&null!=mMusicJukeBoxView.getCurrentMedia()){
-            boolean isExist = MusicUtils.getInstance().isExistCollectHistroy(
-                    mMusicJukeBoxView.getCurrentMedia().getAudioId());
+            boolean isExist = SqlLiteCacheManager.getInstance().isExistToCollectByID(mMusicJukeBoxView.getCurrentMedia().getAudioId());
             mBtnCollect.setSelected(isExist);
         }
         if(MusicPlayerManager.getInstance().getPlayerState()==MusicPlayerState.MUSIC_PLAYER_PLAYING){
@@ -442,7 +441,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             mSubTitle.setText(audioInfo.getNickname());
             mTotalTime.setText(MusicUtils.getInstance().stringForAudioTime(audioInfo.getAudioDurtion()));
             //收藏状态
-            boolean isExist = MusicUtils.getInstance().isExistCollectHistroy(audioInfo.getAudioId());
+            boolean isExist = SqlLiteCacheManager.getInstance().isExistToCollectByID(audioInfo.getAudioId());
             mBtnCollect.setSelected(isExist);
             mRootLayout.setBackgroundCover(MusicUtils.getInstance().getMusicFrontPath(audioInfo),1200);
             //非回显事件，释放原有播放器并开始播放

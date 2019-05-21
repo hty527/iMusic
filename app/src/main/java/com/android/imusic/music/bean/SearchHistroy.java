@@ -9,15 +9,15 @@ import java.io.Serializable;
 
 public class SearchHistroy implements Serializable{
 
-    private long time;
+    private long addtime;
     private String key;
 
-    public long getTime() {
-        return time;
+    public long getAddtime() {
+        return addtime;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setAddtime(long addtime) {
+        this.addtime = addtime;
     }
 
     public String getKey() {
@@ -31,7 +31,7 @@ public class SearchHistroy implements Serializable{
     @Override
     public String toString() {
         return "SearchHistroy{" +
-                "time=" + time +
+                "addtime=" + addtime +
                 ", key='" + key + '\'' +
                 '}';
     }

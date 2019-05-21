@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.imusic.R;
 import com.android.imusic.music.bean.MusicDetails;
+import com.android.imusic.music.manager.SqlLiteCacheManager;
 import com.music.player.lib.adapter.base.BaseAdapter;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.util.MusicUtils;
 import java.util.List;
 
 /**
@@ -42,7 +42,7 @@ public class MusicDetailsAdapter extends BaseAdapter<MusicDetails,MusicDetailsAd
             viewHolder.itemView.setTag(itemData);
             if(itemData.getItemID()==MusicDetails.ITEM_ID_COLLECT&&itemData.getId()>0){
                 //已收藏不允许点击
-                boolean isExist= MusicUtils.getInstance().isExistCollectHistroy(itemData.getId());
+                boolean isExist = SqlLiteCacheManager.getInstance().isExistToCollectByID(itemData.getId());
                 if(isExist){
                     viewHolder.textTitle.setTextColor(Color.parseColor("#AAAAAA"));
                     viewHolder.itemIcon.setColorFilter(Color.parseColor("#AAAAAA"));

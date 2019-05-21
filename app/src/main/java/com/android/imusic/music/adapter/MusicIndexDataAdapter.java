@@ -15,6 +15,7 @@ import com.android.imusic.music.adapter.holder.IndexDefaultViewHolder;
 import com.android.imusic.music.adapter.holder.IndexMusicViewHolder;
 import com.android.imusic.music.adapter.holder.IndexTitleViewHolder;
 import com.android.imusic.music.bean.AudioInfo;
+import com.android.imusic.music.manager.SqlLiteCacheManager;
 import com.android.imusic.music.utils.MediaUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -96,6 +97,7 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                 //播放状态和历史记录
                 boolean isVisible=false;
                 if(!TextUtils.isEmpty(itemData.getTag_id())){
+                    //本地音乐
                     if(itemData.getTag_id().equals(AudioInfo.TAG_LOCATION)){
                         if(MusicPlayerManager.getInstance().getPlayingChannel().equals(
                                 MusicPlayingChannel.CHANNEL_LOCATION)){
@@ -104,10 +106,11 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                         //本地音频个数获取
                         List<BaseAudioInfo> locationMusic = MediaUtils.getInstance().getLocationMusic();
                         if(null!=locationMusic&&locationMusic.size()>0){
-                            defaultViewHolder.textDesp.setText("("+locationMusic.size()+"首)");
+                            defaultViewHolder.textDesp.setText(String.format("(%s首)",locationMusic.size()));
                         }else{
                             defaultViewHolder.textDesp.setText("(0)");
                         }
+                    //最近播放
                     }else if(itemData.getTag_id().equals(AudioInfo.TAG_LAST_PLAYING)){
                         if(MusicPlayerManager.getInstance().getPlayingChannel().equals(
                                 MusicPlayingChannel.CHANNEL_HISTROY)){
@@ -119,25 +122,22 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                             defaultViewHolder.textDesp.setText("("+currentPlayerMusic.getAudioName()+")");
                         }else{
                             //历史记录
-                            List<BaseAudioInfo> playListByHistroy = MusicUtils.getInstance().getMusicsByHistroy();
-                            if(null!=playListByHistroy&&playListByHistroy.size()>0){
-                                defaultViewHolder.textDesp.setText("("+playListByHistroy.get(0).getAudioName()+")");
+                            BaseAudioInfo mediaInfo = SqlLiteCacheManager.getInstance().queryHistroyFirstAudio();
+                            if(null!=mediaInfo){
+                                defaultViewHolder.textDesp.setText(String.format("(%s)",mediaInfo.getAudioName()));
                             }else{
-                                defaultViewHolder.textDesp.setText("(暂无播放记录)");
+                                defaultViewHolder.textDesp.setText(String.format("(%s)","暂无播放记录"));
                             }
                         }
+                    //我的收藏
                     }else if(itemData.getTag_id().equals(AudioInfo.TAG_COLLECT)){
                         if(MusicPlayerManager.getInstance().getPlayingChannel().equals(
                                 MusicPlayingChannel.CHANNEL_COLLECT)){
                             isVisible=true;
                         }
-                        //收藏记录
-                        List<BaseAudioInfo> musicsByCollect = MusicUtils.getInstance().getMusicsByCollect();
-                        if(null!=musicsByCollect&&musicsByCollect.size()>0){
-                            defaultViewHolder.textDesp.setText("("+musicsByCollect.size()+")");
-                        }else{
-                            defaultViewHolder.textDesp.setText("(0)");
-                        }
+                        //查询收藏表总条数
+                        long size = SqlLiteCacheManager.getInstance().queryCollectAudiosSize();
+                        defaultViewHolder.textDesp.setText(String.format("(%s)",size));
                     }
                 }
                 defaultViewHolder.playingStatus.setVisibility(isVisible?View.VISIBLE:View.GONE);

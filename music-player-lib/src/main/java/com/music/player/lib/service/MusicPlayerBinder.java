@@ -2,13 +2,16 @@ package com.music.player.lib.service;
 
 import android.app.Notification;
 import android.os.Binder;
+
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.listener.MusicPlayerEventListener;
+import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.listener.MusicPlayerPresenter;
 import com.music.player.lib.model.MusicAlarmModel;
 import com.music.player.lib.model.MusicPlayModel;
 import com.music.player.lib.model.MusicPlayerState;
 import com.music.player.lib.model.MusicPlayingChannel;
+
 import java.util.List;
 
 /**
@@ -234,6 +237,14 @@ public class MusicPlayerBinder extends Binder{
 
     public void removeAllPlayerListener() {
         if(null!=mPresenter) mPresenter.removeAllPlayerListener();
+    }
+
+    public void setPlayInfoListener(MusicPlayerInfoListener listener) {
+        if(null!=mPresenter) mPresenter.setPlayInfoListener(listener);
+    }
+
+    public void removePlayInfoListener() {
+        if(null!=mPresenter) mPresenter.removePlayInfoListener();
     }
 
     public MusicAlarmModel getPlayerAlarmModel() {

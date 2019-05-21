@@ -43,7 +43,6 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -54,9 +53,7 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.model.MusicAlarmModel;
 import com.music.player.lib.model.MusicGlideCircleTransform;
-
 import java.io.File;
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
@@ -80,15 +77,9 @@ import java.util.TimeZone;
 public class MusicUtils {
 
     private static final String TAG = "MusicUtils";
-    //最大保存播放记录个数
-    private static int MAX_PLAY_HISTROY_COUNT = 50;
-    //允许收藏个数
-    private static int MAX_COLLECT_COUNT = 100;
-
     private static volatile MusicUtils mInstance;
     private static SharedPreferences mSharedPreferences;
     private static SharedPreferences.Editor mEditor;
-    private static MusicACache mACache;
 
     public static MusicUtils getInstance() {
         if(null==mInstance){
@@ -102,39 +93,6 @@ public class MusicUtils {
     }
 
     private MusicUtils(){}
-
-    /**
-     * 初始化历史记录存储器
-     * @param context
-     */
-    public void initACache(Context context) {
-        MusicACache cache = MusicACache.get(context);
-        setACache(cache);
-    }
-
-    public void setACache(MusicACache ACache) {
-        mACache = ACache;
-    }
-
-    public MusicACache getACache() {
-        return mACache;
-    }
-
-    /**
-     * 设置最大的保存历史播放记录
-     * @param maxHistroyCount
-     */
-    public void setMaxPlayHistroyCount(int maxHistroyCount){
-        MAX_PLAY_HISTROY_COUNT =maxHistroyCount;
-    }
-
-    /**
-     * 设置最大的收藏记录个数
-     * @param maxCollectCount
-     */
-    public void setMaxCollectCount(int maxCollectCount){
-        MAX_COLLECT_COUNT =maxCollectCount;
-    }
 
     /**
      * 不透明度
@@ -1407,250 +1365,10 @@ public class MusicUtils {
     }
 
     /**
-     * 保存播放记录到历史记录中，使用默认最大个数
-     * @param audioInfo 播放对象
-     */
-    public void putMusicToHistory(BaseAudioInfo audioInfo){
-        putMusicToHistory(audioInfo, MAX_PLAY_HISTROY_COUNT);
-    }
-
-    /**
-     * 保存播放记录到历史记录中
-     * @param audioInfo
-     * @param maxHistoryCount 最大历史记录个数
-     */
-    public void putMusicToHistory(final BaseAudioInfo audioInfo, final int maxHistoryCount) {
-        if(null!=getACache()&&null!=audioInfo&&!TextUtils.isEmpty(audioInfo.getAudioPath())){
-            new Thread(){
-                @Override
-                public void run() {
-                    super.run();
-                    List<BaseAudioInfo> cacheMusics = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_HISTORY);
-                    if(null!=cacheMusics){
-                        int currentIndex=-1;
-                        for (int i = 0; i < cacheMusics.size(); i++) {
-                            BaseAudioInfo baseaudioInfo = cacheMusics.get(i);
-                            if(baseaudioInfo.getAudioId()==audioInfo.getAudioId()){
-                                currentIndex=i;
-                                break;
-                            }
-                        }
-                        //本地存在此播放记录,移除掉重新添加
-                        if(currentIndex>-1){
-                            cacheMusics.remove(currentIndex);
-                        }
-                        audioInfo.setLastPlayTime(System.currentTimeMillis());
-                        cacheMusics.add(audioInfo);
-                        //冒泡排序，由近到远
-                        for (int i = 0; i < cacheMusics.size()-1; i++) {
-                            for (int i1 = 0; i1 < cacheMusics.size()-1-i; i1++) {
-                                if(cacheMusics.get(i1).getLastPlayTime()<cacheMusics.get(i1+1).getLastPlayTime()){
-                                    BaseAudioInfo tempMedia=cacheMusics.get(i1);
-                                    cacheMusics.set(i1,cacheMusics.get(i1+1));
-                                    cacheMusics.set(i1+1,tempMedia);
-                                }
-                            }
-                        }
-                        //缓存个数到达上限，移除最后一个
-                        if(cacheMusics.size()>maxHistoryCount){
-                            cacheMusics.remove(cacheMusics.size()-1);
-                        }
-                        getACache().remove(MusicConstants.A_KEY_PLAY_HISTORY);
-                        getACache().put(MusicConstants.A_KEY_PLAY_HISTORY, (Serializable) cacheMusics);
-                    }else{
-                        //新的第一条播放记录
-                        List<BaseAudioInfo> newCacheaudioInfos=new ArrayList<>();
-                        audioInfo.setLastPlayTime(System.currentTimeMillis());
-                        newCacheaudioInfos.add(audioInfo);
-                        getACache().put(MusicConstants.A_KEY_PLAY_HISTORY, (Serializable) newCacheaudioInfos);
-                    }
-                }
-            }.start();
-        }
-    }
-
-    /**
-     * 获取历史播放记录
-     * @return 所有历史播放记录
-     */
-    public List<BaseAudioInfo> getMusicsByHistroy(){
-        if(null==getACache()){
-            return null;
-        }
-        List<BaseAudioInfo> audioInfos = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_HISTORY);
-        return audioInfos;
-    }
-
-    /**
-     * 删除指定ID的历史记录
-     * @param musicID 音频ID
-     * @return true:成功删除
-     */
-    public boolean removeMusicHistroyById(long musicID) {
-        if(null==getACache()){
-            return false;
-        }
-        List<BaseAudioInfo> audioInfos = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_HISTORY);
-        if(null!=audioInfos&&audioInfos.size()>0){
-            int index=-1;
-            for (int i = 0; i < audioInfos.size(); i++) {
-                if(audioInfos.get(i).getAudioId()==musicID){
-                    index=i;
-                    break;
-                }
-            }
-            if(index>-1){
-                audioInfos.remove(index);
-                getACache().remove(MusicConstants.A_KEY_PLAY_HISTORY);
-                getACache().put(MusicConstants.A_KEY_PLAY_HISTORY, (Serializable) audioInfos);
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-
-    /**
-     * 清空所有最近播放记录
-     * @return true:成功删除
-     */
-    public boolean removeMusicHistroys(){
-        if(null==getACache()){
-            return false;
-        }
-        getACache().remove(MusicConstants.A_KEY_PLAY_HISTORY);
-        return true;
-    }
-
-
-    /**
-     * 保存音乐到收藏记录，使用默认最大个数
-     * @param audioInfo 音频对象
-     */
-    public boolean putMusicToCollect(BaseAudioInfo audioInfo){
-        return putMusicToCollect(audioInfo, MAX_COLLECT_COUNT);
-    }
-
-    public boolean putMusicToCollect(final BaseAudioInfo audioInfo, final int maxCollectCount){
-        if(null!=getACache()&&null!=audioInfo&&!TextUtils.isEmpty(audioInfo.getAudioPath())) {
-            new Thread() {
-                @Override
-                public void run() {
-                    super.run();
-                    List<BaseAudioInfo> cacheMusics = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
-                    if (null != cacheMusics) {
-                        int currentIndex = -1;
-                        for (int i = 0; i < cacheMusics.size(); i++) {
-                            BaseAudioInfo baseaudioInfo = cacheMusics.get(i);
-                            if (baseaudioInfo.getAudioId() == audioInfo.getAudioId()) {
-                                currentIndex = i;
-                                break;
-                            }
-                        }
-                        //本地存在此播放记录,移除掉重新添加
-                        if (currentIndex > -1) {
-                            cacheMusics.remove(currentIndex);
-                        }
-                        audioInfo.setLastPlayTime(System.currentTimeMillis());
-                        cacheMusics.add(audioInfo);
-                        //冒泡排序算法交换位置
-                        //冒泡排序，由近到远
-                        for (int i = 0; i < cacheMusics.size() - 1; i++) {
-                            for (int i1 = 0; i1 < cacheMusics.size() - 1 - i; i1++) {
-                                if (cacheMusics.get(i1).getLastPlayTime() < cacheMusics.get(i1 + 1).getLastPlayTime()) {
-                                    BaseAudioInfo tempMedia = cacheMusics.get(i1);
-                                    cacheMusics.set(i1, cacheMusics.get(i1 + 1));
-                                    cacheMusics.set(i1 + 1, tempMedia);
-                                }
-                            }
-                        }
-                        //缓存个数到达上限，移除最后一个
-                        if (cacheMusics.size() > maxCollectCount) {
-                            cacheMusics.remove(cacheMusics.size() - 1);
-                        }
-                        getACache().remove(MusicConstants.A_KEY_PLAY_COLLECT);
-                        getACache().put(MusicConstants.A_KEY_PLAY_COLLECT, (Serializable) cacheMusics);
-                    } else {
-                        //第一条播放记录
-                        List<BaseAudioInfo> newCacheaudioInfos = new ArrayList<>();
-                        audioInfo.setLastPlayTime(System.currentTimeMillis());
-                        newCacheaudioInfos.add(audioInfo);
-                        getACache().put(MusicConstants.A_KEY_PLAY_COLLECT, (Serializable) newCacheaudioInfos);
-                    }
-                }
-            }.start();
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 删除指定ID的收藏记录
-     * @param musicID 音频ID
-     */
-    public boolean removeMusicCollectById(long musicID) {
-        if(null==getACache()){
-            return false;
-        }
-        List<BaseAudioInfo> audioInfos = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
-        if(null!=audioInfos&&audioInfos.size()>0){
-            int index=-1;
-            for (int i = 0; i < audioInfos.size(); i++) {
-                if(audioInfos.get(i).getAudioId()==musicID){
-                    index=i;
-                    break;
-                }
-            }
-            if(index>-1){
-                audioInfos.remove(index);
-                getACache().remove(MusicConstants.A_KEY_PLAY_COLLECT);
-                getACache().put(MusicConstants.A_KEY_PLAY_COLLECT, (Serializable) audioInfos);
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-
-    /**
-     * 获取收藏记录
-     * @return 所有收藏记录
-     */
-    public List<BaseAudioInfo> getMusicsByCollect(){
-        if(null==getACache()){
-            return null;
-        }
-        List<BaseAudioInfo> audioInfos = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
-        return audioInfos;
-    }
-
-    /**
-     * 收藏列表是否存在此收藏记录
-     * @param musicID
-     * @return true:存在
-     */
-    public boolean isExistCollectHistroy(long musicID) {
-        if(null==getACache()){
-            return false;
-        }
-        List<BaseAudioInfo> audioInfos = (List<BaseAudioInfo>) getACache().getAsObject(MusicConstants.A_KEY_PLAY_COLLECT);
-        if(null!=audioInfos&&audioInfos.size()>0) {
-            for (int i = 0; i < audioInfos.size(); i++) {
-                if (audioInfos.get(i).getAudioId() == musicID) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return false;
-    }
-
-    /**
      * 检查是否拥有通知栏权限
      * @param context
      * @return true:拥有
      */
-
     public boolean hasNiticePremission(Context context) {
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M){
             return true;

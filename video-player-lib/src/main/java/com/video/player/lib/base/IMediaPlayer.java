@@ -252,7 +252,6 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
         @Override
         public void run() {
             TIMER_RUN_COUNT++;
-            Logger.i(TAG,"TIMER_RUN_COUNT:"+TIMER_RUN_COUNT+"%:"+TIMER_RUN_COUNT%10);
             //播放进度实时回调
             if(null!=mOnPlayerEventListeners){
                 if(null!=mMediaPlayer&&mMediaPlayer.isPlaying()){

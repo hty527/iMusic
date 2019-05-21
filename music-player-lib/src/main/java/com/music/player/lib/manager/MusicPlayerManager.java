@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.listener.MusicPlayerEventListener;
+import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.listener.MusicPlayerPresenter;
 import com.music.player.lib.model.MusicAlarmModel;
 import com.music.player.lib.model.MusicPlayModel;
@@ -40,6 +41,8 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     //播放器配置
     private static MusicPlayerConfig mMusicPlayerConfig;
     private static String mActivityPlayerClassName, mActivityLockClassName;
+    //临时存储的变量，防止在初始化时设置监听内部Service还未启动
+    private MusicPlayerInfoListener mTempInfoListener;
 
     public static MusicPlayerManager getInstance() {
         if(null==mInstance){
@@ -60,8 +63,9 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      * 全局初始化
      * @param context ApplicaionContext
      */
-    public void init(Context context){
+    public MusicPlayerManager init(Context context){
         MusicUtils.getInstance().initSharedPreferencesConfig(context);
+        return mInstance;
     }
 
     /**
@@ -670,6 +674,29 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
     /**
+     * 监听播放器正在处理的对象
+     * @param listener 实现监听器的对象
+     */
+    @Override
+    public void setPlayInfoListener(MusicPlayerInfoListener listener) {
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.setPlayInfoListener(listener);
+        }else{
+            mTempInfoListener=listener;
+        }
+    }
+
+    /**
+     * 移除监听播放对象事件
+     */
+    @Override
+    public void removePlayInfoListener() {
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.removePlayInfoListener();
+        }
+    }
+
+    /**
      * 尝试改变播放模式, 单曲、列表循环、随机 三种模式之间切换
      */
     @Override
@@ -826,6 +853,9 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
             if (null != service) {
                 if(service instanceof MusicPlayerBinder){
                     mBinder = (MusicPlayerBinder) service;
+                    if(null!=mTempInfoListener){
+                        mBinder.setPlayInfoListener(mTempInfoListener);
+                    }
                 }
             }
         }
@@ -845,5 +875,6 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
         MusicWindowManager.getInstance().onDestroy();
         mConnection=null;mBinder=null;cMMusicSubjectObservable=null;mInstance=null;
         mActivityPlayerClassName =null;mActivityLockClassName=null;mMusicPlayerConfig=null;
+        mTempInfoListener=null;
     }
 }
