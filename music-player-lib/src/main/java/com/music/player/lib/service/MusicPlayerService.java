@@ -1683,7 +1683,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                         startIntent.setClassName(getPackageName(),MusicPlayerManager.getInstance().getLockActivityName());
                         startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                        MusicPlayerService.this.startActivity(startIntent);
+                        getApplicationContext().startActivity(startIntent);
                     }
                 }
             //前台进程-通知栏根点击事件
@@ -1699,7 +1699,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                         startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(startIntent);
+                        getApplicationContext().startActivity(startIntent);
                     }
                 }
             //前台进程-上一首

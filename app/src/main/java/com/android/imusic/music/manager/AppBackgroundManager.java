@@ -50,7 +50,7 @@ public class AppBackgroundManager {
         if (!isAppForeground) {
             //第一次打开状态
             mActivityStated = STATE_OPEN;
-            onAppForegroundStateChange(true);
+            onAppForegroundStateChange(mLastStartActivityName,true);
         } else {
             mActivityStated = STATE_RESUMED;
         }
@@ -76,7 +76,7 @@ public class AppBackgroundManager {
         if (isAppForeground) {
             mMultiStart.set(0);
             isAppForeground = false;
-            onAppForegroundStateChange(false);
+            onAppForegroundStateChange(mLastStartActivityName,false);
         }
     }
 
@@ -85,11 +85,11 @@ public class AppBackgroundManager {
     }
 
     //App前后台切换
-    private void onAppForegroundStateChange(boolean isAppForeground) {
+    private void onAppForegroundStateChange(String className,boolean isAppForeground) {
         if (mListener == null) {
             return;
         }
-        mListener.onAppStateChanged(isAppForeground);
+        mListener.onAppStateChanged(className,isAppForeground);
     }
 
     public void setAppStateListener(IAppStateChangeListener listener) {
@@ -97,7 +97,6 @@ public class AppBackgroundManager {
     }
 
     public interface IAppStateChangeListener {
-
-        void onAppStateChanged(boolean isAppForceground);
+        void onAppStateChanged(String activityName,boolean isAppForceground);
     }
 }

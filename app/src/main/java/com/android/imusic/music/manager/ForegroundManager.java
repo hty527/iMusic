@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
-import com.music.player.lib.util.Logger;
-
 /**
  * 2019/2/20
  * Activity活动状态监测
@@ -13,7 +11,6 @@ import com.music.player.lib.util.Logger;
 
 public class ForegroundManager implements Application.ActivityLifecycleCallbacks{
 
-    private static final String TAG = "ForegroundManager";
     private static volatile ForegroundManager mInstance;
     private Activity mRunActivity;
     private int activityAount = 0;
@@ -60,9 +57,8 @@ public class ForegroundManager implements Application.ActivityLifecycleCallbacks
     @Override
     public void onActivityStarted(Activity activity) {
         activityAount++;
-        Logger.d(TAG,"onActivityStarted--"+activityAount);
 //        if(activity instanceof SplashActivity) return;
-        AppBackgroundManager.getInstance().onActivityStarted(activity.getLocalClassName());
+        AppBackgroundManager.getInstance().onActivityStarted(activity.getComponentName().getClassName());
     }
 
     @Override
@@ -83,7 +79,6 @@ public class ForegroundManager implements Application.ActivityLifecycleCallbacks
         if (activityAount == 0) {
             isForeground = false;
         }
-        Logger.d(TAG,"onActivityStopped--"+activityAount);
 //        if(activity instanceof SplashActivity) return;
         AppBackgroundManager.getInstance().onActivityStopped();
     }
