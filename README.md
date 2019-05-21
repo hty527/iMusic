@@ -60,7 +60,7 @@ ___
 **1.依赖**
 ```
     dependencies {
-        implementation 'com.imusic.player:music-player:1.0.4'
+        implementation 'com.imusic.player:music-player:1.0.5'
     }
 ```
 若拉取失败，请检查根build.gradle中是否对jcenter支持<br/>
@@ -220,7 +220,7 @@ ___
 [前往fir下载]: https://fir.im/iMusic "fir下载"
 **fir托管下载：** **[前往fir下载]**
 
-[点击下载Apk]: https://raw.githubusercontent.com/Yuye584312311/IMusic/master/Doc/apk/iMusic-1.0.4.apk "apk下载"
+[点击下载Apk]: https://raw.githubusercontent.com/Yuye584312311/IMusic/master/Doc/apk/iMusic-1.0.5.apk "apk下载"
 **本地下载：** **[点击下载Apk]**<br/>
 <br/>
 **或者扫描二维码下载<br/>**
