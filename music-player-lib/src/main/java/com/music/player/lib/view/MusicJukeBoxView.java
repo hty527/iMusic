@@ -113,11 +113,7 @@ public class MusicJukeBoxView extends RelativeLayout{
     private void initDiscBlackground() {
         ImageView mDiscBlackground = (ImageView) findViewById(R.id.view_disc_backgound);
         mDiscBlackground.setImageDrawable(getDiscBlackgroundDrawable());
-        int marginTop = (int) (MusicConstants.SCALE_DISC_MARGIN_TOP * mScreenWidth);
-        //Demo垃圾桶样式，背景透明圆盘可见
-        if(MusicPlayerManager.getInstance().getWindownStyle().equals(MusicWindowStyle.TRASH)){
-            marginTop = (int) (MusicConstants.SCALE_DISC_BG_MARGIN_TOP * mScreenWidth);
-        }
+        int marginTop = (int) (MusicConstants.SCALE_DISC_BG_MARGIN_TOP * mScreenWidth);
         LayoutParams layoutParams = (LayoutParams) mDiscBlackground.getLayoutParams();
         layoutParams.setMargins(0, marginTop, 0, 0);
         mDiscBlackground.setLayoutParams(layoutParams);

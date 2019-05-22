@@ -71,18 +71,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements
     private MusicJukeBoxView mMusicJukeBoxView;
     private SeekBar mSeekBar;
     private MusicJukeBoxBackgroundLayout mRootLayout;
-    private ImageView mMusicBtnPlayPause;
-    private TextView mViewTitle;
+    private ImageView mMusicBtnPlayPause,mMusicPlayerModel,mBtnCollect;
+    private TextView mViewTitle,mTotalTime,mCurrentTime,mMusicAlarm,mSubTitle;
     private Handler mHandler;
     private MusicClickControler mClickControler;
-    private TextView mTotalTime;
-    private TextView mCurrentTime;
-    private ImageView mMusicPlayerModel;
-    private TextView mMusicAlarm;
     private boolean isVisibility=false;
     private boolean isTouchSeekBar=false;//手指是否正在控制seekBar
-    private TextView mSubTitle;
-    private ImageView mBtnCollect;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -130,7 +124,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         //Music对象
         long musicID = intent.getLongExtra(MusicConstants.KEY_MUSIC_ID,0);
         if(musicID<=0){
-            Toast.makeText(MusicPlayerActivity.this,"参数错误,缺少ID",Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -175,9 +168,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         }else{
             if(null!=currentPlayerMusic){
                 onStatusResume(musicID);
-                return;
-            }else{
-                Toast.makeText(MusicPlayerActivity.this,"播放失败，请检查播放列表",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -582,20 +572,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements
     @Override
     @Deprecated
     public void onBufferingUpdate(final int percent) {
-        getHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                if(null!=mSeekBar&&mSeekBar.getSecondaryProgress()<100){
-                    mSeekBar.setSecondaryProgress(percent);
-                }
-            }
-        });
+        if(null!=mSeekBar&&mSeekBar.getSecondaryProgress()<100){
+            mSeekBar.setSecondaryProgress(percent);
+        }
     }
 
     @Override
-    public void onInfo(int event, int extra) {
-        Logger.d(TAG,"onInfo-->event:"+event+",extra:"+extra);
-    }
+    public void onInfo(int event, int extra) {}
 
     /**
      * 内部播放器正在处理的对象发生了变化，这里接收到回调只负责定位，数据更新应以唱片机回调状态为准
@@ -729,20 +712,25 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * @param bufferProgress
      */
     private synchronized void updataPlayerParams(final long totalDurtion, final long currentDurtion,
-                                                 final long alarmResidueDurtion, final int bufferProgress) {
+                                                 final long alarmResidueDurtion, int bufferProgress) {
         if(isVisibility&&null!=mSeekBar){
+            //子线程中更新进度
+            if(mSeekBar.getSecondaryProgress()<100){
+                mSeekBar.setSecondaryProgress(bufferProgress);
+            }
+            if(totalDurtion>-1){
+                if(!isTouchSeekBar){
+                    int progress = (int) (((float) currentDurtion / totalDurtion) * 100);// 得到当前进度
+                    mSeekBar.setProgress(progress);
+                }
+            }
             getHandler().post(new Runnable() {
                 @Override
                 public void run() {
-                    if(mSeekBar.getSecondaryProgress()<100){
-                        mSeekBar.setSecondaryProgress(bufferProgress);
-                    }
+
                     //缓冲、播放进度
                     if(totalDurtion>-1){
-                        if(!isTouchSeekBar){
-                            int progress = (int) (((float) currentDurtion / totalDurtion) * 100);// 得到当前进度
-                            mSeekBar.setProgress(progress);
-                        }
+
                         if(null!=mTotalTime){
                             mTotalTime.setText(MusicUtils.getInstance().stringForAudioTime(totalDurtion));
                             mCurrentTime.setText(MusicUtils.getInstance().stringForAudioTime(currentDurtion));
