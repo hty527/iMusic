@@ -60,7 +60,7 @@ ___
 **1.依赖**
 ```
     dependencies {
-        implementation 'com.imusic.player:music-player:1.0.5'
+        implementation 'com.imusic.player:music-player:1.0.6'
     }
 ```
 若拉取失败，请检查根build.gradle中是否对jcenter支持<br/>
