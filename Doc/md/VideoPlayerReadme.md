@@ -1,8 +1,7 @@
 [VideoPlayerAPI]: https://yuye584312311.github.io/pages.github.io/JavaDoc/video-player-lib/javadoc/index.html "VideoPlayerAPI"
-* 有关VideoPlayer全部API文档，请阅读[VideoPlayerAPI]
-<div align="center">
-    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/videp_player.png" height="374" width="620">
-</div>
+* 有关VideoPlayer全部API文档，请阅读[VideoPlayerAPI]<br/>
+![VideoPlayerFrame](https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/videp_player.png)
+
 ### 一、播放器框架定义的名词概念释义
 
 #### 1. 播放器通道
