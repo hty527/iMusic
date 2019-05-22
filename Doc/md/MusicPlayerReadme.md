@@ -1,5 +1,8 @@
 [MusicPlayerAPI]: https://yuye584312311.github.io/pages.github.io/JavaDoc/music-player-lib/javadoc/index.html "MusicPlayerAPI"
 * 有关MusicPlayer全部API文档，请阅读[MusicPlayerAPI]
+<div align="center">
+    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/music_player.png" height="401" width="620">
+</div>
 ### 一、APP后台防杀死和更多权限
 设置MusicPlayerManager.getInstance().setLockForeground(true)即可实现APP后台防杀死。
 ```
