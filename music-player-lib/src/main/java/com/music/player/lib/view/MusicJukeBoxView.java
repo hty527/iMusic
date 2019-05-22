@@ -36,7 +36,8 @@ import java.util.Map;
  * TinyHung@Outlook.com
  * 2019/3/6
  * BIG JukeBox
- * 示例唱片机，负责UI的展示和播放、暂停系列通话，次组件不直接参与下一首、上一首的业务逻辑，将此类事件一律抛出至持有此组件的活动
+ * 示例唱片机，负责UI的展示和播放、暂停系列通话，次组件不直接参与下一首、上一首的业务逻辑
+ * 将此类事件一律抛出至持有此组件的活动
  */
 
 public class MusicJukeBoxView extends RelativeLayout{

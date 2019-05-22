@@ -410,7 +410,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      */
     @Override
     public void onJukeBoxOffsetObject(BaseAudioInfo audioInfo) {
-        Logger.d(TAG,"onJukeBoxOffsetObject:MUSIC_ID："+audioInfo.getAudioId());
         mViewTitle.setText(audioInfo.getAudioName());
         mSubTitle.setText(audioInfo.getNickname());
     }
@@ -423,8 +422,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      */
     @Override
     public void onJukeBoxObjectChanged(final int position, BaseAudioInfo audioInfo, boolean isEchoDisplay) {
-        Logger.d(TAG,"onJukeBoxObjectChanged-->POSITION:"+position+",MUSIC_INFO:"
-                +audioInfo.getAudioId()+",isEchoDisplay:"+isEchoDisplay);
         //清空唱片机播放器
         if(null!=audioInfo){
             mViewTitle.setText(audioInfo.getAudioName());

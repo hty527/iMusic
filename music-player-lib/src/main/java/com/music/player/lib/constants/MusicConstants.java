@@ -46,26 +46,25 @@ public interface MusicConstants {
     float SCALE_NEEDLE_MARGIN_TOP = (float) (46.0 / BASE_SCREEN_WIDTH);
 
     //唱盘比例
-    float SCALE_DISC_SIZE = (float) (810.0 / BASE_SCREEN_WIDTH);
+    float SCALE_DISC_SIZE = (float) (824.0 / BASE_SCREEN_WIDTH);
     //唱盘背景比例
-    float SCALE_DISC_BG_SIZE = (float) (836.0 / BASE_SCREEN_WIDTH);
+    float SCALE_DISC_BG_SIZE = (float) (834.0 / BASE_SCREEN_WIDTH);
     //唱盘距离顶部边距
-    float SCALE_DISC_MARGIN_TOP = (float) (186 / BASE_SCREEN_WIDTH);
+    float SCALE_DISC_MARGIN_TOP = (float) (178.0 / BASE_SCREEN_WIDTH);
     //唱盘距离顶部边距
-    float SCALE_DISC_BG_MARGIN_TOP = (float) (173 / BASE_SCREEN_WIDTH);
+    float SCALE_DISC_BG_MARGIN_TOP = (float) (173.0 / BASE_SCREEN_WIDTH);
     //专辑图片比例
-    float SCALE_MUSIC_PIC_SIZE = (float) (530.0 / BASE_SCREEN_WIDTH);
+    float SCALE_MUSIC_PIC_SIZE = (float) (544.0 / BASE_SCREEN_WIDTH);
 
     //锁屏唱盘比例
     float SCALE_DISC_LOCK_SIZE = (float) (680.0 / BASE_SCREEN_WIDTH);
-
     //锁屏专辑图片比例
-    float SCALE_MUSIC_PIC_LOCK_SIZE = (float) (432.0 / BASE_SCREEN_WIDTH);
+    float SCALE_MUSIC_PIC_LOCK_SIZE = (float) (466.02 / BASE_SCREEN_WIDTH);
 
     //迷你唱盘比例
-    float SCALE_DISC_MINI_SIZE = (float) (160 / BASE_SCREEN_WIDTH);
+    float SCALE_DISC_MINI_SIZE = (float) (160.0 / BASE_SCREEN_WIDTH);
     //迷你专辑图片比例
-    float SCALE_MUSIC_PIC_MINE_SIZE = (float) (63.0 / BASE_SCREEN_WIDTH);
+    float SCALE_MUSIC_PIC_MINE_SIZE = (float) (96.0 / BASE_SCREEN_WIDTH);
     //胶盘旋转一圈耗时时长，单位秒
     int BOX_REVOLVE_MINUTE = 16;
     //迷你胶盘旋转一圈耗时时长，单位秒

@@ -165,7 +165,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
             mMusicAnchor.setText(audioInfo.getNickname());
             MusicUtils.getInstance().setMusicComposeFront(MusicLockActivity.this,mMusicCover,
                     MusicUtils.getInstance().getMusicFrontPath(audioInfo),MusicConstants.SCALE_DISC_LOCK_SIZE
-                    ,MusicConstants.SCALE_MUSIC_PIC_LOCK_SIZE,R.drawable.ic_music_lock_cover_plate,R.drawable.ic_music_juke_default_cover);
+                    ,MusicConstants.SCALE_MUSIC_PIC_LOCK_SIZE,R.drawable.ic_music_disc,R.drawable.ic_music_juke_default_cover);
         }
     }
 
