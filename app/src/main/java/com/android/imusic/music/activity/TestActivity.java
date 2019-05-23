@@ -74,6 +74,6 @@ public class TestActivity extends AppCompatActivity {
                 "[03:41.62]只要你的平凡\n" +
                 "[03:45.75]此心此生无憾\n" +
                 "[03:49.86]生命的火已点燃\n";
-        mLrcView.updateLrc(content);
+        mLrcView.setLrcRow(content);
     }
 }

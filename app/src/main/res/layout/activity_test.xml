@@ -118,12 +118,14 @@
             android:layout_gravity="center"
             android:layout_marginTop="80dp"
             android:layout_marginBottom="80dp"
-            app:musicLrcEmptyTips="这首歌没有歌词"
-            app:musicLrcTextColor="#EEEEEE"
+            app:musicLrcEmptyTips="没有发现歌词"
+            app:musicLrcTextColor="#EAEAEA"
             app:musicLrcTextSize="16dp"
-            app:musicLrcLightTextColor="#8000FF"
+            app:musicLrcLightTextColor="#FFFF00"
             app:musicLrcLightTextSize="17dp"
-            app:musicLrcLineHeight="10dp"/>
+            app:musicLrcLineHeight="22dp"
+            app:musicLrcTimeTextSize="11dp"
+            app:musicLrcBottomLineColor="#BCBCBC"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

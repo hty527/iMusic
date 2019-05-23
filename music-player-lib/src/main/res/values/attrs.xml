@@ -68,18 +68,16 @@
         <attr name="musicLrcTextColor" format="color"></attr>
         <!--歌词文本大小-->
         <attr name="musicLrcTextSize" format="dimension"></attr>
-        <!--歌词文本最大大小-->
-        <attr name="musicLrcTextMaxSize" format="dimension"></attr>
         <!--歌词高亮文本颜色-->
         <attr name="musicLrcLightTextColor" format="color"></attr>
         <!--歌词高亮文本大小-->
         <attr name="musicLrcLightTextSize" format="dimension"></attr>
         <!--歌词之间的的高度-->
         <attr name="musicLrcLineHeight" format="dimension"></attr>
-        <!--时间（long）字体大小-->
-        <attr name="musicLrcTimeTextSize" format="dimension"></attr>
-        <!--时间（long）字体颜色-->
+        <!--时间字体颜色-->
         <attr name="musicLrcTimeTextColor" format="color"></attr>
+        <!--时间字体大小-->
+        <attr name="musicLrcTimeTextSize" format="dimension"></attr>
         <!--手指拖动歌词底部线条颜色-->
         <attr name="musicLrcBottomLineColor" format="color"></attr>
     </declare-styleable>

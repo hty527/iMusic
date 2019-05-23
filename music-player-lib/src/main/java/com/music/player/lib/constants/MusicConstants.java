@@ -45,12 +45,17 @@ public interface MusicConstants {
     float SCALE_NEEDLE_HEIGHT = (float) (413.0 / BASE_SCREEN_WIDTH);
     float SCALE_NEEDLE_MARGIN_TOP = (float) (46.0 / BASE_SCREEN_WIDTH);
 
+    /**
+     * 注意：SCALE_DISC_BG_MARGIN_TOP 和 SCALE_DISC_MARGIN_TOP 计算公式：
+     * SCALE_DISC_BG_MARGIN_TOP= 你自己定义
+     * SCALE_DISC_MARGIN_TOP = SCALE_DISC_BG_SIZE-SCALE_DISC_SIZE/2
+     */
     //唱盘比例
     float SCALE_DISC_SIZE = (float) (824.0 / BASE_SCREEN_WIDTH);
     //唱盘背景比例
-    float SCALE_DISC_BG_SIZE = (float) (834.0 / BASE_SCREEN_WIDTH);
+    float SCALE_DISC_BG_SIZE = (float) (828.0 / BASE_SCREEN_WIDTH);
     //唱盘距离顶部边距
-    float SCALE_DISC_MARGIN_TOP = (float) (178.0 / BASE_SCREEN_WIDTH);
+    float SCALE_DISC_MARGIN_TOP = (float) (175.0 / BASE_SCREEN_WIDTH);
     //唱盘距离顶部边距
     float SCALE_DISC_BG_MARGIN_TOP = (float) (173.0 / BASE_SCREEN_WIDTH);
     //专辑图片比例
