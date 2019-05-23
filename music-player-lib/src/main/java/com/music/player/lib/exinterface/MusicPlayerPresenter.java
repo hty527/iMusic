@@ -1,7 +1,9 @@
-package com.music.player.lib.listener;
+package com.music.player.lib.exinterface;
 
 import android.app.Notification;
 import com.music.player.lib.bean.BaseAudioInfo;
+import com.music.player.lib.listener.MusicPlayerEventListener;
+import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.model.MusicAlarmModel;
 import com.music.player.lib.model.MusicPlayModel;
 import com.music.player.lib.model.MusicPlayerState;

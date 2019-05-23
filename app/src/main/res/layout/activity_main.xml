@@ -41,4 +41,11 @@
                 android:textColor="@color/music_index_tab_color"
                 android:background="@drawable/music_right_tab_selector"/>
     </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PARSER"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="100dp"
+        android:onClick="startParser"/>
 </FrameLayout>
