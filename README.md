@@ -95,7 +95,11 @@ ___
      */
     MusicPlayerManager.getInstance().startPlayMusic(List<?> audios,int position);
 ```
-**5.权限声明**
+**5.音乐歌词**
+```
+    歌词显示功能正在开发中，预计1.0.7版本上线，请持续关注
+```
+**6.权限声明**
 ```
     <!--网络状态检查-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
