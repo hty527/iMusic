@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.music.player.lib.R;
 import com.music.player.lib.constants.MusicConstants;
-import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 
 /**
@@ -25,7 +24,6 @@ import com.music.player.lib.util.MusicUtils;
 
 public class MusicJukeBoxCoverPager extends LinearLayout{
 
-    private static final String TAG = "MusicJukeBoxCoverPager";
     //唱片机旋转一圈耗时
     private int mRotationDurtion = MusicConstants.BOX_REVOLVE_MINUTE;
     private ObjectAnimator mDiscObjectAnimator;
@@ -78,7 +76,6 @@ public class MusicJukeBoxCoverPager extends LinearLayout{
      * @param filePath http 或者 file://
      */
     public void setMusicCover(String filePath){
-        Logger.d(TAG,"setMusicCover-->filePath:"+filePath);
         MusicUtils.getInstance().setMusicComposeFront(getContext(),mDiseCover,filePath,MusicConstants.SCALE_DISC_SIZE
                 ,MusicConstants.SCALE_MUSIC_PIC_SIZE,R.drawable.ic_music_disc,R.drawable.ic_music_juke_default_cover);
     }
@@ -144,7 +141,6 @@ public class MusicJukeBoxCoverPager extends LinearLayout{
     }
 
     public void onReset() {
-        Logger.d(TAG,"onReset");
         onStop();
     }
 

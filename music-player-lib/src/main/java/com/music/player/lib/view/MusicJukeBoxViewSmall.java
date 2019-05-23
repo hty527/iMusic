@@ -304,24 +304,20 @@ public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
 
     public void onResume(){
         if(readyPlay){
-            Logger.d(TAG,"onResume");
             startAnimator();
         }
     }
 
     public void onPause(){
-        Logger.d(TAG,"onPause");
         stopAnimator(true);
     }
 
     public void onVisible() {
-        Logger.d(TAG,"onVisible");
         isVisible=true;
         onResume();
     }
 
     public void onInvisible() {
-        Logger.d(TAG,"onInvisible");
         isVisible=false;
         stopAnimator(false);
     }
@@ -365,7 +361,6 @@ public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
     }
 
     public void onDestroy(){
-        Logger.d(TAG,"onDestroy");
         readyPlay=false;
         isVisible=false;
         stopAnimator(true);

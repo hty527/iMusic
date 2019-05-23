@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.music.player.lib.R;
 import com.music.player.lib.listener.MusicAnimatorListener;
-import com.music.player.lib.util.Logger;
 
 /**
  * TinyHung@Outlook.com
@@ -24,7 +23,6 @@ import com.music.player.lib.util.Logger;
 
 public class MusicWindowTrash extends LinearLayout {
 
-    public static final String TAG="MusicWindowTrash";
     private Animation mShakeAnimation;
 	private ImageView mIcTrash;
 	private final TextView mTvTrash;
@@ -57,7 +55,6 @@ public class MusicWindowTrash extends LinearLayout {
         if(isStarting){
             return;
         }
-        Logger.d(TAG,"startTrashWindowAnimation-->");
         isStarting=true;
         this.clearAnimation();
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(MusicWindowTrash.this, "alpha", 0.0f, 0.9f);
@@ -84,7 +81,6 @@ public class MusicWindowTrash extends LinearLayout {
         if(isCleaning){
             return;
         }
-        Logger.d(TAG,"startHideAnimation-->");
         isCleaning=true;
         this.clearAnimation();
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(MusicWindowTrash.this, "alpha", 0.9f, 0.0f);

@@ -1,5 +1,6 @@
 package com.music.player.lib.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.music.player.lib.R;
+import com.music.player.lib.util.MusicUtils;
 
 /**
  * TinyHung@Outlook.com
@@ -23,7 +25,6 @@ import com.music.player.lib.R;
 
 public class MusicCommentTitleView extends LinearLayout implements View.OnClickListener {
 
-    private static final String TAG = "MusicCommentTitleView";
     private TextView mTitleView,mSubTitle;
     private long[] clickCount = new long[2];
 
@@ -37,6 +38,7 @@ public class MusicCommentTitleView extends LinearLayout implements View.OnClickL
         init(context,attrs);
     }
 
+    @SuppressLint("WrongViewCast")
     private void init(Context context, AttributeSet attrs) {
         View.inflate(context, R.layout.music_comment_title_layout,this);
         ImageView btnback = (ImageView) findViewById(R.id.view_btn_back);
@@ -80,6 +82,7 @@ public class MusicCommentTitleView extends LinearLayout implements View.OnClickL
         mTitleView.setOnClickListener(this);
         mSubTitle.setOnClickListener(this);
         btnMenu.setOnClickListener(this);
+        findViewById(R.id.statusbar_view).getLayoutParams().height= MusicUtils.getInstance().getStatusBarHeight(getContext());
     }
 
     @Override

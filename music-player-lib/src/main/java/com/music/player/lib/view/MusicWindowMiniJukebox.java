@@ -19,7 +19,6 @@ import com.music.player.lib.listener.MusicWindowClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.model.MusicWindowStyle;
-import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 
 /**
@@ -31,7 +30,6 @@ import com.music.player.lib.util.MusicUtils;
 
 public class MusicWindowMiniJukebox extends RelativeLayout {
 
-	private static final String TAG = "MusicMiniJukeboxWindow";
     private final Vibrator mVibrator;
     private WindowManager mWindowManager;
 	private WindowManager.LayoutParams mParams;
@@ -148,14 +146,12 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
                     //Logger.d(TAG,"closeStartX:"+closeStartX+",closeEndX:"+closeEndX+",closeStartY:"+closeStartY+",closeEndY:"+closeEndY+",rawX:"+rawX+",rawY:"+rawY);
                     if(rawX>closeStartX&&rawX<closeEndX&&rawY>closeStartY&&rawY<closeEndY){
                         mListener.onWindownCancel(MusicWindowMiniJukebox.this);
-						Logger.d(TAG,"删除垃圾桶");
                         //结束播放并移除自身
                         MusicPlayerManager.getInstance().onStop();
                         MusicWindowManager.getInstance().removeMiniJukeBoxFromWindow(getContext().getApplicationContext());
                         return true;
                     }
                 }
-				Logger.d(TAG,"单击悬浮窗");
                 //悬浮窗整体单击事件
                 mListener.onWindownClick(MusicWindowMiniJukebox.this,(Long) mJukeBoxViewSmall.getTag());
                 return true;

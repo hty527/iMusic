@@ -25,7 +25,6 @@ import com.music.player.lib.listener.MusicJukeBoxStatusListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.model.MusicPlayerStatus;
 import com.music.player.lib.model.MusicWindowStyle;
-import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +41,6 @@ import java.util.Map;
 
 public class MusicJukeBoxView extends RelativeLayout{
 
-    private static final String TAG = "MusicJukeBoxView";
     private ImageView mHandImage;
     private ViewPager mViewPager;
     private ViewPagerAdapter mPagerAdapter;
@@ -196,7 +194,6 @@ public class MusicJukeBoxView extends RelativeLayout{
                     mIsNeed2StartPlayAnimator = false;
                     //只有在ViewPager不处于偏移状态时，才开始唱盘旋转动画
                     if (!mViewPagerIsOffset&&MusicPlayerManager.getInstance().isPlaying()) {
-                        Logger.d(TAG,"onAnimationEnd--绞盘开始动画");
                         MusicJukeBoxView.this.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -268,7 +265,6 @@ public class MusicJukeBoxView extends RelativeLayout{
         }
         @Override
         public void onPageSelected(int position) {
-            Logger.d(TAG,"onPageSelected:"+position+",mOffsetPosition:"+mOffsetPosition);
             try {
                 if(null!=mFragments){
                     mFragments.get(mOffsetPosition).onReset();
@@ -281,7 +277,6 @@ public class MusicJukeBoxView extends RelativeLayout{
                 if(null!=mPlayerInfoListener&&null!=mMusicDatas&&mMusicDatas.size()>position){
                     if(mEchoPageSelectedEnable){
                         mEchoPageSelectedEnable=false;
-                        Logger.d(TAG,"onPageSelected-->onPageSelected(index)遭到禁用，只处理回显");
                         mPlayerInfoListener.onJukeBoxObjectChanged(position,(BaseAudioInfo)
                                 mMusicDatas.get(position),true);
                     }else{
@@ -294,7 +289,6 @@ public class MusicJukeBoxView extends RelativeLayout{
 
         @Override
         public void onPageScrollStateChanged(int state) {
-            Logger.d(TAG,"onPageScrollStateChanged--state:"+state+",mOffsetPosition:"+mOffsetPosition);
             switch (state) {
                 //用户松手了
                 case ViewPager.SCROLL_STATE_SETTLING:
@@ -353,7 +347,6 @@ public class MusicJukeBoxView extends RelativeLayout{
      * 暂停唱针动画
      */
     private void pauseAnimator() {
-        Logger.d(TAG,"pauseAnimator:"+needleAnimatorStatus);
         if(null!=mHandAnimator){
             //播放时暂停动画
             if (needleAnimatorStatus == NeedleAnimatorStatus.IN_NEAR_END) {
@@ -381,7 +374,6 @@ public class MusicJukeBoxView extends RelativeLayout{
      * @param position
      */
     private void playDiscAnimator(int position) {
-        Logger.d(TAG,"playDiscAnimator--POSITION:"+position);
         if(null!= mFragments && mFragments.size()>0){
             MusicJukeBoxCoverPager musicJukeBoxCoverPager = mFragments.get(position);
             if(null!=musicJukeBoxCoverPager){
@@ -410,7 +402,6 @@ public class MusicJukeBoxView extends RelativeLayout{
      * @param position
      */
     private void pauseDiscAnimatior(int position) {
-        Logger.d(TAG,"playDiscAnimator:"+position);
         if(null!= mFragments && mFragments.size()>0){
             MusicJukeBoxCoverPager musicJukeBoxCoverPager = mFragments.get(position);
             if(null!=musicJukeBoxCoverPager){
@@ -466,9 +457,6 @@ public class MusicJukeBoxView extends RelativeLayout{
      */
     public void setCurrentMusicItem(int position,boolean smoothScroll,boolean isPlayAnimator,boolean
             echoPageSelectedEnable) {
-        Logger.d(TAG,"setCurrentMusicItem:CurrentPosition"+mViewPager.getCurrentItem()
-                +",position:"+position+",smoothScroll:"+smoothScroll+",isPlayAnimator:"
-                +isPlayAnimator+",isEchoCurrentIndex:"+echoPageSelectedEnable);
         if(null!=mScroller) {
             mScroller.setScroller(smoothScroll);//不需要缓慢滚动落地
         }

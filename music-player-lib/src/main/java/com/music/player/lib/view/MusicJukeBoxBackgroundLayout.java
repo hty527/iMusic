@@ -35,7 +35,6 @@ import com.music.player.lib.util.MusicUtils;
 
 public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
 
-    private static final String TAG = "MusicJukeBoxBackgroundLayout";
     private int DURATION_ANIMATION = 500;
     //背景图层
     private int BACKGROUND_DRAWABLE=0;
