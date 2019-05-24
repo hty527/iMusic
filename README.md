@@ -217,7 +217,7 @@ ___
 <div align="center">
     <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162033.jpg" height="480" width="270">
     <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162126.jpg" height="480" width="270">
-    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162237.jpg" height="480" width="270">
+    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190418_135655.jpg" height="480" width="270">
 </div>
 <div align="center">
     <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190418_135654.jpg" height="480" width="270">
