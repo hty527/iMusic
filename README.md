@@ -97,7 +97,10 @@ ___
 ```
 **5.音乐歌词**
 ```
-    歌词显示功能正在开发中，预计1.0.7版本上线，请持续关注
+    歌词解析及显示功能在>=1.0.7版本起提供支持，支持网络歌词、本地歌词等自定义歌词解析器，基本的拖动跳转交互。
+    封装成MusicLrcView控件(支持众多自定义属性设置)，具体使用请参考唱片机类MusicJukeBoxView和播放器主界面MusicPlayerActivity。
+    iMuisc内置网络歌词解析仅支持酷狗音乐(搜索模块播放的歌曲)。
+    歌词功能目前仅在内测阶段，未更新并发布至jcenter,可下载iMusic体验。
 ```
 **6.权限声明**
 ```
@@ -224,7 +227,7 @@ ___
 [前往fir下载]: https://fir.im/iMusic "fir下载"
 **fir托管下载：** **[前往fir下载]**
 
-[点击下载Apk]: https://raw.githubusercontent.com/Yuye584312311/IMusic/master/Doc/apk/iMusic-1.0.6.apk "apk下载"
+[点击下载Apk]: https://raw.githubusercontent.com/Yuye584312311/IMusic/master/Doc/apk/iMusic-1.0.7.apk "apk下载"
 **本地下载：** **[点击下载Apk]**<br/>
 <br/>
 **或者扫描二维码下载<br/>**
