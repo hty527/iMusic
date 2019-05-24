@@ -39,6 +39,7 @@ import java.util.Observer;
  * TinyHung@Outlook.com
  * 2019/3/6
  * Mini JukeBox
+ * 迷你悬浮窗播放器，负责通过观察者更新UI
  */
 
 public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {

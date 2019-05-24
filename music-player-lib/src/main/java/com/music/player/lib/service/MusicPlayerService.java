@@ -33,7 +33,7 @@ import com.music.player.lib.R;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
-import com.music.player.lib.exinterface.MusicPlayerPresenter;
+import com.music.player.lib.iinterface.MusicPlayerPresenter;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.manager.MusicAudioFocusManager;

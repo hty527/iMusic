@@ -3,13 +3,15 @@ package com.music.player.lib.bean;
 /**
  * Created by TinyHung@outlook.com
  * 2019/5/23
- * music lrc
+ * 音乐歌词 lrc
  */
 
 public class MusicLrcRow {
-
+    //歌词内容
     private String content;
+    //时间：00:00.12
     private String timeText;
+    //时间位置，毫秒
     private long time;
 
     public MusicLrcRow(){}

@@ -20,7 +20,7 @@
         <LinearLayout
             android:id="@+id/music_top_bar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:orientation="horizontal">
             <ImageView
                 android:id="@+id/music_back"
@@ -66,6 +66,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_music_disc_top_line"
         android:layout_below="@id/music_root_top_bar" />
+    <!--唱片机-->
     <include
         android:id="@+id/music_discview"
         layout="@layout/music_view_discview_layout"
@@ -145,17 +146,4 @@
             android:layout_centerInParent="true"
             android:src="@drawable/music_player_menu_selector"/>
     </LinearLayout>
-    <TextView
-        android:id="@+id/music_btn_alarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_music_alarm_noimal"
-        android:layout_above="@+id/music_seek_time"
-        android:layout_centerHorizontal="true"
-        android:textColor="#FFFFFF"
-        android:drawablePadding="3dp"
-        android:textSize="15dp"
-        android:gravity="center_vertical"
-        android:padding="10dp"
-        android:text="定时关闭"/>
 </com.music.player.lib.view.MusicJukeBoxBackgroundLayout>

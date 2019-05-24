@@ -3,7 +3,7 @@ package com.music.player.lib.service;
 import android.app.Notification;
 import android.os.Binder;
 import com.music.player.lib.bean.BaseAudioInfo;
-import com.music.player.lib.exinterface.MusicPlayerPresenter;
+import com.music.player.lib.iinterface.MusicPlayerPresenter;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.model.MusicAlarmModel;

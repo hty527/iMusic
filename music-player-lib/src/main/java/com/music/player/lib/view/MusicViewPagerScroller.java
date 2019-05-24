@@ -1,7 +1,6 @@
 package com.music.player.lib.view;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
 import java.lang.reflect.Field;
@@ -63,9 +62,9 @@ public class MusicViewPagerScroller extends Scroller {
         }
     }
 
-    public void initViewPagerScroll(ViewPager viewPager) {
+    public void initViewPagerScroll(MusicViewPager viewPager) {
         try {
-            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+            Field mScroller = MusicViewPager.class.getDeclaredField("mScroller");
             mScroller.setAccessible(true);
             mScroller.set(viewPager, this);
         } catch (Exception e) {

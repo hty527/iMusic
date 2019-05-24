@@ -76,4 +76,12 @@ public class TestActivity extends AppCompatActivity {
                 "[03:49.86]生命的火已点燃\n";
         mLrcView.setLrcRow(content);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(null!=mLrcView){
+            mLrcView.onDestroy();
+        }
+    }
 }

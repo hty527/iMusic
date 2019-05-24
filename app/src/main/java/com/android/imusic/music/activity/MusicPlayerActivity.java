@@ -25,7 +25,9 @@ import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.manager.SqlLiteCacheManager;
+import com.android.imusic.music.model.MusicLrcRowParserEngin;
 import com.music.player.lib.bean.BaseAudioInfo;
+import com.music.player.lib.bean.MusicLrcRow;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicAnimatorListener;
@@ -77,6 +79,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
     private MusicClickControler mClickControler;
     private boolean isVisibility=false;
     private boolean isTouchSeekBar=false;//手指是否正在控制seekBar
+    private MusicLrcRowParserEngin mParserEngin;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -189,6 +192,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
     /**
      * 界面初始化
      */
+    @SuppressLint("WrongViewCast")
     private void initViews() {
         View.OnClickListener onClickListener=new View.OnClickListener() {
             @Override
@@ -343,6 +347,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         });
         mClickControler = new MusicClickControler();
         mClickControler.init(3,1);
+        findViewById(R.id.status_bar).getLayoutParams().height=MusicUtils.getInstance().getStatusBarHeight(this);
     }
 
     @Override
@@ -462,6 +467,31 @@ public class MusicPlayerActivity extends AppCompatActivity implements
 //                mMusicBtnPlayPause.setImageResource(R.drawable.music_player_play_selector);
 //            }
 //        }
+    }
+
+    /**
+     * 唱片机的点击事件，在这里关心是否需要使用到歌词控件
+     * @param view click view
+     */
+    @Override
+    public void onClickJukeBox(View view) {
+        //创建歌词解析器
+        if(null==mParserEngin){
+            mParserEngin = new MusicLrcRowParserEngin();
+        }
+        mMusicJukeBoxView.setLrcRows(MusicPlayerManager.getInstance().getCurrentPlayerID()+"",
+                MusicPlayerManager.getInstance().getCurrentPlayerHashKey(),mParserEngin);
+    }
+
+    /**
+     * 唱片机内部歌词控件抛出的歌词拖动事件
+     * @param lrcRow 歌词对象
+     */
+    @Override
+    public void onLrcSeek(MusicLrcRow lrcRow) {
+        if(null!=lrcRow){
+            MusicPlayerManager.getInstance().seekTo(lrcRow.getTime());
+        }
     }
 
     //========================================播放器内部状态==========================================
@@ -724,14 +754,15 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             getHandler().post(new Runnable() {
                 @Override
                 public void run() {
-
                     //缓冲、播放进度
                     if(totalDurtion>-1){
-
                         if(null!=mTotalTime){
                             mTotalTime.setText(MusicUtils.getInstance().stringForAudioTime(totalDurtion));
                             mCurrentTime.setText(MusicUtils.getInstance().stringForAudioTime(currentDurtion));
                         }
+                    }
+                    if(null!=mMusicJukeBoxView){
+                        mMusicJukeBoxView.updateLrcPosition(currentDurtion);
                     }
                     //定时闹钟状态
                     if(alarmResidueDurtion<=0){
@@ -765,6 +796,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * 即将退出播放器
      */
     private void onBackOutPlayer() {
+        //唱片机是否有返回事件需要内部处理，比如说正在显示的歌词控件回收
+        if(null!=mMusicJukeBoxView&&!mMusicJukeBoxView.isBackPressed()){
+            return;
+        }
         if(!MusicWindowManager.getInstance().checkAlertWindowsPermission(MusicPlayerActivity.this)){
             new android.support.v7.app.AlertDialog.Builder(MusicPlayerActivity.this)
                     .setTitle("退出播放器提示")

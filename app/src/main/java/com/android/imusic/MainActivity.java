@@ -11,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.activity.MusicLockActivity;
@@ -33,7 +32,6 @@ import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.manager.VideoWindowManager;
-
 import java.util.ArrayList;
 import java.util.List;
 

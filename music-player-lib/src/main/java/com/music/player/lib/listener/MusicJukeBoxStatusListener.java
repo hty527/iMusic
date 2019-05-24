@@ -1,6 +1,9 @@
 package com.music.player.lib.listener;
 
+import android.view.View;
+
 import com.music.player.lib.bean.BaseAudioInfo;
+import com.music.player.lib.bean.MusicLrcRow;
 import com.music.player.lib.model.MusicPlayerStatus;
 
 /**
@@ -30,4 +33,16 @@ public interface MusicJukeBoxStatusListener {
      * @param playerState 唱片机状态
      */
     void onJukeBoxState(MusicPlayerStatus playerState);
+
+    /**
+     * 唱片机点击事件,主要抛出给组件来控制歌词控件
+     * @param view click view
+     */
+    void onClickJukeBox(View view);
+
+    /**
+     * 歌词被拖动了，跳转至指定位置开始播放
+     * @param lrcRow 歌词对象
+     */
+    void onLrcSeek(MusicLrcRow lrcRow);
 }

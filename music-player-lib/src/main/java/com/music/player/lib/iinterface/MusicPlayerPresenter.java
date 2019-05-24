@@ -1,4 +1,4 @@
-package com.music.player.lib.exinterface;
+package com.music.player.lib.iinterface;
 
 import android.app.Notification;
 import com.music.player.lib.bean.BaseAudioInfo;

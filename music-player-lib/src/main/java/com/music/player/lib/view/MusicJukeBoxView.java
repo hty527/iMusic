@@ -9,22 +9,25 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.music.player.lib.R;
 import com.music.player.lib.bean.BaseAudioInfo;
+import com.music.player.lib.bean.MusicLrcRow;
 import com.music.player.lib.constants.MusicConstants;
+import com.music.player.lib.iinterface.MusicLrcRowParser;
 import com.music.player.lib.listener.MusicAnimatorListener;
 import com.music.player.lib.listener.MusicJukeBoxStatusListener;
+import com.music.player.lib.listener.MusicLrcViewListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.model.MusicPlayerStatus;
 import com.music.player.lib.model.MusicWindowStyle;
+import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,13 +39,15 @@ import java.util.Map;
  * 2019/3/6
  * BIG JukeBox
  * 示例唱片机，负责UI的展示和播放、暂停系列通话，次组件不直接参与下一首、上一首的业务逻辑
+ * 内部并持有歌词显示控件
  * 将此类事件一律抛出至持有此组件的活动
  */
 
 public class MusicJukeBoxView extends RelativeLayout{
 
+    private static final String TAG = "MusicJukeBoxView";
     private ImageView mHandImage;
-    private ViewPager mViewPager;
+    private MusicViewPager mViewPager;
     private ViewPagerAdapter mPagerAdapter;
     //当前手指松手后的位置
     private int mOffsetPosition=0;
@@ -62,6 +67,12 @@ public class MusicJukeBoxView extends RelativeLayout{
     private MusicAnimatorListener mAnimatorListener;
     //此标记记录ViewPager调用setCurrentItem()后是否禁用回调onPageSelected(int pisotion);方法
     private boolean mEchoPageSelectedEnable;
+    //歌词控件
+    private MusicLrcView mMusicLrcView;
+    //歌词控件容器
+    private FrameLayout mLrcLayout;
+    //唱片容器
+    private View mDiscRoot;
 
     /**
      * 唱针当前所处的状态
@@ -104,6 +115,14 @@ public class MusicJukeBoxView extends RelativeLayout{
         initViewPager();
         initHandView();
         initObjectAnimator();
+        mLrcLayout = (FrameLayout) findViewById(R.id.msuic_lrc_view);
+    }
+
+    private void removeViewByGroupVoew(View view) {
+        if(null!=view&&null!=view.getParent()){
+            ViewGroup parent = (ViewGroup) view.getParent();
+            parent.removeView(view);
+        }
     }
 
     /**
@@ -122,7 +141,16 @@ public class MusicJukeBoxView extends RelativeLayout{
      * 初始化横向滑动Pager
      */
     private void initViewPager() {
-        mViewPager = (ViewPager) findViewById(R.id.view_disc_viewpager);
+        mDiscRoot = findViewById(R.id.music_disc_root);
+        mViewPager = (MusicViewPager) findViewById(R.id.view_disc_viewpager);
+        mViewPager.setOnClickViewListener(new MusicViewPager.OnClickViewListener() {
+            @Override
+            public void onClick(View view) {
+                if(null!=mPlayerInfoListener){
+                    mPlayerInfoListener.onClickJukeBox(view);
+                }
+            }
+        });
         //禁止滑动阴影
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mPagerAdapter = new ViewPagerAdapter();
@@ -234,7 +262,7 @@ public class MusicJukeBoxView extends RelativeLayout{
         }
     }
 
-    private ViewPager.OnPageChangeListener onPageChangedListener=new ViewPager.OnPageChangeListener() {
+    private MusicViewPager.OnPageChangeListener onPageChangedListener=new MusicViewPager.OnPageChangeListener() {
 
         int mScrollOffsetX = 0;
         /**
@@ -272,6 +300,14 @@ public class MusicJukeBoxView extends RelativeLayout{
             }catch (RuntimeException e){
 
             }finally {
+                if(null!=mMusicLrcView){
+                    mMusicLrcView.onReset();
+                    //还原唱片机状态
+                    removeViewByGroupVoew(mMusicLrcView);
+                }
+                if(mOffsetPosition!=position){
+                    showLrcView(false);
+                }
                 mOffsetPosition=position;
                 //静止了，处理界面和播放，有效避免顿挫感现象
                 if(null!=mPlayerInfoListener&&null!=mMusicDatas&&mMusicDatas.size()>position){
@@ -291,11 +327,11 @@ public class MusicJukeBoxView extends RelativeLayout{
         public void onPageScrollStateChanged(int state) {
             switch (state) {
                 //用户松手了
-                case ViewPager.SCROLL_STATE_SETTLING:
+                case MusicViewPager.SCROLL_STATE_SETTLING:
 
                     break;
                 //动画静止
-                case ViewPager.SCROLL_STATE_IDLE:
+                case MusicViewPager.SCROLL_STATE_IDLE:
                     mViewPagerIsOffset = false;
                     //松手后还是停留在此Pager
                     if(null!=mViewPager){
@@ -311,7 +347,7 @@ public class MusicJukeBoxView extends RelativeLayout{
                     }
                     break;
                 //用户开始滚动Pager
-                case ViewPager.SCROLL_STATE_DRAGGING:
+                case MusicViewPager.SCROLL_STATE_DRAGGING:
                     mViewPagerIsOffset = true;
                     if(null!=mScroller) {
                         mScroller.setScroller(true);
@@ -470,6 +506,98 @@ public class MusicJukeBoxView extends RelativeLayout{
         }
     }
 
+    //=============================================歌词相关==========================================
+
+    /**
+     * 歌词控件显示与否
+     * @param showlrc true:显示
+     */
+    private void showLrcView(boolean showlrc) {
+        if(null!=mMusicLrcView){
+            mMusicLrcView.setEnable(showlrc);
+        }
+        if(null!=mDiscRoot){
+            if(showlrc){
+                mDiscRoot.setVisibility(INVISIBLE);
+            }else{
+                mDiscRoot.setVisibility(VISIBLE);
+            }
+        }
+    }
+
+    /**
+     * 设置歌词,已经准备好的歌词源文本请调用此方法
+     * @param audioID 音频ID，如果传入，启用歌词内部缓存
+     * @param lrcContent 歌词源文本内容
+     */
+    public void setLrcRows(String audioID,String lrcContent) {
+        if(null==mMusicLrcView){
+            mMusicLrcView =new MusicLrcView(getContext());
+            mMusicLrcView.setLrcViewListener(new MusicLrcViewListener() {
+                @Override
+                public void onLrcSeeked(int position, MusicLrcRow lrcRow) {
+                    Logger.d(TAG,"onLrcSeeked-->position:"+position+",lrcRow:"+lrcRow.toString());
+                    if(null!=mPlayerInfoListener){
+                        mPlayerInfoListener.onLrcSeek(lrcRow);
+                    }
+                }
+
+                @Override
+                public void onClick(View view) {
+                    Logger.d(TAG,"onClick-->");
+                    removeViewByGroupVoew(mMusicLrcView);
+                    showLrcView(false);
+                }
+            });
+        }
+        mMusicLrcView.setLrcRow(audioID,lrcContent);
+    }
+
+    /**
+     * 酷狗专用-设置异步的网络歌词
+     * @param audioID 音频ID，如果传入，启用歌词内部缓存
+     * @param hashKey 酷狗音乐的文件唯一标识
+     * @param lrcRowParser 自己实现的歌词解析器
+     */
+    public void setLrcRows(String audioID, String hashKey,MusicLrcRowParser lrcRowParser) {
+        if(null==lrcRowParser){
+            return;
+        }
+        if(null==mMusicLrcView){
+            mMusicLrcView =new MusicLrcView(getContext());
+            mMusicLrcView.setLrcViewListener(new MusicLrcViewListener() {
+                @Override
+                public void onLrcSeeked(int position, MusicLrcRow lrcRow) {
+                    Logger.d(TAG,"onLrcSeeked-->position:"+position+",lrcRow:"+lrcRow.toString());
+                    if(null!=mPlayerInfoListener){
+                        mPlayerInfoListener.onLrcSeek(lrcRow);
+                    }
+                }
+
+                @Override
+                public void onClick(View view) {
+                    Logger.d(TAG,"onClick-->");
+                    removeViewByGroupVoew(mMusicLrcView);
+                    showLrcView(false);
+                }
+            });
+        }
+        removeViewByGroupVoew(mMusicLrcView);
+        showLrcView(true);
+        mLrcLayout.addView(mMusicLrcView,new FrameLayout.LayoutParams(-1,-1));
+        mMusicLrcView.setNetLrcRow(lrcRowParser,audioID,hashKey,"歌词获取中...");
+    }
+
+    /**
+     * 更新歌词显示位置
+     * @param currentDurtion 正在播放的位置，毫秒
+     */
+    public void updateLrcPosition(long currentDurtion) {
+        if(null!=mMusicLrcView){
+            mMusicLrcView.seekTo(currentDurtion);
+        }
+    }
+
     /**
      * 开始唱片机指针动画，指针动画结束后紧接着唱片机旋转动画
      */
@@ -565,7 +693,7 @@ public class MusicJukeBoxView extends RelativeLayout{
     /**
      * Pager Adapter
      */
-    private class ViewPagerAdapter extends PagerAdapter {
+    private class ViewPagerAdapter extends MusicPagerAdapter {
 
         @Override
         public int getCount() {
@@ -579,7 +707,7 @@ public class MusicJukeBoxView extends RelativeLayout{
 
         @Override
         public int getItemPosition(Object object) {
-            return PagerAdapter.POSITION_NONE;
+            return MusicPagerAdapter.POSITION_NONE;
         }
 
         @Override
@@ -606,6 +734,19 @@ public class MusicJukeBoxView extends RelativeLayout{
     }
 
     /**
+     * 唱片机内部是否有返回事件需要自行处理
+     * @return true：唱片机内部有自己的返回事件需要处理 ，false：没有事件处理
+     */
+    public boolean isBackPressed() {
+        //卸装歌词控件
+        if(null!=mMusicLrcView&&null!=mMusicLrcView.getParent()){
+            removeViewByGroupVoew(mMusicLrcView);
+            showLrcView(false);
+            return false;
+        }
+        return true;
+    }
+    /**
      * 销毁
      */
     public void onDestroy() {
@@ -618,6 +759,10 @@ public class MusicJukeBoxView extends RelativeLayout{
         mDiscStatus = DiscStatus.STOP;
         needleAnimatorStatus=NeedleAnimatorStatus.IN_FAR_END;mScreenWidth=0;
         mPlayerInfoListener=null;mAnimatorListener=null;
+        if(null!=mMusicLrcView){
+            mMusicLrcView.onDestroy();
+            mMusicLrcView=null;
+        }
         if(null!=mViewPager){
             mViewPager.removeOnPageChangeListener(onPageChangedListener);
             mViewPager.removeAllViews();

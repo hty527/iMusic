@@ -8,52 +8,47 @@ import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import com.music.player.lib.R;
 import com.music.player.lib.bean.MusicLrcRow;
-import com.music.player.lib.exinterface.MusicLrcRowFormat;
-import com.music.player.lib.exinterface.MusicLrcRowParser;
+import com.music.player.lib.iinterface.MusicLrcRowParser;
 import com.music.player.lib.listener.MusicLrcParserCallBack;
 import com.music.player.lib.listener.MusicLrcViewListener;
 import com.music.player.lib.model.MusicDefaultLrcParser;
-import com.music.player.lib.model.MusicDefsultLrcFormat;
+import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by TinyHung@outlook.com
  * 2019/5/23
  * Music Lrc
+ * 默认歌词解析器为MusicDefaultLrcParser，如果需要实现自己的歌词解析
+ * 请继承MusicLrcRowParser复写其中两个重要方法
  */
 
 public class MusicLrcView extends View{
 
     private static final String TAG = "MusicLrcView";
+    private Context mContext;
+    //是否是正在加载中、歌词是否拦截触摸事件
+    private boolean loadLrcing=false,mEnable=true;
     //歌词解析器
-    private MusicLrcRowFormat mLrcRowFormat;
-    //逐行歌词解析器
     private MusicLrcRowParser mLrcRowParser;
     //歌词
-    List<MusicLrcRow> mLrcRows;
-    private String textNoimal="没有歌词";
-    //歌词文本颜色
-    private int textColor;
-    //歌词高亮颜色
-    private int textLightColor;
-    //文本大小
-    private float textSize;
-    //高亮文字大小
-    private float textLightSize;
-    //时间字体大小
-    private float textTimeSize;
-    //歌词之间高度
-    private float textLineHeight;
-    //手指拖动时间文字颜色
-    private int textTimeColor;
-    //手指拖动歌词底部线条文字颜色
-    private int buttomLineColor;
+    private List<MusicLrcRow> mLrcRows;
+    //为空、加载中
+    private String textNoimal=null,textLoading=null;
+    //歌词内存缓存
+    private Map<String,List<MusicLrcRow>> cacheLrcRows;
+    //歌词文本颜色、歌词高亮颜色、手指拖动时间文字颜色、手指拖动歌词底部线条文字颜色
+    private int textColor,textLightColor,textTimeColor,buttomLineColor;
+    //文本大小、高亮文字大小、时间字体大小、歌词之间高度
+    private float textSize,textLightSize,textTimeSize,textLineHeight;
     //画笔
     private Paint mPaint;
     //持续拖动监听
@@ -68,7 +63,14 @@ public class MusicLrcView extends View{
     private int mHignlightRow = 0;
     //拖动歌词时，在当前高亮歌词下面的一条直线的起始位置
     private int mSeekLinePaddingX = 0;
+    //手指拖动位置记录
+    private float mLastMotionY,downX,downY;
 
+    {
+        cacheLrcRows=new HashMap<>();
+        textNoimal="暂时没有找到歌词";
+        textLoading="歌词获取中...";
+    }
 
     public MusicLrcView(Context context) {
         this(context,null);
@@ -80,51 +82,134 @@ public class MusicLrcView extends View{
 
     public MusicLrcView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.mContext=context;
         if(null!=attrs){
             TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.MusicLrcView);
             String string = typedArray.getString(R.styleable.MusicLrcView_musicLrcEmptyTips);
             if(!TextUtils.isEmpty(string)){
                 textNoimal=string;
             }
-            textColor = typedArray.getColor(R.styleable.MusicLrcView_musicLrcTextColor, Color.parseColor("#EAEAEA"));
-            textLightColor = typedArray.getColor(R.styleable.MusicLrcView_musicLrcLightTextColor, Color.parseColor("#FFFF00"));
+            textColor = typedArray.getColor(R.styleable.MusicLrcView_musicLrcTextColor,
+                    Color.parseColor("#EAEAEA"));
+            textLightColor = typedArray.getColor(R.styleable.MusicLrcView_musicLrcLightTextColor,
+                    Color.parseColor("#FFFF00"));
             textSize=typedArray.getDimensionPixelSize(R.styleable.MusicLrcView_musicLrcTextSize,16);
             textTimeSize=typedArray.getDimensionPixelSize(R.styleable.MusicLrcView_musicLrcTimeTextSize,11);
             textLightSize=typedArray.getDimensionPixelSize(R.styleable.MusicLrcView_musicLrcLightTextSize,17);
             textLineHeight=typedArray.getDimensionPixelSize(R.styleable.MusicLrcView_musicLrcLineHeight,22);
-            textTimeColor=typedArray.getColor(R.styleable.MusicLrcView_musicLrcTimeTextColor,Color.parseColor("#BABDBC"));
-            buttomLineColor =typedArray.getColor(R.styleable.MusicLrcView_musicLrcBottomLineColor,Color.parseColor("#BCBCBC"));
+            textTimeColor=typedArray.getColor(R.styleable.MusicLrcView_musicLrcTimeTextColor,
+                    Color.parseColor("#BABDBC"));
+            buttomLineColor =typedArray.getColor(R.styleable.MusicLrcView_musicLrcBottomLineColor,
+                    Color.parseColor("#BCBCBC"));
             typedArray.recycle();
         }else{
             textSize= MusicUtils.getInstance().dpToPxInt(getContext(),16f);
+            textTimeSize= MusicUtils.getInstance().dpToPxInt(getContext(),11f);
             textLightSize= MusicUtils.getInstance().dpToPxInt(getContext(),17f);
-            textLineHeight= MusicUtils.getInstance().dpToPxInt(getContext(),20f);
+            textLineHeight= MusicUtils.getInstance().dpToPxInt(getContext(),22f);
+            textColor=Color.parseColor("#EAEAEA");
+            textLightColor=Color.parseColor("#FFFF00");
+            textTimeColor=Color.parseColor("#BABDBC");
+            buttomLineColor=Color.parseColor("#BCBCBC");
         }
         mPaint=new Paint();
+        mPaint.setAntiAlias(true);
     }
 
     /**
-     * 监听歌词滚动
-     * @param lrcViewListener 监听器
+     * 歌词滚动监听器
+     * @param lrcViewListener 实现类
      */
     public void setLrcViewListener(MusicLrcViewListener lrcViewListener) {
-        mLrcViewListener = lrcViewListener;
+        this.mLrcViewListener = lrcViewListener;
     }
 
     /**
-     * 设置歌词解析构造器
-     * @param lrcRowFormat 歌词解析器
+     * 设置歌词解析器，支持网络、本地、或其他任意解析器哦
+     * @param lrcRowParser 解析器
      */
-    public void setLrcFormatConstructor(MusicLrcRowFormat lrcRowFormat){
-        this.mLrcRowFormat=lrcRowFormat;
+    public void setLrcRowParser(MusicLrcRowParser lrcRowParser) {
+        this.mLrcRowParser = lrcRowParser;
     }
 
     /**
-     * 设置歌词逐行解析构造器
-     * @param lrcRowParser 逐行歌词解析器
+     * 设置歌词为空时的占位字符串
+     * @param textNoimal 占位提示符
      */
-    public void setLrcFormatConstructor(MusicLrcRowParser lrcRowParser){
-        this.mLrcRowParser=lrcRowParser;
+    public void setTextNoimal(String textNoimal) {
+        this.textNoimal = textNoimal;
+    }
+
+    /**
+     * 设置加载本地、网络歌词时提示文字
+     * @param textLoading 加载提示符
+     */
+    public void setTextLoading(String textLoading) {
+        this.textLoading = textLoading;
+    }
+
+    /**
+     * 设置常规歌词文字颜色
+     * @param textColor 常规歌词文字颜色
+     */
+    public void setTextColor(int textColor) {
+        this.textColor = textColor;
+    }
+
+    /**
+     * 设置常规歌词文字大小
+     * @param textSize 常规歌词文字大小
+     */
+    public void setTextSize(float textSize) {
+        this.textSize = textSize;
+    }
+
+    /**
+     * 设置选中的歌词文字颜色
+     * @param textLightColor 高亮歌词文字颜色
+     */
+    public void setTextLightColor(int textLightColor) {
+        this.textLightColor = textLightColor;
+    }
+
+    /**
+     * 设置高亮歌词文字大小
+     * @param textLightSize 高亮歌词文字大小
+     */
+    public void setTextLightSize(float textLightSize) {
+        this.textLightSize = textLightSize;
+    }
+
+    /**
+     * 设置拖动歌词时的时间文字颜色
+     * @param textTimeColor 时间文字颜色
+     */
+    public void setTextTimeColor(int textTimeColor) {
+        this.textTimeColor = textTimeColor;
+    }
+
+    /**
+     * 设置拖动歌词时的歌词文字大小
+     * @param textTimeSize 时间文字大小
+     */
+    public void setTextTimeSize(float textTimeSize) {
+        this.textTimeSize = textTimeSize;
+    }
+
+    /**
+     * 设置拖动歌词时的歌词下划线颜色
+     * @param buttomLineColor 歌词下划线颜色
+     */
+    public void setButtomLineColor(int buttomLineColor) {
+        this.buttomLineColor = buttomLineColor;
+    }
+
+    /**
+     * 设置歌词之间的行高
+     * @param textLineHeight 歌词之间行高
+     */
+    public void setTextLineHeight(float textLineHeight) {
+        this.textLineHeight = textLineHeight;
     }
 
     /**
@@ -132,44 +217,94 @@ public class MusicLrcView extends View{
      * @param lrcString 源歌词文本
      */
     public void setLrcRow(String lrcString){
-        setLrcRow(lrcString,mLrcRowFormat,mLrcRowParser);
+        setLrcRow(null,lrcString,mLrcRowParser);
     }
 
     /**
      * 更新歌词文件
+     * @param audioID 音频ID，存取内存缓存用，避免重复IO
      * @param lrcString 源歌词文本
-     * @param lrcRowFormat 歌词解析器
      */
-    public void setLrcRow(String lrcString,MusicLrcRowFormat lrcRowFormat){
-        setLrcRow(lrcString,lrcRowFormat,mLrcRowParser);
+    public void setLrcRow(String audioID,String lrcString){
+        setLrcRow(audioID,lrcString,mLrcRowParser);
     }
 
     /**
      * 更新歌词文件
+     * @param audioID 音频ID，存取内存缓存用，避免重复IO
      * @param lrcString 源歌词文本
      * @param lrcRowParser 逐行歌词解析器
      */
-    public void setLrcRow(String lrcString,MusicLrcRowParser lrcRowParser){
-        setLrcRow(lrcString,mLrcRowFormat,lrcRowParser);
-    }
-
-    /**
-     * 更新歌词文件
-     * @param lrcString 源歌词文本
-     * @param lrcRowFormat 歌词解析器
-     * @param lrcRowParser 逐行歌词解析器
-     */
-    public void setLrcRow(String lrcString,MusicLrcRowFormat lrcRowFormat,MusicLrcRowParser lrcRowParser){
-        if(null==lrcRowFormat){
-            mLrcRowFormat=new MusicDefsultLrcFormat();
-        }
+    public void setLrcRow(final String audioID, String lrcString, MusicLrcRowParser lrcRowParser){
         if(null==lrcRowParser){
             mLrcRowParser=new MusicDefaultLrcParser();
         }
-        mLrcRowFormat.formatLrcFromString(lrcString, mLrcRowParser, new MusicLrcParserCallBack() {
+        loadLrcRows(mLrcRowParser,audioID,lrcString,textLoading,false);
+    }
+
+    /**
+     * 更新网络歌词文件
+     * @param lrcRowParser 解析器
+     * @param audioID 歌曲ID
+     * @param hashKey 酷狗音乐唯一标识
+     * @param loadingTips 加载中提示内容
+     */
+    public void setNetLrcRow(MusicLrcRowParser lrcRowParser, final String audioID, String hashKey,
+                             String loadingTips) {
+        loadLrcRows(lrcRowParser,audioID,hashKey,loadingTips,true);
+    }
+
+    /**
+     * 开始加载本地、网络歌词文件
+     * @param lrcRowParser 歌词解析器
+     * @param audioID 音频ID
+     * @param object 如果是加载网络歌词，lrcString为歌曲唯一标识
+     * @param textLoading 加载中提示文字
+     * @param isNet 是否加载来自网络的? true:网络歌词
+     * 注意：没错，你看到的这里的代码加载网络和加载本地的入口个方法都是一模一样的，关键就在解析器，
+     * 内部内置了一个默认的解析器，MusicDefaultLrcParser，如果无法满足你的解析需求，
+     * 请继承MusicLrcRowParser重写两个重要的方法！！！
+     */
+    private void loadLrcRows(MusicLrcRowParser lrcRowParser, final String audioID, String object,
+                             String textLoading, boolean isNet) {
+        //如果已经绘制了不做任何处理
+        if(null!=mLrcRows&&mLrcRows.size()>0){
+            return;
+        }
+        this.textLoading=textLoading;
+        loadLrcing=true;
+        //优先从缓存获取
+        if(!TextUtils.isEmpty(audioID)&&null!=cacheLrcRows&&null!=cacheLrcRows.get(audioID)){
+            loadLrcing=false;
+            List<MusicLrcRow> lrcRowList = cacheLrcRows.get(audioID);
+            if(null==mLrcRows){
+                mLrcRows=new ArrayList<>();
+            }
+            mLrcRows.clear();
+            mLrcRows.addAll(lrcRowList);
+            Logger.d(TAG,"loadLrcRows-->使用内部缓存");
+            invalidate();
+            return;
+        }
+        invalidate();
+        //从本地、网络加载
+        lrcRowParser.formatLrc(object, new MusicLrcParserCallBack() {
             @Override
             public void onLrcRows(List<MusicLrcRow> lrcRows) {
-                MusicLrcView.this.mLrcRows=lrcRows;
+                loadLrcing=false;
+                if(!TextUtils.isEmpty(audioID)&&null!=lrcRows){
+                    if(null==cacheLrcRows){
+                        cacheLrcRows=new HashMap<>();
+                    }
+                    cacheLrcRows.put(audioID,lrcRows);
+                }
+                if(null==mLrcRows){
+                    mLrcRows=new ArrayList<>();
+                }
+                mLrcRows.clear();
+                if(null!=lrcRows){
+                    mLrcRows.addAll(lrcRows);
+                }
                 invalidate();
             }
         });
@@ -180,14 +315,37 @@ public class MusicLrcView extends View{
      * @param lrcRows 已经解析好的歌词实体数组
      */
     public void setLrcRow(List<MusicLrcRow> lrcRows){
-        this.mLrcRows=lrcRows;
+        if(null==mLrcRows){
+            mLrcRows=new ArrayList<>();
+        }
+        mLrcRows.clear();
+        if(null!=lrcRows){
+            mLrcRows.addAll(lrcRows);
+        }
         invalidate();
+    }
+
+    /**
+     * 歌词控件是否可用
+     * @param enable true:正常 false:控件将不可拖动，不会同步更新歌词显示位置
+     */
+    public void setEnable(boolean enable) {
+        this.mEnable=enable;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         int width = getWidth();
         int height = getHeight();
+        //加载中
+        if(loadLrcing){
+            mPaint.setColor(textColor);
+            mPaint.setTextSize(textSize);
+            mPaint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText(textLoading,width/2,height/2,mPaint);
+            return;
+        }
+        //歌词为空
         if(null==mLrcRows||mLrcRows.size()==0){
             mPaint.setColor(textColor);
             mPaint.setTextSize(textSize);
@@ -219,7 +377,8 @@ public class MusicLrcView extends View{
             float lineOffset = textLineHeight / 3;
             //时间位于控件的右侧
             float leftOffset=width-MusicUtils.getInstance().dpToPxInt(getContext(),55f);
-            canvas.drawLine(mSeekLinePaddingX, highlightRowY + lineOffset, width - mSeekLinePaddingX, highlightRowY + lineOffset, mPaint);
+            canvas.drawLine(mSeekLinePaddingX, highlightRowY + lineOffset, width
+                    - mSeekLinePaddingX, highlightRowY + lineOffset, mPaint);
             // 画出高亮的那句歌词的时间，绘制在屏幕右侧
             mPaint.setColor(textTimeColor);
             mPaint.setTextSize(textTimeSize);
@@ -254,45 +413,62 @@ public class MusicLrcView extends View{
     /**
      * 设置要高亮的歌词为第几行歌词
      * @param position 要高亮的歌词行数
-     * @param cb       是否是手指拖动后要高亮的歌词
+     * @param isTouch  是否是手指拖动的事件
      */
-    public void seekLrc(int position, boolean cb) {
-        if (mLrcRows == null || position < 0 || position > mLrcRows.size()) {
+    private void seekLrc(int position, boolean isTouch) {
+        Logger.d(TAG,"seekLrc-->position:"+position+",isTouch:"+isTouch);
+        if (mLrcRows == null || position < 0 || position > mLrcRows.size()-1) {
             return;
         }
         MusicLrcRow lrcRow = mLrcRows.get(position);
+        //标记高亮行，重绘界面
         mHignlightRow = position;
         invalidate();
         //如果是手指拖动歌词后
-        if (mLrcViewListener != null && cb) {
+        if (mLrcViewListener != null && isTouch) {
             //回调onLrcSeeked方法，将音乐播放器播放的位置移动到高亮歌词的位置
             mLrcViewListener.onLrcSeeked(position, lrcRow);
         }
     }
 
-    private float mLastMotionY;
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if(!mEnable){
+            return false;
+        }
+        return super.dispatchTouchEvent(event);
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mLrcRows == null || mLrcRows.size() == 0) {
-            return super.onTouchEvent(event);
+        if(!mEnable){
+            return false;
         }
         switch (event.getAction()) {
-            //手指按下
             case MotionEvent.ACTION_DOWN:
                 mLastMotionY = event.getY();
-                invalidate();
+                downX = event.getX();
+                downY=event.getY();
                 break;
-            //手指移动
             case MotionEvent.ACTION_MOVE:
-                //拖动歌词上下
-                doSeek(event);
+                if(null!=mLrcRows&&mLrcRows.size()>0){
+                    doSeek(event);
+                }
                 break;
-            case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                seekLrc(mHignlightRow, true);
                 mDisplayMode = DISPLAY_MODE_NORMAL;
-                invalidate();
+                //如果用户手指并没有明显的拖动，则抛出单击事件
+                if(Math.abs(event.getX()-downX) < 5 && Math.abs(event.getY()-downY) < 5){
+                    if(null!=mLrcViewListener){
+                        mLrcViewListener.onClick(MusicLrcView.this);
+                    }
+                }else{
+                    if(null!=mLrcRows&&mLrcRows.size()>0){
+                        seekLrc(mHignlightRow, true);
+                        invalidate();
+                    }
+                }
+                downX=0;downY=0;
                 break;
         }
         return true;
@@ -307,7 +483,7 @@ public class MusicLrcView extends View{
         float y = event.getY();//手指当前位置的y坐标
         float offsetY = y - mLastMotionY; //第一次按下的y坐标和目前移动手指位置的y坐标之差
         int rowOffset = (int) Math.abs((int) offsetY / textSize); //歌词要滚动的行数
-        Log.d(TAG, "move to new hightlightrow : " + mHignlightRow + " offsetY: " + offsetY + " rowOffset:" + rowOffset);
+        //Logger.d(TAG, "doSeek-->hightlightrow : " + mHignlightRow + " offsetY: " + offsetY + " rowOffset:" + rowOffset);
         if (offsetY < 0) {
             //手指向上移动，歌词向下滚动
             mHignlightRow += rowOffset;//设置要高亮的歌词为 当前高亮歌词 向下滚动rowOffset行后的歌词
@@ -317,7 +493,8 @@ public class MusicLrcView extends View{
         }
         //设置要高亮的歌词为0和mHignlightRow中的较大值，即如果mHignlightRow < 0，mHignlightRow=0
         mHignlightRow = Math.max(0, mHignlightRow);
-        //设置要高亮的歌词为0和mHignlightRow中的较小值，即如果mHignlight > RowmLrcRows.size()-1，mHignlightRow=mLrcRows.size()-1
+        //设置要高亮的歌词为0和mHignlightRow中的较小值，即如果mHignlight > RowmLrcRows.size()-1，
+        // mHignlightRow=mLrcRows.size()-1
         mHignlightRow = Math.min(mHignlightRow, mLrcRows.size() - 1);
         //如果歌词要滚动的行数大于0，则重画LrcView
         if (rowOffset > 0) {
@@ -327,30 +504,53 @@ public class MusicLrcView extends View{
     }
 
     /**
-     * 播放的时候调用该方法滚动歌词，高亮正在播放的那句歌词
-     * @param time
+     * 实时跳转至指定位置，更新高亮的行
+     * @param currentDurtion 音频的时间位置，单位毫秒
      */
-    public void seekLrcToTime(long time) {
-        if (mLrcRows == null || mLrcRows.size() == 0) {
-            return;
-        }
-        if (mDisplayMode != DISPLAY_MODE_NORMAL) {
-            return;
-        }
-        Log.d(TAG, "seekLrcToTime:" + time);
-
-        for (int i = 0; i < mLrcRows.size(); i++) {
-            MusicLrcRow current = mLrcRows.get(i);
-            MusicLrcRow next = i + 1 == mLrcRows.size() ? null : mLrcRows.get(i + 1);
-            /**
-             *  正在播放的时间大于current行的歌词的时间而小于next行歌词的时间， 设置要高亮的行为current行
-             *  正在播放的时间大于current行的歌词，而current行为最后一句歌词时，设置要高亮的行为current行
-             */
-            if ((time >= current.getTime() && next != null && time < next.getTime())
-                    || (time > current.getTime() && next == null)){
-                seekLrc(i, false);
+    public void seekTo(long currentDurtion) {
+        if(mEnable&&null!=mLrcRows&&mLrcRows.size()>0){
+            if (mDisplayMode != DISPLAY_MODE_NORMAL) {
                 return;
             }
+            for (int i = 0; i < mLrcRows.size(); i++) {
+                MusicLrcRow current = mLrcRows.get(i);
+                MusicLrcRow next = i + 1 == mLrcRows.size() ? null : mLrcRows.get(i + 1);
+                //条件1：满足当前播放的时间>当前随机对象的时间&&当前播放的时间<下个随机对象的时间
+                //条件2：满足当前播放的时间>当前随机对象的时间&&已经到达最后一个随机对象了
+                if ((currentDurtion >= current.getTime() && next != null && currentDurtion < next.getTime())
+                        || (currentDurtion > current.getTime() && next == null)){
+                    seekLrc(i, false);
+                    return;
+                }
+            }
         }
+    }
+
+    /**
+     * 还原，但不清除设置
+     */
+    public void onReset(){
+        if(null!=mLrcRows){
+            mLrcRows.clear();
+            mLrcRows=null;
+        }
+        loadLrcing=false;
+        invalidate();
+    }
+
+    /**
+     * 对应生命周期调用
+     */
+    public void onDestroy(){
+        mContext=null;
+        if(null!=mLrcRowParser){
+            mLrcRowParser.onDestroy();
+            mLrcRowParser=null;
+        }
+        if(null!=mLrcRows){
+            mLrcRows.clear();
+            mLrcRows=null;
+        }
+        invalidate();
     }
 }

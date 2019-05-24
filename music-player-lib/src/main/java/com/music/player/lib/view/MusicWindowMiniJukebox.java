@@ -25,7 +25,7 @@ import com.music.player.lib.util.MusicUtils;
  * TinyHung@Outlook.com
  * 2019/3/12
  * Window MiniJukebox
- * 迷你悬浮窗播放窗口示例，通过观察者更新UI
+ * 迷你悬浮窗容器，只处理用户交互
  */
 
 public class MusicWindowMiniJukebox extends RelativeLayout {
