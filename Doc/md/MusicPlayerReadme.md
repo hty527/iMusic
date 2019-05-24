@@ -218,8 +218,12 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
 ```
     在开始播放前，需设置MusicPlayerManager中的setLockForeground(boolean enable);方法，设置为true即可，播放器内部以兼容处理8.0手机和国产部分机型通知栏显示。
 ```
+### 八、播放器歌词
+```
+    内部封装了播放器歌词显示及交互控件MusicLrcView，支持常规属性设置，内部提供了默认的本地、网络歌词解析器，当然你也可以完全自定义你自己的歌词解析器。自定义解析器需继承MusicLrcRowParser类，重写内部两个重要的方法。
+```
  ___
-### 八、MusicPlayerManager 常用API预览及说明：
+### 九、MusicPlayerManager 常用API预览及说明：
 ```
     /**
      * Activity初始化音乐服务组件，Activity中初始化后调用
