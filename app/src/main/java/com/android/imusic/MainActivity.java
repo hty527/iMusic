@@ -1,7 +1,6 @@
 package com.android.imusic;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import com.android.imusic.base.BaseActivity;
 import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
-import com.android.imusic.music.activity.TestActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
 import com.android.imusic.music.manager.VersionUpdateManager;
 import com.android.imusic.music.ui.fragment.IndexMusicFragment;
@@ -265,9 +263,5 @@ public class MainActivity extends BaseActivity {
             mPagerAdapter.onDestroy();
             mPagerAdapter=null;
         }
-    }
-
-    public void startParser(View view) {
-        startActivity(new Intent(this, TestActivity.class));
     }
 }
