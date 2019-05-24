@@ -83,7 +83,7 @@ public abstract class MusicLrcRowParser {
              return null;
          }
          //先正则过滤一遍
-         boolean b = Pattern.compile(RGEX1).matcher(lrcLineContent).matches();
+         boolean b = Pattern.compile(RGEX1).matcher(lrcLineContent).find();
          if(!b){
              boolean b1 = Pattern.compile(RGEX2).matcher(lrcLineContent).find();
              //不匹配再正则第二种

@@ -71,9 +71,9 @@ public interface MusicConstants {
     //迷你专辑图片比例
     float SCALE_MUSIC_PIC_MINE_SIZE = (float) (96.0 / BASE_SCREEN_WIDTH);
     //胶盘旋转一圈耗时时长，单位秒
-    int BOX_REVOLVE_MINUTE = 16;
+    int BOX_REVOLVE_MINUTE = 20;
     //迷你胶盘旋转一圈耗时时长，单位秒
-    int BOX_MINI_REVOLVE_MINUTE = 16;
+    int BOX_MINI_REVOLVE_MINUTE = 20;
     //申请悬浮窗权限
     int REQUST_WINDOWN_PERMISSION = 2001;
     //前台进程通知群组ID
