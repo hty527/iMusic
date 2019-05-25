@@ -42,7 +42,7 @@
         //是否启用锁屏控制播放
         .setScreenOffEnable(true)
         //悬浮窗样式：垃圾桶回收样式，默认时点击悬浮窗右上角X按钮回收
-        .setWindownStyle(MusicWindowStyle.TRASH);
+        .setWindownStyle(MusicConstants.TRASH);
     //设置给媒体播放管理者
     MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
     //设置点击通知栏打开的播放器界面,需开启setLockForeground(true);
@@ -231,17 +231,11 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      */
     public void initialize(Context context);
 
-    /**
-     * 解绑服务
-     * @param context Activity上下文
-     */
-    public void unBindService(Context context);
-
-    /**
-     * 返回播放器配置
-     * @return 播放器当前配置
-     */
-    public MusicPlayerConfig getMusicPlayerConfig();
+   /**
+    * APP销毁时同步销毁
+    * @param context Activity类型上下文
+    */
+   public void unInitialize(Activity context);
 
     /**
      * 设定播放器配置
@@ -250,36 +244,18 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     public void setMusicPlayerConfig(MusicPlayerConfig musicPlayerConfig);
 
     /**
-     * 获取默认的闹钟模式
-     * @return 播放器闹钟模式
-     */
-    public MusicAlarmModel getDefaultAlarmModel();
-
-    /**
      * 设置默认的闹钟模式
      * @param alarmModel
      * @return 已设置的闹钟模式
      */
-    public MusicPlayerManager setDefaultAlarmModel(MusicAlarmModel alarmModel);
-
-    /**
-     * 获取播放模式
-     * @return 播放器默认的闹钟模式
-     */
-    public MusicPlayModel getDefaultPlayModel();
+    public MusicPlayerManager setDefaultAlarmModel(int alarmModel);
 
     /**
      * 设置默认的播放模式
      * @param playModel
      * @return 自身
      */
-    public MusicPlayerManager setDefaultPlayModel(MusicPlayModel playModel);
-
-    /**
-     * 是否启用前台进程
-     * @return 返回场常驻进程开启状态
-     */
-    public boolean isLockForeground();
+    public MusicPlayerManager setDefaultPlayModel(int playModel);
 
     /**
      * 是否开启前台进程
@@ -288,22 +264,10 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     public MusicPlayerManager setLockForeground(boolean enable);
 
     /**
-     * 是否启用悬浮窗自动吸附悬停
-     * @return 返回是否启用自动吸附悬停
-     */
-    public boolean isWindownAutoScrollToEdge();
-
-    /**
      * 设置悬浮窗是否自动吸附至屏幕边缘
      * @param enable true:开启
      */
     public MusicPlayerManager setWindownAutoScrollToEdge(boolean enable);
-
-    /**
-     * 是否启用垃圾桶手势取消悬浮窗
-     * @return 返回是否启用垃圾桶
-     */
-    public boolean isTrashEnable();
 
     /**
      * 设置垃圾桶手势取消悬浮窗
@@ -312,28 +276,16 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     public MusicPlayerManager setTrashEnable(boolean enable);
 
     /**
-     * 是否启用锁屏控制器
-     * @return 返回是否启锁屏控制器
-     */
-    public boolean isScreenOffEnable();
-
-    /**
      * 锁屏控制器开关
      * @param enable true:开启
      */
     public MusicPlayerManager setScreenOffEnable(boolean enable);
 
     /**
-     * 返回悬浮窗播放器样式
-     * @return 返回悬浮窗播放器样式
-     */
-    public MusicWindowStyle getWindownStyle();
-
-    /**
      * 设置悬浮窗播放器样式
-     * @param musicWindowStyle 新的样式，参考MusicWindowStyle定义
+     * @param musicWindowStyle 新的样式，参考MusicConstants定义
      */
-    public MusicPlayerManager setWindownStyle(MusicWindowStyle musicWindowStyle);
+    public MusicPlayerManager setWindownStyle(int musicWindowStyle);
 
     /**
      * 开始播放新的音频队列，播放器会替换全新音乐列表
@@ -355,11 +307,10 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      * @param audioInfo 音频对象
      */
     @Override
-    public void addPlayMusicToTop(BaseaudioInfo audioInfo);
+    public void addPlayMusicToTop(BaseAudioInfo audioInfo);
 
     /**
      * 开始、暂停播放
-     * @return
      */
     @Override
     public void playOrPause();
@@ -381,7 +332,7 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      * @param loop true:循环
      */
     @Override
-    public void setLoop(boolean loop);
+    public void setLoop(boolean loop) ;
 
     /**
      * 继续上次播放，此方法在特殊场景下调用，如播放的地址为空后组件端购买、鉴权后需要自动重新播放
@@ -420,33 +371,33 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
 
     /**
      * 设置播放模式
-     * @param model 播放模式，参考MusicPlayModel定义
+     * @param model 播放模式，参考MusicConstants定义
      * @return 成功设置的播放模式
      */
     @Override
-    public MusicPlayModel setPlayerModel(MusicPlayModel model);
+    public int setPlayerModel(int model);
 
     /**
      * 获取播放模式
      * @return 播放器播放模式
      */
     @Override
-    public MusicPlayModel getPlayerModel();
+    public int getPlayerModel();
 
     /**
      * 设置定时模式
-     * @param model 定时关闭模式，参考MusicAlarmModel定义
+     * @param model 定时关闭模式，参考MusicConstants定义
      * @return 成功设置的播放模式
      */
     @Override
-    public MusicAlarmModel setPlayerAlarmModel(MusicAlarmModel model);
+    public int setPlayerAlarmModel(int model);
 
     /**
      * 获取定时模式
-     * @return 定时关闭模式
+     * @return 定时关闭模式 详见MusicConstants定义
      */
     @Override
-    public MusicAlarmModel getPlayerAlarmModel();
+    public int getPlayerAlarmModel();
 
     /**
      * 尝试跳转至某处缓冲播放
@@ -466,6 +417,7 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      */
     @Override
     public void playNextMusic();
+
     /**
      * 探测上一首的播放位置，播放器内部根据用户设置的播放模式返回合法的播放位置，内部播放器并不会自动开始播放
      * @return 合法的可播放位置
@@ -506,7 +458,7 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      * @return 音频对象
      */
     @Override
-    public BaseaudioInfo getCurrentPlayerMusic();
+    public BaseAudioInfo getCurrentPlayerMusic();
 
     /**
      * 获取播放器正在处理第三方网络歌曲的唯一标识，此hashKey只有搜索的歌曲有此属性
@@ -527,21 +479,21 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      * @param channel 详见 MusicPlayingChannel 定义
      */
     @Override
-    public void setPlayingChannel(MusicPlayingChannel channel);
+    public void setPlayingChannel(int channel);
 
     /**
-     * 返回播放器内部正在处理的对象来源属性,详见 MusicPlayingChannel 描述
+     * 返回播放器内部正在处理的对象来源属性,详见 MusicConstants 描述
      * @return 播放器内部处理数据集的CHANNEL
      */
     @Override
-    public MusicPlayingChannel getPlayingChannel();
+    public int getPlayingChannel();
 
     /**
      * 返回播放器内部工作状态
      * @return 详见 MusicPlayerState 定义
      */
     @Override
-    public MusicPlayerState getPlayerState();
+    public int getPlayerState();
 
     /**
      * 检查播放器配置
@@ -576,7 +528,6 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      */
     @Override
     public void removeAllPlayerListener();
-
 
     /**
      * 监听播放器正在处理的对象
@@ -663,19 +614,8 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     /**
      * 指定点击通知栏后打开的Activity对象绝对路径
      * @param className
+     * @return MusicPlayerManager
      */
-    public void setMusicPlayerActivityClassName(String className);
-
-    /**
-     * 设置锁屏Activity绝对路径
-     * @param activityClassName activity绝对路径
-     */
-    public void setLockActivityName(String activityClassName);
-
-    /**
-     * APP销毁时同步销毁
-     * @param context Activity类型上下文
-     */
-    public void unInitialize(Activity context);
+    public MusicPlayerManager setMusicPlayerActivityClassName(String className);
 
 ```
