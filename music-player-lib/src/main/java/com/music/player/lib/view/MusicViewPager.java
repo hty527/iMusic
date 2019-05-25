@@ -2275,7 +2275,6 @@ public class MusicViewPager extends ViewGroup {
     private void actionClickView(MotionEvent ev) {
         if(Math.abs(ev.getX()-downX) < 5
                 && Math.abs(ev.getY()-downY) < 5){
-            Logger.d(TAG,"单击事件--");
             downX=0;downY=0;
             if(null!=mOnClickViewListener){
                 mOnClickViewListener.onClick(MusicViewPager.this);

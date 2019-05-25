@@ -1,10 +1,8 @@
 package com.music.player.lib.listener;
 
 import android.view.View;
-
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicLrcRow;
-import com.music.player.lib.model.MusicPlayerStatus;
 
 /**
  * hty_Yuye@Outlook.com
@@ -30,9 +28,9 @@ public interface MusicJukeBoxStatusListener {
 
     /**
      * 唱片机状态发生了变化
-     * @param playerState 唱片机状态
+     * @param playerState 唱片机状态,参见MusicConstants常量定义
      */
-    void onJukeBoxState(MusicPlayerStatus playerState);
+    void onJukeBoxState(int playerState);
 
     /**
      * 唱片机点击事件,主要抛出给组件来控制歌词控件

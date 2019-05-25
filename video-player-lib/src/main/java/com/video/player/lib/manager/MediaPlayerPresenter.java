@@ -1,7 +1,5 @@
 package com.video.player.lib.manager;
 
-import com.video.player.lib.model.VideoPlayerState;
-
 /**
  * TinyHung@Outlook.com
  * 2019/4/9
@@ -112,9 +110,9 @@ public interface MediaPlayerPresenter {
 
     /**
      * 返回内部播放器播放状态
-     * @return 内部播放状态
+     * @return 内部播放状态，详见VideoConstants.定义
      */
-    VideoPlayerState getVideoPlayerState();
+    int getVideoPlayerState();
 
     /**
      * 此标记标识跳转至目标Activity是否衔接播放

@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.android.imusic.R;
 import com.android.imusic.music.adapter.holder.IndexAlbumViewHolder;
 import com.android.imusic.music.adapter.holder.IndexDefaultViewHolder;
@@ -22,10 +23,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.music.player.lib.adapter.base.BaseAdapter;
 import com.music.player.lib.bean.BaseAudioInfo;
+import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.model.MusicPlayingChannel;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
+
 import java.util.List;
 
 /**
@@ -99,8 +101,7 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                 if(!TextUtils.isEmpty(itemData.getTag_id())){
                     //本地音乐
                     if(itemData.getTag_id().equals(AudioInfo.TAG_LOCATION)){
-                        if(MusicPlayerManager.getInstance().getPlayingChannel().equals(
-                                MusicPlayingChannel.CHANNEL_LOCATION)){
+                        if(MusicPlayerManager.getInstance().getPlayingChannel()==MusicConstants.CHANNEL_LOCATION){
                             isVisible=true;
                         }
                         //本地音频个数获取
@@ -112,8 +113,7 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                         }
                     //最近播放
                     }else if(itemData.getTag_id().equals(AudioInfo.TAG_LAST_PLAYING)){
-                        if(MusicPlayerManager.getInstance().getPlayingChannel().equals(
-                                MusicPlayingChannel.CHANNEL_HISTROY)){
+                        if(MusicPlayerManager.getInstance().getPlayingChannel()==MusicConstants.CHANNEL_HISTROY){
                             isVisible=true;
                         }
                         //优先拿播放器内部的，处理播放过程中切换了对象
@@ -131,8 +131,7 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                         }
                     //我的收藏
                     }else if(itemData.getTag_id().equals(AudioInfo.TAG_COLLECT)){
-                        if(MusicPlayerManager.getInstance().getPlayingChannel().equals(
-                                MusicPlayingChannel.CHANNEL_COLLECT)){
+                        if(MusicPlayerManager.getInstance().getPlayingChannel()==MusicConstants.CHANNEL_COLLECT){
                             isVisible=true;
                         }
                         //查询收藏表总条数

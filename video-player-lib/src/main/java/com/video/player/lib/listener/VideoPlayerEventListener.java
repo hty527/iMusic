@@ -1,7 +1,5 @@
 package com.video.player.lib.listener;
 
-import com.video.player.lib.model.VideoPlayerState;
-
 /**
  * TinyHung@Outlook.com
  * 2018/1/18.
@@ -12,9 +10,9 @@ public interface VideoPlayerEventListener {
 
     /**
      * 播放器所有状态回调
-     * @param playerState 播放器内部状态
+     * @param playerState 播放器内部状态,详见VideoConstants.定义
      */
-    void onVideoPlayerState(VideoPlayerState playerState, String message);
+    void onVideoPlayerState(int playerState, String message);
 
     /**
      * 播放器准备好了

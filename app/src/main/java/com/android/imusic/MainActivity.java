@@ -25,7 +25,6 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.model.MusicPlayerConfig;
-import com.music.player.lib.model.MusicWindowStyle;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.manager.VideoPlayerManager;
@@ -61,7 +60,7 @@ public class MainActivity extends BaseActivity {
             .setWindownAutoScrollToEdge(true)//悬浮窗自动吸附开关
             .setTrashEnable(true)//垃圾桶功能开关
             .setScreenOffEnable(true)//锁屏控制器开关
-            .setWindownStyle(MusicWindowStyle.TRASH);//悬浮窗播放器样式
+            .setWindownStyle(MusicConstants.TRASH);//悬浮窗播放器样式
         MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
         //设置点击通知栏打开的播放器界面,需开启setLockForeground(true);
         MusicPlayerManager.getInstance().setMusicPlayerActivityClassName(

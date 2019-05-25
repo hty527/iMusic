@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicSearchAdapter;
@@ -37,12 +38,13 @@ import com.android.imusic.music.utils.MediaUtils;
 import com.google.android.flexbox.FlexboxLayout;
 import com.music.player.lib.adapter.base.OnLoadMoreListener;
 import com.music.player.lib.bean.MusicStatus;
+import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
-import com.music.player.lib.model.MusicPlayingChannel;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
+
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -514,7 +516,7 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
                     item.setSource(data.getPlay_url());
                     mAdapter.notifyDataSetChanged(position);
                     AudioInfo audioInfo=getaudioInfo(data,item.getAudio_id());
-                    MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_SEARCH);
+                    MusicPlayerManager.getInstance().setPlayingChannel(MusicConstants.CHANNEL_SEARCH);
                     MusicPlayerManager.getInstance().addPlayMusicToTop(audioInfo);
                     //如果悬浮窗权限未给定
                     createMiniJukeboxWindow();

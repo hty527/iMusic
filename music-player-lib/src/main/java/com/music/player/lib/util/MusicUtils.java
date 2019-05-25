@@ -51,7 +51,6 @@ import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicAlarmSetting;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.model.MusicAlarmModel;
 import com.music.player.lib.model.MusicGlideCircleTransform;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -602,13 +601,13 @@ public class MusicUtils {
      */
     public List<MusicAlarmSetting> createAlarmSettings() {
         List<MusicAlarmSetting> alarmSettings=new ArrayList<>();
-        MusicAlarmSetting alarmSetting1=new MusicAlarmSetting("10", MusicAlarmModel.MUSIC_ALARM_MODEL_10);
+        MusicAlarmSetting alarmSetting1=new MusicAlarmSetting("10", MusicConstants.MUSIC_ALARM_MODEL_10);
         alarmSettings.add(alarmSetting1);
-        MusicAlarmSetting alarmSetting2=new MusicAlarmSetting("15", MusicAlarmModel.MUSIC_ALARM_MODEL_15);
+        MusicAlarmSetting alarmSetting2=new MusicAlarmSetting("15", MusicConstants.MUSIC_ALARM_MODEL_15);
         alarmSettings.add(alarmSetting2);
-        MusicAlarmSetting alarmSetting3=new MusicAlarmSetting("30", MusicAlarmModel.MUSIC_ALARM_MODEL_30);
+        MusicAlarmSetting alarmSetting3=new MusicAlarmSetting("30", MusicConstants.MUSIC_ALARM_MODEL_30);
         alarmSettings.add(alarmSetting3);
-        MusicAlarmSetting alarmSetting4=new MusicAlarmSetting("60", MusicAlarmModel.MUSIC_ALARM_MODEL_60);
+        MusicAlarmSetting alarmSetting4=new MusicAlarmSetting("60", MusicConstants.MUSIC_ALARM_MODEL_60);
         alarmSettings.add(alarmSetting4);
         return alarmSettings;
     }

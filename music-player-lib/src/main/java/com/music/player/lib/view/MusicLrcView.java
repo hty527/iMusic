@@ -277,11 +277,7 @@ public class MusicLrcView extends View{
         if(!TextUtils.isEmpty(audioID)&&null!=cacheLrcRows&&null!=cacheLrcRows.get(audioID)){
             loadLrcing=false;
             List<MusicLrcRow> lrcRowList = cacheLrcRows.get(audioID);
-            if(null==mLrcRows){
-                mLrcRows=new ArrayList<>();
-            }
-            mLrcRows.clear();
-            mLrcRows.addAll(lrcRowList);
+            addToLrcRows(lrcRowList);
             Logger.d(TAG,"loadLrcRows-->使用内部缓存");
             invalidate();
             return;
@@ -292,22 +288,33 @@ public class MusicLrcView extends View{
             @Override
             public void onLrcRows(List<MusicLrcRow> lrcRows) {
                 loadLrcing=false;
-                if(!TextUtils.isEmpty(audioID)&&null!=lrcRows){
+                if(null==lrcRows){
+                    lrcRows=new ArrayList<>();
+                }
+                if(!TextUtils.isEmpty(audioID)){
                     if(null==cacheLrcRows){
                         cacheLrcRows=new HashMap<>();
                     }
                     cacheLrcRows.put(audioID,lrcRows);
                 }
-                if(null==mLrcRows){
-                    mLrcRows=new ArrayList<>();
-                }
-                mLrcRows.clear();
-                if(null!=lrcRows){
-                    mLrcRows.addAll(lrcRows);
-                }
+                addToLrcRows(lrcRows);
                 invalidate();
             }
         });
+    }
+
+    /**
+     * 添加此控件持有的歌词列表
+     * @param lrcRowList 歌词
+     */
+    private void addToLrcRows(List<MusicLrcRow> lrcRowList) {
+        if(null==mLrcRows){
+            mLrcRows=new ArrayList<>();
+        }
+        mLrcRows.clear();
+        if(null!=lrcRowList){
+            mLrcRows.addAll(lrcRowList);
+        }
     }
 
     /**
@@ -315,13 +322,7 @@ public class MusicLrcView extends View{
      * @param lrcRows 已经解析好的歌词实体数组
      */
     public void setLrcRow(List<MusicLrcRow> lrcRows){
-        if(null==mLrcRows){
-            mLrcRows=new ArrayList<>();
-        }
-        mLrcRows.clear();
-        if(null!=lrcRows){
-            mLrcRows.addAll(lrcRows);
-        }
+        addToLrcRows(lrcRows);
         invalidate();
     }
 
@@ -416,7 +417,6 @@ public class MusicLrcView extends View{
      * @param isTouch  是否是手指拖动的事件
      */
     private void seekLrc(int position, boolean isTouch) {
-        Logger.d(TAG,"seekLrc-->position:"+position+",isTouch:"+isTouch);
         if (mLrcRows == null || position < 0 || position > mLrcRows.size()-1) {
             return;
         }

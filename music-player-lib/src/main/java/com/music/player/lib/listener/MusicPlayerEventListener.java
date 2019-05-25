@@ -1,9 +1,6 @@
 package com.music.player.lib.listener;
 
 import com.music.player.lib.bean.BaseAudioInfo;
-import com.music.player.lib.model.MusicAlarmModel;
-import com.music.player.lib.model.MusicPlayModel;
-import com.music.player.lib.model.MusicPlayerState;
 
 /**
  * TinyHung@Outlook.com
@@ -17,7 +14,7 @@ public interface MusicPlayerEventListener {
      * 播放器所有状态回调
      * @param playerState 播放器内部状态
      */
-    void onMusicPlayerState(MusicPlayerState playerState,String message);
+    void onMusicPlayerState(int playerState,String message);
 
     /**
      * 播放器准备好了
@@ -76,5 +73,5 @@ public interface MusicPlayerEventListener {
      * @param alarmModel 闹钟模式
      * @param isToast 是否吐司提示
      */
-    void onPlayerConfig(MusicPlayModel playModel, MusicAlarmModel alarmModel,boolean isToast);
+    void onPlayerConfig(int playModel, int alarmModel,boolean isToast);
 }

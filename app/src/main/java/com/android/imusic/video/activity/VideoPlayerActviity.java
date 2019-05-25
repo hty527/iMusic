@@ -171,6 +171,7 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(mVideoPlayer.getCoverController().mVideoCover);
             }
+            Logger.d(TAG,"initVideoParams-->"+mIsPlaying);
             //无缝衔接外部播放任务
             if(mIsPlaying&&null!= IMediaPlayer.getInstance().getTextureView()){
                 addTextrueViewToView(mVideoPlayer);

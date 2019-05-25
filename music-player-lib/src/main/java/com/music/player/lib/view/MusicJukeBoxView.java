@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -25,8 +26,6 @@ import com.music.player.lib.listener.MusicAnimatorListener;
 import com.music.player.lib.listener.MusicJukeBoxStatusListener;
 import com.music.player.lib.listener.MusicLrcViewListener;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.model.MusicPlayerStatus;
-import com.music.player.lib.model.MusicWindowStyle;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import java.util.ArrayList;
@@ -300,13 +299,15 @@ public class MusicJukeBoxView extends RelativeLayout{
             }catch (RuntimeException e){
 
             }finally {
+
                 if(null!=mMusicLrcView){
                     mMusicLrcView.onReset();
+                    //只有当歌词已经在显示了，尝试隐藏歌词控件
+                    if(null!=mMusicLrcView.getParent()){
+                        showLrcView(false);
+                    }
                     //还原唱片机状态
                     removeViewByGroupVoew(mMusicLrcView);
-                }
-                if(mOffsetPosition!=position){
-                    showLrcView(false);
                 }
                 mOffsetPosition=position;
                 //静止了，处理界面和播放，有效避免顿挫感现象
@@ -365,7 +366,7 @@ public class MusicJukeBoxView extends RelativeLayout{
         if(null!=mHandAnimator){
             //唱针处于远端时，直接播放动画
             if (needleAnimatorStatus == NeedleAnimatorStatus.IN_FAR_END) {
-                notifyMusicStatusChanged(MusicPlayerStatus.PLAY);
+                notifyMusicStatusChanged(MusicConstants.JUKE_BOX_PLAY);
                 mHandAnimator.start();
             }else if (needleAnimatorStatus == NeedleAnimatorStatus.TO_FAR_END) {
                 ////唱针处于往远端移动时，设置标记，等动画结束后再播放动画
@@ -398,9 +399,9 @@ public class MusicJukeBoxView extends RelativeLayout{
             }
             //动画可能执行多次，只有音乐处于停止 / 暂停状态时，才执行暂停命令
             if (mDiscStatus == DiscStatus.STOP) {
-                notifyMusicStatusChanged(MusicPlayerStatus.STOP);
+                notifyMusicStatusChanged(MusicConstants.JUKE_BOX_STOP);
             }else if (mDiscStatus == DiscStatus.PAUSE) {
-                notifyMusicStatusChanged(MusicPlayerStatus.PAUSE);
+                notifyMusicStatusChanged(MusicConstants.JUKE_BOX_PAUSE);
             }
         }
     }
@@ -464,7 +465,7 @@ public class MusicJukeBoxView extends RelativeLayout{
      * 播放器状态
      * @param status
      */
-    public void notifyMusicStatusChanged(MusicPlayerStatus status) {
+    public void notifyMusicStatusChanged(int status) {
         if(null!=mPlayerInfoListener&&null!=mMusicDatas&&mMusicDatas.size()>0){
             mPlayerInfoListener.onJukeBoxState(status);
         }
@@ -517,11 +518,17 @@ public class MusicJukeBoxView extends RelativeLayout{
             mMusicLrcView.setEnable(showlrc);
         }
         if(null!=mDiscRoot){
+            ObjectAnimator animator;
             if(showlrc){
-                mDiscRoot.setVisibility(INVISIBLE);
+                //显示歌词，隐藏唱片机
+                animator = ObjectAnimator.ofFloat(mDiscRoot, "alpha", 1.0f, 0.0f);
             }else{
-                mDiscRoot.setVisibility(VISIBLE);
+                //隐藏歌词，显示唱片机
+                animator = ObjectAnimator.ofFloat(mDiscRoot, "alpha", 0.0f, 1.0f);
             }
+            animator.setDuration(200);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.start();
         }
     }
 
@@ -680,7 +687,7 @@ public class MusicJukeBoxView extends RelativeLayout{
     private Drawable getDiscBlackgroundDrawable() {
         int discSize = (int) (mScreenWidth * MusicConstants.SCALE_DISC_SIZE);
         //Demo垃圾桶样式，背景透明圆盘可见
-        if(MusicPlayerManager.getInstance().getWindownStyle().equals(MusicWindowStyle.TRASH)){
+        if(MusicPlayerManager.getInstance().getWindownStyle()==MusicConstants.TRASH){
             discSize = (int) (mScreenWidth * MusicConstants.SCALE_DISC_BG_SIZE);
         }
         Bitmap bitmapDisc = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R

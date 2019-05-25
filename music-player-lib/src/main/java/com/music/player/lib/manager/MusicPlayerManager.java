@@ -8,15 +8,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import com.music.player.lib.bean.BaseAudioInfo;
+import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.iinterface.MusicPlayerPresenter;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
-import com.music.player.lib.model.MusicAlarmModel;
-import com.music.player.lib.model.MusicPlayModel;
 import com.music.player.lib.model.MusicPlayerConfig;
-import com.music.player.lib.model.MusicPlayerState;
-import com.music.player.lib.model.MusicPlayingChannel;
-import com.music.player.lib.model.MusicWindowStyle;
 import com.music.player.lib.service.MusicPlayerBinder;
 import com.music.player.lib.service.MusicPlayerService;
 import com.music.player.lib.util.MusicUtils;
@@ -33,7 +29,6 @@ import java.util.Observer;
 
 public final class MusicPlayerManager implements MusicPlayerPresenter {
 
-    private static final String TAG = MusicPlayerManager.class.getSimpleName();
     private static volatile MusicPlayerManager mInstance = null;
     private static MusicSubjectObservable cMMusicSubjectObservable;
     private static MusicPlayerServiceConnection mConnection;
@@ -118,11 +113,11 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      * 获取默认的闹钟模式
      * @return 播放器闹钟模式
      */
-    public MusicAlarmModel getDefaultAlarmModel() {
+    public int getDefaultAlarmModel() {
         if(null!=mMusicPlayerConfig){
             return mMusicPlayerConfig.getDefaultAlarmModel();
         }
-        return MusicAlarmModel.MUSIC_ALARM_MODEL_0;
+        return MusicConstants.MUSIC_ALARM_MODEL_0;
     }
 
     /**
@@ -130,7 +125,7 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      * @param alarmModel
      * @return 已设置的闹钟模式
      */
-    public MusicPlayerManager setDefaultAlarmModel(MusicAlarmModel alarmModel) {
+    public MusicPlayerManager setDefaultAlarmModel(int alarmModel) {
         if(null==mMusicPlayerConfig){
             mMusicPlayerConfig=new MusicPlayerConfig();
         }
@@ -142,11 +137,11 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      * 获取播放模式
      * @return 播放器默认的闹钟模式
      */
-    public MusicPlayModel getDefaultPlayModel() {
+    public int getDefaultPlayModel() {
         if(null!=mMusicPlayerConfig){
             return mMusicPlayerConfig.getDefaultPlayModel();
         }
-        return MusicPlayModel.MUSIC_MODEL_LOOP;
+        return MusicConstants.MUSIC_MODEL_LOOP;
     }
 
     /**
@@ -154,7 +149,7 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      * @param playModel
      * @return 自身
      */
-    public MusicPlayerManager setDefaultPlayModel(MusicPlayModel playModel) {
+    public MusicPlayerManager setDefaultPlayModel(int playModel) {
         if(null==mMusicPlayerConfig){
             mMusicPlayerConfig=new MusicPlayerConfig();
         }
@@ -258,18 +253,18 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      * 返回悬浮窗播放器样式
      * @return 返回悬浮窗播放器样式
      */
-    public MusicWindowStyle getWindownStyle() {
+    public int getWindownStyle() {
         if(null!=mMusicPlayerConfig){
             return mMusicPlayerConfig.getWindownStyle();
         }
-        return MusicWindowStyle.DEFAULT;
+        return MusicConstants.DEFAULT;
     }
 
     /**
      * 设置悬浮窗播放器样式
-     * @param musicWindowStyle 新的样式，参考MusicWindowStyle定义
+     * @param musicWindowStyle 新的样式，参考MusicConstants定义
      */
-    public MusicPlayerManager setWindownStyle(MusicWindowStyle musicWindowStyle) {
+    public MusicPlayerManager setWindownStyle(int musicWindowStyle) {
         if(null==mMusicPlayerConfig){
             mMusicPlayerConfig=new MusicPlayerConfig();
         }
@@ -409,15 +404,15 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
 
     /**
      * 设置播放模式
-     * @param model 播放模式，参考MusicPlayModel定义
+     * @param model 播放模式，参考MusicConstants定义
      * @return 成功设置的播放模式
      */
     @Override
-    public MusicPlayModel setPlayerModel(MusicPlayModel model) {
+    public int setPlayerModel(int model) {
         if(null!=mBinder&&mBinder.pingBinder()){
             return mBinder.setPlayerModel(model);
         }
-        return null;
+        return MusicConstants.MUSIC_MODEL_LOOP;
     }
 
     /**
@@ -425,36 +420,36 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      * @return 播放器播放模式
      */
     @Override
-    public MusicPlayModel getPlayerModel() {
+    public int getPlayerModel() {
         if(null!=mBinder&&mBinder.pingBinder()){
             return mBinder.getPlayerModel();
         }
-        return null;
+        return MusicConstants.MUSIC_MODEL_LOOP;
     }
 
     /**
      * 设置定时模式
-     * @param model 定时关闭模式，参考MusicAlarmModel定义
+     * @param model 定时关闭模式，参考MusicConstants定义
      * @return 成功设置的播放模式
      */
     @Override
-    public MusicAlarmModel setPlayerAlarmModel(MusicAlarmModel model) {
+    public int setPlayerAlarmModel(int model) {
         if(null!=mBinder&&mBinder.pingBinder()){
             return mBinder.setPlayerAlarmModel(model);
         }
-        return null;
+        return MusicConstants.MUSIC_ALARM_MODEL_0;
     }
 
     /**
      * 获取定时模式
-     * @return 定时关闭模式
+     * @return 定时关闭模式 详见MusicConstants定义
      */
     @Override
-    public MusicAlarmModel getPlayerAlarmModel() {
+    public int getPlayerAlarmModel() {
         if(null!=mBinder&&mBinder.pingBinder()){
             return mBinder.getPlayerAlarmModel();
         }
-        return null;
+        return MusicConstants.MUSIC_ALARM_MODEL_0;
     }
 
     /**
@@ -589,22 +584,22 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      * @param channel 详见 MusicPlayingChannel 定义
      */
     @Override
-    public void setPlayingChannel(MusicPlayingChannel channel) {
+    public void setPlayingChannel(int channel) {
         if(null!=mBinder&&mBinder.pingBinder()){
             mBinder.setPlayingChannel(channel);
         }
     }
 
     /**
-     * 返回播放器内部正在处理的对象来源属性,详见 MusicPlayingChannel 描述
+     * 返回播放器内部正在处理的对象来源属性,详见 MusicConstants 描述
      * @return 播放器内部处理数据集的CHANNEL
      */
     @Override
-    public MusicPlayingChannel getPlayingChannel() {
+    public int getPlayingChannel() {
         if(null!=mBinder&&mBinder.pingBinder()){
             return mBinder.getPlayingChannel();
         }
-        return MusicPlayingChannel.CHANNEL_NET;
+        return MusicConstants.CHANNEL_NET;
     }
 
     /**
@@ -612,11 +607,11 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      * @return 详见 MusicPlayerState 定义
      */
     @Override
-    public MusicPlayerState getPlayerState() {
+    public int getPlayerState() {
         if(null!=mBinder&&mBinder.pingBinder()){
             return mBinder.getPlayerState();
         }
-        return null;
+        return 0;
     }
 
     /**

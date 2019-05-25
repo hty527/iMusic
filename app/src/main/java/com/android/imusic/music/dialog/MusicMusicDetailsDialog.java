@@ -23,9 +23,6 @@ import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.model.MusicAlarmModel;
-import com.music.player.lib.model.MusicPlayModel;
-import com.music.player.lib.model.MusicPlayerState;
 import java.util.List;
 
 /**
@@ -127,7 +124,7 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
                 MusicPlayerManager.getInstance().changedPlayerPlayModel();
         }
         });
-        MusicPlayModel playerModel = MusicPlayerManager.getInstance().getPlayerModel();
+        int playerModel = MusicPlayerManager.getInstance().getPlayerModel();
         mBtnPlayModel.setImageResource(getResToPlayModel(playerModel,false));
     }
 
@@ -142,26 +139,12 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
      * @param isToast 是否吐司提示
      * @return
      */
-    private int getResToPlayModel(MusicPlayModel playerModel,boolean isToast) {
-        if(playerModel.equals(MusicPlayModel.MUSIC_MODEL_LOOP)){
-            if(isToast){
-                Toast.makeText(getContext(),"列表循环",Toast.LENGTH_SHORT).show();
-            }
-            return R.drawable.ic_music_model_loop;
+    private int getResToPlayModel(int playerModel,boolean isToast) {
+        int playerModelToRes = MediaUtils.getInstance().getPlayerModelToRes(playerModel);
+        if(isToast){
+            Toast.makeText(getContext(),MediaUtils.getInstance().getPlayerModelToString(playerModel),Toast.LENGTH_SHORT).show();
         }
-        if(playerModel.equals(MusicPlayModel.MUSIC_MODEL_SINGLE)){
-            if(isToast){
-                Toast.makeText(getContext(),"单曲循环",Toast.LENGTH_SHORT).show();
-            }
-            return R.drawable.ic_music_model_signle;
-        }
-        if(playerModel.equals(MusicPlayModel.MUSIC_MODEL_RANDOM)){
-            if(isToast){
-                Toast.makeText(getContext(),"随机播放",Toast.LENGTH_SHORT).show();
-            }
-            return R.drawable.ic_music_model_random;
-        }
-        return R.drawable.ic_music_model_signle;
+        return playerModelToRes;
     }
 
     protected void initLayoutPrams(){
@@ -185,7 +168,7 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
     }
 
     @Override
-    public void onMusicPlayerState(MusicPlayerState playerState, String message) {}
+    public void onMusicPlayerState(int playerState, String message) {}
     @Override
     public void onPrepared(long totalDurtion) {}
     @Override
@@ -205,8 +188,8 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
                               long alarmResidueDurtion,int bufferProgress) {}
 
     @Override
-    public void onPlayerConfig(MusicPlayModel playModel, MusicAlarmModel alarmModel, boolean isToast) {
-        if(null!=playModel&&null!=mBtnPlayModel){
+    public void onPlayerConfig(int playModel, int alarmModel, boolean isToast) {
+        if(null!=mBtnPlayModel){
             mBtnPlayModel.setImageResource(getResToPlayModel(playModel,isToast));
         }
     }

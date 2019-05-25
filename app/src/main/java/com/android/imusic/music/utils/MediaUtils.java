@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
@@ -11,8 +12,10 @@ import com.android.imusic.music.bean.SearchResultInfo;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
 import com.music.player.lib.bean.BaseAudioInfo;
+import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.bean.VideoParams;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -304,5 +307,37 @@ public class MediaUtils {
         videoParams.setVideoUrl(indexItemBean.getPlayUrl());
         videoParams.setDurtion(indexItemBean.getDuration());
         return videoParams;
+    }
+
+    /**
+     * 根据播放模式返回文本
+     * @param playerModel
+     * @return
+     */
+    public String getPlayerModelToString(int playerModel) {
+        if(playerModel==MusicConstants.MUSIC_MODEL_SINGLE){
+            return "单曲循环";
+        }else if(playerModel==MusicConstants.MUSIC_MODEL_LOOP){
+            return "列表循环";
+        }else if(playerModel==MusicConstants.MUSIC_MODEL_RANDOM){
+            return "随机播放";
+        }
+        return "列表循环";
+    }
+
+    /**
+     * 根据播放模式返回资源ID
+     * @param playerModel
+     * @return
+     */
+    public int getPlayerModelToRes(int playerModel) {
+        if(playerModel== MusicConstants.MUSIC_MODEL_SINGLE){
+            return R.drawable.music_player_model_single_selector;
+        }else if(playerModel==MusicConstants.MUSIC_MODEL_LOOP){
+            return R.drawable.music_player_model_loop_selector;
+        }else if(playerModel==MusicConstants.MUSIC_MODEL_RANDOM){
+            return R.drawable.ic_music_lock_model_random;
+        }
+        return R.drawable.music_player_model_loop_selector;
     }
 }

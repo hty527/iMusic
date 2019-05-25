@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
+
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
@@ -20,12 +21,13 @@ import com.android.imusic.music.ui.presenter.MusicLocationPersenter;
 import com.android.imusic.music.utils.MediaUtils;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
+import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
-import com.music.player.lib.model.MusicPlayingChannel;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicCommentTitleView;
+
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -59,7 +61,7 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
             @Override
             public void onSubTitleClick(View v) {
                 if(null!=mAdapter&&null!=mAdapter.getData()&&mAdapter.getData().size()>0){
-                    MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_LOCATION);
+                    MusicPlayerManager.getInstance().setPlayingChannel(MusicConstants.CHANNEL_LOCATION);
                     List<BaseAudioInfo> audioInfos = mAdapter.getData();
                     startMusicPlayer(audioInfos.get(0).getAudioId(),audioInfos);
                 }
@@ -146,7 +148,7 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
 //                        }
 //                    }
 //                }
-                MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_LOCATION);
+                MusicPlayerManager.getInstance().setPlayingChannel(MusicConstants.CHANNEL_LOCATION);
                 //开始播放
                 MusicPlayerManager.getInstance().startPlayMusic(mAdapter.getData(),position);
                 //如果悬浮窗权限未给定
@@ -217,21 +219,26 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, final Object arg) {
         if(null!=mAdapter&&o instanceof MusicSubjectObservable && null!=arg && arg instanceof MusicStatus){
-            MusicStatus musicStatus= (MusicStatus) arg;
-            if(MusicStatus.PLAYER_STATUS_DESTROY==musicStatus.getPlayerStatus()
-                    ||MusicStatus.PLAYER_STATUS_STOP==musicStatus.getPlayerStatus()){
-                if(null!=mAdapter.getData()&&mAdapter.getData().size()>mAdapter.getCurrentPosition()){
-                    mAdapter.getData().get(mAdapter.getCurrentPosition()).setSelected(false);
-                    mAdapter.notifyDataSetChanged();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MusicStatus musicStatus= (MusicStatus) arg;
+                    if(MusicStatus.PLAYER_STATUS_DESTROY==musicStatus.getPlayerStatus()
+                            ||MusicStatus.PLAYER_STATUS_STOP==musicStatus.getPlayerStatus()){
+                        if(null!=mAdapter.getData()&&mAdapter.getData().size()>mAdapter.getCurrentPosition()){
+                            mAdapter.getData().get(mAdapter.getCurrentPosition()).setSelected(false);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }else{
+                        mAdapter.notifyDataSetChanged();
+                        int position = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
+                                MusicPlayerManager.getInstance().getCurrentPlayerID());
+                        mAdapter.setCurrentPosition(position);
+                    }
                 }
-            }else{
-                mAdapter.notifyDataSetChanged();
-                int position = MusicUtils.getInstance().getCurrentPlayIndexInThis(mAdapter.getData(),
-                        MusicPlayerManager.getInstance().getCurrentPlayerID());
-                mAdapter.setCurrentPosition(position);
-            }
+            });
         }
     }
 

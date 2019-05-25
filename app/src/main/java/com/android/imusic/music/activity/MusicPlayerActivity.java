@@ -22,10 +22,12 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.manager.SqlLiteCacheManager;
 import com.android.imusic.music.model.MusicLrcRowParserEngin;
+import com.android.imusic.music.utils.MediaUtils;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicLrcRow;
 import com.music.player.lib.bean.MusicStatus;
@@ -36,10 +38,6 @@ import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
-import com.music.player.lib.model.MusicAlarmModel;
-import com.music.player.lib.model.MusicPlayModel;
-import com.music.player.lib.model.MusicPlayerState;
-import com.music.player.lib.model.MusicPlayerStatus;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicClickControler;
 import com.music.player.lib.util.MusicUtils;
@@ -47,6 +45,7 @@ import com.music.player.lib.view.MusicJukeBoxBackgroundLayout;
 import com.music.player.lib.view.MusicJukeBoxView;
 import com.music.player.lib.view.dialog.MusicAlarmSettingDialog;
 import com.music.player.lib.view.dialog.MusicPlayerListDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +143,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             thisMusicLists.addAll(audioInfos);
             final int index=MusicUtils.getInstance().getCurrentPlayIndex(thisMusicLists,musicID);
             if(null!=currentPlayerMusic&&currentPlayerMusic.getAudioId()==musicID&&
-                    MusicPlayerManager.getInstance().getPlayerState()==MusicPlayerState.MUSIC_PLAYER_PLAYING){
+                    MusicPlayerManager.getInstance().getPlayerState()==MusicConstants.MUSIC_PLAYER_PLAYING){
                 Logger.d(TAG,"RESET PLAY,musicID:"+musicID);
                 //更新播放器内部数据
                 MusicPlayerManager.getInstance().updateMusicPlayerData(thisMusicLists,index);
@@ -257,13 +256,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                         MusicAlarmSettingDialog.getInstance(MusicPlayerActivity.this).
                                 setOnAlarmModelListener(new MusicAlarmSettingDialog.OnAlarmModelListener() {
                             @Override
-                            public void onAlarmModel(MusicAlarmModel alarmModel) {
-                                final MusicAlarmModel musicAlarmModel =
+                            public void onAlarmModel(int alarmModel) {
+                                final int musicAlarmModel =
                                         MusicPlayerManager.getInstance().setPlayerAlarmModel(alarmModel);
                                 getHandler().post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        setPlayerConfig(null,musicAlarmModel,true);
+                                        setPlayerConfig(-1,musicAlarmModel,true);
                                     }
                                 });
                             }
@@ -359,7 +358,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             boolean isExist = SqlLiteCacheManager.getInstance().isExistToCollectByID(mMusicJukeBoxView.getCurrentMedia().getAudioId());
             mBtnCollect.setSelected(isExist);
         }
-        if(MusicPlayerManager.getInstance().getPlayerState()==MusicPlayerState.MUSIC_PLAYER_PLAYING){
+        if(MusicPlayerManager.getInstance().getPlayerState()==MusicConstants.MUSIC_PLAYER_PLAYING){
             if(null!=mMusicBtnPlayPause) mMusicBtnPlayPause.setImageResource(R.drawable.music_player_pause_selector);
             if(null!= mMusicJukeBoxView){
                 mMusicJukeBoxView.onStart();
@@ -388,24 +387,16 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * @param isToast 是否吐司提示
      * @return
      */
-    private int getResToPlayModel(MusicPlayModel playerModel,boolean isToast) {
-        String content="列表循环";
-        int resID=R.drawable.music_player_model_loop_selector;
-        if(playerModel.equals(MusicPlayModel.MUSIC_MODEL_SINGLE)){
-            content="单曲循环";
-            resID=R.drawable.music_player_model_single_selector;
-        }else if(playerModel.equals(MusicPlayModel.MUSIC_MODEL_LOOP)){
-            content="列表循环";
-            resID=R.drawable.music_player_model_loop_selector;
-        }else if(playerModel.equals(MusicPlayModel.MUSIC_MODEL_RANDOM)){
-            content="随机播放";
-            resID=R.drawable.ic_music_lock_model_random;
+    private int getResToPlayModel(int playerModel,boolean isToast) {
+        int playerModelToRes = MediaUtils.getInstance().getPlayerModelToRes(playerModel);
+        String playerModelToString = MediaUtils.getInstance().getPlayerModelToString(playerModel);
+        if(playerModel==MusicConstants.MUSIC_MODEL_RANDOM){
             mMusicPlayerModel.setColorFilter(Color.parseColor("#FFFFFF"));
         }
         if(isToast){
-            Toast.makeText(MusicPlayerActivity.this,content,Toast.LENGTH_SHORT).show();
+            Toast.makeText(MusicPlayerActivity.this,playerModelToString,Toast.LENGTH_SHORT).show();
         }
-        return resID;
+        return playerModelToRes;
     }
 
     //========================================唱片机内部状态==========================================
@@ -458,12 +449,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * @param playerState 唱片机内部状态
      */
     @Override
-    public void onJukeBoxState(MusicPlayerStatus playerState) {
+    public void onJukeBoxState(int playerState) {
 //        Logger.d(TAG,"onJukeBoxState-->JUKEBOX_STATE:"+playerState);
 //        if(null!=mMusicBtnPlayPause){
-//            if(playerState==MusicPlayerStatus.PLAY){
+//            if(playerState==MusicConstants.JUKE_BOX_PLAY){
 //                mMusicBtnPlayPause.setImageResource(R.drawable.music_player_pause_selector);
-//            }else if(playerState==MusicPlayerStatus.PAUSE){
+//            }else if(playerState==MusicConstants.JUKE_BOX_PAUSE){
 //                mMusicBtnPlayPause.setImageResource(R.drawable.music_player_play_selector);
 //            }
 //        }
@@ -502,18 +493,18 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * @param message
      */
     @Override
-    public void onMusicPlayerState(final MusicPlayerState playerState, final String message) {
+    public void onMusicPlayerState(final int playerState, final String message) {
         Logger.d(TAG,"onMusicPlayerState-->"+playerState);
         getHandler().post(new Runnable() {
             @Override
             public void run() {
-                if (playerState.equals(MusicPlayerState.MUSIC_PLAYER_ERROR)&&!TextUtils.isEmpty(message)) {
+                if (playerState==MusicConstants.MUSIC_PLAYER_ERROR&&!TextUtils.isEmpty(message)) {
                     Toast.makeText(MusicPlayerActivity.this,message,Toast.LENGTH_SHORT).show();
                 }
                 switch (playerState) {
-                    case MUSIC_PLAYER_PREPARE:
-                        if (null != mMusicAlarm && !MusicPlayerManager.getInstance().getPlayerAlarmModel().
-                                equals(MusicAlarmModel.MUSIC_ALARM_MODEL_0)) {
+                    case MusicConstants.MUSIC_PLAYER_PREPARE:
+                        if (null != mMusicAlarm &&MusicPlayerManager.getInstance().getPlayerAlarmModel()
+                                !=MusicConstants.MUSIC_ALARM_MODEL_0) {
                             Drawable drawable = getResources().getDrawable(R.drawable.ic_music_alarm_pre);
                             mMusicAlarm.setCompoundDrawablesWithIntrinsicBounds(drawable,
                                     null, null, null);
@@ -523,20 +514,20 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                                 R.drawable.music_player_pause_selector);
                         if (null != mMusicJukeBoxView) mMusicJukeBoxView.onStart();
                         break;
-                    case MUSIC_PLAYER_BUFFER:
+                    case MusicConstants.MUSIC_PLAYER_BUFFER:
 
                         break;
-                    case MUSIC_PLAYER_PLAYING:
+                    case MusicConstants.MUSIC_PLAYER_PLAYING:
                         if (null != mMusicBtnPlayPause)
                             mMusicBtnPlayPause.setImageResource(R.drawable.music_player_pause_selector);
                         if (null != mMusicJukeBoxView) mMusicJukeBoxView.onStart();
                         break;
-                    case MUSIC_PLAYER_PAUSE:
+                    case MusicConstants.MUSIC_PLAYER_PAUSE:
                         if (null != mMusicBtnPlayPause)
                             mMusicBtnPlayPause.setImageResource(R.drawable.music_player_play_selector);
                         if (null != mMusicJukeBoxView) mMusicJukeBoxView.onPause();
                         break;
-                    case MUSIC_PLAYER_STOP:
+                    case MusicConstants.MUSIC_PLAYER_STOP:
                         if (null != mMusicBtnPlayPause) mMusicBtnPlayPause.setImageResource(
                                 R.drawable.music_player_play_selector);
                         if (null != mCurrentTime) mCurrentTime.setText("00:00");
@@ -552,7 +543,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                         }
                         if (null != mMusicJukeBoxView) mMusicJukeBoxView.onStop();
                         break;
-                    case MUSIC_PLAYER_ERROR:
+                    case MusicConstants.MUSIC_PLAYER_ERROR:
                         if (null != mMusicBtnPlayPause){
                             mMusicBtnPlayPause.setImageResource(R.drawable.music_player_play_selector);
                         }
@@ -676,7 +667,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * @param isToast 是否吐司提示
      */
     @Override
-    public void onPlayerConfig(final MusicPlayModel playModel, final MusicAlarmModel alarmModel,
+    public void onPlayerConfig(final int playModel, final int alarmModel,
                                final boolean isToast) {
         Logger.d(TAG,"onPlayerConfig--:playModel"+playModel+",alarmModel:"+alarmModel);
         getHandler().post(new Runnable() {
@@ -698,13 +689,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * @param playModel
      * @param alarmModel
      */
-    private synchronized void setPlayerConfig(MusicPlayModel playModel, MusicAlarmModel alarmModel,
+    private synchronized void setPlayerConfig(int playModel, int alarmModel,
                                               boolean isToast) {
-        if(null!=playModel&&null!=mMusicPlayerModel){
+        if(playModel>-1&&null!=mMusicPlayerModel){
             mMusicPlayerModel.setImageResource(getResToPlayModel(playModel,isToast));
         }
-        if(null!=mMusicAlarm&&null!=alarmModel){
-            if(alarmModel.equals(MusicAlarmModel.MUSIC_ALARM_MODEL_0)){
+        if(null!=mMusicAlarm){
+            if(alarmModel==MusicConstants.MUSIC_ALARM_MODEL_0){
                 Drawable drawable = getResources().getDrawable(R.drawable.ic_music_alarm_noimal);
                 mMusicAlarm.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
                 mMusicAlarm.setText("定时关闭");
@@ -714,15 +705,15 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                 mMusicAlarm.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
                 //这里不想去浪费资源运算了
                 String durtion="00:00";
-                if(alarmModel.equals(MusicAlarmModel.MUSIC_ALARM_MODEL_10)){
+                if(alarmModel==MusicConstants.MUSIC_ALARM_MODEL_10){
                     durtion="10:00";
-                }else if(alarmModel.equals(MusicAlarmModel.MUSIC_ALARM_MODEL_15)){
+                }else if(alarmModel==MusicConstants.MUSIC_ALARM_MODEL_15){
                     durtion="15:00";
-                }else if(alarmModel.equals(MusicAlarmModel.MUSIC_ALARM_MODEL_30)){
+                }else if(alarmModel==MusicConstants.MUSIC_ALARM_MODEL_30){
                     durtion="30:00";
-                }else if(alarmModel.equals(MusicAlarmModel.MUSIC_ALARM_MODEL_60)){
+                }else if(alarmModel==MusicConstants.MUSIC_ALARM_MODEL_60){
                     durtion="01:00:00";
-                }else if(alarmModel.equals(MusicAlarmModel.MUSIC_ALARM_MODEL_CURRENT)){
+                }else if(alarmModel==MusicConstants.MUSIC_ALARM_MODEL_CURRENT){
                     durtion="00:00";
                 }
                 mMusicAlarm.setText(durtion);
@@ -854,10 +845,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                 String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);
                 musicStatus.setCover(frontPath);
                 musicStatus.setTitle(musicInfo.getAudioName());
-                MusicPlayerState playerState = MusicPlayerManager.getInstance().getPlayerState();
-                boolean playing = playerState.equals(MusicPlayerState.MUSIC_PLAYER_PLAYING)
-                        || playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE)
-                        || playerState.equals(MusicPlayerState.MUSIC_PLAYER_BUFFER);
+                int playerState = MusicPlayerManager.getInstance().getPlayerState();
+                boolean playing = playerState==MusicConstants.MUSIC_PLAYER_PLAYING
+                        || playerState==MusicConstants.MUSIC_PLAYER_PREPARE
+                        || playerState==MusicConstants.MUSIC_PLAYER_BUFFER;
                 musicStatus.setPlayerStatus(playing?MusicStatus.PLAYER_STATUS_START:MusicStatus.PLAYER_STATUS_PAUSE);
                 MusicWindowManager.getInstance().updateWindowStatus(musicStatus);
             }

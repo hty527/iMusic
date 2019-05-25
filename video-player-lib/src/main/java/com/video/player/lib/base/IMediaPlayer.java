@@ -11,12 +11,12 @@ import android.text.TextUtils;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
+import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.manager.MediaPlayerPresenter;
 import com.video.player.lib.manager.VideoAudioFocusManager;
 import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.manager.VideoWindowManager;
-import com.video.player.lib.model.VideoPlayerState;
 import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
 import com.video.player.lib.view.VideoTextureView;
@@ -51,7 +51,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
     //播放器组件监听器
     private static VideoPlayerEventListener mOnPlayerEventListeners;
     //内部播放状态
-    private static VideoPlayerState mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_STOP;
+    private static int mMusicPlayerState = VideoConstants.MUSIC_PLAYER_STOP;
     //息屏下WIFI锁
     private static WifiManager.WifiLock mWifiLock;
     //进度计时器
@@ -324,14 +324,14 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
      */
     public void startVideoPlayer(String dataSource, Context context, int percentIndex) {
         if(TextUtils.isEmpty(dataSource)){
-            IMediaPlayer.this.mMusicPlayerState= VideoPlayerState.MUSIC_PLAYER_STOP;
+            IMediaPlayer.this.mMusicPlayerState= VideoConstants.MUSIC_PLAYER_STOP;
             if(null!=mOnPlayerEventListeners){
                 mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"播放地址为空");
                 mOnPlayerEventListeners.onVideoPathInvalid();
             }
             return;
         }
-        if(IMediaPlayer.this.mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PREPARE)
+        if(IMediaPlayer.this.mMusicPlayerState==VideoConstants.MUSIC_PLAYER_PREPARE
                 &&mDataSource.equals(dataSource)){
             Logger.d(TAG,"startVideoPlayer-->重复调用");
             return;
@@ -348,7 +348,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
         reset();
         if(VideoUtils.getInstance().isCheckNetwork(mContext)){
             if(!VideoUtils.getInstance().isWifiConnected(mContext)&&!VideoPlayerManager.getInstance().isMobileWorkEnable()){
-                IMediaPlayer.this.mMusicPlayerState= VideoPlayerState.MUSIC_PLAYER_MOBILE;
+                IMediaPlayer.this.mMusicPlayerState= VideoConstants.MUSIC_PLAYER_MOBILE;
                 if(null!=mOnPlayerEventListeners){
                     mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"正在使用移动网络");
                 }
@@ -378,7 +378,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
             });
 
             if(requestAudioFocus== AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
-                IMediaPlayer.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_PREPARE;
+                IMediaPlayer.this.mMusicPlayerState = VideoConstants.MUSIC_PLAYER_PREPARE;
                 try {
                     mMediaPlayer = new MediaPlayer();
                     mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -405,19 +405,19 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
                 }catch (Exception e){
                     e.printStackTrace();
                     Logger.e(TAG,"startPlay-->Exception--e:"+e.getMessage());
-                    IMediaPlayer.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_ERROR;
+                    IMediaPlayer.this.mMusicPlayerState = VideoConstants.MUSIC_PLAYER_ERROR;
                     if (null != mOnPlayerEventListeners) {
                         mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"播放失败，"+e.getMessage());
                     }
                 }
             }else{
-                IMediaPlayer.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_ERROR;
+                IMediaPlayer.this.mMusicPlayerState = VideoConstants.MUSIC_PLAYER_ERROR;
                 if (null != mOnPlayerEventListeners) {
                     mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"未成功获取音频输出焦点");
                 }
             }
         }else{
-            IMediaPlayer.this.mMusicPlayerState= VideoPlayerState.MUSIC_PLAYER_STOP;
+            IMediaPlayer.this.mMusicPlayerState= VideoConstants.MUSIC_PLAYER_STOP;
             if(null!=mOnPlayerEventListeners){
                 mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,"网络未连接");
             }
@@ -451,8 +451,8 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
      */
     @Override
     public boolean isPlaying() {
-        return null!=mMediaPlayer&&(mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PLAY)
-                || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_START));
+        return null!=mMediaPlayer&&(mMusicPlayerState==VideoConstants.MUSIC_PLAYER_PLAY
+                || mMusicPlayerState==VideoConstants.MUSIC_PLAYER_START);
     }
 
     /**
@@ -461,11 +461,11 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
      */
     @Override
     public boolean isWorking() {
-        return null!=mMediaPlayer&&(mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PREPARE)
-                || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_BUFFER)
-                || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_START)
-                || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PAUSE)
-                || mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PLAY));
+        return null!=mMediaPlayer&&(mMusicPlayerState==VideoConstants.MUSIC_PLAYER_PREPARE
+                || mMusicPlayerState==VideoConstants.MUSIC_PLAYER_BUFFER
+                || mMusicPlayerState==VideoConstants.MUSIC_PLAYER_START
+                || mMusicPlayerState==VideoConstants.MUSIC_PLAYER_PAUSE
+                || mMusicPlayerState==VideoConstants.MUSIC_PLAYER_PLAY);
     }
 
     /**
@@ -492,31 +492,31 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
     @Override
     public void playOrPause() {
         switch (getVideoPlayerState()) {
-            case MUSIC_PLAYER_STOP:
+            case VideoConstants.MUSIC_PLAYER_STOP:
                 startVideoPlayer(mDataSource,null);
                 break;
-            case MUSIC_PLAYER_PREPARE:
+            case VideoConstants.MUSIC_PLAYER_PREPARE:
                 pause();
                 break;
-            case MUSIC_PLAYER_BUFFER:
+            case VideoConstants.MUSIC_PLAYER_BUFFER:
                 pause();
                 break;
-            case MUSIC_PLAYER_START:
+            case VideoConstants.MUSIC_PLAYER_START:
                 pause();
                 break;
-            case MUSIC_PLAYER_PLAY:
+            case VideoConstants.MUSIC_PLAYER_PLAY:
                 pause();
                 break;
-            case MUSIC_PLAYER_PAUSE:
+            case VideoConstants.MUSIC_PLAYER_PAUSE:
                 if(null!=mAudioFocusManager){
                     mAudioFocusManager.requestAudioFocus(null);
                 }
                 play();
                 break;
-            case MUSIC_PLAYER_ERROR:
+            case VideoConstants.MUSIC_PLAYER_ERROR:
                 startVideoPlayer(mDataSource,null);
                 break;
-            case MUSIC_PLAYER_MOBILE:
+            case VideoConstants.MUSIC_PLAYER_MOBILE:
 
                 break;
         }
@@ -527,9 +527,9 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
      */
     @Override
     public void play() {
-        if(mMusicPlayerState == VideoPlayerState.MUSIC_PLAYER_START ||mMusicPlayerState ==
-                VideoPlayerState.MUSIC_PLAYER_PREPARE
-                ||mMusicPlayerState.equals(VideoPlayerState.MUSIC_PLAYER_PLAY)){
+        if(mMusicPlayerState == VideoConstants.MUSIC_PLAYER_START ||mMusicPlayerState ==
+                VideoConstants.MUSIC_PLAYER_PREPARE
+                ||mMusicPlayerState==VideoConstants.MUSIC_PLAYER_PLAY){
             return;
         }
         try {
@@ -540,7 +540,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
 
         }finally {
             if(null!=mMediaPlayer){
-                IMediaPlayer.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_PLAY;
+                IMediaPlayer.this.mMusicPlayerState = VideoConstants.MUSIC_PLAYER_PLAY;
                 if (null != mOnPlayerEventListeners) {
                     mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
                 }
@@ -562,7 +562,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
 
         }finally {
             stopTimer();
-            IMediaPlayer.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_PAUSE;
+            IMediaPlayer.this.mMusicPlayerState = VideoConstants.MUSIC_PLAYER_PAUSE;
             if (null != mOnPlayerEventListeners) {
                 mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
             }
@@ -613,7 +613,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
                 mAudioFocusManager.releaseAudioFocus();
             }
             //还原UI状态
-            IMediaPlayer.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_STOP;
+            IMediaPlayer.this.mMusicPlayerState = VideoConstants.MUSIC_PLAYER_STOP;
             if(null!=mOnPlayerEventListeners){
                 mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
             }
@@ -634,9 +634,8 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
         try {
             if(null!=mMediaPlayer){
                 //非暂停状态下置为加载中状态
-                if(!IMediaPlayer.getInstance().getVideoPlayerState().equals(
-                        VideoPlayerState.MUSIC_PLAYER_PAUSE)){
-                    IMediaPlayer.this.mMusicPlayerState= VideoPlayerState.MUSIC_PLAYER_SEEK;
+                if(IMediaPlayer.getInstance().getVideoPlayerState()!=VideoConstants.MUSIC_PLAYER_PAUSE){
+                    IMediaPlayer.this.mMusicPlayerState= VideoConstants.MUSIC_PLAYER_SEEK;
                     if(null!=mOnPlayerEventListeners){
                         mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
                     }
@@ -729,7 +728,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
      * @return 内部播放状态
      */
     @Override
-    public VideoPlayerState getVideoPlayerState() {
+    public int getVideoPlayerState() {
         return mMusicPlayerState;
     }
 
@@ -891,7 +890,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
     @Override
     public void onCompletion(MediaPlayer mp) {
         Logger.d(TAG,"onCompletion");
-        IMediaPlayer.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_STOP;
+        IMediaPlayer.this.mMusicPlayerState = VideoConstants.MUSIC_PLAYER_STOP;
         stopTimer();
         if(null!=mOnPlayerEventListeners){
             mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
@@ -911,9 +910,9 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
     public void onSeekComplete(MediaPlayer mp) {
         Logger.d(TAG,"onSeekComplete");
         //非用户主动暂停下，处理为恢复播放事件
-        if(IMediaPlayer.this.mMusicPlayerState!= VideoPlayerState.MUSIC_PLAYER_PAUSE){
+        if(IMediaPlayer.this.mMusicPlayerState!= VideoConstants.MUSIC_PLAYER_PAUSE){
             startTimer();
-            IMediaPlayer.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_START;
+            IMediaPlayer.this.mMusicPlayerState = VideoConstants.MUSIC_PLAYER_START;
             if(null!=mOnPlayerEventListeners){
                 mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
             }
@@ -924,7 +923,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
     public boolean onError(MediaPlayer mp, int what, int extra) {
         stopTimer();
         Logger.d(TAG,"onError,what:"+what+",extra:"+extra);
-        IMediaPlayer.this.mMusicPlayerState = VideoPlayerState.MUSIC_PLAYER_ERROR;
+        IMediaPlayer.this.mMusicPlayerState = VideoConstants.MUSIC_PLAYER_ERROR;
         if(null!=mOnPlayerEventListeners){
             mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
         }
@@ -933,16 +932,16 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
 
     @Override
     public boolean onInfo(MediaPlayer mp, int event, int extra) {
-        VideoPlayerState state=null;
+        int state =-1;
         if(event==MediaPlayer.MEDIA_INFO_BUFFERING_START){
-            state= VideoPlayerState.MUSIC_PLAYER_BUFFER;
+            state= VideoConstants.MUSIC_PLAYER_BUFFER;
         }else if(event==MediaPlayer.MEDIA_INFO_BUFFERING_END){
-            state= VideoPlayerState.MUSIC_PLAYER_START;
+            state= VideoConstants.MUSIC_PLAYER_START;
         }else if(event==MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START){
-            state= VideoPlayerState.MUSIC_PLAYER_START;
+            state= VideoConstants.MUSIC_PLAYER_START;
         }
-        if(null!=state){
-            IMediaPlayer.this.mMusicPlayerState =state;
+        if(state>-1){
+            IMediaPlayer.this.mMusicPlayerState = state;
             if(null!= mOnPlayerEventListeners){
                 mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
             }

@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
+
 import com.android.imusic.R;
 import com.android.imusic.base.BaseFragment;
 import com.android.imusic.music.activity.MusicAlbumActivity;
@@ -33,8 +34,8 @@ import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
-import com.music.player.lib.model.MusicPlayingChannel;
 import com.music.player.lib.view.MusicCommentTitleView;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -117,7 +118,7 @@ public class IndexMusicFragment extends BaseFragment<MusicListPersenter>
                             }
                         }
                         if(newData.size()>0){
-                            MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_NET);
+                            MusicPlayerManager.getInstance().setPlayingChannel(MusicConstants.CHANNEL_NET);
                             startToMusicPlayer(audioInfo.getAudioId(),newData);
                         }
                         return;

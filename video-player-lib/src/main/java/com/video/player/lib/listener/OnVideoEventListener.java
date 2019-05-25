@@ -1,7 +1,5 @@
 package com.video.player.lib.listener;
 
-import com.video.player.lib.model.VideoPlayerState;
-
 /**
  * TinyHung@Outlook.com
  * 2019/4/23
@@ -14,9 +12,9 @@ public abstract class OnVideoEventListener {
 
     /**
      * 播放中各种状态，开始、暂停、恢复、停止、完成、失败 等
-     * @param videoPlayerState 详见 VideoPlayerState 定义说明
+     * @param videoPlayerState 详见 VideoConstants. 定义说明
      */
-    public void onPlayerStatus(VideoPlayerState videoPlayerState){}
+    public void onPlayerStatus(int videoPlayerState){}
 
     /**
      * 播放进度，此方法在播放状态中持续被回调，已暂停情况下总时长和已播放时长返回-1

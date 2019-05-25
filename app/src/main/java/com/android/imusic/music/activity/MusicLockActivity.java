@@ -19,15 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.manager.SqlLiteCacheManager;
+import com.android.imusic.music.utils.MediaUtils;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
-import com.music.player.lib.model.MusicAlarmModel;
-import com.music.player.lib.model.MusicPlayModel;
-import com.music.player.lib.model.MusicPlayerState;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicClickControler;
 import com.music.player.lib.util.MusicUtils;
@@ -134,7 +132,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
         mMusicModel.setOnClickListener(onClickListener);
         mHandler=new Handler();
         //闹钟模式
-        MusicPlayModel playerModel = MusicPlayerManager.getInstance().getPlayerModel();
+        int playerModel = MusicPlayerManager.getInstance().getPlayerModel();
         mMusicModel.setImageResource(getResToPlayModel(playerModel,false));
         //播放对象、状态
         BaseAudioInfo audioInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
@@ -187,14 +185,14 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
      * @return
      * @param playerState
      */
-    private int getPauseIcon(MusicPlayerState playerState) {
+    private int getPauseIcon(int playerState) {
         switch (playerState) {
-            case MUSIC_PLAYER_PREPARE:
-            case MUSIC_PLAYER_PLAYING:
-            case MUSIC_PLAYER_BUFFER:
+            case MusicConstants.MUSIC_PLAYER_PREPARE:
+            case MusicConstants.MUSIC_PLAYER_PLAYING:
+            case MusicConstants.MUSIC_PLAYER_BUFFER:
                 return R.drawable.music_player_pause_selector;
-            case MUSIC_PLAYER_STOP:
-            case MUSIC_PLAYER_ERROR:
+            case MusicConstants.MUSIC_PLAYER_STOP:
+            case MusicConstants.MUSIC_PLAYER_ERROR:
                 return R.drawable.music_player_play_selector;
         }
         return R.drawable.music_player_play_selector;
@@ -206,26 +204,12 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
      * @param isToast 是否吐司提示
      * @return
      */
-    private int getResToPlayModel(MusicPlayModel playerModel,boolean isToast) {
-        if(playerModel.equals(MusicPlayModel.MUSIC_MODEL_LOOP)){
-            if(isToast){
-                Toast.makeText(MusicLockActivity.this,"列表循环",Toast.LENGTH_SHORT).show();
-            }
-            return R.drawable.ic_music_lock_model_loop;
+    private int getResToPlayModel(int playerModel,boolean isToast) {
+        int playerModelToRes = MediaUtils.getInstance().getPlayerModelToRes(playerModel);
+        if(isToast){
+            Toast.makeText(MusicLockActivity.this,MediaUtils.getInstance().getPlayerModelToString(playerModel),Toast.LENGTH_SHORT).show();
         }
-        if(playerModel.equals(MusicPlayModel.MUSIC_MODEL_SINGLE)){
-            if(isToast){
-                Toast.makeText(MusicLockActivity.this,"单曲循环",Toast.LENGTH_SHORT).show();
-            }
-            return R.drawable.ic_music_lock_model_signle;
-        }
-        if(playerModel.equals(MusicPlayModel.MUSIC_MODEL_RANDOM)){
-            if(isToast){
-                Toast.makeText(MusicLockActivity.this,"随机播放",Toast.LENGTH_SHORT).show();
-            }
-            return R.drawable.ic_music_lock_model_random;
-        }
-        return R.drawable.ic_music_lock_model_signle;
+        return playerModelToRes;
     }
 
     @Override
@@ -332,24 +316,24 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
      * @param message
      */
     @Override
-    public void onMusicPlayerState(final MusicPlayerState playerState, final String message) {
+    public void onMusicPlayerState(final int playerState, final String message) {
         Logger.d(TAG,"onMusicPlayerState-->"+playerState);
         if(null!=mHandler){
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (playerState.equals(MusicPlayerState.MUSIC_PLAYER_ERROR)&&!TextUtils.isEmpty(message)) {
+                    if (playerState==MusicConstants.MUSIC_PLAYER_ERROR&&!TextUtils.isEmpty(message)) {
                         Toast.makeText(MusicLockActivity.this,message,Toast.LENGTH_SHORT).show();
                     }
                     if(null!=mMusicPause){
                         mMusicPause.setImageResource(getPauseIcon(playerState));
                     }
-                    if(playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE)||playerState.equals(
-                            MusicPlayerState.MUSIC_PLAYER_PLAYING)){
+                    if(playerState==MusicConstants.MUSIC_PLAYER_PREPARE
+                            || playerState==MusicConstants.MUSIC_PLAYER_PLAYING){
                         jukeBoxResume();
-                    }else if(playerState.equals(MusicPlayerState.MUSIC_PLAYER_PAUSE)
-                            ||playerState.equals(MusicPlayerState.MUSIC_PLAYER_ERROR)
-                            ||playerState.equals(MusicPlayerState.MUSIC_PLAYER_STOP)){
+                    }else if(playerState==MusicConstants.MUSIC_PLAYER_PAUSE
+                            ||playerState==MusicConstants.MUSIC_PLAYER_ERROR
+                            ||playerState==MusicConstants.MUSIC_PLAYER_STOP){
                         jukeBoxPause();
                     }
                 }
@@ -415,7 +399,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
         }
     }
     @Override
-    public void onPlayerConfig(MusicPlayModel playModel, MusicAlarmModel alarmModel,boolean isToast) {
+    public void onPlayerConfig(int playModel, int alarmModel,boolean isToast) {
         if(null!=mMusicModel){
             mMusicModel.setImageResource(getResToPlayModel(playModel,isToast));
         }

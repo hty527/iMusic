@@ -3,13 +3,10 @@ package com.music.player.lib.service;
 import android.app.Notification;
 import android.os.Binder;
 import com.music.player.lib.bean.BaseAudioInfo;
+import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.iinterface.MusicPlayerPresenter;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
-import com.music.player.lib.model.MusicAlarmModel;
-import com.music.player.lib.model.MusicPlayModel;
-import com.music.player.lib.model.MusicPlayerState;
-import com.music.player.lib.model.MusicPlayingChannel;
 import java.util.List;
 
 /**
@@ -95,25 +92,25 @@ public class MusicPlayerBinder extends Binder{
         }
     }
 
-    public MusicPlayModel setPlayerModel(MusicPlayModel model) {
+    public int setPlayerModel(int model) {
         if (null!=mPresenter) {
             return mPresenter.setPlayerModel(model);
         }
-        return null;
+        return MusicConstants.MUSIC_MODEL_LOOP;
     }
 
-    public MusicPlayModel getPlayerModel(){
+    public int getPlayerModel(){
         if (null!=mPresenter) {
             return mPresenter.getPlayerModel();
         }
-        return null;
+        return MusicConstants.MUSIC_MODEL_LOOP;
     }
 
-    public MusicAlarmModel setPlayerAlarmModel(MusicAlarmModel model) {
+    public int setPlayerAlarmModel(int model) {
         if (null!=mPresenter) {
             return mPresenter.setPlayerAlarmModel(model);
         }
-        return null;
+        return MusicConstants.MUSIC_ALARM_MODEL_0;
     }
 
     public void onSeekTo(long currentTime){
@@ -189,18 +186,18 @@ public class MusicPlayerBinder extends Binder{
         return null;
     }
 
-    public void setPlayingChannel(MusicPlayingChannel channel) {
+    public void setPlayingChannel(int channel) {
         if(null!=mPresenter){
             mPresenter.setPlayingChannel(channel);
         }
     }
 
 
-    public MusicPlayingChannel getPlayingChannel() {
+    public int getPlayingChannel() {
         if(null!=mPresenter){
             return mPresenter.getPlayingChannel();
         }
-        return MusicPlayingChannel.CHANNEL_NET;
+        return MusicConstants.CHANNEL_NET;
     }
 
 
@@ -212,11 +209,11 @@ public class MusicPlayerBinder extends Binder{
         if(null!=mPresenter) mPresenter.onCheckedCurrentPlayTask();
     }
 
-    public MusicPlayerState getPlayerState() {
+    public int getPlayerState() {
         if(null!=mPresenter){
             return mPresenter.getPlayerState();
         }
-        return null;
+        return 0;
     }
 
     public void changedPlayerPlayModel(){
@@ -245,11 +242,11 @@ public class MusicPlayerBinder extends Binder{
         if(null!=mPresenter) mPresenter.removePlayInfoListener();
     }
 
-    public MusicAlarmModel getPlayerAlarmModel() {
+    public int getPlayerAlarmModel() {
         if(null!=mPresenter){
             return mPresenter.getPlayerAlarmModel();
         }
-        return null;
+        return MusicConstants.MUSIC_ALARM_MODEL_0;
     }
 
     public void createMiniJukeboxWindow(){

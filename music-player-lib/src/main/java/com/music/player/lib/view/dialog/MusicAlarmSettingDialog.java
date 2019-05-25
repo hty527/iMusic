@@ -13,16 +13,18 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.music.player.lib.R;
 import com.music.player.lib.adapter.MusicAlarmAdapter;
 import com.music.player.lib.adapter.base.OnItemClickListener;
 import com.music.player.lib.bean.MusicAlarmSetting;
+import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.model.MusicAlarmModel;
 import com.music.player.lib.model.MusicItemSpaceDecoration;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicBackgroungBlurView;
+
 import java.util.List;
 
 /**
@@ -75,13 +77,13 @@ public class MusicAlarmSettingDialog extends BottomSheetDialog {
                 } else if (v.getId() == R.id.view_btn_current_close) {
                     if (null != mOnAlarmModelListener) {
                         MusicAlarmSettingDialog.this.dismiss();
-                        mOnAlarmModelListener.onAlarmModel(MusicAlarmModel.MUSIC_ALARM_MODEL_CURRENT);
+                        mOnAlarmModelListener.onAlarmModel(MusicConstants.MUSIC_ALARM_MODEL_CURRENT);
                     }
 
                 } else if(v.getId()==R.id.view_btn_cancel){
                     if (null != mOnAlarmModelListener) {
                         MusicAlarmSettingDialog.this.dismiss();
-                        mOnAlarmModelListener.onAlarmModel(MusicAlarmModel.MUSIC_ALARM_MODEL_0);
+                        mOnAlarmModelListener.onAlarmModel(MusicConstants.MUSIC_ALARM_MODEL_0);
                     }
                 }
             }
@@ -90,7 +92,7 @@ public class MusicAlarmSettingDialog extends BottomSheetDialog {
         findViewById(R.id.btn_close).setOnClickListener(onClickListener);
         TextView cancelBtn = findViewById(R.id.view_btn_cancel);
         cancelBtn.setOnClickListener(onClickListener);
-        if (MusicPlayerManager.getInstance().getPlayerAlarmModel().equals(MusicAlarmModel.MUSIC_ALARM_MODEL_0)) {
+        if (MusicPlayerManager.getInstance().getPlayerAlarmModel()==MusicConstants.MUSIC_ALARM_MODEL_0) {
             cancelBtn.setVisibility(View.GONE);
         } else {
             cancelBtn.setVisibility(View.VISIBLE);
@@ -122,7 +124,7 @@ public class MusicAlarmSettingDialog extends BottomSheetDialog {
         return MusicAlarmSettingDialog.this;
     }
     public interface OnAlarmModelListener{
-        void onAlarmModel(MusicAlarmModel alarmModel);
+        void onAlarmModel(int alarmModel);
     }
 
     @Override

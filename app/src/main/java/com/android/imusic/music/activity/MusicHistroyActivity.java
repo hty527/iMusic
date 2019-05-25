@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
+
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
@@ -18,11 +19,12 @@ import com.android.imusic.music.ui.contract.MusicHistroyContract;
 import com.android.imusic.music.ui.presenter.MusicHistroyPersenter;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
+import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
-import com.music.player.lib.model.MusicPlayingChannel;
 import com.music.player.lib.view.MusicCommentTitleView;
+
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -107,7 +109,7 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
                 }
                 //重新确定选中的对象
                 mAdapter.notifyDataSetChanged(position);
-                MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_HISTROY);
+                MusicPlayerManager.getInstance().setPlayingChannel(MusicConstants.CHANNEL_HISTROY);
                 //开始播放
                 MusicPlayerManager.getInstance().startPlayMusic(mAdapter.getData(),position);
                 //如果悬浮窗权限未给定
@@ -190,23 +192,28 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
 
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, final Object arg) {
         if(null!=mAdapter&&o instanceof MusicSubjectObservable && null!=arg && arg instanceof MusicStatus){
-            MusicStatus musicStatus= (MusicStatus) arg;
-            //停止
-            if(MusicStatus.PLAYER_STATUS_DESTROY==musicStatus.getPlayerStatus()
-                    ||MusicStatus.PLAYER_STATUS_STOP==musicStatus.getPlayerStatus()){
-                if(null!=mAdapter.getData()&&mAdapter.getData().size()>mAdapter.getCurrentPosition()){
-                    mAdapter.getData().get(mAdapter.getCurrentPosition()).setSelected(false);
-                    mAdapter.notifyDataSetChanged();
-                }
-            //还在继续
-            }else{
-                //播放对象发生了变化，此时列表中可能不存在此音频对象，拉取最新的播放记录
-                if(null!=mPresenter){
-                    mPresenter.getHistroyAudios();
-                }
-            }
+           runOnUiThread(new Runnable() {
+               @Override
+               public void run() {
+                   MusicStatus musicStatus= (MusicStatus) arg;
+                   //停止
+                   if(MusicStatus.PLAYER_STATUS_DESTROY==musicStatus.getPlayerStatus()
+                           ||MusicStatus.PLAYER_STATUS_STOP==musicStatus.getPlayerStatus()){
+                       if(null!=mAdapter.getData()&&mAdapter.getData().size()>mAdapter.getCurrentPosition()){
+                           mAdapter.getData().get(mAdapter.getCurrentPosition()).setSelected(false);
+                           mAdapter.notifyDataSetChanged();
+                       }
+                       //还在继续
+                   }else{
+                       //播放对象发生了变化，此时列表中可能不存在此音频对象，拉取最新的播放记录
+                       if(null!=mPresenter){
+                           mPresenter.getHistroyAudios();
+                       }
+                   }
+               }
+           });
         }
     }
 

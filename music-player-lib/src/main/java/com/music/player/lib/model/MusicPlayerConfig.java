@@ -1,5 +1,7 @@
 package com.music.player.lib.model;
 
+import com.music.player.lib.constants.MusicConstants;
+
 /**
  * TinyHung@Outlook.com
  * 2019/3/20
@@ -9,13 +11,13 @@ package com.music.player.lib.model;
 public class MusicPlayerConfig {
 
     //默认闹钟模式
-    private MusicAlarmModel defaultAlarmModel = MusicAlarmModel.MUSIC_ALARM_MODEL_0;
+    private int defaultAlarmModel = MusicConstants.MUSIC_ALARM_MODEL_0;
     //默认播放模式
-    private MusicPlayModel defaultPlayModel = MusicPlayModel.MUSIC_MODEL_LOOP;
+    private int defaultPlayModel = MusicConstants.MUSIC_MODEL_LOOP;
     //是否锁定前台Service
     private boolean lockForeground = false;
     //悬浮窗样式,默认是带有删除按钮的
-    private MusicWindowStyle windownStyle = MusicWindowStyle.DEFAULT;
+    private int windownStyle = MusicConstants.DEFAULT;
     //悬浮窗是否自动吸附至屏幕边缘
     private boolean windownAutoScrollToEdge =false;
     //迷你悬浮窗垃圾桶功能是否开启
@@ -23,20 +25,20 @@ public class MusicPlayerConfig {
     //锁屏控制器是否开启
     private boolean screenOffEnable =false;
 
-    public MusicAlarmModel getDefaultAlarmModel() {
+    public int getDefaultAlarmModel() {
         return defaultAlarmModel;
     }
 
-    public MusicPlayerConfig setDefaultAlarmModel(MusicAlarmModel defaultAlarmModel) {
+    public MusicPlayerConfig setDefaultAlarmModel(int defaultAlarmModel) {
         this.defaultAlarmModel = defaultAlarmModel;
         return this;
     }
 
-    public MusicPlayModel getDefaultPlayModel() {
+    public int getDefaultPlayModel() {
         return defaultPlayModel;
     }
 
-    public MusicPlayerConfig setDefaultPlayModel(MusicPlayModel defaultPlayModel) {
+    public MusicPlayerConfig setDefaultPlayModel(int defaultPlayModel) {
         this.defaultPlayModel = defaultPlayModel;
         return this;
     }
@@ -50,11 +52,11 @@ public class MusicPlayerConfig {
         return this;
     }
 
-    public MusicWindowStyle getWindownStyle() {
+    public int getWindownStyle() {
         return windownStyle;
     }
 
-    public MusicPlayerConfig setWindownStyle(MusicWindowStyle windownStyle) {
+    public MusicPlayerConfig setWindownStyle(int windownStyle) {
         this.windownStyle = windownStyle;
         return this;
     }

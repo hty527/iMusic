@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
@@ -26,6 +27,7 @@ import com.android.imusic.music.bean.SingerInfo;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
 import com.android.imusic.music.ui.contract.MusicListContract;
 import com.android.imusic.music.ui.presenter.MusicListPersenter;
+import com.android.imusic.music.utils.MediaUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -37,19 +39,17 @@ import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
-import com.music.player.lib.model.MusicAlarmModel;
 import com.music.player.lib.model.MusicGlideCircleTransform;
-import com.music.player.lib.model.MusicPlayModel;
-import com.music.player.lib.model.MusicPlayerState;
-import com.music.player.lib.model.MusicPlayingChannel;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicColorUtils;
 import com.music.player.lib.util.MusicStatusUtils;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicRoundImageView;
+
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
@@ -131,7 +131,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
                         break;
                     case R.id.btn_play_all:
                         if(null!=mAdapter&&null!=mAdapter.getData()&&mAdapter.getData().size()>0){
-                            MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_NET);
+                            MusicPlayerManager.getInstance().setPlayingChannel(MusicConstants.CHANNEL_NET);
                             List<BaseAudioInfo> audioInfos = mAdapter.getData();
                             startMusicPlayer(audioInfos.get(0).getAudioId(),audioInfos);
                         }
@@ -217,29 +217,11 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
      * 更新播放模式
      * @param playModel
      */
-    private void setPlayerModel(MusicPlayModel playModel) {
-        if(null!=playModel&&null!=mPlayerModel&&null!=mPlayerModelName){
-            int resid=R.drawable.ic_music_model_loop;
-            String content="列表循环";
-            if(playModel.equals(MusicPlayModel.MUSIC_MODEL_LOOP)){
-                content="列表循环";
-                resid = R.drawable.ic_music_model_loop;
-            }
-            if(playModel.equals(MusicPlayModel.MUSIC_MODEL_SINGLE)){
-                content="单曲循环";
-                resid = R.drawable.ic_music_model_signle;
-            }
-            if(playModel.equals(MusicPlayModel.MUSIC_MODEL_RANDOM)){
-                content="随机播放";
-                resid = R.drawable.ic_music_model_random;
-            }
-            if(null!=mPlayerModel){
-                mPlayerModel.setImageResource(resid);
-            }
+    private void setPlayerModel(int playModel) {
+        if(null!=mPlayerModel&&null!=mPlayerModelName){
+            mPlayerModel.setImageResource(MediaUtils.getInstance().getPlayerModelToRes(playModel));
             mPlayerModel.setColorFilter(Color.parseColor("#333333"));
-            if(null!=mPlayerModelName){
-                mPlayerModelName.setText(content);
-            }
+            mPlayerModelName.setText(MediaUtils.getInstance().getPlayerModelToString(playModel));
         }
     }
 
@@ -309,6 +291,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
             final BaseAudioInfo audioInfo = (BaseAudioInfo) view.getTag();
             if(musicID>0){
                 long currentPlayerID = MusicPlayerManager.getInstance().getCurrentPlayerID();
+                Logger.d(TAG,"onItemClick-->currentPlayerID:"+currentPlayerID);
                 if(currentPlayerID>0&&currentPlayerID==audioInfo.getAudioId()){
                     //重复点击，打开播放器
                     startToMusicPlayer(currentPlayerID);
@@ -316,7 +299,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
                 }
                 //重新确定选中的对象
                 mAdapter.notifyDataSetChanged(posotion);
-                MusicPlayerManager.getInstance().setPlayingChannel(MusicPlayingChannel.CHANNEL_NET);
+                MusicPlayerManager.getInstance().setPlayingChannel(MusicConstants.CHANNEL_NET);
                 //开始播放
                 MusicPlayerManager.getInstance().startPlayMusic(mAdapter.getData(),posotion);
                 //如果悬浮窗权限未给定
@@ -442,7 +425,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
     }
 
     @Override
-    public void onMusicPlayerState(MusicPlayerState playerState, String message) {}
+    public void onMusicPlayerState(int playerState, String message) {}
     @Override
     public void onPrepared(long totalDurtion) {}
     @Override
@@ -458,7 +441,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
     @Override
     public void onTaskRuntime(long totalDurtion, long currentDurtion, long alarmResidueDurtion, int bufferProgress) {}
     @Override
-    public void onPlayerConfig(MusicPlayModel playModel, MusicAlarmModel alarmModel, boolean isToast) {
+    public void onPlayerConfig(int playModel, int alarmModel, boolean isToast) {
         setPlayerModel(playModel);
     }
 }

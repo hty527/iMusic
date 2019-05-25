@@ -1,7 +1,5 @@
 package com.music.player.lib.bean;
 
-import com.music.player.lib.model.MusicAlarmModel;
-
 /**
  * TinyHung@Outlook.com
  * 2019/3/8
@@ -11,13 +9,13 @@ import com.music.player.lib.model.MusicAlarmModel;
 public class MusicAlarmSetting {
 
     private String title;
-    private MusicAlarmModel alarmModel;
+    private int alarmModel;
 
     public MusicAlarmSetting(){
 
     }
 
-    public MusicAlarmSetting(String title, MusicAlarmModel alarmModel) {
+    public MusicAlarmSetting(String title, int alarmModel) {
         this.title = title;
         this.alarmModel = alarmModel;
     }
@@ -30,11 +28,11 @@ public class MusicAlarmSetting {
         this.title = title;
     }
 
-    public MusicAlarmModel getAlarmModel() {
+    public int getAlarmModel() {
         return alarmModel;
     }
 
-    public void setAlarmModel(MusicAlarmModel alarmModel) {
+    public void setAlarmModel(int alarmModel) {
         this.alarmModel = alarmModel;
     }
 }

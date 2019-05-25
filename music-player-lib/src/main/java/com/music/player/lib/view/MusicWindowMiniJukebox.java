@@ -14,11 +14,11 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.RelativeLayout;
 import com.music.player.lib.bean.MusicStatus;
+import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicAnimatorListener;
 import com.music.player.lib.listener.MusicWindowClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
-import com.music.player.lib.model.MusicWindowStyle;
 import com.music.player.lib.util.MusicUtils;
 
 /**
@@ -58,10 +58,10 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
 		this.mWindowManager = windowManager;
 		this.mListener=listener;
         //悬浮窗样式
-        MusicWindowStyle musicWindowStyle =MusicPlayerManager.getInstance().getWindownStyle();
-        if(musicWindowStyle.equals(MusicWindowStyle.DEFAULT)){
+        int musicWindowStyle =MusicPlayerManager.getInstance().getWindownStyle();
+        if(musicWindowStyle==MusicConstants.DEFAULT){
             mViewWidth = MusicUtils.getInstance().dpToPxInt(context, 63f);
-        }else if(musicWindowStyle.equals(MusicWindowStyle.TRASH)){
+        }else if(musicWindowStyle==MusicConstants.TRASH){
             mViewWidth = MusicUtils.getInstance().dpToPxInt(context,60f);
         }
         mViewHeight = mViewWidth;
@@ -137,7 +137,7 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
             if (isVisible&&null!=mListener&&Math.abs(xInScreen - xDownInScreen) < SCROLL_PIXEL
 					&& Math.abs(yInScreen - yDownInScreen) < SCROLL_PIXEL) {
                 //取消事件只在默认样式生效
-                if(MusicPlayerManager.getInstance().getWindownStyle().equals(MusicWindowStyle.DEFAULT)){
+                if(MusicPlayerManager.getInstance().getWindownStyle()==MusicConstants.DEFAULT){
                     //删除按钮的位置：X：宽度的后1/3段像素内，Y：高度的前1/3段像素内
                     int closeStartX=locations[0]+mViewWidth/3*2;
                     int closeEndX=locations[0]+mViewWidth;

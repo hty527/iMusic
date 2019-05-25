@@ -29,7 +29,6 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
-import com.music.player.lib.model.MusicWindowStyle;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import java.util.Observable;
@@ -62,8 +61,8 @@ public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
         View.inflate(context, R.layout.music_view_small_disc,this);
         mViewCover = (ImageView) findViewById(R.id.view_cover);
         ImageView cancelBtn = (ImageView) findViewById(R.id.view_close);
-        MusicWindowStyle musicWindowStyle =MusicPlayerManager.getInstance().getWindownStyle();
-        if(musicWindowStyle.equals(MusicWindowStyle.DEFAULT)){
+        int musicWindowStyle =MusicPlayerManager.getInstance().getWindownStyle();
+        if(musicWindowStyle==MusicConstants.DEFAULT){
             FrameLayout.LayoutParams layoutParams = (LayoutParams) mViewCover.getLayoutParams();
             int margin = MusicUtils.getInstance().dpToPxInt(context, 6f);
             layoutParams.setMargins(margin,margin,margin,margin);

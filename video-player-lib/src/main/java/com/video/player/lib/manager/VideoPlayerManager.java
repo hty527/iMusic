@@ -1,7 +1,6 @@
 package com.video.player.lib.manager;
 
 import com.video.player.lib.constants.VideoConstants;
-import com.video.player.lib.model.VideoPlayerState;
 
 /**
  * TinyHung@Outlook.com
@@ -288,11 +287,11 @@ public final class VideoPlayerManager implements MediaPlayerPresenter {
      * @return 内部播放状态
      */
     @Override
-    public VideoPlayerState getVideoPlayerState() {
+    public int getVideoPlayerState() {
         if(null!=mIMediaPlayer){
             return mIMediaPlayer.getVideoPlayerState();
         }
-        return VideoPlayerState.MUSIC_PLAYER_STOP;
+        return VideoConstants.MUSIC_PLAYER_STOP;
     }
 
 

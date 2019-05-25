@@ -39,7 +39,6 @@ import com.video.player.lib.listener.VideoOrientationListener;
 import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.manager.VideoWindowManager;
-import com.video.player.lib.model.VideoPlayerState;
 import com.video.player.lib.utils.Logger;
 import com.video.player.lib.utils.VideoUtils;
 import com.video.player.lib.view.VideoTextureView;
@@ -1483,17 +1482,20 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
      * @param message 状态描述
      */
     @Override
-    public void onVideoPlayerState(final VideoPlayerState playerState, final String message) {
+    public void onVideoPlayerState(final int playerState, final String message) {
         Logger.d(TAG,"onVideoPlayerState-->"+playerState);
-        if(playerState.equals(VideoPlayerState.MUSIC_PLAYER_ERROR)&&!TextUtils.isEmpty(message)){
+        if(playerState==VideoConstants.MUSIC_PLAYER_ERROR&&!TextUtils.isEmpty(message)){
             Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
+        }
+        if(playerState<0){
+            return;
         }
         BaseVideoPlayer.this.post(new Runnable() {
             @Override
             public void run() {
                 switch (playerState) {
                     //播放器准备中
-                    case MUSIC_PLAYER_PREPARE:
+                    case VideoConstants.MUSIC_PLAYER_PREPARE:
                         if(null!=mCoverController&&mCoverController.getVisibility()!=VISIBLE){
                             mCoverController.setVisibility(VISIBLE);
                         }
@@ -1502,7 +1504,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         }
                         break;
                     //播放过程缓冲中
-                    case MUSIC_PLAYER_BUFFER:
+                    case VideoConstants.MUSIC_PLAYER_BUFFER:
                         if(null!=mCoverController&&mCoverController.getVisibility()!=GONE){
                             mCoverController.setVisibility(GONE);
                         }
@@ -1511,7 +1513,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         }
                         break;
                     //缓冲结束、准备结束 后的开始播放
-                    case MUSIC_PLAYER_START:
+                    case VideoConstants.MUSIC_PLAYER_START:
                         if(null!=mCoverController&&mCoverController.getVisibility()!=GONE){
                             mCoverController.setVisibility(GONE);
                         }
@@ -1520,19 +1522,19 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         }
                         break;
                     //恢复播放
-                    case MUSIC_PLAYER_PLAY:
+                    case VideoConstants.MUSIC_PLAYER_PLAY:
                         if(null!=mVideoController){
                             mVideoController.repeatPlay();
                         }
                         break;
                     //开始跳转播放中
-                    case MUSIC_PLAYER_SEEK:
+                    case VideoConstants.MUSIC_PLAYER_SEEK:
                         if(null!=mVideoController){
                             mVideoController.startSeek();
                         }
                         break;
                     //移动网络环境下播放
-                    case MUSIC_PLAYER_MOBILE:
+                    case VideoConstants.MUSIC_PLAYER_MOBILE:
                         if(null!=mCoverController&&mCoverController.getVisibility()!=VISIBLE){
                             mCoverController.setVisibility(VISIBLE);
                         }
@@ -1541,7 +1543,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         }
                         break;
                     //暂停
-                    case MUSIC_PLAYER_PAUSE:
+                    case VideoConstants.MUSIC_PLAYER_PAUSE:
                         if(null!=mCoverController&&mCoverController.getVisibility()!=GONE){
                             mCoverController.setVisibility(GONE);
                         }
@@ -1554,7 +1556,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         }
                         break;
                     //停止
-                    case MUSIC_PLAYER_STOP:
+                    case VideoConstants.MUSIC_PLAYER_STOP:
                         isPlayerWorking =false;
                         if(null!=mCoverController&&mCoverController.getVisibility()!=VISIBLE){
                             mCoverController.setVisibility(VISIBLE);
@@ -1569,7 +1571,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         }
                         break;
                     //失败
-                    case MUSIC_PLAYER_ERROR:
+                    case VideoConstants.MUSIC_PLAYER_ERROR:
                         isPlayerWorking =false;
                         if(null!=mVideoController){
                             mVideoController.error(0,message);

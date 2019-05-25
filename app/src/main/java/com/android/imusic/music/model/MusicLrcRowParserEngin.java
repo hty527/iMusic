@@ -36,7 +36,7 @@ import rx.schedulers.Schedulers;
  * 自定义同步的网络歌词解析器
  */
 
-public class MusicLrcRowParserEngin extends MusicLrcRowParser {
+public final class MusicLrcRowParserEngin extends MusicLrcRowParser {
 
     private OkHttpClient mHttpClient;
     private Gson mGson;

@@ -93,10 +93,58 @@ public interface MusicConstants {
     String MUSIC_INTENT_ACTION_CLICK_CLOSE = "IMUSIC_INTENT_ACTION_CLICK_CLOSE";
     //参数传入
     String MUSIC_KEY_MEDIA_ID = "MUSIC_KEY_MEDIA_ID";
-    //历史播放记录
-    String A_KEY_PLAY_HISTORY = "a_key_play_history";
+
+    /**
+     * 播放器内部各种状态，替换enum类型
+     */
+    int MUSIC_PLAYER_STOP    = 0; //已结束，或未开始
+    int MUSIC_PLAYER_PREPARE = 1; //准备中
+    int MUSIC_PLAYER_BUFFER  = 2; //缓冲中
+    int MUSIC_PLAYER_PLAYING = 3; //播放中
+    int MUSIC_PLAYER_PAUSE   = 4; //暂停
+    int MUSIC_PLAYER_ERROR   = 5; //错误
+
+    /**
+     * 唱片机，替换enum类型
+     */
+    int JUKE_BOX_PLAY  = 0;//开始
+    int JUKE_BOX_PAUSE = 1;//暂停
+    int JUKE_BOX_STOP  = 2;//停止
+    /**
+     * 定时闹钟档次，替换enum类型
+     */
+    int MUSIC_ALARM_MODEL_10       = 1;//10分钟后
+    int MUSIC_ALARM_MODEL_15       = 2;
+    int MUSIC_ALARM_MODEL_30       = 3;
+    int MUSIC_ALARM_MODEL_60       = 4;
+    int MUSIC_ALARM_MODEL_CURRENT  = 5;//当前歌曲播放完成立即结束
+    int MUSIC_ALARM_MODEL_0        = 0;//无限期
+    /**
+     * 播放器内部处理的数据来源标识，替换enum类型
+     */
+    //网络、专辑、推荐
+    int CHANNEL_NET       = 0;
+    //本地
+    int CHANNEL_LOCATION  = 1;
+    //历史记录
+    int CHANNEL_HISTROY   = 2;
+    //网络搜索
+    int CHANNEL_SEARCH    = 3;
     //收藏记录
-    String A_KEY_PLAY_COLLECT = "a_key_play_collect";
-    //播放器界面路径
-    String MUSIC_PLAYER_CLASS_NAME = "com.android.imusic.music.activity.MusicPlayerActivity";
+    int CHANNEL_COLLECT   = 4;
+
+    /**
+     * 播放模式，替换enum类型
+     */
+    int MUSIC_MODEL_LOOP    = 0;//列表循环模式
+    int MUSIC_MODEL_SINGLE  = 1;//单曲模式
+    int MUSIC_MODEL_ORDER   = 2;//顺序播放
+    int MUSIC_MODEL_RANDOM  = 3;//随机播放
+    /**
+     * 悬浮窗样式，替换enum类型
+     */
+    //默认，悬浮窗，点击右上角删除按钮取消悬浮窗
+    int DEFAULT  =0;
+    //垃圾桶样式，手指拖动到垃圾桶删除
+    int TRASH    =1;
 }

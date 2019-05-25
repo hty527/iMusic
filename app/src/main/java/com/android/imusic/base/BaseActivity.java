@@ -29,7 +29,6 @@ import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
-import com.music.player.lib.model.MusicPlayerState;
 import com.music.player.lib.util.MusicUtils;
 import java.io.Serializable;
 import java.util.List;
@@ -335,9 +334,10 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                 String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);
                 musicStatus.setCover(frontPath);
                 musicStatus.setTitle(musicInfo.getAudioName());
-                MusicPlayerState playerState = MusicPlayerManager.getInstance().getPlayerState();
-                boolean playing = playerState.equals(MusicPlayerState.MUSIC_PLAYER_PLAYING) ||
-                        playerState.equals(MusicPlayerState.MUSIC_PLAYER_PREPARE) || playerState.equals(MusicPlayerState.MUSIC_PLAYER_BUFFER);
+                int playerState = MusicPlayerManager.getInstance().getPlayerState();
+                boolean playing = playerState==MusicConstants.MUSIC_PLAYER_PLAYING
+                        || playerState==MusicConstants.MUSIC_PLAYER_PREPARE
+                        || playerState==MusicConstants.MUSIC_PLAYER_BUFFER;
                 musicStatus.setPlayerStatus(playing?MusicStatus.PLAYER_STATUS_START:MusicStatus.PLAYER_STATUS_PAUSE);
                 MusicWindowManager.getInstance().updateWindowStatus(musicStatus);
                 MusicWindowManager.getInstance().onVisible();

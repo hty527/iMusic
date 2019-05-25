@@ -1,13 +1,11 @@
 package com.music.player.lib.iinterface;
 
 import android.app.Notification;
+
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
-import com.music.player.lib.model.MusicAlarmModel;
-import com.music.player.lib.model.MusicPlayModel;
-import com.music.player.lib.model.MusicPlayerState;
-import com.music.player.lib.model.MusicPlayingChannel;
+
 import java.util.List;
 
 /**
@@ -89,29 +87,29 @@ public interface MusicPlayerPresenter {
 
     /**
      * 设置播放模式
-     * @param model 播放模式，参考MusicPlayModel定义
+     * @param model 播放模式，参考MusicConstants定义
      * @return 成功设置的播放模式
      */
-    MusicPlayModel setPlayerModel(MusicPlayModel model);
+    int setPlayerModel(int model);
 
     /**
      * 返回播放器内部播放模式
-     * @return 播放模式
+     * @return 播放模式,详见MusicConstants
      */
-    MusicPlayModel getPlayerModel();
+    int getPlayerModel();
 
     /**
      * 设置播放器定时关闭的模式
-     * @param model 定时关闭模式，参考MusicAlarmModel定义
+     * @param model 定时关闭模式，参考MusicConstants常量定义
      * @return 成功设置的定时关闭模式
      */
-    MusicAlarmModel setPlayerAlarmModel(MusicAlarmModel model);
+    int setPlayerAlarmModel(int model);
 
     /**
      * 返回播放器定时关闭模式
-     * @return 定时关闭模式
+     * @return 定时关闭模式，详见MusicConstants定义
      */
-    MusicAlarmModel getPlayerAlarmModel();
+    int getPlayerAlarmModel();
 
     /**
      * 跳转至某处播放
@@ -179,21 +177,21 @@ public interface MusicPlayerPresenter {
 
     /**
      * 更改播放器内部正在处理的播放数据来源CHANNEL
-     * @param channel 数据来源CHANNEL,详见MusicPlayingChannel定义
+     * @param channel 数据来源CHANNEL,详见MusicConstants定义
      */
-    void setPlayingChannel(MusicPlayingChannel channel);
+    void setPlayingChannel(int channel);
 
     /**
      * 返回放器内部正在处理的播放数据来源CHANNEL
-     * @return 数据来源CHANNEL,详见MusicPlayingChannel定义
+     * @return 数据来源CHANNEL,详见MusicConstants定义
      */
-    MusicPlayingChannel getPlayingChannel();
+    int getPlayingChannel();
 
     /**
      * 返回播放器内部工作状态
-     * @return 播放状态，详见MusicPlayerState定义
+     * @return 播放状态，详见MusicConstants常量定义
      */
-    MusicPlayerState getPlayerState();
+    int getPlayerState();
 
     /**
      * 检查播放配置，一般在播放器界面回显调用
