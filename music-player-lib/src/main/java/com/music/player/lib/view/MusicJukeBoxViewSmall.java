@@ -179,35 +179,36 @@ public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
      * 刷新数据
      * @param musicStatus
      */
-    public void updateData(final MusicStatus musicStatus){
+    public void updateData(MusicStatus musicStatus){
         if(!TextUtils.isEmpty(musicStatus.getCover())&&null!=mViewCover){
             setMusicFront(musicStatus.getCover());
         }
+        //ID更新
+        if(musicStatus.getId()>0){
+            MusicJukeBoxViewSmall.this.setTag(musicStatus.getId());
+        }
+        final int playerStatus = musicStatus.getPlayerStatus();
         MusicJukeBoxViewSmall.this.post(new Runnable() {
             @Override
             public void run() {
-                //ID更新
-                if(musicStatus.getId()>0){
-                    MusicJukeBoxViewSmall.this.setTag(musicStatus.getId());
-                }
                 //停止
-                if(MusicStatus.PLAYER_STATUS_STOP==musicStatus.getPlayerStatus()){
+                if(MusicStatus.PLAYER_STATUS_STOP==playerStatus){
                     Logger.d(TAG,"update，播放器停止");
                     readyPlay=false;
                     stopAnimator(true);
                     //暂停
-                }else if(MusicStatus.PLAYER_STATUS_PAUSE==musicStatus.getPlayerStatus()){
+                }else if(MusicStatus.PLAYER_STATUS_PAUSE==playerStatus){
                     Logger.d(TAG,"update，播放器暂停");
                     readyPlay=false;
                     pausAnimator();
                     //播放
-                }else if(MusicStatus.PLAYER_STATUS_START==musicStatus.getPlayerStatus()
-                        ||MusicStatus.PLAYER_STATUS_PREPARED==musicStatus.getPlayerStatus()){
+                }else if(MusicStatus.PLAYER_STATUS_START==playerStatus
+                        ||MusicStatus.PLAYER_STATUS_PREPARED==playerStatus){
                     Logger.d(TAG,"update，播放器开始");
                     readyPlay=true;
                     startAnimator();
                     //销毁
-                }else if(MusicStatus.PLAYER_STATUS_DESTROY==musicStatus.getPlayerStatus()){
+                }else if(MusicStatus.PLAYER_STATUS_DESTROY==playerStatus){
                     Logger.d(TAG,"update，播放器销毁");
                     readyPlay=false;
                     if(null!=mViewCover){
@@ -215,7 +216,7 @@ public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
                     }
                     stopAnimator(true);
                     //失败
-                }else if(MusicStatus.PLAYER_STATUS_ERROR==musicStatus.getPlayerStatus()){
+                }else if(MusicStatus.PLAYER_STATUS_ERROR==playerStatus){
                     Logger.d(TAG,"update，播放器收到无效播放地址");
                     readyPlay=false;
                 }

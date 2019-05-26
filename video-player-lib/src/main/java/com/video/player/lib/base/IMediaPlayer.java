@@ -368,7 +368,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
 
                 @Override
                 public void onFocusOut() {
-                    IMediaPlayer.this.onStop(true);
+                    pause();
                 }
 
                 @Override

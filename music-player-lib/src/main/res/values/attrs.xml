@@ -81,4 +81,34 @@
         <!--手指拖动歌词底部线条颜色-->
         <attr name="musicLrcBottomLineColor" format="color"></attr>
     </declare-styleable>
+    <!--扇形-->
+    <declare-styleable name="MusicFanLayout">
+        <!--扇形颜色-->
+        <attr name="trashColor" format="color"></attr>
+    </declare-styleable>
+    <!--圆形进度条-->
+    <declare-styleable name="CircleProgressBar">
+        <!--文字大小-->
+        <attr name="circlePrgTextSize" format="dimension"></attr>
+        <!--文字颜色-->
+        <attr name="circlePrgTextColor" format="color"></attr>
+        <!--完成提示文字-->
+        <attr name="circlePrgSuccessText" format="string"></attr>
+        <!--圆心颜色-->
+        <attr name="circlePrgCircleColor" format="color"></attr>
+        <!--进度条颜色、扇形、背景颜色-->
+        <attr name="circlePrgProgressColor" format="color"></attr>
+        <!--开始角度-->
+        <attr name="circlePrgStartAngle" format="integer"></attr>
+        <!--最大进度阈值-->
+        <attr name="circlePrgMaxProgress" format="integer"></attr>
+        <!--最小进度阈值-->
+        <attr name="circlePrgMiniProgress" format="integer"></attr>
+        <!--是否是镂空的进度条-->
+        <attr name="circlePrgIsSolid" format="boolean"></attr>
+        <!--是否显示文本进度-->
+        <attr name="circlePrgIsShowText" format="boolean"></attr>
+        <!--进度条边框宽度-->
+        <attr name="circlePrgBorder" format="dimension"></attr>
+    </declare-styleable>
 </resources>

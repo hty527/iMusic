@@ -33,6 +33,8 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -1703,5 +1705,20 @@ public class MusicUtils {
     public int getScreenDensity(Context context) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         return dm.densityDpi;
+    }
+
+    /**
+     * Get AppCompatActivity from context
+     * @param context context
+     * @return AppCompatActivity if it's not null
+     */
+    public AppCompatActivity getAppCompActivity(Context context) {
+        if (context == null) return null;
+        if (context instanceof AppCompatActivity) {
+            return (AppCompatActivity) context;
+        } else if (context instanceof ContextThemeWrapper) {
+            return getAppCompActivity(((ContextThemeWrapper) context).getBaseContext());
+        }
+        return null;
     }
 }

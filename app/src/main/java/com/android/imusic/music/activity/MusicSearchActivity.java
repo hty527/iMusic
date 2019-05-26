@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -20,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.imusic.MainActivity;
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicSearchAdapter;
@@ -32,6 +34,7 @@ import com.android.imusic.music.bean.SearchResult;
 import com.android.imusic.music.bean.SearchResultInfo;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
 import com.android.imusic.music.manager.SqlLiteCacheManager;
+import com.android.imusic.music.manager.VersionUpdateManager;
 import com.android.imusic.music.ui.contract.MusicSearchContract;
 import com.android.imusic.music.ui.presenter.MusicSearchPersenter;
 import com.android.imusic.music.utils.MediaUtils;
@@ -44,7 +47,6 @@ import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
-
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -71,6 +73,7 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
         super.onCreate(savedInstanceState);
         setWindowEnable(true);
         setContentView(R.layout.music_activity_search);
+
         View.OnClickListener onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,6 +162,22 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
         MusicPlayerManager.getInstance().addObservable(this);
         //搜索记录回显
         createSearchCache();
+
+        if(MusicUtils.getInstance().getInt(MusicConstants.SP_FIRST_SEARCH,0)==0){
+            AlertDialog.Builder builder = new AlertDialog.Builder(MusicSearchActivity.this)
+                    .setTitle("搜索播放提示")
+                    .setMessage("搜索的音乐播放后会添加至播放记录中，因为酷狗的原因歌曲能播放的有效期通常为第一次播放+23小时左右，敬请悉知！")
+                    .setPositiveButton("知道了", null).setCancelable(false);
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    //检查版本更新
+                    VersionUpdateManager.getInstance().checkAppVersion();
+                }
+            });
+            builder.show();
+            MusicUtils.getInstance().putInt(MusicConstants.SP_FIRST_SEARCH,1);
+        }
     }
 
     @Override

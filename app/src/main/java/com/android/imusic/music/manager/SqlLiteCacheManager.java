@@ -351,6 +351,26 @@ public class SqlLiteCacheManager {
     }
 
     /**
+     * 查询历史纪录表的总长度
+     * @return 收藏表记录列总长度
+     */
+    public long queryHistroyAudiosSize(){
+        createHistroyDB();
+        SQLiteDatabase writableDatabase = mHistroyDB.get().getWritableDatabase();
+        String sql="SELECT COUNT(*) FROM "+ SQLHistroyHelper.TABLE_NAME;
+        Cursor cursor = writableDatabase.rawQuery(sql, null);
+        if(null!=cursor){
+            cursor.moveToFirst();
+            long size = cursor.getLong(0);
+            cursor.close();
+            writableDatabase.close();
+            return size;
+        }
+        writableDatabase.close();
+        return 0;
+    }
+
+    /**
      * 更新播放记录,如果存在就更新，不存在则新插入
      * @param data 视频实体对象
      * @return true:更新成功

@@ -66,12 +66,10 @@ public class MusicApplication extends Application {
 
             @Override
             public void onWindownClick(View view, long musicID) {
-                if(musicID>0){
-                    Intent intent=new Intent(getApplicationContext(), MusicPlayerActivity.class);
-                    intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplicationContext().startActivity(intent);
-                }
+                Intent intent=new Intent(getApplicationContext(), MusicPlayerActivity.class);
+                intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
             }
 
             @Override

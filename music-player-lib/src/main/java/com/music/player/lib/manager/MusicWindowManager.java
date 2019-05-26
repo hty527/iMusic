@@ -160,7 +160,7 @@ public class MusicWindowManager {
         if (null== mMusicWindowTrash) {
             WindowManager windowManager = getWindowManager(context);
             mMusicWindowTrash = new MusicWindowTrash(context);
-            int height = MusicUtils.getInstance().dpToPxInt(context, 66f);
+            int dpToPxInt = MusicUtils.getInstance().dpToPxInt(context, 120f);
             WindowManager.LayoutParams trachLayoutParams = new WindowManager.LayoutParams();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 trachLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
@@ -178,12 +178,12 @@ public class MusicWindowManager {
             //背景透明
             trachLayoutParams.format = PixelFormat.RGBA_8888;
             trachLayoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-            trachLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-            trachLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            trachLayoutParams.width = dpToPxInt;
+            trachLayoutParams.height = dpToPxInt;
             trachLayoutParams.x=0;
             trachLayoutParams.y=0;
             windowManager.addView(mMusicWindowTrash, trachLayoutParams);
-            return new int[]{WindowManager.LayoutParams.MATCH_PARENT,height};
+            return new int[]{dpToPxInt,dpToPxInt};
         }
         return null;
     }
@@ -202,10 +202,12 @@ public class MusicWindowManager {
 
                 @Override
                 public void onAnimationEnd() {
-                    mMusicWindowTrash.onDestroy();
-                    WindowManager windowManager = getWindowManager(context);
-                    windowManager.removeView(mMusicWindowTrash);
-                    mMusicWindowTrash = null;
+                    if(null!=mMusicWindowTrash){
+                        mMusicWindowTrash.onDestroy();
+                        WindowManager windowManager = getWindowManager(context);
+                        windowManager.removeView(mMusicWindowTrash);
+                        mMusicWindowTrash = null;
+                    }
                 }
             });
         }

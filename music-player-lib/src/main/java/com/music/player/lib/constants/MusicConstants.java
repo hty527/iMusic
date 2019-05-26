@@ -31,6 +31,7 @@ public interface MusicConstants {
     String KEY_TAG_ID = "KEY_TAG_ID";
     String KEY_ALBUM_ANME = "KEY_ALBUM_ANME";
     String SP_FIRST_START ="sp_first_start";//第一次启动标记
+    String SP_FIRST_SEARCH ="sp_first_search";//第一次使用搜索
     //Hand 起始角度
     float ROTATION_INIT_NEEDLE = -30;
     //图片截图屏幕宽高
@@ -55,9 +56,9 @@ public interface MusicConstants {
     //唱盘背景比例
     float SCALE_DISC_BG_SIZE = (float) (828.0 / BASE_SCREEN_WIDTH);
     //唱盘距离顶部边距
-    float SCALE_DISC_MARGIN_TOP = (float) (176.0 / BASE_SCREEN_WIDTH);
+    float SCALE_DISC_MARGIN_TOP = (float) (180.0 / BASE_SCREEN_WIDTH);
     //唱盘背景距离顶部边距
-    float SCALE_DISC_BG_MARGIN_TOP = (float) (173.0 / BASE_SCREEN_WIDTH);
+    float SCALE_DISC_BG_MARGIN_TOP = (float) (177.0 / BASE_SCREEN_WIDTH);
     //专辑图片比例
     float SCALE_MUSIC_PIC_SIZE = (float) (544.0 / BASE_SCREEN_WIDTH);
 

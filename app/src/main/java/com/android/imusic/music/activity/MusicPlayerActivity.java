@@ -19,10 +19,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.manager.SqlLiteCacheManager;
@@ -45,7 +45,6 @@ import com.music.player.lib.view.MusicJukeBoxBackgroundLayout;
 import com.music.player.lib.view.MusicJukeBoxView;
 import com.music.player.lib.view.dialog.MusicAlarmSettingDialog;
 import com.music.player.lib.view.dialog.MusicPlayerListDialog;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -346,7 +345,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         });
         mClickControler = new MusicClickControler();
         mClickControler.init(3,1);
-        findViewById(R.id.status_bar).getLayoutParams().height=MusicUtils.getInstance().getStatusBarHeight(this);
+        RelativeLayout toolBar = (RelativeLayout) findViewById(R.id.music_top_bar);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) toolBar.getLayoutParams();
+        layoutParams.setMargins(0,MusicUtils.getInstance().getStatusBarHeight(this),0,0);
     }
 
     @Override
