@@ -120,24 +120,24 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
             int[] toWindown = MusicWindowManager.getInstance().
                     addMiniJukeBoxTrashToWindown(getContext().getApplicationContext());
             //返回悬浮窗控件的size数组或者悬浮窗对象本身
-			if(null!=toWindown){
+            if(null!=toWindown){
                 mTrashLocationX=toWindown[0];
                 mTrashLocationY=toWindown[1];
                 MusicWindowManager.getInstance().startTrashWindowAnimation();
-				int rawX = (int) event.getRawX();
-				int rawY = (int) event.getRawY();
-				if(rawX>(mScreenWidth-mTrashLocationX)&&rawY>(mScreenHeight-mTrashLocationY)){
-                    if(!isPlayVibrate&&null!=mVibrator){
-                        isPlayVibrate=true;
-                        MusicWindowManager.getInstance().jukeBoxTrashFocusCap(true);
-                        mVibrator.vibrate(50);
-                        MusicWindowManager.getInstance().startShakeAnimation();
-                    }
-				}else{
-					MusicWindowManager.getInstance().jukeBoxTrashFocusCap(false);
-					isPlayVibrate=false;
-				}
-			}
+            }
+            int rawX = (int) event.getRawX();
+            int rawY = (int) event.getRawY();
+            if(rawX>(mScreenWidth-mTrashLocationX)&&rawY>(mScreenHeight-mTrashLocationY)){
+                if(!isPlayVibrate&&null!=mVibrator){
+                    isPlayVibrate=true;
+                    MusicWindowManager.getInstance().jukeBoxTrashFocusCap(true);
+                    mVibrator.vibrate(50);
+                    MusicWindowManager.getInstance().startShakeAnimation();
+                }
+            }else{
+                MusicWindowManager.getInstance().jukeBoxTrashFocusCap(false);
+                isPlayVibrate=false;
+            }
 		}
 	}
 
