@@ -467,7 +467,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
 
 ```
 
-    /**
+/**
      * 设置循环模式
      * @param loop true:循环播放 false:反之
      * @return 自身实例
@@ -475,6 +475,11 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     @Override
     public VideoPlayerManager setLoop(boolean loop);
 
+    /**
+     * 返回循环播放模式
+     * @return true:循环播放，false:不循环
+     */
+    public boolean isLoop();
 
     /**
      * 设置是否允许移动网络环境下工作
@@ -484,6 +489,12 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     public void setMobileWorkEnable(boolean enable);
 
     /**
+     * 是否允许移动网络环境下工作
+     * @return 是否允许在移动网络下工作
+     */
+    public boolean isMobileWorkEnable();
+
+    /**
      * 设置视频画面显示缩放类型,如果正在播放，会立刻生效
      * @param displayType 详见VideoConstants常量定义
      */
@@ -491,11 +502,23 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
     public void setVideoDisplayType(int displayType);
 
     /**
+     * 返回视频画面缩放模式
+     * @return 用户设定的缩放模式
+     */
+    public int getVideoDisplayType();
+
+    /**
      * 指定点击通知栏后打开的Activity对象绝对路径
      * @param className 播放器Activity绝对路径
      */
     public void setPlayerActivityClassName(String className);
-	
+
+    /**
+     * 返回点击通知栏后打开的Activity对象绝对路径
+     * @return 播放器Activity绝对路径
+     */
+    public String getPlayerActivityClassName();
+
     /**
      * 返回播放器内部播放状态
      * @return 播放器内部播放状态
@@ -509,21 +532,22 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      */
     @Override
     public boolean isWorking();
-	
-   /**
-     * 返回当前视频宽
-     * @return 播放器实例
+
+    /**
+     * 返回当前正在播放的视频宽
+     * @return 视频宽（分辨率）
      */
     @Override
     public int getVideoWidth();
 
+
     /**
-     * 返回当前视频高
-     * @return 播放器实例
+     * 返回当前正在播放的视频高
+     * @return 视频高（分辨率）
      */
     @Override
     public int getVideoHeight();
-	
+
     /**
      * 开始、暂停 播放
      */
@@ -568,7 +592,6 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      */
     @Override
     public long getDurtion();
-
     /**
      * 返回已播放时长
      * @return 已播放的视频长度，单位毫秒
@@ -599,7 +622,7 @@ BaseVideoPlayer被设计成抽象的基类，所有自定义的播放器通道�
      * @return 内部播放状态
      */
     @Override
-    public VideoPlayerState getVideoPlayerState();
+    public int getVideoPlayerState();
 
 
     /**
