@@ -8,6 +8,7 @@
 
 基于原生MediaPlayer解码器封装的音乐播放器和视频播放器功能库。极简接入、功能全面、体积甚小。欢迎Star！欢迎下载apk体验！<br/>
 iMusic示例工程主要界面遵循MVP思想开发，搜索音乐API取自《酷狗音乐》开放API，视频资源API取自《开眼视频》。<br/>
+
 ___
 ## 功能演示及概述:
 #### 功能演示:(更多功能快照在结尾处)
@@ -63,22 +64,16 @@ ___
 **1.依赖**
 ```
     dependencies {
-        implementation 'com.imusic.player:music-player:1.0.7'
+        implementation 'com.imusic.player:music-player:1.0.8'
     }
 ```
-若拉取失败，请检查根build.gradle中是否对jcenter支持<br/>
-**2.全局初始化**
-```
-    //Applicaion中初始化
-    MusicPlayerManager.getInstance().init(getApplicationContext());
-```
-**3.MainActivity中初始化播放器服务组件**
+**2.MainActivity播放器初始化**
 ```
     @Override
     protected void onCreate() {
         super.onCreate();
-        //初始化内部服务组件,或者调用下列重载方法
-        MusicPlayerManager.getInstance().initialize(MainActivity.this);
+        //初始化播放器内部存储及服务组件
+        MusicPlayerManager.getInstance().init(getApplicationContext()).initialize(MainActivity.this);
         //其他功能初始化请阅读音乐播放器文档...
     }
 
@@ -91,7 +86,9 @@ ___
         MusicWindowManager.getInstance().onDestroy();
     }
 ```
-**4.开始播放你的音频任务**
+[其他功能初始化]: https://github.com/Yuye584312311/iMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
+完整初始化[其他功能初始化]<br/>
+**3.开始播放你的音频任务**
 ```
     /**
      * audios:待播放的歌单列表,音频对象需继承BaseAudioInfo类，请阅读类中成员属性注解
@@ -99,14 +96,14 @@ ___
      */
     MusicPlayerManager.getInstance().startPlayMusic(List<?> audios,int position);
 ```
-**5.音乐歌词**
+**4.音乐歌词**
 ```
     歌词解析及显示功能在>=1.0.7版本起提供支持，具体使用请参考唱片机类MusicJukeBoxView。(持续优化中)
     iMuisc内置网络歌词解析仅支持酷狗音乐(搜索模块播放的歌曲)。
 ```
 [播放器歌词]: https://github.com/Yuye584312311/iMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
 具体使用和说明详见[播放器歌词]<br/>
-**6.权限声明**
+**5.权限声明**
 ```
     <!--网络状态检查-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -138,7 +135,7 @@ ___
 **1.依赖**
 ```
     dependencies {
-        implementation 'com.imusic.player:video-player:1.0.5'
+        implementation 'com.imusic.player:video-player:1.0.6'
     }
 ```
 **2.xml中引入播放器通道布局</br>**
