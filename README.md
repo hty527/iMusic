@@ -104,7 +104,7 @@ ___
     iMuisc内置网络歌词解析仅支持酷狗音乐(搜索模块播放的歌曲)。
 ```
 [播放器歌词]: https://github.com/Yuye584312311/iMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
-具体使用和说明详见[播放器歌词]
+具体使用和说明详见[播放器歌词]<br/>
 **6.权限声明**
 ```
     <!--网络状态检查-->
@@ -230,7 +230,7 @@ ___
 [前往fir下载]: https://fir.im/iMusic "fir下载"
 **fir托管下载：** **[前往fir下载]**
 
-[点击下载Apk]: https://raw.githubusercontent.com/Yuye584312311/ConfigFile/master/apk/iMusic-1.0.71.apk "apk下载"
+[点击下载Apk]: https://raw.githubusercontent.com/Yuye584312311/ConfigFile/master/apk/iMusic-1.0.8.apk "apk下载"
 **本地下载：** **[点击下载Apk]**<br/>
 <br/>
 **或者扫描二维码下载<br/>**
