@@ -2,6 +2,7 @@ com.music.player.lib.adapter
 com.music.player.lib.adapter.base
 com.music.player.lib.bean
 com.music.player.lib.constants
+com.music.player.lib.iinterface
 com.music.player.lib.listener
 com.music.player.lib.manager
 com.music.player.lib.model
