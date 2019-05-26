@@ -12,58 +12,45 @@
     <!--APP后台防杀死-->
     <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
 ```
-### 二、音乐播放器更多功能初始化设置
-#### 1. 全局及扩展功能初始化
+### 二、音乐播放器更多功能初始化设置及自定义保存播放记录
 ```
-    //若需要实现播放器内部的悬浮窗播放按钮，则需监听悬浮窗单机事件
-    MusicWindowManager.getInstance().setOnMusicWindowClickListener(new MusicWindowClickListener() {
-
-        @Override
-        public void onWindownClick(View view, long musicID) {
-            if(musicID>0){
-                Intent intent=new Intent(getApplicationContext(), MusicPlayerActivity.class);
-                intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
-            }
-        }
-
-        @Override
-        public void onWindownCancel(View view) {}
-    });
-
+    //音乐播放器配置
     MusicPlayerConfig config=MusicPlayerConfig.Build()
-        //是否启用前台服务、常驻进程
-        .setLockForeground(true)
-        //是否启用手指拖动悬浮窗松手时悬浮窗自动靠边悬浮吸附
-        .setWindownAutoScrollToEdge(true)
-        //是否启用垃圾桶回收播放器
-        .setTrashEnable(true)
-        //是否启用锁屏控制播放
-        .setScreenOffEnable(true)
-        //悬浮窗样式：垃圾桶回收样式，默认时点击悬浮窗右上角X按钮回收
-        .setWindownStyle(MusicConstants.TRASH);
-    //设置给媒体播放管理者
-    MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
-    //设置点击通知栏打开的播放器界面,需开启setLockForeground(true);
-    MusicPlayerManager.getInstance().setMusicPlayerActivityClassName(MusicPlayerActivity.class.getCanonicalName())
-    //设置锁屏界面,需开启setScreenOffEnable(true);
-    .setLockActivityName(MusicLockActivity.class.getCanonicalName());
-```
-#### 2. 实现自己的历史播放记录
-```
-        //全局初始化
-        MusicPlayerManager.getInstance()
-                .init(getApplicationContext())
-                //如果需要实现自己的历史播放记录，请在全局初始化或播放前注册监听器
-                .setPlayInfoListener(new MusicPlayerInfoListener() {
+            //常驻进程开关
+            .setLockForeground(true)
+            //设置默认的闹钟定时关闭模式，优先取用户设置
+            .setDefaultAlarmModel(MusicConstants.MUSIC_ALARM_MODEL_0)
+            //设置默认的循环模式，优先取用户设置
+            .setDefaultPlayModel(MusicConstants.MUSIC_MODEL_LOOP);
 
-                    @Override
-                    public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {
-                        //使用SQL存储本地播放记录
-                        SqlLiteCacheManager.getInstance().insertHistroyAudio(musicInfo);
+    //音乐播放器初始化
+    MusicPlayerManager.getInstance()
+            //内部存储初始化
+            .init(getApplicationContext())
+            //应用播放器配置
+            .setMusicPlayerConfig(config)
+            //设置点击通知栏跳转的播放器界面,需开启常驻进程开关
+            .setPlayerActivityName(MusicPlayerActivity.class.getCanonicalName())
+            //设置锁屏界面，如果禁用，不需要设置或者设置为null
+            .setLockActivityName(MusicLockActivity.class.getCanonicalName())
+            //监听播放状态
+            .setPlayInfoListener(new MusicPlayerInfoListener() {
+                @Override
+                public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {
+                    //使用SQL存储本地播放记录
+                    SqlLiteCacheManager.getInstance().insertHistroyAudio(musicInfo);
+                }
+            })
+            //重载方法，初始化音频媒体服务,成功之后如果系统还在播放音乐，则创建一个悬浮窗承载播放器
+            .initialize(MainActivity.this, new MusicPlayerManager.IInitializeCallBack() {
+                @Override
+                public void onSuccess() {
+                    //如果系统正在播放音乐
+                    if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
+                        MusicPlayerManager.getInstance().createWindowJukebox();
                     }
-                });
+                }
+    });
 ```
 ### 三、音乐播放器主界面UI和自定义锁屏、通知栏实现
 #### 1. 自定义播放器界面UI
@@ -241,6 +228,13 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      */
     public void initialize(Context context);
 
+    /**
+     * Activity初始化音乐服务组件，Activity中初始化后调用
+     * @param context Activity上下文
+     * @param callBack 初始化成功回调，如果不为空，将尝试还原悬浮窗口
+     */
+    public void initialize(Context context,IInitializeCallBack callBack);
+
    /**
     * APP销毁时同步销毁
     * @param context Activity类型上下文
@@ -272,30 +266,6 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      * @param enable true:开启
      */
     public MusicPlayerManager setLockForeground(boolean enable);
-
-    /**
-     * 设置悬浮窗是否自动吸附至屏幕边缘
-     * @param enable true:开启
-     */
-    public MusicPlayerManager setWindownAutoScrollToEdge(boolean enable);
-
-    /**
-     * 设置垃圾桶手势取消悬浮窗
-     * @param enable true:开启
-     */
-    public MusicPlayerManager setTrashEnable(boolean enable);
-
-    /**
-     * 锁屏控制器开关
-     * @param enable true:开启
-     */
-    public MusicPlayerManager setScreenOffEnable(boolean enable);
-
-    /**
-     * 设置悬浮窗播放器样式
-     * @param musicWindowStyle 新的样式，参考MusicConstants定义
-     */
-    public MusicPlayerManager setWindownStyle(int musicWindowStyle);
 
     /**
      * 开始播放新的音频队列，播放器会替换全新音乐列表
@@ -627,5 +597,22 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      * @return MusicPlayerManager
      */
     public MusicPlayerManager setMusicPlayerActivityClassName(String className);
+
+    /**
+     * 创建一个窗口播放器
+     */
+    public void createWindowJukebox();
+
+    /**
+     * 设置播放器界面
+     * @param className Activity绝对路径
+     */
+    void setPlayerActivityName(String className);
+
+    /**
+     * 设置锁屏界面
+     * @param className Activity绝对路径
+     */
+    void setLockActivityName(String className);
 
 ```

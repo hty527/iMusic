@@ -15,13 +15,16 @@ import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
+import com.android.imusic.music.manager.SqlLiteCacheManager;
 import com.android.imusic.music.manager.VersionUpdateManager;
 import com.android.imusic.music.ui.fragment.IndexMusicFragment;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.net.OkHttpUtils;
 import com.android.imusic.video.activity.VideoPlayerActviity;
 import com.android.imusic.video.fragment.IndexVideoFragment;
+import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.constants.MusicConstants;
+import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.model.MusicPlayerConfig;
@@ -54,22 +57,43 @@ public class MainActivity extends BaseActivity {
                 //悬浮窗中打开播放器的绝对路径
                 .setPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
 
-        //音乐播放器初始化
+        //音乐播放器配置
         MusicPlayerConfig config=MusicPlayerConfig.Build()
-            .setLockForeground(true)//前台服务锁定开关
-            .setWindownAutoScrollToEdge(true)//悬浮窗自动吸附开关
-            .setTrashEnable(true)//垃圾桶功能开关
-            .setScreenOffEnable(true)//锁屏控制器开关
-            .setWindownStyle(MusicConstants.TRASH);//悬浮窗播放器样式
-        MusicPlayerManager.getInstance().setMusicPlayerConfig(config);
-        //设置点击通知栏打开的播放器界面,需开启setLockForeground(true);
-        MusicPlayerManager.getInstance().setMusicPlayerActivityClassName(
-                MusicPlayerActivity.class.getCanonicalName())
-            //设置锁屏界面,需开启setScreenOffEnable(true);
-            .setLockActivityName(MusicLockActivity.class.getCanonicalName());
-        //初始化音频媒体服务
-        MusicPlayerManager.getInstance().initialize(MainActivity.this);
+                //常驻进程开关
+                .setLockForeground(true)
+                //设置默认的闹钟定时关闭模式，优先取用户设置
+                .setDefaultAlarmModel(MusicConstants.MUSIC_ALARM_MODEL_0)
+                //设置默认的循环模式，优先取用户设置
+                .setDefaultPlayModel(MusicConstants.MUSIC_MODEL_LOOP);
 
+        //音乐播放器初始化
+        MusicPlayerManager.getInstance()
+                //内部存储初始化
+                .init(getApplicationContext())
+                //应用播放器配置
+                .setMusicPlayerConfig(config)
+                //设置点击通知栏跳转的播放器界面,需开启常驻进程开关
+                .setPlayerActivityName(MusicPlayerActivity.class.getCanonicalName())
+                //设置锁屏界面，如果禁用，不需要设置或者设置为null
+                .setLockActivityName(MusicLockActivity.class.getCanonicalName())
+                //监听播放状态
+                .setPlayInfoListener(new MusicPlayerInfoListener() {
+                    @Override
+                    public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {
+                        //使用SQL存储本地播放记录
+                        SqlLiteCacheManager.getInstance().insertHistroyAudio(musicInfo);
+                    }
+                })
+                //重载方法，初始化音频媒体服务,成功之后如果系统还在播放音乐，则创建一个悬浮窗承载播放器
+                .initialize(MainActivity.this, new MusicPlayerManager.IInitializeCallBack() {
+                    @Override
+                    public void onSuccess() {
+                        //如果系统正在播放音乐
+                        if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
+                            MusicPlayerManager.getInstance().createWindowJukebox();
+                        }
+                    }
+        });
         mBtnMusic = (TextView) findViewById(R.id.music_btn_music);
         mBtnMusic.setSelected(true);
         mBtnVideo = (TextView) findViewById(R.id.music_btn_video);

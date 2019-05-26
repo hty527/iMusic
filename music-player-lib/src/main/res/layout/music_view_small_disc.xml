@@ -7,11 +7,4 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_music_disc_bg_mini" />
-        <ImageView
-            android:id="@+id/view_close"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@drawable/ic_music_window_close"
-            android:layout_gravity="right"
-            android:visibility="gone"/>
 </FrameLayout>

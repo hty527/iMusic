@@ -77,8 +77,9 @@ ___
     @Override
     protected void onCreate() {
         super.onCreate();
-        //初始化内部服务组件
+        //初始化内部服务组件,或者调用下列重载方法
         MusicPlayerManager.getInstance().initialize(MainActivity.this);
+        //其他功能初始化请阅读音乐播放器文档...
     }
 
     @Override

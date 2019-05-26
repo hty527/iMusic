@@ -74,6 +74,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     private static MusicPlayerInfoListener sMusicPlayerInfoListener;
     //音频焦点Manager
     private static MusicAudioFocusManager mAudioFocusManager;
+    //播放器绝对路径、锁屏绝对路径
+    private String mPlayerActivityClass,mLockActivityClass;
     //待播放音频队列池子
     private static List<Object> mAudios = new ArrayList<>();
     //当前播放播放器正在处理的对象位置
@@ -943,8 +945,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      * @param listener 实现监听器的对象
      */
     @Override
-    public void setPlayInfoListener(MusicPlayerInfoListener listener) {
+    public MusicPlayerManager setPlayInfoListener(MusicPlayerInfoListener listener) {
         MusicPlayerService.this.sMusicPlayerInfoListener=listener;
+        return null;
     }
 
     /**
@@ -1195,6 +1198,49 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             stopForeground(notificeid);
         }
+    }
+
+    /**
+     * 创建一个窗口播放器
+     */
+    @Override
+    public void createWindowJukebox() {
+        if(MusicWindowManager.getInstance().checkAlertWindowsPermission(getApplicationContext())){
+            if(!MusicWindowManager.getInstance().isWindowShowing()){
+                BaseAudioInfo audioInfo = getCurrentPlayerMusic();
+                if(null!=audioInfo){
+                    Logger.d(TAG,"createWindowJukebox-->");
+                    MusicWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext(),
+                            MusicUtils.getInstance().dpToPxInt(getApplicationContext(),80f),
+                            MusicUtils.getInstance().dpToPxInt(getApplicationContext(),170f));
+                    MusicStatus musicStatus=new MusicStatus();
+                    musicStatus.setId(audioInfo.getAudioId());
+                    String frontPath=MusicUtils.getInstance().getMusicFrontPath(audioInfo);
+                    musicStatus.setCover(frontPath);
+                    musicStatus.setTitle(audioInfo.getAudioName());
+                    int playerState = getPlayerState();
+                    boolean playing = playerState==MusicConstants.MUSIC_PLAYER_PLAYING
+                            || playerState==MusicConstants.MUSIC_PLAYER_PREPARE
+                            || playerState==MusicConstants.MUSIC_PLAYER_BUFFER;
+                    musicStatus.setPlayerStatus(playing?MusicStatus.PLAYER_STATUS_START:MusicStatus.PLAYER_STATUS_PAUSE);
+                    MusicWindowManager.getInstance().updateWindowStatus(musicStatus);
+                    //此处手动显示一把，避免悬浮窗还未成功创建,将正在播放得音频对象绑定到悬浮窗口
+                    MusicWindowManager.getInstance().onVisible(audioInfo.getAudioId());
+                }
+            }
+        }
+    }
+
+    @Override
+    public MusicPlayerManager setPlayerActivityName(String className) {
+        this.mPlayerActivityClass=className;
+        return null;
+    }
+
+    @Override
+    public MusicPlayerManager setLockActivityName(String className) {
+        this.mLockActivityClass=className;
+        return null;
     }
 
     /**
@@ -1558,11 +1604,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         //简单的更新播放状态
         MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_STOP));
         startServiceForeground();
-        //非付费定制模式，自动下一首
-        if(MusicPlayerManager.getInstance().getWindownStyle()!=MusicConstants.DEFAULT){
-            if (isCheckNetwork()) {
-                onCompletionPlay();
-            }
+        //下一首
+        if (isCheckNetwork()) {
+            onCompletionPlay();
         }
         return false;
     }
@@ -1656,13 +1700,12 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             //屏幕点亮
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
                 //用户需要开启锁屏控制才生效
-                if(MusicPlayerManager.getInstance().isScreenOffEnable()&&
-                        !TextUtils.isEmpty(MusicPlayerManager.getInstance().getLockActivityName())){
+                if(!TextUtils.isEmpty(mLockActivityClass)){
                     int playerState = getPlayerState();
                     if(playerState==MusicConstants.MUSIC_PLAYER_PREPARE
                             ||playerState==MusicConstants.MUSIC_PLAYER_PLAYING){
                         Intent startIntent=new Intent();
-                        startIntent.setClassName(getPackageName(),MusicPlayerManager.getInstance().getLockActivityName());
+                        startIntent.setClassName(getPackageName(),mLockActivityClass);
                         startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                         getApplicationContext().startActivity(startIntent);
@@ -1671,9 +1714,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             //前台进程-通知栏根点击事件
             }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW)){
                 if(intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0)>0){
-                    if(!TextUtils.isEmpty(MusicPlayerManager.getInstance().getMusicPlayerActivityClassName())){
+                    if(!TextUtils.isEmpty(mPlayerActivityClass)){
                         Intent startIntent=new Intent();
-                        startIntent.setClassName(getPackageName(),MusicPlayerManager.getInstance().getMusicPlayerActivityClassName());
+                        startIntent.setClassName(getPackageName(),mPlayerActivityClass);
                         startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0));
                         //如果播放器组件未启用，创建新的实例
                         //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图

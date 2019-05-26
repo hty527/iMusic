@@ -12,7 +12,6 @@ import android.view.Gravity;
 import android.view.WindowManager;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.listener.MusicAnimatorListener;
-import com.music.player.lib.listener.MusicWindowClickListener;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicWindowMiniJukebox;
@@ -33,7 +32,6 @@ public class MusicWindowManager {
 	private MusicWindowMiniJukebox mMusicWindowMiniJukebox;
 	private MusicWindowTrash mMusicWindowTrash;
 	private static WindowManager mWindowManager;
-    private MusicWindowClickListener mListener;
 
     public static MusicWindowManager getInstance() {
         if(null==mInstance){
@@ -91,7 +89,7 @@ public class MusicWindowManager {
             WindowManager windowManager = getWindowManager(context);
             int screenWidth = MusicUtils.getInstance().getScreenWidth(context);
             int screenHeight = MusicUtils.getInstance().getScreenHeight(context);
-            mMusicWindowMiniJukebox = new MusicWindowMiniJukebox(context,windowManager,mListener);
+            mMusicWindowMiniJukebox = new MusicWindowMiniJukebox(context,windowManager);
             WindowManager.LayoutParams miniJukeBoxLayoutParams = new WindowManager.LayoutParams();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
@@ -339,19 +337,21 @@ public class MusicWindowManager {
     }
 
     /**
-     * 悬浮窗单击事件注册
-     * @param listener
-     */
-    public void setOnMusicWindowClickListener(MusicWindowClickListener listener){
-        this.mListener=listener;
-    }
-
-    /**
      * MINIJukeBox悬浮窗可见
      */
     public void onVisible() {
         if(null!= mMusicWindowMiniJukebox) {
             mMusicWindowMiniJukebox.onVisible();
+        }
+    }
+
+    /**
+     * MINIJukeBox悬浮窗可见
+     * @param audioID 音频ID
+     */
+    public void onVisible(long audioID) {
+        if(null!= mMusicWindowMiniJukebox) {
+            mMusicWindowMiniJukebox.onVisible(audioID);
         }
     }
 
@@ -378,6 +378,6 @@ public class MusicWindowManager {
             mWindowManager.removeViewImmediate(mMusicWindowTrash);
             mMusicWindowTrash =null;
         }
-        mWindowManager=null;mInstance=null;mListener=null;
+        mWindowManager=null;mInstance=null;
     }
 }

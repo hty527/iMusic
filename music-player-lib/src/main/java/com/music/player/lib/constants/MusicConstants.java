@@ -141,11 +141,4 @@ public interface MusicConstants {
     int MUSIC_MODEL_SINGLE  = 1;//单曲模式
     int MUSIC_MODEL_ORDER   = 2;//顺序播放
     int MUSIC_MODEL_RANDOM  = 3;//随机播放
-    /**
-     * 悬浮窗样式，替换enum类型
-     */
-    //默认，悬浮窗，点击右上角删除按钮取消悬浮窗
-    int DEFAULT  =0;
-    //垃圾桶样式，手指拖动到垃圾桶删除
-    int TRASH    =1;
 }

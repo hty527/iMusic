@@ -284,4 +284,22 @@ public class MusicPlayerBinder extends Binder{
             mPresenter.stopServiceForeground(notificeid);
         }
     }
+
+    public void createWindowJukebox(){
+        if(null!=mPresenter){
+            mPresenter.createWindowJukebox();
+        }
+    }
+
+    public void setPlayerActivityName(String className) {
+        if(null!=mPresenter){
+            mPresenter.setPlayerActivityName(className);
+        }
+    }
+
+    public void setLockActivityName(String className) {
+        if(null!=mPresenter){
+            mPresenter.setLockActivityName(className);
+        }
+    }
 }

@@ -7,7 +7,9 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,7 +18,6 @@ import android.widget.RelativeLayout;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicAnimatorListener;
-import com.music.player.lib.listener.MusicWindowClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.MusicUtils;
@@ -30,11 +31,9 @@ import com.music.player.lib.util.MusicUtils;
 
 public class MusicWindowMiniJukebox extends RelativeLayout {
 
-    private static final String TAG = "MusicWindowMiniJukebox";
     private final Vibrator mVibrator;
     private WindowManager mWindowManager;
 	private WindowManager.LayoutParams mParams;
-	private MusicWindowClickListener mListener;
 	private MusicJukeBoxViewSmall mJukeBoxViewSmall;
 	//单击事件的有效像素
 	public static int SCROLL_PIXEL=10;
@@ -56,17 +55,10 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
     //悬浮球停靠在屏幕边上的边界大小
     private final int mMaginBorder;
 
-    public MusicWindowMiniJukebox(Context context, WindowManager windowManager, MusicWindowClickListener listener) {
+    public MusicWindowMiniJukebox(Context context, WindowManager windowManager) {
 		super(context);
 		this.mWindowManager = windowManager;
-		this.mListener=listener;
-        //悬浮窗样式
-        int musicWindowStyle =MusicPlayerManager.getInstance().getWindownStyle();
-        if(musicWindowStyle==MusicConstants.DEFAULT){
-            mViewWidth = MusicUtils.getInstance().dpToPxInt(context, 63f);
-        }else if(musicWindowStyle==MusicConstants.TRASH){
-            mViewWidth = MusicUtils.getInstance().dpToPxInt(context,60f);
-        }
+		mViewWidth = MusicUtils.getInstance().dpToPxInt(context,60f);
         mViewHeight = mViewWidth;
 		mJukeBoxViewSmall = new MusicJukeBoxViewSmall(context);
         LayoutParams layoutParams = new LayoutParams(mViewWidth, mViewWidth);
@@ -96,9 +88,7 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
 			yInScreen = event.getRawY() - (getStatusBarHeight());
 			//手指移动的时候更新小悬浮窗的位置
 			updateViewPosition();
-			if(MusicPlayerManager.getInstance().isTrashEnable()){
-                showTrachWindow(event);
-			}
+			showTrachWindow(event);
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
@@ -199,52 +189,36 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
      * @return 是否消费了
      */
     private boolean actionTouchUp(MotionEvent event) {
-        //松手时手指在屏幕中的位置
-        int rawX = (int) event.getRawX();
-        int rawY = (int) event.getRawY();
-        //手势垃圾桶
-        if(MusicPlayerManager.getInstance().isTrashEnable()){
-            MusicWindowManager.getInstance().removeTrashFromWindown(getContext().getApplicationContext());
-            //丢进垃圾桶
-            if(isPlayVibrate){
-                MusicPlayerManager.getInstance().onStop();
-                MusicWindowManager.getInstance().removeMiniJukeBoxFromWindow(getContext().getApplicationContext());
-                isPlayVibrate=false;
-                return true;
-            }
-        }
+		MusicWindowManager.getInstance().removeTrashFromWindown(getContext().getApplicationContext());
+		//丢进垃圾桶
+		if(isPlayVibrate){
+			MusicPlayerManager.getInstance().onStop();
+			MusicWindowManager.getInstance().removeMiniJukeBoxFromWindow(getContext().getApplicationContext());
+			isPlayVibrate=false;
+			return true;
+		}
         isPlayVibrate=false;
         int[] locations=new int[2];
         getLocationOnScreen(locations);
         //单击事件
-        if (isVisible&&null!=mListener&&Math.abs(xInScreen - xDownInScreen) < SCROLL_PIXEL
+        if (isVisible&&Math.abs(xInScreen - xDownInScreen) < SCROLL_PIXEL
                 && Math.abs(yInScreen - yDownInScreen) < SCROLL_PIXEL) {
-            //取消事件只在默认样式生效
-            if(MusicPlayerManager.getInstance().getWindownStyle()==MusicConstants.DEFAULT){
-                //删除按钮的位置：X：宽度的后1/3段像素内，Y：高度的前1/3段像素内
-                int closeStartX=locations[0]+mViewWidth/3*2;
-                int closeEndX=locations[0]+mViewWidth;
-                int closeStartY=locations[1];
-                int closeEndY=locations[1]+mViewHeight/3*1;
-                //Logger.d(TAG,"closeStartX:"+closeStartX+",closeEndX:"+closeEndX+",closeStartY:"+closeStartY+",closeEndY:"+closeEndY+",rawX:"+rawX+",rawY:"+rawY);
-                if(rawX>closeStartX&&rawX<closeEndX&&rawY>closeStartY&&rawY<closeEndY){
-                    mListener.onWindownCancel(MusicWindowMiniJukebox.this);
-                    //结束播放并移除自身
-                    MusicPlayerManager.getInstance().onStop();
-                    MusicWindowManager.getInstance().removeMiniJukeBoxFromWindow(getContext().getApplicationContext());
-                    return true;
-                }
-            }
-            //悬浮窗整体单击事件
-            mListener.onWindownClick(MusicWindowMiniJukebox.this,(Long) mJukeBoxViewSmall.getTag());
+            //前往播放器界面
+			String activityName = MusicPlayerManager.getInstance().getPlayerActivityName();
+            if(!TextUtils.isEmpty(activityName)){
+				Context context = getContext().getApplicationContext();
+				Intent startIntent=new Intent();
+				startIntent.setClassName(context.getPackageName(),activityName);
+				startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, (Long) mJukeBoxViewSmall.getTag());
+				startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				context.startActivity(startIntent);
+			}
             return true;
         }
         //自动靠边吸附悬停
-        if(MusicPlayerManager.getInstance().isWindownAutoScrollToEdge()){
-            float eventRawX = event.getRawX();
-            //缓慢吸附到屏幕边侧
-            scrollToPixel(locations[0],locations[1]-getStatusBarHeight(), (int) eventRawX,350);
-        }
+		float eventRawX = event.getRawX();
+		//缓慢吸附到屏幕边侧
+		scrollToPixel(locations[0],locations[1]-getStatusBarHeight(), (int) eventRawX,350);
         return true;
     }
 
@@ -385,6 +359,22 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
 	}
 
 	/**
+	 * 唱片机可见
+	 * @param audioID 音频ID
+	 */
+	public void onVisible(long audioID) {
+		isVisible=true;
+		if(null!=mJukeBoxViewSmall){
+			if(audioID>0){
+				mJukeBoxViewSmall.setTag(audioID);
+			}
+			mJukeBoxViewSmall.onVisible();
+		}
+		MusicWindowMiniJukebox.this.clearAnimation();
+		showWindowAnimation(this);
+	}
+
+	/**
 	 * 唱片机不可见
 	 */
 	public void onInvisible() {
@@ -459,6 +449,5 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
 		if(null!=mJukeBoxViewSmall){
 			mJukeBoxViewSmall.onDestroy();
 		}
-		mListener=null;
 	}
 }

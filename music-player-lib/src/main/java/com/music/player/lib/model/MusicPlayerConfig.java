@@ -16,14 +16,6 @@ public class MusicPlayerConfig {
     private int defaultPlayModel = MusicConstants.MUSIC_MODEL_LOOP;
     //是否锁定前台Service
     private boolean lockForeground = false;
-    //悬浮窗样式,默认是带有删除按钮的
-    private int windownStyle = MusicConstants.DEFAULT;
-    //悬浮窗是否自动吸附至屏幕边缘
-    private boolean windownAutoScrollToEdge =false;
-    //迷你悬浮窗垃圾桶功能是否开启
-    private boolean trashEnable =false;
-    //锁屏控制器是否开启
-    private boolean screenOffEnable =false;
 
     public int getDefaultAlarmModel() {
         return defaultAlarmModel;
@@ -49,42 +41,6 @@ public class MusicPlayerConfig {
 
     public MusicPlayerConfig setLockForeground(boolean lockForeground) {
         this.lockForeground = lockForeground;
-        return this;
-    }
-
-    public int getWindownStyle() {
-        return windownStyle;
-    }
-
-    public MusicPlayerConfig setWindownStyle(int windownStyle) {
-        this.windownStyle = windownStyle;
-        return this;
-    }
-
-    public boolean isWindownAutoScrollToEdge() {
-        return windownAutoScrollToEdge;
-    }
-
-    public MusicPlayerConfig setWindownAutoScrollToEdge(boolean windownAutoScrollToEdge) {
-        this.windownAutoScrollToEdge = windownAutoScrollToEdge;
-        return this;
-    }
-
-    public boolean isTrashEnable() {
-        return trashEnable;
-    }
-
-    public MusicPlayerConfig setTrashEnable(boolean trashEnable) {
-        this.trashEnable = trashEnable;
-        return this;
-    }
-
-    public boolean isScreenOffEnable() {
-        return screenOffEnable;
-    }
-
-    public MusicPlayerConfig setScreenOffEnable(boolean screenOffEnable) {
-        this.screenOffEnable = screenOffEnable;
         return this;
     }
 

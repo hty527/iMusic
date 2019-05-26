@@ -685,11 +685,7 @@ public class MusicJukeBoxView extends RelativeLayout{
      * @return 图形
      */
     private Drawable getDiscBlackgroundDrawable() {
-        int discSize = (int) (mScreenWidth * MusicConstants.SCALE_DISC_SIZE);
-        //Demo垃圾桶样式，背景透明圆盘可见
-        if(MusicPlayerManager.getInstance().getWindownStyle()==MusicConstants.TRASH){
-            discSize = (int) (mScreenWidth * MusicConstants.SCALE_DISC_BG_SIZE);
-        }
+        int discSize = (int) (mScreenWidth * MusicConstants.SCALE_DISC_BG_SIZE);
         Bitmap bitmapDisc = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R
                 .drawable.ic_music_disc_blackground), discSize, discSize, true);
         RoundedBitmapDrawable roundDiscDrawable = RoundedBitmapDrawableFactory.create

@@ -5,6 +5,7 @@ import android.app.Notification;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
+import com.music.player.lib.manager.MusicPlayerManager;
 
 import java.util.List;
 
@@ -224,7 +225,7 @@ public interface MusicPlayerPresenter {
      * 设置播放对象监听
      * @param listener 实现监听器的对象
      */
-    void setPlayInfoListener(MusicPlayerInfoListener listener);
+    MusicPlayerManager setPlayInfoListener(MusicPlayerInfoListener listener);
 
     /**
      * 移除监听播放对象事件
@@ -269,4 +270,21 @@ public interface MusicPlayerPresenter {
      * @param notificeid 指定通知ID
      */
     void stopServiceForeground(int notificeid);
+
+    /**
+     * 创建一个窗口播放器
+     */
+    void createWindowJukebox();
+
+    /**
+     * 设置播放器界面
+     * @param className Activity绝对路径
+     */
+    MusicPlayerManager setPlayerActivityName(String className);
+
+    /**
+     * 设置锁屏界面
+     * @param className Activity绝对路径
+     */
+    MusicPlayerManager setLockActivityName(String className);
 }

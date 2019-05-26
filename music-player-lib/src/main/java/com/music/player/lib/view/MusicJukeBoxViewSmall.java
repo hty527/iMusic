@@ -60,15 +60,6 @@ public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
         super(context, attrs);
         View.inflate(context, R.layout.music_view_small_disc,this);
         mViewCover = (ImageView) findViewById(R.id.view_cover);
-        ImageView cancelBtn = (ImageView) findViewById(R.id.view_close);
-        int musicWindowStyle =MusicPlayerManager.getInstance().getWindownStyle();
-        if(musicWindowStyle==MusicConstants.DEFAULT){
-            FrameLayout.LayoutParams layoutParams = (LayoutParams) mViewCover.getLayoutParams();
-            int margin = MusicUtils.getInstance().dpToPxInt(context, 6f);
-            layoutParams.setMargins(margin,margin,margin,margin);
-            mViewCover.setLayoutParams(layoutParams);
-            cancelBtn.setVisibility(VISIBLE);
-        }
         if(null!=attrs){
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicJukeBoxViewSmall);
             boolean enable = typedArray.getBoolean(R.styleable.MusicJukeBoxViewSmall_musicMiniJukeEnable, true);
@@ -162,17 +153,6 @@ public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
             return objectAnimator;
         }
         return null;
-    }
-
-    /**
-     * 单击事件
-     * @param view
-     */
-    public void onClick(View view) {
-        if(null!=MusicJukeBoxViewSmall.this.getTag()){
-            long musicID= (long) MusicJukeBoxViewSmall.this.getTag();
-            if(null!=mListener) mListener.onItemClick(view, 0, musicID);
-        }
     }
 
     /**
