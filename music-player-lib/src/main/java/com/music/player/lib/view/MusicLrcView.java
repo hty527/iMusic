@@ -68,8 +68,8 @@ public class MusicLrcView extends View{
 
     {
         cacheLrcRows=new HashMap<>();
-        textNoimal="暂时没有找到歌词";
-        textLoading="歌词获取中...";
+        textNoimal=getResources().getString(R.string.music_text_lrc_empty);
+        textLoading=getResources().getString(R.string.music_text_lrc_loading);
     }
 
     public MusicLrcView(Context context) {

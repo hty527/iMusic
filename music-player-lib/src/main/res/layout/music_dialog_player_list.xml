@@ -39,7 +39,7 @@
                 android:layout_marginLeft="13dp"
                 android:textSize="16dp"
                 android:textColor="#FFFFFF"
-                android:text="播放列表(0首)"/>
+                android:text="@string/music_text_music_num"/>
         </LinearLayout>
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
@@ -58,6 +58,6 @@
             android:gravity="center"
             android:textColor="#FFFFFF"
             android:background="#0DFFFFFF"
-            android:text="关闭"/>
+            android:text="@string/music_text_close"/>
     </LinearLayout>
 </FrameLayout>

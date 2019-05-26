@@ -145,10 +145,10 @@ public class MainActivity extends BaseActivity {
         boolean premission = MusicUtils.getInstance().hasNiticePremission(this);
         if(!premission){
             new android.support.v7.app.AlertDialog.Builder(MainActivity.this)
-                    .setTitle("系统提示")
-                    .setMessage("检测到系统禁用了此APP的通知权限，为更好的体验，请前往手动开启通知栏权限！")
-                    .setNegativeButton("取消",null)
-                    .setPositiveButton("去开启", new DialogInterface.OnClickListener() {
+                    .setTitle(getString(R.string.text_sys_tips))
+                    .setMessage(getString(R.string.text_tips_notice))
+                    .setNegativeButton(getString(R.string.music_text_cancel),null)
+                    .setPositiveButton(getString(R.string.text_start_open), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             MusicUtils.getInstance().startAppSetting(MainActivity.this);
@@ -157,18 +157,17 @@ public class MainActivity extends BaseActivity {
         }else{
             if(MusicUtils.getInstance().getInt(MusicConstants.SP_FIRST_START,0)==0){
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("使用提示")
-                        .setMessage("iMusic默认关闭了'本地音乐'列表音乐封面加载功能，如需开启或关闭，请双击" +
-                                "标题栏'iMusic'开启或关闭封面加载")
-                        .setNegativeButton("现在开启", new DialogInterface.OnClickListener() {
+                        .setTitle(getString(R.string.text_action_tips))
+                        .setMessage(getString(R.string.text_action_content))
+                        .setNegativeButton(getString(R.string.text_start_now_open), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 MediaUtils.getInstance().setLocalImageEnable(true);
-                                Toast.makeText(MainActivity.this, "本地音乐封面加载已开启",
+                                Toast.makeText(MainActivity.this, getString(R.string.text_start_open_success),
                                         Toast.LENGTH_SHORT).show();
                             }
                         })
-                        .setPositiveButton("知道了", null).setCancelable(false);
+                        .setPositiveButton(getString(R.string.text_yse), null).setCancelable(false);
                 builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -223,7 +222,7 @@ public class MainActivity extends BaseActivity {
         if(VideoPlayerManager.getInstance().isBackPressed(false)){
             long millis = System.currentTimeMillis();
             if(0 == currentMillis | millis-currentMillis > 2000){
-                Toast.makeText(MainActivity.this,"再按一次退出"+getResources().getString(R.string.app_name),Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,getString(R.string.text_back_tips)+getResources().getString(R.string.app_name),Toast.LENGTH_SHORT).show();
                 currentMillis=millis;
                 return;
             }

@@ -81,7 +81,7 @@ public class VideoDetailsHeaderView extends LinearLayout {
             //视频基本信息
             videoTitle.setText(data.getVideoTitle());
             videoAnchor.setText(data.getNickName());
-            userDesp.setText("发表于"+ MusicUtils.getInstance().getTimeNow(data.getLastTime()));
+            userDesp.setText(getResources().getString(R.string.text_update2)+ MusicUtils.getInstance().getTimeNow(data.getLastTime()));
             if(!TextUtils.isEmpty(data.getHeadTitle())){
                 TextView headerTitle = (TextView) findViewById(R.id.view_header_title);
                 headerTitle.setText(data.getHeadTitle());

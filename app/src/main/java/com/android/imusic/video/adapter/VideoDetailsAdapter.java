@@ -120,7 +120,8 @@ public class VideoDetailsAdapter extends BaseAdapter<OpenEyesIndexItemBean,Recyc
         videoViewHolder.itemDurtion.setText(MusicUtils.getInstance().stringForAudioTime(
                 indexItemBean.getDuration()*1000));
         if(null!=indexItemBean.getAuthor()){
-            videoViewHolder.itemTime.setText("更新于"+MusicUtils.getInstance().getTimeNow(
+            String string = mContext.getString(R.string.text_update_title);
+            videoViewHolder.itemTime.setText(string+MusicUtils.getInstance().getTimeNow(
                     indexItemBean.getAuthor().getLatestReleaseTime()));
             videoViewHolder.itemUserName.setText(indexItemBean.getAuthor().getName());
             videoViewHolder.itemTitle.setText(indexItemBean.getAuthor().getDescription());

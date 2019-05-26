@@ -120,17 +120,18 @@ public class MediaUtils {
 
     /**
      * 根据歌曲信息返回详细信息数组
-     * @param audioInfo
+     * @param context 上下文
+     * @param audioInfo 音频对象
      * @param sceneMode 场景
      * @param albumName 专辑昵称
      * @return
      */
-    public List<MusicDetails> getMusicDetails(BaseAudioInfo audioInfo,
+    public List<MusicDetails> getMusicDetails(Context context,BaseAudioInfo audioInfo,
                                               MusicMusicDetailsDialog.DialogScene sceneMode, String albumName) {
         List<MusicDetails> musicDetailsList=new ArrayList<>();
         if(!sceneMode.equals(MusicMusicDetailsDialog.DialogScene.SCENE_COLLECT)){
             MusicDetails musicDetails0=new MusicDetails();
-            musicDetails0.setTitle("添加到我的收藏");
+            musicDetails0.setTitle(context.getString(R.string.text_add_to_collect));
             musicDetails0.setIcon(R.drawable.ic_music_details_collect);
             musicDetails0.setItemID(MusicDetails.ITEM_ID_COLLECT);
             musicDetails0.setId(audioInfo.getAudioId());
@@ -141,13 +142,13 @@ public class MediaUtils {
                 ||sceneMode.equals(MusicMusicDetailsDialog.DialogScene.SCENE_COLLECT)
                 ||sceneMode.equals(MusicMusicDetailsDialog.DialogScene.SCENE_HISTROY)){
             MusicDetails defaultDetails=new MusicDetails();
-            defaultDetails.setTitle("播放下一首");
+            defaultDetails.setTitle(context.getString(R.string.text_play_next));
             defaultDetails.setIcon(R.drawable.ic_music_details_next);
             defaultDetails.setItemID(MusicDetails.ITEM_ID_NEXT_PLAY);
             musicDetailsList.add(defaultDetails);
         }
         MusicDetails shareDetails=new MusicDetails();
-        shareDetails.setTitle("分享");
+        shareDetails.setTitle(context.getString(R.string.text_share));
         shareDetails.setPath(audioInfo.getAudioPath());
         shareDetails.setIcon(R.drawable.ic_music_details_share);
         shareDetails.setItemID(MusicDetails.ITEM_ID_SHARE);
@@ -155,26 +156,26 @@ public class MediaUtils {
 
         if(!TextUtils.isEmpty(audioInfo.getNickname())){
             MusicDetails musicDetails=new MusicDetails();
-            musicDetails.setTitle("歌手：<font color='#333333'>"+audioInfo.getNickname()+"</font>");
+            musicDetails.setTitle(context.getString(R.string.text_anchor)+"<font color='#333333'>"+audioInfo.getNickname()+"</font>");
             musicDetails.setIcon(R.drawable.ic_music_details_anchor);
             musicDetailsList.add(musicDetails);
         }
         if(!TextUtils.isEmpty(albumName)){
             MusicDetails defaultDetails=new MusicDetails();
-            defaultDetails.setTitle("专辑：<font color='#333333'>"+albumName+"</font>");
+            defaultDetails.setTitle(context.getString(R.string.text_album)+"<font color='#333333'>"+albumName+"</font>");
             defaultDetails.setIcon(R.drawable.ic_music_details_album);
             musicDetailsList.add(defaultDetails);
         }else{
             if(!TextUtils.isEmpty(audioInfo.getAudioAlbumName())){
                 MusicDetails musicDetails=new MusicDetails();
-                musicDetails.setTitle("专辑：<font color='#333333'>"+audioInfo.getAudioAlbumName()+"</font>");
+                musicDetails.setTitle(context.getString(R.string.text_album)+"<font color='#333333'>"+audioInfo.getAudioAlbumName()+"</font>");
                 musicDetails.setIcon(R.drawable.ic_music_details_album);
                 musicDetailsList.add(musicDetails);
             }
         }
         if(audioInfo.getAudioDurtion()>0){
             MusicDetails musicDetails=new MusicDetails();
-            musicDetails.setTitle("时长：<font color='#333333'>"+MusicUtils.getInstance().
+            musicDetails.setTitle(context.getString(R.string.text_durtion)+"<font color='#333333'>"+MusicUtils.getInstance().
                     stringForAudioTime(audioInfo.getAudioDurtion())+"</font>");
             musicDetails.setIcon(R.drawable.ic_music_details_durtion);
             musicDetailsList.add(musicDetails);
@@ -184,11 +185,11 @@ public class MediaUtils {
                 ||sceneMode.equals(MusicMusicDetailsDialog.DialogScene.SCENE_HISTROY)
                 ||sceneMode.equals(MusicMusicDetailsDialog.DialogScene.SCENE_COLLECT)){
             MusicDetails musicDetails=new MusicDetails();
-            musicDetails.setTitle("删除");
+            musicDetails.setTitle(context.getString(R.string.text_detele));
             if(sceneMode.equals(MusicMusicDetailsDialog.DialogScene.SCENE_HISTROY)){
-                musicDetails.setTitle("从播放记录删除");
+                musicDetails.setTitle(context.getString(R.string.text_detele_to_collect));
             }else if(sceneMode.equals(MusicMusicDetailsDialog.DialogScene.SCENE_COLLECT)){
-                musicDetails.setTitle("从收藏记录删除");
+                musicDetails.setTitle(context.getString(R.string.text_detele_to_histroy));
             }
             musicDetails.setItemID(MusicDetails.ITEM_ID_DETELE);
             musicDetails.setIcon(R.drawable.ic_music_details_detele);
@@ -271,18 +272,10 @@ public class MediaUtils {
         mLocalImageEnable = localImageEnable;
     }
 
-    public void onDestroy() {
-        if(null!=mLocationMusic){
-            mLocationMusic.clear();
-            mLocationMusic=null;
-        }
-        mInstance=null;
-    }
-
     /**
      * 格式化视频入参
-     * @param indexItemBean
-     * @return
+     * @param indexItemBean ITEM
+     * @return Player参数
      */
     public VideoParams formatVideoParams(OpenEyesIndexItemBean indexItemBean) {
         if(null==indexItemBean){
@@ -311,24 +304,35 @@ public class MediaUtils {
 
     /**
      * 根据播放模式返回文本
-     * @param playerModel
-     * @return
+     * @param context 上下文
+     * @param playerModel 播放模式
+     * @return 模式描述
      */
-    public String getPlayerModelToString(int playerModel) {
-        if(playerModel==MusicConstants.MUSIC_MODEL_SINGLE){
-            return "单曲循环";
-        }else if(playerModel==MusicConstants.MUSIC_MODEL_LOOP){
+    public String getPlayerModelToString(Context context,int playerModel) {
+        if(null==context){
+            if(playerModel==MusicConstants.MUSIC_MODEL_SINGLE){
+                return "单曲循环";
+            }else if(playerModel==MusicConstants.MUSIC_MODEL_LOOP){
+                return "列表循环";
+            }else if(playerModel==MusicConstants.MUSIC_MODEL_RANDOM){
+                return "随机播放";
+            }
             return "列表循环";
-        }else if(playerModel==MusicConstants.MUSIC_MODEL_RANDOM){
-            return "随机播放";
         }
-        return "列表循环";
+        if(playerModel==MusicConstants.MUSIC_MODEL_SINGLE){
+            return context.getResources().getString(R.string.text_play_model_single);
+        }else if(playerModel==MusicConstants.MUSIC_MODEL_LOOP){
+            return context.getResources().getString(R.string.text_play_model_loop);
+        }else if(playerModel==MusicConstants.MUSIC_MODEL_RANDOM){
+            return context.getResources().getString(R.string.text_play_model_random);
+        }
+        return context.getResources().getString(R.string.text_play_model_loop);
     }
 
     /**
      * 根据播放模式返回资源ID
-     * @param playerModel
-     * @return
+     * @param playerModel 播放模式
+     * @return 资源ICON
      */
     public int getPlayerModelToRes(int playerModel) {
         if(playerModel== MusicConstants.MUSIC_MODEL_SINGLE){
@@ -339,5 +343,13 @@ public class MediaUtils {
             return R.drawable.ic_music_lock_model_random;
         }
         return R.drawable.music_player_model_loop_selector;
+    }
+
+    public void onDestroy() {
+        if(null!=mLocationMusic){
+            mLocationMusic.clear();
+            mLocationMusic=null;
+        }
+        mInstance=null;
     }
 }

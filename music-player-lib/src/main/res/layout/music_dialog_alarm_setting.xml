@@ -43,7 +43,7 @@
                 android:textSize="14dp"
                 android:layout_marginLeft="8dp"
                 android:textColor="#FFFFFF"
-                android:text="定时关闭播放"/>
+                android:text="@string/music_text_alarm_title"/>
         </LinearLayout>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -65,7 +65,7 @@
             android:layout_marginRight="16dp"
             android:textSize="16dp"
             android:gravity="center"
-            android:text="当前音频播放完后"/>
+            android:text="@string/music_text_alarm_current"/>
         <TextView
             android:id="@+id/view_btn_cancel"
             android:layout_width="match_parent"
@@ -77,7 +77,7 @@
             android:layout_marginRight="16dp"
             android:textSize="16dp"
             android:gravity="center"
-            android:text="取消定时"/>
+            android:text="@string/music_text_alarm_cancel"/>
         <TextView
             android:id="@+id/btn_close"
             android:layout_width="match_parent"
@@ -87,6 +87,6 @@
             android:gravity="center"
             android:textColor="#FFFFFF"
             android:background="#0DFFFFFF"
-            android:text="取消"/>
+            android:text="@string/music_text_cancel"/>
     </LinearLayout>
 </FrameLayout>

@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.music.player.lib.R;
 import com.music.player.lib.adapter.MusicAlarmAdapter;
 import com.music.player.lib.adapter.base.OnItemClickListener;
@@ -21,10 +20,8 @@ import com.music.player.lib.bean.MusicAlarmSetting;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.model.MusicItemSpaceDecoration;
-import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicBackgroungBlurView;
-
 import java.util.List;
 
 /**
@@ -35,7 +32,6 @@ import java.util.List;
 
 public class MusicAlarmSettingDialog extends BottomSheetDialog {
 
-    private static final String TAG = "MusicAlarmSettingDialog";
     private MusicAlarmAdapter mAdapter;
     private MusicBackgroungBlurView mBlurView;
 
@@ -100,7 +96,6 @@ public class MusicAlarmSettingDialog extends BottomSheetDialog {
         int width = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         LinearLayout contentLayout = (LinearLayout) findViewById(R.id.content_layout);
         contentLayout.measure(width,width);
-        Logger.d(TAG,"HEIGHT:"+contentLayout.getMeasuredHeight());
         mBlurView = (MusicBackgroungBlurView) findViewById(R.id.view_blur_layout);
         mBlurView.getLayoutParams().height=contentLayout.getMeasuredHeight();
     }

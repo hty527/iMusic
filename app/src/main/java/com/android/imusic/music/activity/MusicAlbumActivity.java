@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
@@ -45,11 +44,9 @@ import com.music.player.lib.util.MusicColorUtils;
 import com.music.player.lib.util.MusicStatusUtils;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicRoundImageView;
-
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
@@ -86,7 +83,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
         mTagID = getIntent().getStringExtra(MusicConstants.KEY_TAG_ID);
         mTitle = getIntent().getStringExtra(MusicConstants.KEY_ALBUM_ANME);
         if(TextUtils.isEmpty(mTagID)){
-            Toast.makeText(MusicAlbumActivity.this,"TAG为空",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MusicAlbumActivity.this,"TAG is empty",Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -119,9 +116,9 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
                 -MusicUtils.getInstance().dpToPxInt(this,7f));
         mSongCover = (MusicRoundImageView) findViewById(R.id.music_song_cover);
         TextView  tvPlay = (TextView) findViewById(R.id.music_tv_play);
-        tvPlay.setText("全部播放");
+        tvPlay.setText(getString(R.string.text_all_play));
         mTvSubPlay = (TextView) findViewById(R.id.music_tv_sub_play);
-        mTvSubPlay.setText("(共"+0+"首)");
+        mTvSubPlay.setText(String.format(getString(R.string.text_music_count),"0"));
         View.OnClickListener onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,7 +146,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
         mPlayerModel = (ImageView) findViewById(R.id.music_play_model);
         mPlayerModelName = (TextView) findViewById(R.id.music_play_model_name);
         mTitleView = (TextView) findViewById(R.id.music_title);
-        mTitleView.setText("歌单");
+        mTitleView.setText(getString(R.string.text_album_title));
         setPlayerModel(MusicPlayerManager.getInstance().getPlayerModel());
         mBtnFunction = (LinearLayout) findViewById(R.id.ll_btn_function);
         //主列表
@@ -207,7 +204,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
             mTitleView.setText(mTitle);
             mBtnFunction.setBackgroundColor(Color.parseColor("#FFFFFF"));
         }else{
-            mTitleView.setText("歌单");
+            mTitleView.setText(getString(R.string.text_album_title));
             mBtnFunction.setBackgroundResource(R.drawable.music_song_play_bg);
         }
         oldVerticalOffset=abs;
@@ -221,7 +218,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
         if(null!=mPlayerModel&&null!=mPlayerModelName){
             mPlayerModel.setImageResource(MediaUtils.getInstance().getPlayerModelToRes(playModel));
             mPlayerModel.setColorFilter(Color.parseColor("#333333"));
-            mPlayerModelName.setText(MediaUtils.getInstance().getPlayerModelToString(playModel));
+            mPlayerModelName.setText(MediaUtils.getInstance().getPlayerModelToString(MusicAlbumActivity.this,playModel));
         }
     }
 
@@ -344,7 +341,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
         if(null!=mAdapter&&null!=data.getList()&&data.getList().size()>0){
             mAdapter.setNewData(data.getList());
             if(null!=mTvSubPlay){
-                mTvSubPlay.setText(Html.fromHtml("(共"+data.getList().size()+"首)"));
+                mTvSubPlay.setText(Html.fromHtml(String.format(getString(R.string.text_music_count),data.getList().size()+"")));
             }
         }
         if(null!=data.getSinger()){

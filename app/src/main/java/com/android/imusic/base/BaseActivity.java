@@ -99,9 +99,9 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         }
         if(null==models) models=new PermissionModel[]{
                 new PermissionModel(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        "读取本地音频文件需要'读取本地存储'权限", READ_EXTERNAL_STORAGE_CODE),
+                        getString(R.string.text_per_storage_read), READ_EXTERNAL_STORAGE_CODE),
                 new PermissionModel(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        "播放记录存储需要'写入数据到存储'权限", WRITE_EXTERNAL_STORAGE_CODE)
+                        getString(R.string.text_per_storage_write), WRITE_EXTERNAL_STORAGE_CODE)
         };
         try {
             for (PermissionModel model : models) {
@@ -174,15 +174,15 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                         //用户拒绝过其中一个权限
                         if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
                             new android.support.v7.app.AlertDialog.Builder(BaseActivity.this)
-                                    .setTitle("获取本地音乐失败")
+                                    .setTitle(getString(R.string.text_per_read_song_error))
                                     .setMessage(findPermissionExplain(permissions[0]))
-                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    .setNegativeButton(getString(R.string.text_cancel), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             onRequstPermissionResult(PREMISSION_CANCEL);
                                         }
                                     })
-                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    .setPositiveButton(getString(R.string.text_submit), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             requstPermissions();
@@ -191,15 +191,15 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                         } else {
                             //用户勾选了不再询问，手动开启
                             new android.support.v7.app.AlertDialog.Builder(BaseActivity.this)
-                                    .setTitle("获取本地音乐失败")
-                                    .setMessage("读取本地存储权限被拒绝，请点击‘去设置’手动开启读取本地存储权限")
-                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    .setTitle(getString(R.string.text_per_read_song_error))
+                                    .setMessage(getString(R.string.text_per_read_song_pre_error))
+                                    .setNegativeButton(getString(R.string.text_cancel), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             onRequstPermissionResult(PREMISSION_CANCEL);
                                         }
                                     })
-                                    .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                                    .setPositiveButton(getString(R.string.text_start_setting), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             startActivityForResult(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -286,16 +286,16 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     protected void createMiniJukeboxWindow() {
         if(!MusicWindowManager.getInstance().checkAlertWindowsPermission(BaseActivity.this)){
             new android.support.v7.app.AlertDialog.Builder(BaseActivity.this)
-                    .setTitle("播放提示")
-                    .setMessage("前往开启悬浮窗，更好的体验播放功能")
-                    .setNegativeButton("暂不开启", new DialogInterface.OnClickListener() {
+                    .setTitle(getString(R.string.text_music_play_tips))
+                    .setMessage(getString(R.string.text_music_play_window_tips))
+                    .setNegativeButton(getString(R.string.text_music_play_no_open), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             MusicPlayerManager.getInstance().onStop();
                             finish();
                         }
                     })
-                    .setPositiveButton("去开启", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.text_start_open), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -305,7 +305,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                                         .getPackageName(BaseActivity.this)));
                                 BaseActivity.this.startActivityForResult(intent,MusicConstants.REQUST_WINDOWN_PERMISSION);
                             } else {
-                                Toast.makeText(BaseActivity.this,"请在设置中手动开启",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(BaseActivity.this,getString(R.string.text_music_active_open),Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent();
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");

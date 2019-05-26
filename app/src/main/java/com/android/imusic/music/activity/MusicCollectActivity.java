@@ -48,7 +48,7 @@ public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> im
         setWindowEnable(true);
         setContentView(R.layout.music_activity_music_list);
         MusicCommentTitleView titleView = (MusicCommentTitleView) findViewById(R.id.title_view);
-        titleView.setTitle("我的收藏");
+        titleView.setTitle(getString(R.string.text_collect_title));
         titleView.setOnTitleClickListener(new MusicCommentTitleView.OnTitleClickListener() {
             @Override
             public void onBack(View view) {
@@ -122,16 +122,16 @@ public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> im
         super.onMusicMenuClick(position, itemId, audioInfo);
         if(itemId== MusicDetails.ITEM_ID_DETELE){
             new android.support.v7.app.AlertDialog.Builder(MusicCollectActivity.this)
-                    .setTitle("删除提示")
-                    .setMessage("确定要从收藏列表中删除这首歌吗？")
-                    .setNegativeButton("取消",null)
-                    .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    .setTitle(getString(R.string.text_detele_tips))
+                    .setMessage(getString(R.string.text_collect_detele_title))
+                    .setNegativeButton(getString(R.string.music_text_cancel),null)
+                    .setPositiveButton(getString(R.string.text_detele), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             boolean flag = SqlLiteCacheManager.getInstance().deteleCollectByID(audioInfo.getAudioId());
                             if(flag){
                                 MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
-                                Toast.makeText(MusicCollectActivity.this,"已删除",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MusicCollectActivity.this,getString(R.string.text_detele_succ),Toast.LENGTH_SHORT).show();
                                 if(null!=mPresenter){
                                     mPresenter.getCollectAudios();
                                 }

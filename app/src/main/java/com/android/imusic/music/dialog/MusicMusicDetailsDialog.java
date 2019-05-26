@@ -92,13 +92,13 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
         super(context, theme);
         setContentView(R.layout.music_dialog_details);
         this.mSceneMode=sceneMode;
-        ((TextView) findViewById(R.id.view_item_title)).setText("歌曲："+audioInfo.getAudioName());
+        ((TextView) findViewById(R.id.view_item_title)).setText(getContext().getString(R.string.text_music_title)+audioInfo.getAudioName());
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false));
         List<MusicDetails> musicDetails=
-                MediaUtils.getInstance().getMusicDetails(audioInfo,mSceneMode,albumName);
+                MediaUtils.getInstance().getMusicDetails(context,audioInfo,mSceneMode,albumName);
         mAdapter = new MusicDetailsAdapter(context,musicDetails);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -142,7 +142,7 @@ public class MusicMusicDetailsDialog extends BottomSheetDialog implements MusicP
     private int getResToPlayModel(int playerModel,boolean isToast) {
         int playerModelToRes = MediaUtils.getInstance().getPlayerModelToRes(playerModel);
         if(isToast){
-            Toast.makeText(getContext(),MediaUtils.getInstance().getPlayerModelToString(playerModel),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),MediaUtils.getInstance().getPlayerModelToString(getContext(),playerModel),Toast.LENGTH_SHORT).show();
         }
         return playerModelToRes;
     }

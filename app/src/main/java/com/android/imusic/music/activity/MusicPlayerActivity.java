@@ -390,7 +390,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      */
     private int getResToPlayModel(int playerModel,boolean isToast) {
         int playerModelToRes = MediaUtils.getInstance().getPlayerModelToRes(playerModel);
-        String playerModelToString = MediaUtils.getInstance().getPlayerModelToString(playerModel);
+        String playerModelToString = MediaUtils.getInstance().getPlayerModelToString(MusicPlayerActivity.this,playerModel);
         if(playerModel==MusicConstants.MUSIC_MODEL_RANDOM){
             mMusicPlayerModel.setColorFilter(Color.parseColor("#FFFFFF"));
         }
@@ -540,7 +540,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                             Drawable drawable = getResources().getDrawable(R.drawable.ic_music_alarm_noimal);
                             mMusicAlarm.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
                             mMusicAlarm.setTextColor(Color.parseColor("#FFFFFF"));
-                            mMusicAlarm.setText("定时关闭");
+                            mMusicAlarm.setText(getString(R.string.text_music_alarm));
                         }
                         if (null != mMusicJukeBoxView) mMusicJukeBoxView.onStop();
                         break;
@@ -699,7 +699,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             if(alarmModel==MusicConstants.MUSIC_ALARM_MODEL_0){
                 Drawable drawable = getResources().getDrawable(R.drawable.ic_music_alarm_noimal);
                 mMusicAlarm.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
-                mMusicAlarm.setText("定时关闭");
+                mMusicAlarm.setText(getString(R.string.text_music_alarm));
                 mMusicAlarm.setTextColor(Color.parseColor("#FFFFFF"));
             }else {
                 Drawable drawable = getResources().getDrawable(R.drawable.ic_music_alarm_pre);
@@ -762,7 +762,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                             Drawable drawable = getResources().getDrawable(R.drawable.ic_music_alarm_noimal);
                             mMusicAlarm.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
                             mMusicAlarm.setTextColor(Color.parseColor("#FFFFFF"));
-                            mMusicAlarm.setText("定时关闭");
+                            mMusicAlarm.setText(getString(R.string.text_music_alarm));
                         }
                         return;
                     }
@@ -794,16 +794,16 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         }
         if(!MusicWindowManager.getInstance().checkAlertWindowsPermission(MusicPlayerActivity.this)){
             new android.support.v7.app.AlertDialog.Builder(MusicPlayerActivity.this)
-                    .setTitle("退出播放器提示")
-                    .setMessage("后台播放需要开启悬浮窗播放功能，请前往系统设置开启悬浮窗权限")
-                    .setNegativeButton("停止播放", new DialogInterface.OnClickListener() {
+                    .setTitle(getString(R.string.text_music_close_tips))
+                    .setMessage(getString(R.string.text_music_close_permission_tips))
+                    .setNegativeButton(getString(R.string.text_music_stop_play), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             MusicPlayerManager.getInstance().onStop();
                             finish();
                         }
                     })
-                    .setPositiveButton("开启", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.text_music_open), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
@@ -814,7 +814,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                                             MusicUtils.getInstance().getPackageName(MusicPlayerActivity.this)));
                                     MusicPlayerActivity.this.startActivityForResult(intent,MusicConstants.REQUST_WINDOWN_PERMISSION);
                                 } else {
-                                    Toast.makeText(MusicPlayerActivity.this,"请在设置中手动开启",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MusicPlayerActivity.this,getString(R.string.text_music_active_open),Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent();
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");

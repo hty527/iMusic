@@ -47,7 +47,7 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
         setWindowEnable(true);
         setContentView(R.layout.music_activity_music_list);
         mTitleView = (MusicCommentTitleView) findViewById(R.id.title_view);
-        mTitleView.setTitle("最近播放");
+        mTitleView.setTitle(getString(R.string.text_chistroy_title));
         mTitleView.setOnTitleClickListener(new MusicCommentTitleView.OnTitleClickListener() {
             @Override
             public void onBack(View view) {
@@ -57,15 +57,15 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
             @Override
             public void onSubTitleClick(View v) {
                 new android.support.v7.app.AlertDialog.Builder(MusicHistroyActivity.this)
-                        .setTitle("清空提示")
-                        .setMessage("确定要清空最近的播放记录吗？")
-                        .setNegativeButton("取消",null)
-                        .setPositiveButton("清空", new DialogInterface.OnClickListener() {
+                        .setTitle(getString(R.string.text_remove_tips))
+                        .setMessage(getString(R.string.text_histroy_remove_title))
+                        .setNegativeButton(getString(R.string.music_text_cancel),null)
+                        .setPositiveButton(getString(R.string.text_remove_title), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 boolean allHistroy = SqlLiteCacheManager.getInstance().deteleAllHistroy();
                                 if(allHistroy){
-                                    Toast.makeText(MusicHistroyActivity.this,"已清空",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MusicHistroyActivity.this,getString(R.string.text_remove_succ),Toast.LENGTH_SHORT).show();
                                     mAdapter.setNewData(null);
                                     mTitleView.setSubTitle("");
                                     MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
@@ -142,15 +142,15 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
         super.onMusicMenuClick(position, itemId, audioInfo);
         if(itemId== MusicDetails.ITEM_ID_DETELE){
             new android.support.v7.app.AlertDialog.Builder(MusicHistroyActivity.this)
-                    .setTitle("删除提示")
-                    .setMessage("确定要从播放记录中删除这首歌吗？")
-                    .setNegativeButton("取消",null)
-                    .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    .setTitle(getString(R.string.text_detele_tips))
+                    .setMessage(getString(R.string.text_histroy_detele_title))
+                    .setNegativeButton(getString(R.string.music_text_cancel),null)
+                    .setPositiveButton(getString(R.string.text_detele), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             boolean deteleHistroy = SqlLiteCacheManager.getInstance().deteleHistroyByID(audioInfo.getAudioId());
                             if(deteleHistroy){
-                                Toast.makeText(MusicHistroyActivity.this,"已删除",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MusicHistroyActivity.this,getString(R.string.text_detele_succ),Toast.LENGTH_SHORT).show();
                                 if(null!=mPresenter){
                                     mPresenter.getHistroyAudios();
                                 }
@@ -179,7 +179,7 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
             mAdapter.setNewData(data);
         }
         if(null!=mTitleView){
-            mTitleView.setSubTitle("清空");
+            mTitleView.setSubTitle(getString(R.string.text_remove_title));
         }
     }
 

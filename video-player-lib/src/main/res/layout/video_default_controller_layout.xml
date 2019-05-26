@@ -133,7 +133,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="糟糕，视频播放失败~"
+            android:text="@string/video_text_player_error"
             android:textColor="#F0F0F0"
             android:textSize="13dp"/>
         <TextView
@@ -146,7 +146,7 @@
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:background="@drawable/video_text_button_bg"
-            android:text="点击重试"
+            android:text="@string/video_text_reset"
             android:textColor="#F0F0F0"
             android:textSize="13dp" />
     </LinearLayout>
@@ -168,7 +168,7 @@
             android:layout_marginRight="10dp"
             android:lineSpacingMultiplier="1.2"
             android:gravity="center"
-            android:text="当前网络未连接WIFI,将使用流量播放"
+            android:text="@string/video_text_mobile_tips"
             android:textColor="#FFFFFF"
             android:textSize="14dp"/>
         <TextView
@@ -182,7 +182,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:background="@drawable/video_text_play_bg"
-            android:text="继续播放"
+            android:text="@string/video_text_continue"
             android:textColor="#FFFFFF"
             android:textSize="13dp" />
     </LinearLayout>

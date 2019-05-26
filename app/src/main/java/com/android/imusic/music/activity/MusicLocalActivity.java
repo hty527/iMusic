@@ -51,7 +51,7 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
         setWindowEnable(true);
         setContentView(R.layout.music_activity_music_list);
         mTitleView = (MusicCommentTitleView) findViewById(R.id.title_view);
-        mTitleView.setTitle("本地音乐");
+        mTitleView.setTitle(getString(R.string.text_local_title));
         mTitleView.setOnTitleClickListener(new MusicCommentTitleView.OnTitleClickListener() {
             @Override
             public void onBack(View view) {
@@ -86,7 +86,7 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
     protected void onRequstPermissionResult(int resultCode) {
         super.onRequstPermissionResult(resultCode);
         if(resultCode==PREMISSION_CANCEL){
-            Toast.makeText(this,"你拒绝了读取本地存储的权限，无法查找本地音乐",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.text_local_premiss),Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -176,14 +176,14 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
         super.onMusicMenuClick(position,itemId, audioInfo);
         if(itemId== MusicDetails.ITEM_ID_DETELE){
             new android.support.v7.app.AlertDialog.Builder(MusicLocalActivity.this)
-                    .setTitle("删除提示")
-                    .setMessage("确定要从列表中删除这首歌吗？")
-                    .setNegativeButton("取消",null)
-                    .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    .setTitle(getString(R.string.text_detele_tips))
+                    .setMessage(getString(R.string.text_local_detele_title))
+                    .setNegativeButton(getString(R.string.music_text_cancel),null)
+                    .setPositiveButton(getString(R.string.text_detele), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mAdapter.removeItem(position);
-                            Toast.makeText(MusicLocalActivity.this,"已删除",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MusicLocalActivity.this,getString(R.string.text_detele_succ),Toast.LENGTH_SHORT).show();
                         }
                     }).setCancelable(false).show();
         }
@@ -206,7 +206,7 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
     @Override
     public void showAudios(List<BaseAudioInfo> data) {
         if(null!=mAdapter){
-            mTitleView.setSubTitle("播放全部");
+            mTitleView.setSubTitle(getString(R.string.text_local_play_title));
             MediaUtils.getInstance().setLocationMusic(data);
             mAdapter.setNewData(data);
             //定位至正在播放的任务

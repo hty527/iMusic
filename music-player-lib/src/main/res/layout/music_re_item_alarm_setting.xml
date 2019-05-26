@@ -26,6 +26,6 @@
             android:layout_marginTop="-8dp"
             android:textSize="14dp"
             android:textColor="#FFFFFF"
-            android:text="分钟"/>
+            android:text="@string/music_text_minute"/>
     </RelativeLayout>
 </FrameLayout>

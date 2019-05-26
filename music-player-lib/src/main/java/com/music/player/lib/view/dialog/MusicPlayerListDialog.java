@@ -131,7 +131,7 @@ public class MusicPlayerListDialog extends BottomSheetDialog implements Observer
                         if(null!=mLayoutManager){
                             mLayoutManager.scrollToPositionWithOffset(currentPosition, MusicUtils.getInstance().dpToPxInt(getContext(),43f));
                         }
-                        ((TextView) findViewById(R.id.view_item_title)).setText("播放列表("+musicInfos.size()+"首)");
+                        ((TextView) findViewById(R.id.view_item_title)).setText(String.format(getContext().getString(R.string.music_text_music_num),musicInfos.size()));
                     }
                 }
             }
@@ -171,7 +171,6 @@ public class MusicPlayerListDialog extends BottomSheetDialog implements Observer
             MusicStatus musicStatus= (MusicStatus) arg;
             if(MusicStatus.PLAYER_STATUS_PREPARED==musicStatus.getPlayerStatus()){
                 int currentPlayIndex = MusicUtils.getInstance().getCurrentPlayIndex(mAdapter.getData(), musicStatus.getId());
-                Logger.d(TAG,"update:新的播放对象："+musicStatus.getId()+",位置："+currentPlayIndex+",旧的位置："+currentPosition);
                 mAdapter.getData().get(currentPosition).setSelected(false);
                 mAdapter.getData().get(currentPlayIndex).setSelected(true);
                 mAdapter.notifyItemChanged(currentPosition,"ITEM_UPDATE");

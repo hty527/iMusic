@@ -145,9 +145,9 @@ public class IndexMusicFragment extends BaseFragment<MusicListPersenter>
             @Override
             public void onBack(View view) {
                 new android.support.v7.app.AlertDialog.Builder(getActivity())
-                        .setTitle("支持作者")
-                        .setMessage("感谢您的支持与厚爱，您的支持是我前进的动力！点击‘赏赐’立即前往支付宝犒赏作者")
-                        .setNegativeButton("赏赐",new DialogInterface.OnClickListener() {
+                        .setTitle(getString(R.string.text_support_anchor))
+                        .setMessage(getString(R.string.text_support_anchor_tips))
+                        .setNegativeButton(getString(R.string.text_support_support),new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String userSing="tsx05608jpga1ccy7yeej90";
@@ -174,7 +174,7 @@ public class IndexMusicFragment extends BaseFragment<MusicListPersenter>
                 if(doubleClick){
                     boolean imageEnable = MediaUtils.getInstance().changeLocalImageEnable();
                     Toast.makeText(getContext(),imageEnable?
-                            "本地音乐封面加载已开启":"本地音乐封面加载已关闭",Toast.LENGTH_SHORT).show();
+                            getString(R.string.text_image_open):getString(R.string.text_image_close),Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -20,8 +20,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.imusic.MainActivity;
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicSearchAdapter;
@@ -91,10 +89,10 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
                         if(mSearchHistroyCount>0){
                             MusicUtils.getInstance().closeKeybord(MusicSearchActivity.this,mEtInput);
                             new android.support.v7.app.AlertDialog.Builder(MusicSearchActivity.this)
-                                    .setTitle("删除提示")
-                                    .setMessage("清空搜索记录后无法恢复，是否继续？")
-                                    .setNegativeButton("取消",null)
-                                    .setPositiveButton("继续清空", new DialogInterface.OnClickListener() {
+                                    .setTitle(getString(R.string.text_detele_tips))
+                                    .setMessage(getString(R.string.text_detele_content))
+                                    .setNegativeButton(getString(R.string.music_text_cancel),null)
+                                    .setPositiveButton(getString(R.string.text_detele_continue), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             boolean deteleAllSearch = SqlLiteCacheManager.getInstance().deteleAllSearch();
@@ -104,7 +102,7 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
                                         }
                                     }).setCancelable(false).show();
                         }else{
-                            Toast.makeText(MusicSearchActivity.this,"暂无搜索记录可清除",
+                            Toast.makeText(MusicSearchActivity.this,getString(R.string.text_detele_empty),
                                     Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -117,7 +115,7 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
         mBtnClean = findViewById(R.id.music_btn_clean);
         mBtnClean.setOnClickListener(onClickListener);
         mEtInput = (EditText) findViewById(R.id.music_et_input);
-        mEtInput.setHint("搜索歌手、歌曲、专辑");
+        mEtInput.setHint(getString(R.string.text_search_hint));
         mEtInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -165,9 +163,9 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
 
         if(MusicUtils.getInstance().getInt(MusicConstants.SP_FIRST_SEARCH,0)==0){
             AlertDialog.Builder builder = new AlertDialog.Builder(MusicSearchActivity.this)
-                    .setTitle("搜索播放提示")
-                    .setMessage("搜索的音乐播放后会添加至播放记录中，因为酷狗的原因歌曲能播放的有效期通常为第一次播放+23小时左右，敬请悉知！")
-                    .setPositiveButton("知道了", null).setCancelable(false);
+                    .setTitle(getString(R.string.text_search_play_tips))
+                    .setMessage(getString(R.string.text_search_play_content))
+                    .setPositiveButton(getString(R.string.text_yse), null).setCancelable(false);
             builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
@@ -243,7 +241,7 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
         if(!isAuto){
             MusicUtils.getInstance().closeKeybord(MusicSearchActivity.this,mEtInput);
             mPage=1;
-            showProgressDialog("搜索中,请稍后...");
+            showProgressDialog(getString(R.string.text_search_loading));
             mAdapter.setCurrentKey(key);
             //写入搜索记录
             boolean searchKey = SqlLiteCacheManager.getInstance().insertSearchKey(key);
@@ -292,7 +290,7 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
                                 if(!TextUtils.isEmpty(searchResultInfo.getSource())){
                                     onMusicMenuClick(posotion,itemId,searchResultInfo);
                                 }else{
-                                    Toast.makeText(MusicSearchActivity.this,"请先试听后收藏",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MusicSearchActivity.this,getString(R.string.text_search_play_collect),Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }).show();

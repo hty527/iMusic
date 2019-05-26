@@ -124,7 +124,7 @@
             android:padding="12dp"
             android:gravity="center"
             android:textColor="#FF333333"
-            android:text="猜你喜欢"
+            android:text="@string/text_recommend_title"
             android:textSize="17dp"
             android:visibility="visible"
             android:textStyle="bold"/>

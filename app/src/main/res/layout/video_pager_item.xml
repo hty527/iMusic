@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:textSize="9dp"
         android:textColor="#FFFFFF"
-        android:text="精华"
+        android:text="@string/text_recommend"
         android:paddingLeft="10dp"
         android:paddingTop="3dp"
         android:paddingBottom="3dp"
