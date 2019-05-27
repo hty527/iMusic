@@ -6,7 +6,7 @@
     <string name="text_detele_tips">删除提示</string>
     <string name="text_remove_tips">清空提示</string>
     <string name="text_back_tips">再按一次退出</string>
-    <string name="text_tips_notice">检测到系统禁用了此APP的通知权限，为更好的体验，请前往手动开启通知栏权限！</string>
+    <string name="text_tips_notice">检测到系统禁用了此APP的通知权限，为完整的音乐播放体验，请前往手动开启通知栏权限！</string>
     <string name="text_cancel">取消</string>
     <string name="text_submit">确定</string>
     <string name="text_detele">删除</string>

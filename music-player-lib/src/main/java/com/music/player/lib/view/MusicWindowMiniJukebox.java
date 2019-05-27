@@ -20,6 +20,7 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicAnimatorListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
+import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 
 /**
@@ -31,7 +32,8 @@ import com.music.player.lib.util.MusicUtils;
 
 public class MusicWindowMiniJukebox extends RelativeLayout {
 
-    private final Vibrator mVibrator;
+	private static final String TAG = "MusicWindowMiniJukebox";
+	private final Vibrator mVibrator;
     private WindowManager mWindowManager;
 	private WindowManager.LayoutParams mParams;
 	private MusicJukeBoxViewSmall mJukeBoxViewSmall;
@@ -73,6 +75,7 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
 
     @Override
 	public boolean onTouchEvent(MotionEvent event) {
+		Logger.d(TAG,"onTouchEvent-->"+event.getAction());
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			//XY坐标都需要除去状态栏高度

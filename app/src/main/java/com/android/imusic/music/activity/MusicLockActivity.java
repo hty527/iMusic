@@ -205,7 +205,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
      * @return
      */
     private int getResToPlayModel(int playerModel,boolean isToast) {
-        int playerModelToRes = MediaUtils.getInstance().getPlayerModelToRes(playerModel);
+        int playerModelToRes = MediaUtils.getInstance().getPlayerModelToWhiteRes(playerModel);
         if(isToast){
             Toast.makeText(MusicLockActivity.this,MediaUtils.getInstance().getPlayerModelToString(MusicLockActivity.this,playerModel),Toast.LENGTH_SHORT).show();
         }

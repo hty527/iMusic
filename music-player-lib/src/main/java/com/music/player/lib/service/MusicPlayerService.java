@@ -1199,6 +1199,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     public void stopServiceForeground(int notificeid) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             stopForeground(notificeid);
+        }else{
+            stopForeground(true);
         }
     }
 

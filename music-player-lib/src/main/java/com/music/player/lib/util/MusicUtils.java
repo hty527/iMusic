@@ -31,6 +31,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -1371,29 +1372,8 @@ public class MusicUtils {
      * @return true:拥有
      */
     public boolean hasNiticePremission(Context context) {
-        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M){
-            return true;
-        }
-        String CHECK_OP_NO_THROW = "checkOpNoThrow";
-        String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
-        AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        ApplicationInfo appInfo = context.getApplicationInfo();
-        String pkg = context.getApplicationContext().getPackageName();
-        int uid = appInfo.uid;
-        Class appOpsClass = null;
-        try {
-            appOpsClass = Class.forName(AppOpsManager.class.getName());
-            Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE,
-                    String.class);
-            Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);
-
-            int value = (Integer) opPostNotificationValue.get(Integer.class);
-            return ((Integer) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+        NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+        return manager.areNotificationsEnabled();
     }
 
     /**

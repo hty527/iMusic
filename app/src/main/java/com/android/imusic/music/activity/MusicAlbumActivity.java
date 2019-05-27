@@ -217,7 +217,6 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
     private void setPlayerModel(int playModel) {
         if(null!=mPlayerModel&&null!=mPlayerModelName){
             mPlayerModel.setImageResource(MediaUtils.getInstance().getPlayerModelToRes(playModel));
-            mPlayerModel.setColorFilter(Color.parseColor("#333333"));
             mPlayerModelName.setText(MediaUtils.getInstance().getPlayerModelToString(MusicAlbumActivity.this,playModel));
         }
     }

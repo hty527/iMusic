@@ -16,7 +16,7 @@
             app:arcGravity="bottom"
             app:arcExpandOpenDurtion="500"
             app:arcExpandCloseDurtion="500"
-            app:arcBtnIcon="@drawable/ic_music_default_arc_icon"
+            app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
         <com.android.imusic.music.view.MusicArcMenuView
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             app:arcGravity="center_vertical"
             app:arcExpandOpenDurtion="500"
             app:arcExpandCloseDurtion="500"
-            app:arcBtnIcon="@drawable/ic_music_default_arc_icon"
+            app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
         <com.android.imusic.music.view.MusicArcMenuView
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             app:arcGravity="top"
             app:arcExpandOpenDurtion="500"
             app:arcExpandCloseDurtion="500"
-            app:arcBtnIcon="@drawable/ic_music_default_arc_icon"
+            app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
         <com.android.imusic.music.view.MusicArcMenuView
             android:layout_width="match_parent"
@@ -49,7 +49,7 @@
             app:arcGravity="center_horizontal"
             app:arcExpandOpenDurtion="500"
             app:arcExpandCloseDurtion="500"
-            app:arcBtnIcon="@drawable/ic_music_default_arc_icon"
+            app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
         <com.android.imusic.music.view.MusicArcMenuView
             android:layout_width="match_parent"
@@ -60,7 +60,7 @@
             app:arcGravity="right"
             app:arcExpandOpenDurtion="500"
             app:arcExpandCloseDurtion="500"
-            app:arcBtnIcon="@drawable/ic_music_default_arc_icon"
+            app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
         <com.android.imusic.music.view.MusicArcMenuView
             android:layout_width="match_parent"
@@ -71,7 +71,7 @@
             app:arcGravity="right|center_vertical"
             app:arcExpandOpenDurtion="500"
             app:arcExpandCloseDurtion="500"
-            app:arcBtnIcon="@drawable/ic_music_default_arc_icon"
+            app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
         <com.android.imusic.music.view.MusicArcMenuView
             android:layout_width="match_parent"
@@ -82,7 +82,7 @@
             app:arcGravity="right|bottom"
             app:arcExpandOpenDurtion="500"
             app:arcExpandCloseDurtion="500"
-            app:arcBtnIcon="@drawable/ic_music_default_arc_icon"
+            app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
         <com.android.imusic.music.view.MusicArcMenuView
             android:layout_width="match_parent"
@@ -93,7 +93,7 @@
             app:arcGravity="bottom|center_horizontal"
             app:arcExpandOpenDurtion="500"
             app:arcExpandCloseDurtion="500"
-            app:arcBtnIcon="@drawable/ic_music_default_arc_icon"
+            app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
         <com.android.imusic.music.view.MusicArcMenuView
             android:layout_width="match_parent"
@@ -104,7 +104,7 @@
             app:arcGravity="center_vertical|center_horizontal"
             app:arcExpandOpenDurtion="500"
             app:arcExpandCloseDurtion="500"
-            app:arcBtnIcon="@drawable/ic_music_default_arc_icon"
+            app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
     </FrameLayout>
     <FrameLayout
@@ -134,4 +134,9 @@
             android:layout_marginBottom="60dp"
             android:onClick="startParser"/>
     </FrameLayout>
+    <com.music.player.lib.view.MusicFanLayout
+        android:id="@+id/music_trash_view"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"/>
 </FrameLayout>

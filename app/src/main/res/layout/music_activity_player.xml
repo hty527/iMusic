@@ -38,8 +38,8 @@
                 android:id="@+id/music_sub_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:textSize="10dp"
+                android:layout_marginTop="1dp"
+                android:textSize="11dp"
                 android:textColor="#ECECEC"
                 tool:text="副标题"/>
         </LinearLayout>
@@ -105,7 +105,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="center"
-            android:src="@drawable/music_player_model_loop_selector"/>
+            android:src="@drawable/ic_music_model_loop_noimal"/>
         <ImageView
             android:id="@+id/music_btn_last"
             android:layout_width="0dp"

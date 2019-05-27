@@ -228,8 +228,8 @@ public class MusicArcMenuView extends FrameLayout implements View.OnTouchListene
         int marginTop = MusicUtils.getInstance().dpToPxInt(getContext(),5f);
         mViews=new ArrayList<>();
         if(createRes){
-            resID=new int[]{R.drawable.ic_music_window_next,R.drawable.ic_music_window_last,
-                    R.drawable.ic_music_window_play,R.drawable.ic_music_window_home};
+            resID=new int[]{R.drawable.ic_music_lock_model_random_pre,R.drawable.ic_music_model_loop_pre,
+                    R.drawable.ic_music_model_signle_pre,R.drawable.ic_music_play_alll};
         }
         for (int i = 0; i < resID.length; i++) {
             ImageView imageView=new ImageView(getContext());
@@ -258,7 +258,7 @@ public class MusicArcMenuView extends FrameLayout implements View.OnTouchListene
             Logger.d(TAG,"属性已设置");
             mBtnImage.setImageDrawable(mBtnDrawable);
         }else{
-            mBtnImage.setImageResource(R.drawable.ic_music_default_arc_icon);
+            mBtnImage.setImageResource(R.drawable.ic_music_collect_pre);
         }
         mBtnImage.setLayoutParams(layoutParams);
         mBtnImage.setOnClickListener(new OnClickListener() {

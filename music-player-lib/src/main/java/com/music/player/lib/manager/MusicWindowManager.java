@@ -57,7 +57,7 @@ public class MusicWindowManager {
 
     /**
      * 添加一个View到窗口,默认位置是位于屏幕左上角，自行指定X、Y轴偏移量
-     * @param context
+     * @param context 全局上下文
      * @param offsetPixelX X轴偏移量 单位像素 -1:使用默认
      * @param offsetPixelY Y轴偏移量 单位像素 -1:使用默认
      */
@@ -80,7 +80,7 @@ public class MusicWindowManager {
 
     /**
      * 添加一个View到窗口,默认位置是位于屏幕左上角，自行指定X、Y轴偏移量
-     * @param context
+     * @param context 全局上下文
      * @param offsetPixelX X轴偏移量 单位像素 -1:使用默认
      * @param offsetPixelY Y轴偏移量 单位像素 -1:使用默认
      */
@@ -139,7 +139,7 @@ public class MusicWindowManager {
 
     /**
 	 * 将小悬浮窗从屏幕上移除。
-	 * @param context
+	 * @param context 全局上下文
 	 */
 	public synchronized void removeMiniJukeBoxFromWindow(Context context) {
 		if(null!= mMusicWindowMiniJukebox){
@@ -151,7 +151,7 @@ public class MusicWindowManager {
 
     /**
      * 添加一个垃圾桶至窗口
-     * @param context
+     * @param context 全局上下文,这个悬浮窗层级应该比唱片机低一级，使其显示在唱片机下方
      * @return 控件的宽高，用来确定控件在屏幕的位置
      */
     public synchronized int[] addMiniJukeBoxTrashToWindown(Context context) {
@@ -162,8 +162,6 @@ public class MusicWindowManager {
             WindowManager.LayoutParams trachLayoutParams = new WindowManager.LayoutParams();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 trachLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                trachLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
             }else if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.KITKAT){
                 trachLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
             }else{
@@ -188,7 +186,7 @@ public class MusicWindowManager {
 
     /**
      * 悬浮窗垃圾桶从屏幕移除
-     * @param context
+     * @param context 全局上下文
      */
     public synchronized void removeTrashFromWindown(final Context context) {
         if(null!= mMusicWindowTrash){
@@ -213,7 +211,7 @@ public class MusicWindowManager {
 
     /**
      * 垃圾桶焦点感应是否捕获
-     * @param focusCap
+     * @param focusCap 全局上下文
      */
     public void jukeBoxTrashFocusCap(boolean focusCap) {
         if(null!= mMusicWindowTrash){
@@ -241,7 +239,7 @@ public class MusicWindowManager {
 
     /**
      * 此应用是否拥有悬浮窗权限
-     * @param context
+     * @param context 全局上下文
      * @return 为true表示拥有悬浮窗权限
      */
 	public boolean haveWindownPermission(Context context){
@@ -253,7 +251,7 @@ public class MusicWindowManager {
 
     /**
      * 判断 悬浮窗口权限是否打开
-     * @param context
+     * @param context 全局上下文
      * @return true 允许  false禁止
      */
     public boolean checkAlertWindowsPermission(Context context) {

@@ -87,7 +87,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:scaleType="center"
-                android:src="@drawable/ic_music_lock_model_loop"/>
+                android:src="@drawable/ic_music_model_loop_noimal"/>
             <ImageView
                 android:id="@+id/music_lock_last"
                 android:layout_weight="1"

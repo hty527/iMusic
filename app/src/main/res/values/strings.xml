@@ -5,7 +5,7 @@
     <string name="text_detele_tips">Delete prompt</string>
     <string name="text_remove_tips">Clearance prompt</string>
     <string name="text_back_tips">Press exit again</string>
-    <string name="text_tips_notice">It was detected that the notification permission for this APP was disabled by the system.please go to manually open the notification bar permission!</string>
+    <string name="text_tips_notice">It was detected that the system disabled the notification permission for this APP, for the complete music playing experience, please go to manually open the notification bar permission!</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_submit">Submit</string>
     <string name="text_detele">Detele</string>

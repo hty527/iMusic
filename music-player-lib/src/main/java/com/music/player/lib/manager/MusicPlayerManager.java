@@ -130,7 +130,7 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      */
     private void unBindService(Context context, boolean destroy) {
         if(null!=context&&context instanceof Activity){
-            if(null!=mConnection&&null!=mBinder&&mBinder.pingBinder()){
+            if(null!=mConnection){
                 context.unbindService(mConnection);
             }
             if(destroy){

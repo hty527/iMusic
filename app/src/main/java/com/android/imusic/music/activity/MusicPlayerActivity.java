@@ -389,11 +389,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * @return
      */
     private int getResToPlayModel(int playerModel,boolean isToast) {
-        int playerModelToRes = MediaUtils.getInstance().getPlayerModelToRes(playerModel);
+        int playerModelToRes = MediaUtils.getInstance().getPlayerModelToWhiteRes(playerModel);
         String playerModelToString = MediaUtils.getInstance().getPlayerModelToString(MusicPlayerActivity.this,playerModel);
-        if(playerModel==MusicConstants.MUSIC_MODEL_RANDOM){
-            mMusicPlayerModel.setColorFilter(Color.parseColor("#FFFFFF"));
-        }
         if(isToast){
             Toast.makeText(MusicPlayerActivity.this,playerModelToString,Toast.LENGTH_SHORT).show();
         }

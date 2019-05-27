@@ -1,8 +1,11 @@
 package com.android.imusic;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -188,7 +191,7 @@ public class MainActivity extends BaseActivity {
             }
         }
         //检查并获取通知权限
-        boolean premission = MusicUtils.getInstance().hasNiticePremission(this);
+        boolean premission = MusicUtils.getInstance().hasNiticePremission(getApplicationContext());
         if(!premission){
             new android.support.v7.app.AlertDialog.Builder(MainActivity.this)
                     .setTitle(getString(R.string.text_sys_tips))
@@ -197,7 +200,16 @@ public class MainActivity extends BaseActivity {
                     .setPositiveButton(getString(R.string.text_start_open), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            MusicUtils.getInstance().startAppSetting(MainActivity.this);
+                            try {
+                                Intent intent = new Intent();
+                                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                intent.setData(uri);
+                                startActivity(intent);
+                            }catch (RuntimeException e){
+                                e.printStackTrace();
+                            }
                         }
                     }).setCancelable(false).show();
         }else{

@@ -408,8 +408,11 @@ public final class OkHttpUtils {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
+                                    int code = response.code();
+                                    String message = response.message();
+                                    response.close();
                                     if(null!=listener){
-                                        listener.onError(response.code(),response.message());
+                                        listener.onError(code,message);
                                     }
                                 }
                             });
@@ -641,6 +644,7 @@ public final class OkHttpUtils {
                 if(200==response.code()){
                     try {
                         String string = response.body().string();
+                        response.close();
                         if(!TextUtils.isEmpty(string)){
                             if(DEBUG){
                                 Logger.d(TAG,"服务端返回数据-->"+string);
@@ -668,8 +672,10 @@ public final class OkHttpUtils {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
+                                    int code = response.code();
+                                    response.close();
                                     if(null!=callBack){
-                                        callBack.onError(response.code(),"body is empty");
+                                        callBack.onError(code,"body is empty");
                                     }
                                 }
                             });
@@ -703,8 +709,11 @@ public final class OkHttpUtils {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            int code = response.code();
+                            String message = response.message();
+                            response.close();
                             if(null!=callBack){
-                                callBack.onError(response.code(),response.message());
+                                callBack.onError(code,message);
                             }
                         }
                     });

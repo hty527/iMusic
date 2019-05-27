@@ -207,7 +207,6 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
     public void showAudios(List<BaseAudioInfo> data) {
         if(null!=mAdapter){
             mTitleView.setSubTitle(getString(R.string.text_local_play_title));
-            MediaUtils.getInstance().setLocationMusic(data);
             mAdapter.setNewData(data);
             //定位至正在播放的任务
             if(null!=mLayoutManager){

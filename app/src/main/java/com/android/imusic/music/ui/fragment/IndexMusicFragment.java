@@ -14,8 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
-
 import com.android.imusic.R;
+import com.android.imusic.base.BaseEngin;
 import com.android.imusic.base.BaseFragment;
 import com.android.imusic.music.activity.MusicAlbumActivity;
 import com.android.imusic.music.activity.MusicCollectActivity;
@@ -35,7 +35,6 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.view.MusicCommentTitleView;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -255,7 +254,6 @@ public class IndexMusicFragment extends BaseFragment<MusicListPersenter>
     @Override
     public void showLocationAudios(List<BaseAudioInfo> data) {
         if(null!=mAdapter){
-            MediaUtils.getInstance().setLocationMusic(data);
             if(mAdapter.getData().size()>0){
                 mAdapter.getData().get(0).setDesp("("+data.size()+"首)");
                 mAdapter.notifyDataSetChanged();
@@ -293,7 +291,9 @@ public class IndexMusicFragment extends BaseFragment<MusicListPersenter>
                 }
             });
         }
-        Toast.makeText(getContext(),errorMsg,Toast.LENGTH_SHORT).show();
+        if(code!= BaseEngin.API_RESULT_EMPTY){
+            Toast.makeText(getContext(),errorMsg,Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

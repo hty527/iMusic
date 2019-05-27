@@ -28,7 +28,7 @@ public class MediaUtils {
 
     private static final String TAG = "MediaUtils";
     private static volatile MediaUtils mInstance;
-    private List<BaseAudioInfo> mLocationMusic;
+    private List<BaseAudioInfo> mLocationMusic=null;
     private static boolean mLocalImageEnable;//本地音乐图片获取开关,默认关闭
 
     public static MediaUtils getInstance() {
@@ -49,7 +49,7 @@ public class MediaUtils {
      * @return
      */
     public ArrayList<BaseAudioInfo> queryLocationMusics(Context context) {
-        ArrayList<BaseAudioInfo> audioInfos=null;
+        ArrayList<BaseAudioInfo> audioInfos=new ArrayList<>();
         if(null!=context.getContentResolver()){
             Cursor cursor = context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -67,7 +67,6 @@ public class MediaUtils {
                             + MediaStore.Audio.Media.MIME_TYPE + "=?",
                     new String[] { "audio/mpeg", "audio/x-ms-wma" }, null);
             if (null!=cursor&&cursor.moveToFirst()) {
-                audioInfos = new ArrayList<>();
                 do {
                     if(!TextUtils.isEmpty(cursor.getString(9))){
                         BaseAudioInfo audioInfo = new BaseAudioInfo();
@@ -113,9 +112,11 @@ public class MediaUtils {
                 } while (cursor.moveToNext());
                 cursor.close();
             }
+            setLocationMusic(audioInfos);
             return audioInfos;
         }
-        return null;
+        setLocationMusic(audioInfos);
+        return audioInfos;
     }
 
     /**
@@ -336,13 +337,30 @@ public class MediaUtils {
      */
     public int getPlayerModelToRes(int playerModel) {
         if(playerModel== MusicConstants.MUSIC_MODEL_SINGLE){
-            return R.drawable.music_player_model_single_selector;
+            return R.drawable.ic_music_model_signle_pre;
         }else if(playerModel==MusicConstants.MUSIC_MODEL_LOOP){
-            return R.drawable.music_player_model_loop_selector;
+            return R.drawable.ic_music_model_loop_pre;
         }else if(playerModel==MusicConstants.MUSIC_MODEL_RANDOM){
-            return R.drawable.ic_music_lock_model_random;
+            return R.drawable.ic_music_lock_model_random_pre;
         }
-        return R.drawable.music_player_model_loop_selector;
+        return R.drawable.ic_music_model_loop_pre;
+    }
+
+
+    /**
+     * 根据播放模式返回资源ID
+     * @param playerModel 播放模式
+     * @return 资源ICON
+     */
+    public int getPlayerModelToWhiteRes(int playerModel) {
+        if(playerModel== MusicConstants.MUSIC_MODEL_SINGLE){
+            return R.drawable.ic_music_model_signle_noimal;
+        }else if(playerModel==MusicConstants.MUSIC_MODEL_LOOP){
+            return R.drawable.ic_music_model_loop_noimal;
+        }else if(playerModel==MusicConstants.MUSIC_MODEL_RANDOM){
+            return R.drawable.ic_music_lock_model_random_noimal;
+        }
+        return R.drawable.ic_music_model_loop_noimal;
     }
 
     public void onDestroy() {

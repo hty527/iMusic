@@ -86,6 +86,7 @@ public class MusicWindowTrash extends RelativeLayout {
     @SuppressLint("ObjectAnimatorBinding")
 	public synchronized void startTrashWindowAnimation(){
         //alpha\scaleX\rotation\rotationX\translationX
+        MusicWindowTrash.this.setVisibility(VISIBLE);
         ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(MusicWindowTrash.this, "translationX", viewWidth,0);
         ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(MusicWindowTrash.this, "translationY", viewHeight,0);
         AnimatorSet animatorSet=new AnimatorSet();
@@ -110,6 +111,7 @@ public class MusicWindowTrash extends RelativeLayout {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
+                MusicWindowTrash.this.setVisibility(GONE);
                 if(null!=animatorListener){
                     animatorListener.onAnimationEnd();
                 }
