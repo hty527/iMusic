@@ -302,4 +302,16 @@ public class MusicPlayerBinder extends Binder{
             mPresenter.setLockActivityName(className);
         }
     }
+
+    public void setMainctivityName(String mMainActivityClass) {
+        if(null!=mPresenter){
+            mPresenter.setMainctivityName(mMainActivityClass);
+        }
+    }
+
+    public void setLockForeground(boolean enable) {
+        if(null!=mPresenter){
+            mPresenter.setLockForeground(enable);
+        }
+    }
 }

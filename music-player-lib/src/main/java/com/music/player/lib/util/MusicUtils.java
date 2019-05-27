@@ -1721,4 +1721,18 @@ public class MusicUtils {
         }
         return null;
     }
+
+    public boolean isAppRunning(Context context, String packageName) {
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
+        if (list.size() <= 0) {
+            return false;
+        }
+        for (ActivityManager.RunningTaskInfo info : list) {
+            if (info.baseActivity.getPackageName().equals(packageName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

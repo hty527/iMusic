@@ -124,7 +124,7 @@ public class MusicWindowTrash extends RelativeLayout {
 	 */
 	public void jukeBoxTrashFocusCap(boolean focusCap) {
 		if(null!=mTvTrash){
-			mTvTrash.setText(focusCap?"请松手取消":"取消悬浮播放");
+			mTvTrash.setText(focusCap?"松手取消悬浮":"取消悬浮播放");
 		}
 	}
 

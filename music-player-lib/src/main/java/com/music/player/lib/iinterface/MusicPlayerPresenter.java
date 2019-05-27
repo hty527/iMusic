@@ -1,12 +1,10 @@
 package com.music.player.lib.iinterface;
 
 import android.app.Notification;
-
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.manager.MusicPlayerManager;
-
 import java.util.List;
 
 /**
@@ -16,6 +14,35 @@ import java.util.List;
  */
 
 public interface MusicPlayerPresenter {
+
+    /**
+     * 设置是否开启前台进程(通知栏)
+     * @param enable true：开启前台进程（通知栏）
+     * @return MusicPlayerManager
+     */
+    MusicPlayerManager setLockForeground(boolean enable);
+
+    /**
+     * 设置播放器界面
+     * @param className Activity绝对路径
+     * @return MusicPlayerManager
+     */
+    MusicPlayerManager setPlayerActivityName(String className);
+
+    /**
+     * 设置锁屏界面
+     * @param className Activity绝对路径
+     * @return MusicPlayerManager
+     */
+    MusicPlayerManager setLockActivityName(String className);
+
+    /**
+     * 设置主界面绝对路径
+     * @param className 绝对路径
+     * @return MusicPlayerManager
+     */
+    MusicPlayerManager setMainctivityName(String className);
+
     /**
      * 开始播放任务
      * @param audios 待播放的数据集，对象需要继承BaseaudioInfo
@@ -275,16 +302,4 @@ public interface MusicPlayerPresenter {
      * 创建一个窗口播放器
      */
     void createWindowJukebox();
-
-    /**
-     * 设置播放器界面
-     * @param className Activity绝对路径
-     */
-    MusicPlayerManager setPlayerActivityName(String className);
-
-    /**
-     * 设置锁屏界面
-     * @param className Activity绝对路径
-     */
-    MusicPlayerManager setLockActivityName(String className);
 }

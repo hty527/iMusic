@@ -14,8 +14,6 @@ public class MusicPlayerConfig {
     private int defaultAlarmModel = MusicConstants.MUSIC_ALARM_MODEL_0;
     //默认播放模式
     private int defaultPlayModel = MusicConstants.MUSIC_MODEL_LOOP;
-    //是否锁定前台Service
-    private boolean lockForeground = false;
 
     public int getDefaultAlarmModel() {
         return defaultAlarmModel;
@@ -32,15 +30,6 @@ public class MusicPlayerConfig {
 
     public MusicPlayerConfig setDefaultPlayModel(int defaultPlayModel) {
         this.defaultPlayModel = defaultPlayModel;
-        return this;
-    }
-
-    public boolean isLockForeground() {
-        return lockForeground;
-    }
-
-    public MusicPlayerConfig setLockForeground(boolean lockForeground) {
-        this.lockForeground = lockForeground;
         return this;
     }
 

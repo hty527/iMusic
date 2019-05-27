@@ -27,7 +27,7 @@ public class MusicApplication extends Application {
         AppBackgroundManager.getInstance().setAppStateListener( new AppBackgroundManager.IAppStateChangeListener() {
             @Override
             public void onAppStateChanged(String activityName,boolean isAppForceground) {
-                //APP不可见，但直接是从播放器界面不可见的，让悬浮窗可见
+                //APP不可见并且直接是从播放器界面不可见的，让悬浮窗显示出来
                 if(!isAppForceground&&activityName.equals(MusicPlayerActivity.class.getCanonicalName())){
                     MusicWindowManager.getInstance().onVisible();
                 }

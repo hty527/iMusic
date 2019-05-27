@@ -74,8 +74,10 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     private static MusicPlayerInfoListener sMusicPlayerInfoListener;
     //音频焦点Manager
     private static MusicAudioFocusManager mAudioFocusManager;
+    //前台进程默认是开启的
+    private boolean mForegroundEnable=true;
     //播放器绝对路径、锁屏绝对路径
-    private String mPlayerActivityClass,mLockActivityClass;
+    private String mPlayerActivityClass,mLockActivityClass,mMainActivityClass;
     //待播放音频队列池子
     private static List<Object> mAudios = new ArrayList<>();
     //当前播放播放器正在处理的对象位置
@@ -1117,7 +1119,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      */
     @Override
     public synchronized void startServiceForeground() {
-        if(MusicPlayerManager.getInstance().isLockForeground()){
+        if(mForegroundEnable){
             NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
             boolean isOpen = manager.areNotificationsEnabled();
             if(isOpen){
@@ -1176,7 +1178,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      */
     @Override
     public void startServiceForeground(Notification notification, int notificeid) {
-        if(MusicPlayerManager.getInstance().isLockForeground()){
+        if(mForegroundEnable){
             if(null!=notification){
                 NOTIFICATION_ID=notificeid;
                 startForeground(NOTIFICATION_ID,notification);
@@ -1232,6 +1234,12 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     @Override
+    public MusicPlayerManager setLockForeground(boolean enable) {
+        this.mForegroundEnable=enable;
+        return null;
+    }
+
+    @Override
     public MusicPlayerManager setPlayerActivityName(String className) {
         this.mPlayerActivityClass=className;
         return null;
@@ -1240,6 +1248,12 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     @Override
     public MusicPlayerManager setLockActivityName(String className) {
         this.mLockActivityClass=className;
+        return null;
+    }
+
+    @Override
+    public MusicPlayerManager setMainctivityName(String className) {
+        this.mMainActivityClass=className;
         return null;
     }
 
@@ -1713,32 +1727,57 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                 }
             //前台进程-通知栏根点击事件
             }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW)){
-                if(intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0)>0){
+                long audioID = intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID, 0);
+                if(audioID>0){
                     if(!TextUtils.isEmpty(mPlayerActivityClass)){
-                        Intent startIntent=new Intent();
-                        startIntent.setClassName(getPackageName(),mPlayerActivityClass);
-                        startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0));
-                        //如果播放器组件未启用，创建新的实例
-                        //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
-                        //反之则清除播放器之上的所有栈，让播放器组件显示在最顶层
-                        startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        getApplicationContext().startActivity(startIntent);
+
+                        //请注意，这里如果APP处于非活跃状态，默认是打开你清单文件的LAUNCHER Activity，
+                        // 并入参audioid,Long类型：MusicConstants.KEY_MUSIC_ID。分两种场景处理
+
+                        //1：如果你的APP正在运行并且播放器界面正在显示关心onNewIntent（），
+                        // 如果APP正在再运行但播放器界面未打开，关心onCreate()。最终从intent取出MusicConstants.KEY_MUSIC_ID。
+
+                        //2：如果你的APP被关闭了，没有Activity在栈中，关心你的LAUNCHER Activity 的 onCreate()
+                        // 并获取intent,从intent取出MusicConstants.KEY_MUSIC_ID。自行处理跳转至播放器界面
+                        boolean appRunning = MusicUtils.getInstance().isAppRunning(getApplicationContext(), getApplicationContext().getPackageName());
+                        Logger.d(TAG,"onReceive-->appRunning:"+appRunning);
+                        if(appRunning){
+                            //MAIN
+                            Intent mainIntent = new Intent();
+                            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            mainIntent.setClassName(getPackageName(),mMainActivityClass);
+                            //Player Activity
+                            Intent startIntent=new Intent();
+                            startIntent.setClassName(getPackageName(),mPlayerActivityClass);
+                            startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, audioID);
+                            //如果播放器组件未启用，创建新的实例
+                            //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
+                            //反之则清除播放器之上的所有栈，让播放器组件显示在最顶层
+                            startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            Intent[] intents = new Intent[]{mainIntent,startIntent};
+                            getApplicationContext().startActivities(intents);
+                        }else{
+                            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+                            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                            launchIntent.putExtra(MusicConstants.KEY_MUSIC_ID, audioID);
+                            context.startActivity(launchIntent);
+                        }
                     }
                 }
             //前台进程-上一首
             }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_LAST)){
-                MusicPlayerManager.getInstance().playLastMusic();
+                playLastMusic();
             //前台进程-下一首
             }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_NEXT)){
-                MusicPlayerManager.getInstance().playNextMusic();
+                playNextMusic();
             //前台进程-暂停、开始
             }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_PAUSE)){
-                MusicPlayerManager.getInstance().playOrPause();
+                playOrPause();
             //前台进程-关闭前台进程
             }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_CLOSE)){
-                MusicPlayerManager.getInstance().stopServiceForeground();
+                stopServiceForeground();
             }
         }
     }

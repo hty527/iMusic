@@ -24,6 +24,7 @@ import com.android.imusic.video.activity.VideoPlayerActviity;
 import com.android.imusic.video.fragment.IndexVideoFragment;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.constants.MusicConstants;
+import com.music.player.lib.listener.MusicInitializeCallBack;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
@@ -36,7 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Music Player示例
+ * TinyHung@Outlook.com
+ * 2019/3/17
+ * iMusic
+ * Main
  */
 
 public class MainActivity extends BaseActivity {
@@ -50,50 +54,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //视频播放器初始化
-        VideoPlayerManager.getInstance()
-                //循环模式
-                .setLoop(true)
-                //悬浮窗中打开播放器的绝对路径
-                .setPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
-
-        //音乐播放器配置
-        MusicPlayerConfig config=MusicPlayerConfig.Build()
-                //常驻进程开关
-                .setLockForeground(true)
-                //设置默认的闹钟定时关闭模式，优先取用户设置
-                .setDefaultAlarmModel(MusicConstants.MUSIC_ALARM_MODEL_0)
-                //设置默认的循环模式，优先取用户设置
-                .setDefaultPlayModel(MusicConstants.MUSIC_MODEL_LOOP);
-
-        //音乐播放器初始化
-        MusicPlayerManager.getInstance()
-                //内部存储初始化
-                .init(getApplicationContext())
-                //应用播放器配置
-                .setMusicPlayerConfig(config)
-                //设置点击通知栏跳转的播放器界面,需开启常驻进程开关
-                .setPlayerActivityName(MusicPlayerActivity.class.getCanonicalName())
-                //设置锁屏界面，如果禁用，不需要设置或者设置为null
-                .setLockActivityName(MusicLockActivity.class.getCanonicalName())
-                //监听播放状态
-                .setPlayInfoListener(new MusicPlayerInfoListener() {
-                    @Override
-                    public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {
-                        //使用SQL存储本地播放记录
-                        SqlLiteCacheManager.getInstance().insertHistroyAudio(musicInfo);
-                    }
-                })
-                //重载方法，初始化音频媒体服务,成功之后如果系统还在播放音乐，则创建一个悬浮窗承载播放器
-                .initialize(MainActivity.this, new MusicPlayerManager.IInitializeCallBack() {
-                    @Override
-                    public void onSuccess() {
-                        //如果系统正在播放音乐
-                        if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
-                            MusicPlayerManager.getInstance().createWindowJukebox();
-                        }
-                    }
-        });
+        //视频、音乐播放器初始化
+        initConfig();
         mBtnMusic = (TextView) findViewById(R.id.music_btn_music);
         mBtnMusic.setSelected(true);
         mBtnVideo = (TextView) findViewById(R.id.music_btn_video);
@@ -148,6 +110,66 @@ public class MainActivity extends BaseActivity {
         mPagerAdapter = new MusicFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         mViewPager.setAdapter(mPagerAdapter);
         requstPermissions();
+
+        //当APP被回收或者用户退出了APP，音乐还在后台播放，点击通知栏时会将正在播放的音频ID传到此处
+        long audioID = getIntent().getLongExtra(MusicConstants.KEY_MUSIC_ID, 0);
+        if(audioID>0){
+            startToMusicPlayer(audioID);
+        }
+    }
+
+    /**
+     * 初始化配置
+     */
+    private void initConfig() {
+        //视频播放器初始化
+        VideoPlayerManager.getInstance()
+                //循环模式
+                .setLoop(true)
+                //悬浮窗中打开播放器的绝对路径
+                .setPlayerActivityClassName(VideoPlayerActviity.class.getCanonicalName());
+
+        //音乐播放器配置
+        MusicPlayerConfig config=MusicPlayerConfig.Build()
+                //设置默认的闹钟定时关闭模式，优先取用户设置
+                .setDefaultAlarmModel(MusicConstants.MUSIC_ALARM_MODEL_0)
+                //设置默认的循环模式，优先取用户设置
+                .setDefaultPlayModel(MusicConstants.MUSIC_MODEL_LOOP);
+
+        //音乐播放器初始化
+        MusicPlayerManager.getInstance()
+                //内部存储初始化
+                .init(getApplicationContext())
+                //应用播放器配置
+                .setMusicPlayerConfig(config)
+                //常驻进程开关，默认开启
+                .setLockForeground(true)
+                //设置点击通知栏跳转的播放器界面,需开启常驻进程开关
+                .setPlayerActivityName(MusicPlayerActivity.class.getCanonicalName())
+                //设置锁屏界面，如果禁用，不需要设置或者设置为null
+                .setLockActivityName(MusicLockActivity.class.getCanonicalName())
+                //设置主界面路径，在APP退出后点击通知栏用到
+                .setMainctivityName(MainActivity.class.getCanonicalName())
+                //监听播放状态
+                .setPlayInfoListener(new MusicPlayerInfoListener() {
+                    @Override
+                    public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {
+                        //使用SQL存储本地播放记录
+                        SqlLiteCacheManager.getInstance().insertHistroyAudio(musicInfo);
+                    }
+                })
+                //重载方法，初始化音频媒体服务,成功之后如果系统还在播放音乐，则创建一个悬浮窗承载播放器
+                .initialize(MainActivity.this, new MusicInitializeCallBack() {
+
+                    @Override
+                    public void onFinish() {
+                        //如果系统正在播放音乐
+                        if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
+                            MusicPlayerManager.getInstance().createWindowJukebox();
+                        }
+                    }
+                });
+
     }
 
     @Override
@@ -278,7 +300,7 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
         VideoPlayerManager.getInstance().onDestroy();
         VideoWindowManager.getInstance().onDestroy();
-        MusicWindowManager.getInstance().onDestroy();
+        //重载方法
         MusicPlayerManager.getInstance().unInitialize(MainActivity.this);
         OkHttpUtils.getInstance().onDestroy();
         if(null!=mPagerAdapter){

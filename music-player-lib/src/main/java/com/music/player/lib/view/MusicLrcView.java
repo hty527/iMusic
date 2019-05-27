@@ -93,9 +93,9 @@ public class MusicLrcView extends View{
                     Color.parseColor("#EAEAEA"));
             textLightColor = typedArray.getColor(R.styleable.MusicLrcView_musicLrcLightTextColor,
                     Color.parseColor("#FFFF00"));
-            textSize=typedArray.getDimensionPixelSize(R.styleable.MusicLrcView_musicLrcTextSize,16);
+            textSize=typedArray.getDimensionPixelSize(R.styleable.MusicLrcView_musicLrcTextSize,15);
             textTimeSize=typedArray.getDimensionPixelSize(R.styleable.MusicLrcView_musicLrcTimeTextSize,11);
-            textLightSize=typedArray.getDimensionPixelSize(R.styleable.MusicLrcView_musicLrcLightTextSize,17);
+            textLightSize=typedArray.getDimensionPixelSize(R.styleable.MusicLrcView_musicLrcLightTextSize,16);
             textLineHeight=typedArray.getDimensionPixelSize(R.styleable.MusicLrcView_musicLrcLineHeight,22);
             textTimeColor=typedArray.getColor(R.styleable.MusicLrcView_musicLrcTimeTextColor,
                     Color.parseColor("#BABDBC"));
@@ -103,9 +103,9 @@ public class MusicLrcView extends View{
                     Color.parseColor("#BCBCBC"));
             typedArray.recycle();
         }else{
-            textSize= MusicUtils.getInstance().dpToPxInt(getContext(),16f);
+            textSize= MusicUtils.getInstance().dpToPxInt(getContext(),15f);
             textTimeSize= MusicUtils.getInstance().dpToPxInt(getContext(),11f);
-            textLightSize= MusicUtils.getInstance().dpToPxInt(getContext(),17f);
+            textLightSize= MusicUtils.getInstance().dpToPxInt(getContext(),16f);
             textLineHeight= MusicUtils.getInstance().dpToPxInt(getContext(),22f);
             textColor=Color.parseColor("#EAEAEA");
             textLightColor=Color.parseColor("#FFFF00");

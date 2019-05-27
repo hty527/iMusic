@@ -10,6 +10,7 @@ import android.os.IBinder;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.iinterface.MusicPlayerPresenter;
+import com.music.player.lib.listener.MusicInitializeCallBack;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.model.MusicPlayerConfig;
@@ -36,9 +37,14 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     private static MusicPlayerBinder mBinder;
     //播放器配置
     private static MusicPlayerConfig mMusicPlayerConfig;
-    private static String mActivityPlayerClassName, mActivityLockClassName;
+    //前台进程默认是开启的
+    private boolean mForegroundEnable=true;
+    //播放器界面路径、锁屏界面路径、主界面路径
+    private static String mActivityPlayerClassName, mActivityLockClassName,mMainActivityClass;
     //临时存储的变量，防止在初始化时设置监听内部Service还未启动
     private MusicPlayerInfoListener mTempInfoListener;
+    //初始化回调
+    private MusicInitializeCallBack mCallBack;
 
     public static MusicPlayerManager getInstance() {
         if(null==mInstance){
@@ -77,7 +83,7 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      * @param context Activity上下文
      * @param callBack 初始化成功回调，如果不为空，将尝试还原悬浮窗口
      */
-    public void initialize(Context context,IInitializeCallBack callBack) {
+    public void initialize(Context context,MusicInitializeCallBack callBack) {
         if(null!=context&&context instanceof Activity){
             this.mCallBack=callBack;
             mConnection = new MusicPlayerServiceConnection();
@@ -90,46 +96,49 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
     /**
+     * APP销毁时同步注销
+     * @param context Activity类型上下文
+     */
+    public void unInitialize(Activity context){
+        unInitialize(context,false);
+    }
+
+    /**
+     * APP销毁时同步注销
+     * @param context Activity类型上下文
+     * @param destroy 是否同步注销内部服务组件，true:注销服务结束播放
+     */
+    public void unInitialize(Activity context,boolean destroy){
+        //释放锁屏设置
+        mActivityLockClassName=null;
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.setLockActivityName(null);
+        }
+        unBindService(context,destroy);
+        removeObservers();
+        removeAllPlayerListener();
+        //音频悬浮窗口释放
+        MusicWindowManager.getInstance().onDestroy();
+        mConnection=null;mBinder=null;cMMusicSubjectObservable=null;mInstance=null;
+        mMusicPlayerConfig=null;mTempInfoListener=null;mCallBack=null;
+    }
+
+    /**
      * 解绑音乐服务组件
      * @param context Activity上下文
+     * @param destroy 是否同步注销内部服务组件，true:注销服务结束播放
      */
-    public void unBindService(Context context) {
+    private void unBindService(Context context, boolean destroy) {
         if(null!=context&&context instanceof Activity){
             if(null!=mConnection&&null!=mBinder&&mBinder.pingBinder()){
                 context.unbindService(mConnection);
             }
-//            context.stopService(new Intent(context, MusicPlayerService.class));
+            if(destroy){
+                context.stopService(new Intent(context, MusicPlayerService.class));
+            }
         }else{
             new IllegalStateException("Must pass in Activity type Context!");
         }
-    }
-
-    /**
-     * 返回播放器配置
-     * @return 播放器当前配置
-     */
-    public MusicPlayerConfig getMusicPlayerConfig() {
-        return mMusicPlayerConfig;
-    }
-
-    /**
-     * 设定播放器配置
-     * @param musicPlayerConfig
-     */
-    public MusicPlayerManager setMusicPlayerConfig(MusicPlayerConfig musicPlayerConfig) {
-        mMusicPlayerConfig = musicPlayerConfig;
-        return mInstance;
-    }
-
-    /**
-     * 获取默认的闹钟模式
-     * @return 播放器闹钟模式
-     */
-    public int getDefaultAlarmModel() {
-        if(null!=mMusicPlayerConfig){
-            return mMusicPlayerConfig.getDefaultAlarmModel();
-        }
-        return MusicConstants.MUSIC_ALARM_MODEL_0;
     }
 
     /**
@@ -145,15 +154,16 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
         return mInstance;
     }
 
+
     /**
-     * 获取播放模式
-     * @return 播放器默认的闹钟模式
+     * 获取默认的闹钟模式
+     * @return 播放器闹钟模式
      */
-    public int getDefaultPlayModel() {
+    public int getDefaultAlarmModel() {
         if(null!=mMusicPlayerConfig){
-            return mMusicPlayerConfig.getDefaultPlayModel();
+            return mMusicPlayerConfig.getDefaultAlarmModel();
         }
-        return MusicConstants.MUSIC_MODEL_LOOP;
+        return MusicConstants.MUSIC_ALARM_MODEL_0;
     }
 
     /**
@@ -170,26 +180,96 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
     /**
-     * 是否开启前台进程
-     * @param enable true:开启
+     * 获取播放模式
+     * @return 播放器默认的闹钟模式
      */
-    public MusicPlayerManager setLockForeground(boolean enable){
-        if(null==mMusicPlayerConfig){
-            mMusicPlayerConfig=new MusicPlayerConfig();
+    public int getDefaultPlayModel() {
+        if(null!=mMusicPlayerConfig){
+            return mMusicPlayerConfig.getDefaultPlayModel();
         }
-        mMusicPlayerConfig.setLockForeground(enable);
+        return MusicConstants.MUSIC_MODEL_LOOP;
+    }
+
+    /**
+     * 设定播放器配置
+     * @param musicPlayerConfig
+     */
+    public MusicPlayerManager setMusicPlayerConfig(MusicPlayerConfig musicPlayerConfig) {
+        mMusicPlayerConfig = musicPlayerConfig;
         return mInstance;
     }
 
     /**
-     * 是否启用前台进程
-     * @return 返回场常驻进程开启状态
+     * 返回播放器配置
+     * @return 播放器当前配置
      */
-    public boolean isLockForeground() {
-        if(null!=mMusicPlayerConfig){
-            return mMusicPlayerConfig.isLockForeground();
+    public MusicPlayerConfig getMusicPlayerConfig() {
+        return mMusicPlayerConfig;
+    }
+
+
+    /**
+     * 是否开启前台进程
+     * @param enable true：开启前台进程（通知栏）
+     * @return MusicPlayerManager
+     */
+    @Override
+    public MusicPlayerManager setLockForeground(boolean enable) {
+        MusicPlayerManager.this.mForegroundEnable = enable;
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.setLockForeground(mForegroundEnable);
         }
-        return false;
+        return mInstance;
+    }
+
+    /**
+     * 指定点击通知栏后打开的Activity对象绝对路径
+     * @param className 绝对路径，跳转入参Key：MusicConstants.KEY_MUSIC_ID,LongExtra类型
+     * @return MusicPlayerManager
+     */
+    @Override
+    public MusicPlayerManager setPlayerActivityName(String className) {
+        MusicPlayerManager.this.mActivityPlayerClassName = className;
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.setPlayerActivityName(mActivityPlayerClassName);
+        }
+        return mInstance;
+    }
+
+    /**
+     * 返回点击通知栏后打开的Activity对象绝对路径
+     * @return Anctivity绝对路径
+     */
+    public String getPlayerActivityName() {
+        return mActivityPlayerClassName;
+    }
+
+    /**
+     * 设置锁屏Activity绝对路径
+     * @param activityClassName activity绝对路径
+     * @return MusicPlayerManager
+     */
+    @Override
+    public MusicPlayerManager setLockActivityName(String activityClassName){
+        MusicPlayerManager.this.mActivityLockClassName=activityClassName;
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.setLockActivityName(mActivityLockClassName);
+        }
+        return mInstance;
+    }
+
+    /**
+     * 设置主界面Class
+     * @param className 绝对路径
+     * @return MusicPlayerManager
+     */
+    @Override
+    public MusicPlayerManager setMainctivityName(String className) {
+        MusicPlayerManager.this.mMainActivityClass = className;
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.setMainctivityName(mMainActivityClass);
+        }
+        return mInstance;
     }
 
     /**
@@ -696,50 +776,6 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
     /**
-     * 指定点击通知栏后打开的Activity对象绝对路径
-     * @param className
-     * @return MusicPlayerManager
-     */
-    @Override
-    public MusicPlayerManager setPlayerActivityName(String className) {
-        mActivityPlayerClassName = className;
-        if(null!=mBinder&&mBinder.pingBinder()){
-            mBinder.setPlayerActivityName(mActivityPlayerClassName);
-        }
-        return mInstance;
-    }
-
-    /**
-     * 返回点击通知栏后打开的Activity对象绝对路径
-     * @return Anctivity绝对路径
-     */
-    public String getPlayerActivityName() {
-        return mActivityPlayerClassName;
-    }
-
-    /**
-     * 设置锁屏Activity绝对路径
-     * @param activityClassName activity绝对路径
-     * @return MusicPlayerManager
-     */
-    @Override
-    public MusicPlayerManager setLockActivityName(String activityClassName){
-        mActivityLockClassName=activityClassName;
-        if(null!=mBinder&&mBinder.pingBinder()){
-            mBinder.setLockActivityName(mActivityLockClassName);
-        }
-        return mInstance;
-    }
-
-    /**
-     * 返回锁屏Activity绝对路径
-     * @return activity绝对路径
-     */
-    public String getLockActivityName(){
-        return mActivityLockClassName;
-    }
-
-    /**
      * 添加对播放器状态关心的 内容观察者，轻量级的状态通知，包括但不限于：开始播放、暂停、继续、停止、销毁 等状态
      * @param observer
      */
@@ -790,42 +826,18 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
                     if(null!=mTempInfoListener){
                         mBinder.setPlayInfoListener(mTempInfoListener);
                     }
+                    //初始化配置
                     mBinder.setPlayerActivityName(mActivityPlayerClassName);
                     mBinder.setLockActivityName(mActivityLockClassName);
+                    mBinder.setMainctivityName(mMainActivityClass);
+                    mBinder.setLockForeground(mForegroundEnable);
                     if(null!=mCallBack){
-                        mCallBack.onSuccess();
+                        mCallBack.onFinish();
                     }
                 }
             }
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {}
-    }
-
-    /**
-     * APP销毁时同步销毁
-     * @param context Activity类型上下文
-     */
-    public void unInitialize(Activity context){
-        unBindService(context);
-        removeObservers();
-        removeAllPlayerListener();
-        //音频悬浮窗口释放
-        MusicWindowManager.getInstance().onDestroy();
-        mConnection=null;mBinder=null;cMMusicSubjectObservable=null;mInstance=null;
-        mMusicPlayerConfig=null;mTempInfoListener=null;mCallBack=null;
-    }
-
-    /**
-     * 初始化回调
-     */
-    public interface IInitializeCallBack{
-        void onSuccess();
-    }
-
-    private IInitializeCallBack mCallBack;
-
-    public void setCallBack(IInitializeCallBack callBack) {
-        mCallBack = callBack;
     }
 }
