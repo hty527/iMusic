@@ -101,9 +101,9 @@ dependencies {
     //implementation(name: 'music-player-1.0.0', ext: 'aar')
     //implementation(name: 'video-player-1.0.0', ext: 'aar')
     //音乐播放器
-//    implementation 'com.imusic.player:music-player:1.0.8'
+    implementation 'com.imusic.player:music-player:1.0.9'
     //视频播放器
-//    implementation 'com.imusic.player:video-player:1.0.6'
-    implementation project(':music-player-lib')
-    implementation project(':video-player-lib')
+    implementation 'com.imusic.player:video-player:1.0.6'
+//    implementation project(':music-player-lib')
+//    implementation project(':video-player-lib')
 }
