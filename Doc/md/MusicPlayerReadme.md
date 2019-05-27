@@ -69,7 +69,17 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     MusicPlayerManager.getInstance().setLockActivityName(MusicLockActivity.class.getCanonicalName());
 ```
 #### 3. 自定义通知栏
-播放器内部实现了一套通知栏交互控制器，如需自定义需在开始播放前先关闭播放器内部通知栏(常驻进程)功能，在适合的时机开始常驻进程并传入自己实现的Notification
+```
+
+    1.播放器内部实现了一套通知栏交互控制器，如需自定义需在开始播放前先调用MusicPlayerManager.getInstance().setLockForeground(false);
+    关闭播放器内部通知栏(常驻进程)功能。
+
+    2.然后再在开始播放后、恢复播放后、暂停等状态下调用 MusicPlayerManager.getInstance().startServiceForeground(Notification notification);
+    传入自己的Notification。
+
+    3.自行注册广播，处理点击交互事件。点击事件的广播处理可参考  “3.2 启动常驻进程(内部默认启动)”
+
+```
 ##### 3.1 关闭常驻进程
 ```
     //关闭内部常驻进程功能(通知栏)，内部常驻进程默认是开启的

@@ -194,6 +194,8 @@ ___
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <!--悬浮窗-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!--启用通知栏需使用-->
+    <uses-permission android:name="android.permission.GET_TASKS" />
 ```
 **6.Activity Manifest文件配置：**
 ```
