@@ -77,4 +77,14 @@
     <string name="text_update2">发表于</string>
     <string name="text_recommend">精华</string>
     <string name="text_start_mini_window">转向小窗口</string>
+    <string name="text_version_find">发现新版本：%s</string>
+    <string name="text_version_next">下次更新</string>
+    <string name="text_version_now">立即更新</string>
+    <string name="text_version_instanll">已下载，点击安装</string>
+    <string name="text_version_download_finlsh">已下载</string>
+    <string name="text_version_download_loading">下载中，请稍后...</string>
+    <string name="text_version_download_background">切换至后台下载</string>
+    <string name="text_version_download_loading_tips">下载中</string>
+    <string name="text_version_download_finlsh_instanl">下载完成，点击安装</string>
+    <string name="text_version_download_error">下载失败，点击重试</string>
 </resources>

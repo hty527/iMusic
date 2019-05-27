@@ -76,4 +76,14 @@
     <string name="text_update2">Published in</string>
     <string name="text_recommend">Wonderful</string>
     <string name="text_start_mini_window">Turn to a small window</string>
+    <string name="text_version_find">Discover a new version：%s</string>
+    <string name="text_version_next">Next update</string>
+    <string name="text_version_now">Update now</string>
+    <string name="text_version_instanll">Downloaded, click install</string>
+    <string name="text_version_download_finlsh">Downloaded</string>
+    <string name="text_version_download_loading">Download, please wait a minute...</string>
+    <string name="text_version_download_background">Switch to background download</string>
+    <string name="text_version_download_loading_tips">Downloading</string>
+    <string name="text_version_download_finlsh_instanl">Download complete, click install</string>
+    <string name="text_version_download_error">Download failed, click retry</string>
 </resources>

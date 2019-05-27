@@ -136,17 +136,17 @@ public class VersionUpdateActivity extends BaseActivity{
         TextView title = (TextView) findViewById(R.id.tv_update_title);
         mUpdateContent = (TextView) findViewById(R.id.tv_update_content);
         mUpdateContent.setMovementMethod(ScrollingMovementMethod.getInstance());
-        title.setText(String.format("发现新版本：%s",versionInfo.getVersion()));
+        title.setText(String.format(getString(R.string.text_version_find),versionInfo.getVersion()));
         mTvDownloadProgress.setText(String.format("%sM/%sM","0",versionInfo.getSize()));
         mUpdateContent.setText(versionInfo.getUpdate_log());
         boolean existApk = VersionUpdateManager.getInstance().isEqualNewVersion(versionInfo.getVersion_code());
         if(existApk){
             mBtnCancel.setVisibility(View.GONE);
-            mBtnNext.setText("已下载，点击安装");
+            mBtnNext.setText(getString(R.string.text_version_instanll));
         }else {
-            mBtnNext.setText("立即更新");
+            mBtnNext.setText(getString(R.string.text_version_now));
         }
-        mBtnCancel.setText("下次更新");
+        mBtnCancel.setText(getString(R.string.text_version_next));
         mBtnNext.setTag(versionInfo);
         //是否强制更新
         if(versionInfo.getCompel_update()>0){
@@ -166,8 +166,8 @@ public class VersionUpdateActivity extends BaseActivity{
         boolean existApk = VersionUpdateManager.getInstance().isEqualNewVersion(versionInfo.getVersion_code());
         Logger.d(TAG,"startDownloadApk-->existApk:"+existApk);
         if(existApk){
-            mTvDownloadTips.setText("已下载");
-            mBtnNext.setText("已下载，点击安装");
+            mTvDownloadTips.setText(getString(R.string.text_version_download_finlsh));
+            mBtnNext.setText(getString(R.string.text_version_instanll));
             VersionUpdateManager.getInstance().instanllApk(versionInfo.getDown_url());
             return;
         }
@@ -177,9 +177,10 @@ public class VersionUpdateActivity extends BaseActivity{
         mUpdateContent.setVisibility(View.GONE);
         //开始下载后禁止点击外部关闭弹窗
         setFinishOnTouchOutside(false);
+        //非强制更新允许用户切换至后台安装
         mBtnNext.setEnabled(false);
-        mBtnNext.setText("下载中，请稍后...");
-        mTvDownloadTips.setText("下载中");
+        mBtnNext.setText(getString(R.string.text_version_download_loading));
+        mTvDownloadTips.setText(getString(R.string.text_version_download_loading_tips));
         VersionUpdateManager.getInstance().downloadAPK(versionInfo.getDown_url(), new OnDownloadListener() {
             @Override
             public void progress(int progress, final long totloLength, final long readLength) {
@@ -202,11 +203,11 @@ public class VersionUpdateActivity extends BaseActivity{
             public void onSuccess(File file) {
                 Logger.d(TAG,"onSuccess-->file:"+file.getAbsolutePath());
                 if(null!=mTvDownloadTips){
-                    mTvDownloadTips.setText("已下载");
+                    mTvDownloadTips.setText(getString(R.string.text_version_download_finlsh));
                 }
                 if(null!=mBtnNext){
                     mBtnNext.setEnabled(true);
-                    mBtnNext.setText("下载完成，点击安装");
+                    mBtnNext.setText(getString(R.string.text_version_download_finlsh_instanl));
                 }
             }
 
@@ -218,7 +219,7 @@ public class VersionUpdateActivity extends BaseActivity{
                 }
                 if(null!=mBtnNext){
                     mBtnNext.setEnabled(true);
-                    mBtnNext.setText("下载失败，点击重试");
+                    mBtnNext.setText(getString(R.string.text_version_download_error));
                 }
             }
         });
@@ -242,7 +243,7 @@ public class VersionUpdateActivity extends BaseActivity{
                 return;
             }
             //下载中不允许关闭对话框
-            if(mBtnNext.getText().equals("下载中，请稍后...")){
+            if(mBtnNext.getText().equals(getString(R.string.text_version_download_loading))){
                 return;
             }
             super.onBackPressed();
