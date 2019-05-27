@@ -28,7 +28,7 @@ ___
 * 本地音乐检索播放</br>
 * 搜索歌手、专辑、歌曲名播放(iMusic)</br>
 * 播放器歌词显示、自定义歌词解析器(>=1.0.7)
-* 音乐后台播放，iMusic已示例对APP重开处理
+* 支持退出APP后台播放(>=1.0.9)<br/>
 * 基本常规操作示例播放器</br>
 * 锁屏播放控制</br>
 * 自定义唱片机、锁屏界面、通知栏</br>
@@ -63,7 +63,7 @@ ___
 **1.依赖**
 ```
     dependencies {
-        implementation 'com.imusic.player:music-player:1.0.8'
+        implementation 'com.imusic.player:music-player:1.0.9'
     }
 ```
 **2.MainActivity播放器初始化**
