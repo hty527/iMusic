@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * 初始化配置
+     * 完整的初始化
      */
     private void initConfig() {
         //视频播放器初始化
@@ -300,7 +300,7 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
         VideoPlayerManager.getInstance().onDestroy();
         VideoWindowManager.getInstance().onDestroy();
-        //重载方法
+        //播放器反初始化。此方法为重载方法，请阅读内部入参说明
         MusicPlayerManager.getInstance().unInitialize(MainActivity.this);
         OkHttpUtils.getInstance().onDestroy();
         if(null!=mPagerAdapter){
