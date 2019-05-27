@@ -27,13 +27,12 @@ ___
 * 网络音乐播放</br>
 * 本地音乐检索播放</br>
 * 搜索歌手、专辑、歌曲名播放(iMusic)</br>
-* 播放器歌词显示(>=1.0.7)
-* 支持完全自定义歌词解析器(>=1.0.7)
-* 内置默认网络、本地歌词解析器(>=1.0.7)
+* 播放器歌词显示、自定义歌词解析器(>=1.0.7)
+* 音乐后台播放，iMusic已示例对APP重开处理
 * 基本常规操作示例播放器</br>
 * 锁屏播放控制</br>
 * 自定义唱片机、锁屏界面、通知栏</br>
-* 悬浮窗播放</br>
+* 全局悬浮窗口播放</br>
 * 状态栏通知控制</br>
 * 定时关闭播放</br>
 * 播放模式设置</br>
@@ -72,18 +71,16 @@ ___
     @Override
     protected void onCreate() {
         super.onCreate();
-        //初始化播放器内部存储及服务组件
+        //初始化播放器内部存储及服务组件。此initialize方法为重载方法，请阅读内部入参说明
         MusicPlayerManager.getInstance().init(getApplicationContext()).initialize(MainActivity.this);
-        //其他功能初始化请阅读音乐播放器文档...
+        //其他功能初始化请下方【其他功能初始化】
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //播放器反初始化
+        //播放器反初始化。此方法为重载方法，请阅读内部入参说明
         MusicPlayerManager.getInstance().unInitialize(MainActivity.this);
-        //如果你启用了内置悬浮窗口播放器，则还需要对其释放
-        MusicWindowManager.getInstance().onDestroy();
     }
 ```
 [其他功能初始化]: https://github.com/Yuye584312311/iMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"

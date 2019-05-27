@@ -12,9 +12,9 @@ ext {
          versionName    : "1.0.8"
     ]
     music=[
-            versionCode    : 10080,
-            versionName    : "1.0.8",
-            bintrayVersion    : '1.0.8'
+            versionCode    : 10090,
+            versionName    : "1.0.9",
+            bintrayVersion    : '1.0.9'
     ]
     video=[
             versionCode    : 10060,

@@ -3,7 +3,7 @@
 ![MusicPlayerFrame](https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/music_player.png)
 
 ### 一、APP后台防杀死和更多权限
-设置MusicPlayerManager.getInstance().setLockForeground(true)即可实现APP后台防杀死。
+设置MusicPlayerManager.getInstance().setLockForeground(true)即可实现APP后台防杀死。默认开启状态，高版本需授予通知栏权限
 ```
     <!--更多权限，若开启垃圾桶回收播放器、悬浮窗口播放、常驻内存、状态栏控制、锁屏播放控制、耳机监控 等功能，请开启已下权限-->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -16,23 +16,25 @@
 ```
     //音乐播放器配置
     MusicPlayerConfig config=MusicPlayerConfig.Build()
-            //常驻进程开关
-            .setLockForeground(true)
-            //设置默认的闹钟定时关闭模式，优先取用户设置
+            //设置用户未更改定时关闭模式时 默认的闹钟定时关闭模式，内部默认为MusicConstants.MUSIC_ALARM_MODEL_0
             .setDefaultAlarmModel(MusicConstants.MUSIC_ALARM_MODEL_0)
-            //设置默认的循环模式，优先取用户设置
+            //设置用户未更改播放模式时 默认的循环模式，内部默认为MusicConstants.MUSIC_MODEL_LOOP
             .setDefaultPlayModel(MusicConstants.MUSIC_MODEL_LOOP);
 
     //音乐播放器初始化
     MusicPlayerManager.getInstance()
-            //内部存储初始化
+            //内部SP存储初始化，储存用户对播放器设置
             .init(getApplicationContext())
             //应用播放器配置
             .setMusicPlayerConfig(config)
-            //设置点击通知栏跳转的播放器界面,需开启常驻进程开关
+            //常驻进程开关，默认开启
+            .setLockForeground(true)
+            //设置点击通知栏跳转的播放器界面,需开启常驻进程
             .setPlayerActivityName(MusicPlayerActivity.class.getCanonicalName())
             //设置锁屏界面，如果禁用，不需要设置或者设置为null
             .setLockActivityName(MusicLockActivity.class.getCanonicalName())
+            //设置主界面路径，在APP退出后点击通知栏用到
+            .setMainctivityName(MainActivity.class.getCanonicalName())
             //监听播放状态
             .setPlayInfoListener(new MusicPlayerInfoListener() {
                 @Override
@@ -41,16 +43,17 @@
                     SqlLiteCacheManager.getInstance().insertHistroyAudio(musicInfo);
                 }
             })
-            //重载方法，初始化音频媒体服务,成功之后如果系统还在播放音乐，则创建一个悬浮窗承载播放器
-            .initialize(MainActivity.this, new MusicPlayerManager.IInitializeCallBack() {
+            //重载方法，初始化音频媒体服务
+            .initialize(MainActivity.this, new MusicInitializeCallBack() {
+
                 @Override
-                public void onSuccess() {
-                    //如果系统正在播放音乐
+                public void onFinish() {
+                    //APP打开，检测到有播放任务在进行，则创建一个悬浮窗口播放器承载播放器
                     if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                         MusicPlayerManager.getInstance().createWindowJukebox();
                     }
                 }
-    });
+            });
 ```
 ### 三、音乐播放器主界面UI和自定义锁屏、通知栏实现
 #### 1. 自定义播放器界面UI
@@ -62,19 +65,17 @@ iMusic工程实现了一套近乎完整的播放器工程，内置自定义唱�
 #### 2. 自定义锁屏界面
 iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockActivity类，如果需要自定义锁屏界面，需要在开始播放前，调用两个初始化设置。
 ```
-    //1.开启锁屏控制播放界面
-    MusicPlayerManager.getInstance().setScreenOffEnable(true);
-    //2.设置自己实现的锁屏Activity绝对路径，有关属性设置，请参考iMusic中的MusicLockActivity
+    //2设置自己实现的锁屏Activity绝对路径，有关属性设置，请参考iMusic中的MusicLockActivity
     MusicPlayerManager.getInstance().setLockActivityName(MusicLockActivity.class.getCanonicalName());
 ```
 #### 3. 自定义通知栏
 播放器内部实现了一套通知栏交互控制器，如需自定义需在开始播放前先关闭播放器内部通知栏(常驻进程)功能，在适合的时机开始常驻进程并传入自己实现的Notification
 ##### 3.1 关闭常驻进程
 ```
-    //关闭内部常驻进程功能(通知栏)，内部常驻进程默认是关闭的
+    //关闭内部常驻进程功能(通知栏)，内部常驻进程默认是开启的
     MusicPlayerManager.getInstance().setLockForeground(false)
 ```
-##### 3.2 启动常驻进程
+##### 3.2 启动常驻进程(内部默认启动)
 ```
     //比如在开始播放后启动常驻进程，传入自己实现的Notification
     MusicPlayerManager.getInstance().startServiceForeground(Notification notification);
@@ -144,21 +145,45 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             Logger.d(TAG,"onReceive:action:"+action);
-            //前台进程-通知栏根点击事件
+            //前台进程-通知栏根点击事件，注意：需在播放前开启setLockForeground，并配合setPlayerActivityName和setMainctivityName使用
             if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW)){
-                if(intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0)>0){
-                    //这里也可直接使用常规的打开Activity姿势
-                    if(!TextUtils.isEmpty(MusicPlayerManager.getInstance().getMusicPlayerActivityClassName())){
-                        Intent startIntent=new Intent();
-                        startIntent.setClassName(getPackageName(),MusicPlayerManager.getInstance().getMusicPlayerActivityClassName());
-                        startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,0));
-                        //如果播放器组件未启用，创建新的实例
-                        //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
-                        //反之则清除播放器之上的所有栈，让播放器组件显示在最顶层
-                        startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(startIntent);
+                long audioID = intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID, 0);
+                if(audioID>0){
+                    if(!TextUtils.isEmpty(mPlayerActivityClass)){
+
+                        //请注意，这里如果APP处于非活跃状态，默认是打开你清单文件的LAUNCHER Activity，
+                        // 并入参audioid,Long类型：MusicConstants.KEY_MUSIC_ID。分两种场景处理
+
+                        //1：如果你的APP正在运行并且播放器界面正在显示关心onNewIntent（），
+                        // 如果APP正在再运行但播放器界面未打开，关心onCreate()。最终从intent取出MusicConstants.KEY_MUSIC_ID。
+
+                        //2：如果你的APP被关闭了，没有Activity在栈中，关心你的LAUNCHER Activity 的 onCreate()
+                        // 并获取intent,从intent取出MusicConstants.KEY_MUSIC_ID。自行处理跳转至播放器界面
+                        boolean appRunning = MusicUtils.getInstance().isAppRunning(getApplicationContext(), getApplicationContext().getPackageName());
+                        Logger.d(TAG,"onReceive-->appRunning:"+appRunning);
+                        if(appRunning){
+                            //MAIN
+                            Intent mainIntent = new Intent();
+                            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            mainIntent.setClassName(getPackageName(),mMainActivityClass);
+                            //Player Activity
+                            Intent startIntent=new Intent();
+                            startIntent.setClassName(getPackageName(),mPlayerActivityClass);
+                            startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, audioID);
+                            //如果播放器组件未启用，创建新的实例
+                            //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
+                            //反之则清除播放器之上的所有栈，让播放器组件显示在最顶层
+                            startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            Intent[] intents = new Intent[]{mainIntent,startIntent};
+                            getApplicationContext().startActivities(intents);
+                        }else{
+                            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+                            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                            launchIntent.putExtra(MusicConstants.KEY_MUSIC_ID, audioID);
+                            context.startActivity(launchIntent);
+                        }
                     }
                 }
             //前台进程-上一首
@@ -210,6 +235,7 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
 自定义解析器需继承MusicLrcRowParser类，重写内部两个重要的方法实现自己的逻辑即可。
 ```
     默认歌词解析器支持歌词结构示例：
+
     [ti:只要平凡]
     [ar:张杰&张碧晨]
     [00:03.18]作词：未知
@@ -218,6 +244,29 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     [00:26]歌词内容3xxx
     [00:26]歌词内容4xxx
     [00:26][00:26]歌词内容5xxx
+
+    //歌词控件自定义属性：
+
+    <declare-styleable name="MusicLrcView">
+        <!--当歌词为空的提示-->
+        <attr name="musicLrcEmptyTips" format="string"></attr>
+        <!--歌词文本颜色-->
+        <attr name="musicLrcTextColor" format="color"></attr>
+        <!--歌词文本大小-->
+        <attr name="musicLrcTextSize" format="dimension"></attr>
+        <!--歌词高亮文本颜色-->
+        <attr name="musicLrcLightTextColor" format="color"></attr>
+        <!--歌词高亮文本大小-->
+        <attr name="musicLrcLightTextSize" format="dimension"></attr>
+        <!--歌词之间的的高度-->
+        <attr name="musicLrcLineHeight" format="dimension"></attr>
+        <!--时间字体颜色-->
+        <attr name="musicLrcTimeTextColor" format="color"></attr>
+        <!--时间字体大小-->
+        <attr name="musicLrcTimeTextSize" format="dimension"></attr>
+        <!--手指拖动歌词底部线条颜色-->
+        <attr name="musicLrcBottomLineColor" format="color"></attr>
+    </declare-styleable>
 ```
  ___
 ### 九、MusicPlayerManager 常用API预览及说明：
@@ -231,21 +280,22 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     /**
      * Activity初始化音乐服务组件，Activity中初始化后调用
      * @param context Activity上下文
-     * @param callBack 初始化成功回调，如果不为空，将尝试还原悬浮窗口
+     * @param callBack 初始化成功回调，可用于处理重开APP是否及时回显播放状态
      */
-    public void initialize(Context context,IInitializeCallBack callBack);
-
-   /**
-    * APP销毁时同步销毁
-    * @param context Activity类型上下文
-    */
-   public void unInitialize(Activity context);
+    public void initialize(Context context,MusicInitializeCallBack callBack);
 
     /**
-     * 设定播放器配置
-     * @param musicPlayerConfig
+     * APP销毁时同步注销
+     * @param context Activity类型上下文
      */
-    public void setMusicPlayerConfig(MusicPlayerConfig musicPlayerConfig);
+    public void unInitialize(Activity context);
+
+    /**
+     * APP销毁时同步注销
+     * @param context Activity类型上下文
+     * @param destroy 是否同步注销内部服务组件，true:注销服务结束播放
+     */
+    public void unInitialize(Activity context,boolean destroy);
 
     /**
      * 设置默认的闹钟模式
@@ -262,10 +312,42 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     public MusicPlayerManager setDefaultPlayModel(int playModel);
 
     /**
-     * 是否开启前台进程
-     * @param enable true:开启
+     * 设定播放器配置
+     * @param musicPlayerConfig
      */
+    public MusicPlayerManager setMusicPlayerConfig(MusicPlayerConfig musicPlayerConfig);
+
+    /**
+     * 是否开启前台进程
+     * @param enable true：开启前台进程（通知栏）
+     * @return MusicPlayerManager
+     */
+    @Override
     public MusicPlayerManager setLockForeground(boolean enable);
+
+    /**
+     * 指定点击通知栏后打开的Activity对象绝对路径
+     * @param className 绝对路径，跳转入参Key：MusicConstants.KEY_MUSIC_ID,LongExtra类型
+     * @return MusicPlayerManager
+     */
+    @Override
+    public MusicPlayerManager setPlayerActivityName(String className);
+
+    /**
+     * 设置锁屏Activity绝对路径
+     * @param activityClassName activity绝对路径
+     * @return MusicPlayerManager
+     */
+    @Override
+    public MusicPlayerManager setLockActivityName(String activityClassName);
+
+    /**
+     * 设置主界面Class
+     * @param className 绝对路径
+     * @return MusicPlayerManager
+     */
+    @Override
+    public MusicPlayerManager setMainctivityName(String className);
 
     /**
      * 开始播放新的音频队列，播放器会替换全新音乐列表
@@ -602,17 +684,4 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
      * 创建一个窗口播放器
      */
     public void createWindowJukebox();
-
-    /**
-     * 设置播放器界面
-     * @param className Activity绝对路径
-     */
-    void setPlayerActivityName(String className);
-
-    /**
-     * 设置锁屏界面
-     * @param className Activity绝对路径
-     */
-    void setLockActivityName(String className);
-
 ```
