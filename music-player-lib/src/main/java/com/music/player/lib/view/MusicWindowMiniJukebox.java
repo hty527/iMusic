@@ -8,6 +8,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Region;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -56,8 +57,10 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
     private boolean isPlayVibrate=false;
     //悬浮球停靠在屏幕边上的边界大小
     private final int mMaginBorder;
+    //垃圾桶悬浮窗
+	private MusicWindowTrash mMusicWindowTrash;
 
-    public MusicWindowMiniJukebox(Context context, WindowManager windowManager) {
+	public MusicWindowMiniJukebox(Context context, WindowManager windowManager) {
 		super(context);
 		this.mWindowManager = windowManager;
 		mViewWidth = MusicUtils.getInstance().dpToPxInt(context,60f);
@@ -107,84 +110,89 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
 	 * 悬浮窗交互
 	 * @param event 手势事件
 	 */
-	private void showTrachWindow(MotionEvent event) {
-		//手势垃圾桶,在用户手指上下滑动10个像素触发垃圾桶
-		if(Math.abs(xInScreen-xDownInScreen)>=SCROLL_PIXEL||Math.abs(yInScreen-yDownInScreen)>=SCROLL_PIXEL){
-            int[] toWindown = MusicWindowManager.getInstance().
-                    addMiniJukeBoxTrashToWindown(getContext().getApplicationContext());
-            //返回悬浮窗控件的size数组或者悬浮窗对象本身
-            if(null!=toWindown){
-                mTrashLocationX=toWindown[0];
-                mTrashLocationY=toWindown[1];
-                MusicWindowManager.getInstance().startTrashWindowAnimation();
-            }
-            int rawX = (int) event.getRawX();
-            int rawY = (int) event.getRawY();
-            if(rawX>(mScreenWidth-mTrashLocationX)&&rawY>(mScreenHeight-mTrashLocationY)){
-                if(!isPlayVibrate&&null!=mVibrator){
-                    isPlayVibrate=true;
-                    MusicWindowManager.getInstance().jukeBoxTrashFocusCap(true);
-                    mVibrator.vibrate(50);
-                    MusicWindowManager.getInstance().startShakeAnimation();
-                }
-            }else{
-                MusicWindowManager.getInstance().jukeBoxTrashFocusCap(false);
-                isPlayVibrate=false;
-            }
-		}
-	}
-
-//    /**
-//     * 悬浮窗交互
-//     * @param event 手势事件
-//     */
-//    private void showTrachWindow(MotionEvent event) {
-//        //手势垃圾桶,在用户手指上下滑动10个像素触发垃圾桶
-//        if(Math.abs(xInScreen-xDownInScreen)>=SCROLL_PIXEL||Math.abs(yInScreen-yDownInScreen)>=SCROLL_PIXEL){
-//            Object object = MusicWindowManager.getInstance().
+//	private void showTrachWindow(MotionEvent event) {
+//		//手势垃圾桶,在用户手指上下滑动10个像素触发垃圾桶
+//		if(Math.abs(xInScreen-xDownInScreen)>=SCROLL_PIXEL||Math.abs(yInScreen-yDownInScreen)>=SCROLL_PIXEL){
+//            Object toWindown = MusicWindowManager.getInstance().
 //                    addMiniJukeBoxTrashToWindown(getContext().getApplicationContext());
 //            //返回悬浮窗控件的size数组或者悬浮窗对象本身
-//            if(null!=object){
-//                if(object instanceof int[]){
-//                    int[] size= (int[]) object;
-//                    mTrashLocationX=size[0];
-//                    mTrashLocationY=size[1];
-//                }else if(object instanceof MusicWindowTrash){
-//                    mMusicWindowTrash= (MusicWindowTrash) object;
-//                }
-//                //仅当悬浮窗本身为空，才显示悬浮窗出来
-//                if(null== mMusicWindowTrash){
-//                    MusicWindowManager.getInstance().startTrashWindowAnimation();
-//                }
-//                int rawX = (int) event.getRawX();
-//                int rawY = (int) event.getRawY();
-//                if(rawX>(mScreenWidth-mTrashLocationX)&&rawY>(mScreenHeight-mTrashLocationY)){
-//                    if(null!=mMusicWindowTrash&&null!=mMusicWindowTrash.getRegion()){
-//                        if(!isPlayVibrate&&null!=mVibrator){
-//                            Region region = mMusicWindowTrash.getRegion();
-//                            boolean contains = region.contains(rawX, rawY);
-//                            Logger.d(TAG,"X:"+rawX+",Y:"+rawY+",viewX"+(mScreenWidth-mTrashLocationX)+",viewY:"+(mScreenHeight-mTrashLocationY)+",contains:"+contains);
-//                            if(!contains){
-//                                isPlayVibrate=true;
-//                                MusicWindowManager.getInstance().jukeBoxTrashFocusCap(true);
-//                                mVibrator.vibrate(50);
-//                                MusicWindowManager.getInstance().startShakeAnimation();
-//                            }else{
-//                                MusicWindowManager.getInstance().jukeBoxTrashFocusCap(false);
-//                                isPlayVibrate=false;
-//                            }
-//                        }
-//                    }else{
-//                        MusicWindowManager.getInstance().jukeBoxTrashFocusCap(false);
-//                        isPlayVibrate=false;
-//                    }
-//                }else{
-//                    MusicWindowManager.getInstance().jukeBoxTrashFocusCap(false);
-//                    isPlayVibrate=false;
-//                }
+//            if(null!=toWindown&&toWindown instanceof int[]){
+//            	int[] window= (int[]) toWindown;
+//                mTrashLocationX=window[0];
+//                mTrashLocationY=window[1];
+//                MusicWindowManager.getInstance().startTrashWindowAnimation();
 //            }
-//        }
-//    }
+//            int rawX = (int) event.getRawX();
+//            int rawY = (int) event.getRawY();
+//            if(rawX>(mScreenWidth-mTrashLocationX)&&rawY>(mScreenHeight-mTrashLocationY)){
+//                if(!isPlayVibrate&&null!=mVibrator){
+//                    isPlayVibrate=true;
+//                    MusicWindowManager.getInstance().jukeBoxTrashFocusCap(true);
+//                    mVibrator.vibrate(50);
+//                    MusicWindowManager.getInstance().startShakeAnimation();
+//                }
+//            }else{
+//                MusicWindowManager.getInstance().jukeBoxTrashFocusCap(false);
+//                isPlayVibrate=false;
+//            }
+//		}
+//	}
+
+    /**
+     * 悬浮窗交互
+     * @param event 手势事件
+     */
+    private void showTrachWindow(MotionEvent event) {
+        //手势垃圾桶,在用户手指上下滑动10个像素触发垃圾桶
+        if(Math.abs(xInScreen-xDownInScreen)>=SCROLL_PIXEL||Math.abs(yInScreen-yDownInScreen)>=SCROLL_PIXEL){
+            Object object = MusicWindowManager.getInstance().
+                    addMiniJukeBoxTrashToWindown(getContext().getApplicationContext());
+            //返回悬浮窗控件的size数组或者悬浮窗对象本身
+            if(null!=object){
+                if(object instanceof int[]){
+                    int[] size= (int[]) object;
+                    mTrashLocationX=size[0];
+                    mTrashLocationY=size[1];
+                }else if(object instanceof MusicWindowTrash){
+                    mMusicWindowTrash= (MusicWindowTrash) object;
+                }
+                //仅当第一次走进onTouchEvent时&&悬浮窗本身为空，才显示悬浮窗出来
+                if(null== mMusicWindowTrash){
+                    MusicWindowManager.getInstance().startTrashWindowAnimation();
+                }
+                //注意，这里需要使用屏幕坐标和和控件左边宽高的的 余集 的坐标位置，最终换算为垃圾桶View的view坐标
+                int rawX = (int) event.getRawX()-(mScreenWidth-mTrashLocationX);
+                int rawY = (int) event.getRawY()-(mScreenHeight-mTrashLocationY);
+				if(null!=mMusicWindowTrash){
+					if(mMusicWindowTrash.isContainsXY(rawX,rawY)){
+						if(isPlayVibrate){
+							return;
+						}
+						isPlayVibrate=true;
+						MusicWindowManager.getInstance().jukeBoxTrashFocusCap(true);
+						if(null!=mVibrator) mVibrator.vibrate(50);
+						MusicWindowManager.getInstance().startShakeAnimation();
+					}else{
+						MusicWindowManager.getInstance().jukeBoxTrashFocusCap(false);
+						isPlayVibrate=false;
+					}
+				}else{
+					if(rawX>(mScreenWidth-mTrashLocationX)&&rawY>(mScreenHeight-mTrashLocationY)){
+						if(!isPlayVibrate&&null!=mVibrator){
+							isPlayVibrate=true;
+							MusicWindowManager.getInstance().jukeBoxTrashFocusCap(true);
+							mVibrator.vibrate(50);
+							MusicWindowManager.getInstance().startShakeAnimation();
+						}
+					}else{
+						MusicWindowManager.getInstance().jukeBoxTrashFocusCap(false);
+						isPlayVibrate=false;
+					}
+
+				}
+            }
+        }
+    }
 
     /**
      * 松手事件处理

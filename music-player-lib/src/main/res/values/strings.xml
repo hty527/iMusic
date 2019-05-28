@@ -9,4 +9,5 @@
     <string name="music_text_minute">Minute</string>
     <string name="music_text_lrc_empty">No lyrics were found</string>
     <string name="music_text_lrc_loading">The lyrics being obtained....</string>
+    <string name="music_text_now_play">Playing.</string>
 </resources>

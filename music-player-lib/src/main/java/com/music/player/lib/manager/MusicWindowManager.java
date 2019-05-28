@@ -154,7 +154,7 @@ public class MusicWindowManager {
      * @param context 全局上下文,这个悬浮窗层级应该比唱片机低一级，使其显示在唱片机下方
      * @return 控件的宽高，用来确定控件在屏幕的位置
      */
-    public synchronized int[] addMiniJukeBoxTrashToWindown(Context context) {
+    public synchronized Object addMiniJukeBoxTrashToWindown(Context context) {
         if (null== mMusicWindowTrash) {
             WindowManager windowManager = getWindowManager(context);
             mMusicWindowTrash = new MusicWindowTrash(context);
@@ -181,7 +181,7 @@ public class MusicWindowManager {
             windowManager.addView(mMusicWindowTrash, trachLayoutParams);
             return new int[]{dpToPxInt,dpToPxInt};
         }
-        return null;
+        return mMusicWindowTrash;
     }
 
     /**

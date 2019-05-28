@@ -134,6 +134,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         intentFilter.addAction(MusicConstants.MUSIC_INTENT_ACTION_CLICK_NEXT);
         intentFilter.addAction(MusicConstants.MUSIC_INTENT_ACTION_CLICK_PAUSE);
         intentFilter.addAction(MusicConstants.MUSIC_INTENT_ACTION_CLICK_CLOSE);
+        intentFilter.addAction(MusicConstants.MUSIC_INTENT_ACTION_CLICK_COLLECT);
         mHeadsetBroadcastReceiver = new HeadsetBroadcastReceiver();
         registerReceiver(mHeadsetBroadcastReceiver,intentFilter);
     }
@@ -1780,19 +1781,22 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             //前台进程-关闭前台进程
             }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_CLOSE)){
                 stopServiceForeground();
+            //收藏
+            }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_COLLECT)){
+
             }
         }
     }
 
-    //=========================================前台服务==============================================
+    //========================================前台通知栏=============================================
 
     /**
      * 构建一个前台进程通知
      * @param audioInfo 播放器正在处理的多媒体对象
-     * @param resource 封面
+     * @param cover 封面
      * @return 通知对象
      */
-    private Notification buildNotifyInstance(BaseAudioInfo audioInfo, Bitmap resource) {
+    private Notification buildNotifyInstance(BaseAudioInfo audioInfo, Bitmap cover) {
         if(null==audioInfo){
             return null;
         }
@@ -1804,45 +1808,88 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             builder=new NotificationCompat.Builder(MusicPlayerService.this);
         }
         //默认布局
-        RemoteViews defaultremoteviews = new RemoteViews(getPackageName(), R.layout.music_notify_default_controller);
-        defaultremoteviews.setImageViewBitmap(R.id.music_notice_def_cover, resource);
-            defaultremoteviews.setImageViewResource(R.id.music_notice_def_btn_pause,getPauseIcon(getPlayerState()));
-            defaultremoteviews.setTextViewText(R.id.music_notice_def_title, audioInfo.getAudioName());
-            defaultremoteviews.setTextViewText(R.id.music_notice_def_subtitle, audioInfo.getNickname());
-            //通知栏根点击意图
-            Intent clickIntent = new Intent(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW);
-            clickIntent.putExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,audioInfo.getAudioId());
-            PendingIntent pendClickIntent = PendingIntent.getBroadcast(this, 1,
-                    clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            //上一首
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_last,
-                    getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_LAST));
-            //下一首
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_next,
-                    getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_NEXT));
-            //暂停、开始
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_pause,
-                    getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_PAUSE));
-            //关闭
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_close,
-                    getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_CLOSE));
-            //大样式布局
-//        RemoteViews bigRemoteViews=new RemoteViews(getPackageName(),R.layout.music_notify_big_controller);
-            builder.setContent(defaultremoteviews)
-                    .setContentIntent(pendClickIntent)
-                    .setWhen(System.currentTimeMillis())
-                    .setTicker("正在播放")
-                    .setOngoing(true)//禁止滑动删除
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setSmallIcon(R.drawable.ic_music_push);
-            if(MusicRomUtil.getInstance().isMiui()){
-                builder.setFullScreenIntent(pendClickIntent,false);//禁用悬挂
-            }else{
-                builder.setFullScreenIntent(null,false);//禁用悬挂
-            }
+        RemoteViews defaultRemoteViews= getDefaultCoustomRemoteView(audioInfo,cover);
+        //扩展布局
+        //RemoteViews bigRemoteViews = getBigCoustomRemoteView(audioInfo,cover);
+        //通知栏根点击意图
+        Intent clickIntent = new Intent(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW);
+        clickIntent.putExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,audioInfo.getAudioId());
+        PendingIntent pendClickIntent = PendingIntent.getBroadcast(this, 1,
+                clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //构建通知栏
+        String string = getString(R.string.music_text_now_play);
+        builder.setCustomContentView(defaultRemoteViews)
+                .setContentIntent(pendClickIntent)
+                .setWhen(System.currentTimeMillis())
+                .setTicker(string)
+                .setOngoing(true)//禁止滑动删除
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setSmallIcon(R.drawable.ic_music_push);
+        if(MusicRomUtil.getInstance().isMiui()){
+            builder.setFullScreenIntent(pendClickIntent,false);//禁用悬挂
+        }else{
+            builder.setFullScreenIntent(null,false);//禁用悬挂
+        }
         Notification notify = builder.build();
         notify.flags = Notification.FLAG_ONGOING_EVENT;
         return notify;
+    }
+
+    /**
+     * 生成并绑定点击事件的默认RemoteView
+     * @param audioInfo 音频对象
+     * @param cover 封面
+     * @return RemoteView
+     */
+    private RemoteViews getDefaultCoustomRemoteView(BaseAudioInfo audioInfo,Bitmap cover) {
+        RemoteViews defaultremoteviews = new RemoteViews(getPackageName(), R.layout.music_notify_default_controller);
+        defaultremoteviews.setImageViewBitmap(R.id.music_notice_def_cover, cover);
+        defaultremoteviews.setImageViewResource(R.id.music_notice_def_btn_pause,getPauseIcon(getPlayerState()));
+        defaultremoteviews.setTextViewText(R.id.music_notice_def_title, audioInfo.getAudioName());
+        defaultremoteviews.setTextViewText(R.id.music_notice_def_subtitle, audioInfo.getNickname());
+        //上一首
+        defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_last,
+                getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_LAST));
+        //下一首
+        defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_next,
+                getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_NEXT));
+        //暂停、开始
+        defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_pause,
+                getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_PAUSE));
+        //关闭
+        defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_close,
+                getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_CLOSE));
+        return defaultremoteviews;
+    }
+
+    /**
+     * 生成并绑定大通知栏View点击事件的默认RemoteView
+     * @param audioInfo 音频对象
+     * @param cover 封面
+     * @return RemoteView
+     */
+    private RemoteViews getBigCoustomRemoteView(BaseAudioInfo audioInfo, Bitmap cover) {
+        RemoteViews defaultremoteviews = new RemoteViews(getPackageName(), R.layout.music_notify_big_controller);
+        defaultremoteviews.setImageViewBitmap(R.id.music_notice_def_cover, cover);
+        defaultremoteviews.setImageViewResource(R.id.music_notice_def_btn_pause,getPauseIcon(getPlayerState()));
+        defaultremoteviews.setTextViewText(R.id.music_notice_def_title, audioInfo.getAudioName());
+        defaultremoteviews.setTextViewText(R.id.music_notice_def_subtitle, audioInfo.getNickname());
+        //上一首
+        defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_last,
+                getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_LAST));
+        //下一首
+        defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_next,
+                getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_NEXT));
+        //暂停、开始
+        defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_pause,
+                getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_PAUSE));
+        //关闭
+        defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_close,
+                getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_CLOSE));
+        //收藏
+        defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_collect,
+                getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_COLLECT));
+        return defaultremoteviews;
     }
 
     /**

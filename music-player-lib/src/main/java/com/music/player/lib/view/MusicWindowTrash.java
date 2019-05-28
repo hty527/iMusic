@@ -64,6 +64,19 @@ public class MusicWindowTrash extends RelativeLayout {
         return null;
     }
 
+    /**
+     * 检测某个X,Y点是否在扇形内
+     * @param rawX 相对于屏幕的X点
+     * @param rawY 相对于屏幕的Y点
+     * @return true:在扇形区域内
+     */
+    public boolean isContainsXY(int rawX,int rawY){
+        if(null!=mTrashLayout){
+            return mTrashLayout.isContainsXY(rawX,rawY);
+        }
+        return false;
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
