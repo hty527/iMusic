@@ -13,7 +13,7 @@
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:elevation="0dp"
+            app:elevation="05dp"
             android:background="#00000000">
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapse_toolbar"
@@ -42,8 +42,8 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:layout_marginBottom="43dp">
+                            android:layout_marginTop="18dp"
+                            android:layout_marginBottom="45dp">
                             <FrameLayout
                                 android:id="@+id/music_song"
                                 android:layout_width="125dp"
@@ -78,7 +78,7 @@
                                         android:layout_gravity="center_vertical"
                                         android:layout_marginRight="5dp"
                                         android:textColor="#FFFFFFFF"
-                                        android:textSize="12dp"
+                                        android:textSize="11dp"
                                         android:text="0"/>
                                 </LinearLayout>
                             </FrameLayout>
@@ -98,7 +98,8 @@
                                     android:layout_marginRight="10dp"
                                     android:maxLines="4"
                                     android:ellipsize="end"
-                                    android:textSize="17dp"
+                                    android:textStyle="bold"
+                                    android:textSize="16dp"
                                     android:text=""/>
                                 <RelativeLayout
                                     android:layout_width="match_parent"
@@ -106,8 +107,8 @@
                                     android:layout_marginTop="10dp">
                                     <ImageView
                                         android:id="@+id/music_song_user_cover"
-                                        android:layout_width="22dp"
-                                        android:layout_height="22dp"
+                                        android:layout_width="21dp"
+                                        android:layout_height="21dp"
                                         android:layout_centerVertical="true"/>
                                     <TextView
                                         android:layout_toRightOf="@+id/music_song_user_cover"
@@ -115,9 +116,9 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_centerVertical="true"
-                                        android:textColor="#BABABA"
+                                        android:textColor="#DDDDDD"
                                         android:layout_marginLeft="6dp"
-                                        android:textSize="14dp"
+                                        android:textSize="12dp"
                                         android:text=""/>
                                 </RelativeLayout>
                             </LinearLayout>
