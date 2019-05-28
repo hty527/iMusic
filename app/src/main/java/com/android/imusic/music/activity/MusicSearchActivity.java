@@ -531,7 +531,7 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
                 if(null!=item){
                     item.setAlbum_img(data.getImg());
                     item.setSource(data.getPlay_url());
-                    mAdapter.notifyDataSetChanged(position);
+                    mAdapter.notifyDataSetChanged();
                     AudioInfo audioInfo=getaudioInfo(data,item.getAudio_id());
                     MusicPlayerManager.getInstance().setPlayingChannel(MusicConstants.CHANNEL_SEARCH);
                     MusicPlayerManager.getInstance().addPlayMusicToTop(audioInfo);
@@ -551,7 +551,6 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
      */
     @Override
     public void showAudioDataError(int code, String errorMsg) {
-        Logger.d(TAG,"showAudioDataError-->code:"+code+",errorMsg:"+errorMsg);
         if(!MusicSearchActivity.this.isFinishing()){
             Toast.makeText(MusicSearchActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
         }

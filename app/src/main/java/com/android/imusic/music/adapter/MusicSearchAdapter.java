@@ -108,22 +108,6 @@ public class MusicSearchAdapter extends BaseAdapter<SearchResultInfo,MusicListVi
         }
     }
 
-    /**
-     * 局部刷新
-     * @param viewHolder
-     * @param position
-     * @param payloads
-     */
-    @Override
-    protected void inBindViewHolder(MusicListViewHolder viewHolder, int position, List<Object> payloads) {
-        super.inBindViewHolder(viewHolder, position, payloads);
-        SearchResultInfo itemData = getItemData(position);
-        if(null!=itemData){
-            viewHolder.itemPlayingStatus.setVisibility(itemData.isSelected()?View.VISIBLE:View.GONE);
-            viewHolder.itemRootView.setTag(itemData);
-        }
-    }
-
     public String getCurrentKey() {
         return mCurrentKey;
     }
