@@ -158,20 +158,16 @@
 -dontwarn okhttp3.**
 -keep class okhttp3.**{*;}
 
-
-#Rxjava RxAndroid
--dontwarn rx.*
--dontwarn sun.misc.**
+#rx
 -keep class rx.android.**{*;}
--keepclassmembers class rx.internal.util.unsafe.*ArrayQuene*Field*{
-long producerIndex;
-long consumerIndex;
+-dontwarn sun.misc.**
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+ long producerIndex;
+ long consumerIndex;
 }
-
 -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-rx.internal.util.atomic.LinkedQueueNode producerNode;
-rx.internal.util.atomic.LinkedQueueNode consumerNode;
+ rx.internal.util.atomic.LinkedQueueNode producerNode;
 }
 -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-rx.internal.util.atomic.LinkedQueueNode consumerNode;
+ rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
