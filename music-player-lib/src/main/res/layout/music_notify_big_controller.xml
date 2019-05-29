@@ -82,7 +82,7 @@
             android:layout_above="@+id/ll_controller"
             android:layout_width="match_parent"
             android:layout_height="0.3dp"
-            android:background="#CBCBCB"/>
+            android:background="#8C777777"/>
     </RelativeLayout>
     <ImageView
         android:id="@+id/music_notice_def_btn_close"
