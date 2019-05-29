@@ -10,7 +10,7 @@
 iMusic示例工程主要界面遵循MVP思想开发，搜索音乐API取自《酷狗音乐》开放API，视频资源API取自《开眼视频》。<br/>
 
 [APK体验及下载]: https://github.com/Yuye584312311/iMusic/wiki/Download "Download"
-[APK体验及下载]
+**[APK体验及下载]**
 ___
 ## 功能演示及概述:
 #### 功能演示:(更多功能快照在结尾处)
