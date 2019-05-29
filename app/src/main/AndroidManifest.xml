@@ -18,7 +18,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!--
+        //当用户每次离开APP 任务栈时，系统都将会将此APP栈中的所有Activity销毁,返回此任务栈时重新创建根栈
+        android:finishOnTaskLaunch="true"
+        //当用户离开此APP任务栈时，请求系统尽可能的保留所有任务的状态
+        android:alwaysRetainTaskState="true"
+            -->
         <activity android:name="com.android.imusic.MainActivity"
+            android:alwaysRetainTaskState="true"
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait">
