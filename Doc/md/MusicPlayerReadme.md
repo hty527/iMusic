@@ -2,10 +2,9 @@
 * 有关MusicPlayer全部API文档，请阅读[MusicPlayerAPI]<br/>
 ![MusicPlayerFrame](https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/music_player.png)
 
-### 一、APP后台防杀死和更多权限
-设置MusicPlayerManager.getInstance().setLockForeground(true)即可实现APP后台防杀死。默认开启状态，高版本需授予通知栏权限
+### 一、iMusic完整功能权限
 ```
-    <!--更多权限，若开启垃圾桶回收播放器、悬浮窗口播放、常驻内存、状态栏控制、锁屏播放控制、耳机监控 等功能，请开启已下权限-->
+    <!--若开启垃圾桶回收播放器、悬浮窗口播放、常驻内存、状态栏控制、锁屏播放控制、耳机监控 等功能，请开启已下权限-->
     <uses-permission android:name="android.permission.VIBRATE" />
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -23,13 +22,15 @@
 
     //音乐播放器初始化
     MusicPlayerManager.getInstance()
-            //内部SP存储初始化，储存用户对播放器设置
+            //内部存储初始化
             .init(getApplicationContext())
             //应用播放器配置
             .setMusicPlayerConfig(config)
+            //通知栏交互，默认开启
+            .setNotificationEnable(true)
             //常驻进程开关，默认开启
             .setLockForeground(true)
-            //设置点击通知栏跳转的播放器界面,需开启常驻进程
+            //设置点击通知栏跳转的播放器界面,需开启常驻进程开关
             .setPlayerActivityName(MusicPlayerActivity.class.getCanonicalName())
             //设置锁屏界面，如果禁用，不需要设置或者设置为null
             .setLockActivityName(MusicLockActivity.class.getCanonicalName())
@@ -37,180 +38,132 @@
             .setMainctivityName(MainActivity.class.getCanonicalName())
             //监听播放状态
             .setPlayInfoListener(new MusicPlayerInfoListener() {
+                //此处自行存储播放记录
                 @Override
                 public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {
-                    //使用SQL存储本地播放记录
                     SqlLiteCacheManager.getInstance().insertHistroyAudio(musicInfo);
                 }
             })
-            //重载方法，初始化音频媒体服务
+            //重载方法，初始化音频媒体服务,成功之后如果系统还在播放音乐，则创建一个悬浮窗承载播放器
             .initialize(MainActivity.this, new MusicInitializeCallBack() {
 
                 @Override
                 public void onFinish() {
-                    //APP打开，检测到有播放任务在进行，则创建一个悬浮窗口播放器承载播放器
+                    //如果系统正在播放音乐
                     if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                         MusicPlayerManager.getInstance().createWindowJukebox();
                     }
                 }
             });
 ```
-### 三、音乐播放器主界面UI和自定义锁屏、通知栏实现
+### 三、音乐播放器主界面UI和自定义锁屏、自定义通知栏实现
 #### 1. 自定义播放器界面UI
-iMusic工程实现了一套近乎完整的播放器工程，内置自定义唱片机交互UI，播放器Activity是MusicPlayerActivity类，请参照该类实现自己的UI效果。
+    iMusic工程实现了一套近乎完整的播放器工程，内置自定义唱片机交互UI，播放器Activity是MusicPlayerActivity类，请参照该类实现自己的UI效果。
 ```
     //注册播放器状态监听器，根据丰富的回调方法实现自己的UI，注意：所有回调方法并不保证都在主线程抛出
     MusicPlayerManager.getInstance().addOnPlayerEventListener(this);
 ```
 #### 2. 自定义锁屏界面
-iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockActivity类，如果需要自定义锁屏界面，需要在开始播放前，调用两个初始化设置。
+    iMusic实现了一套示例的锁屏播放界面交互(MusicLockActivity)，如果需要自定义锁屏界面，在开始播放前，设置锁屏Activity绝对路径即可。
 ```
     //2设置自己实现的锁屏Activity绝对路径，有关属性设置，请参考iMusic中的MusicLockActivity
     MusicPlayerManager.getInstance().setLockActivityName(MusicLockActivity.class.getCanonicalName());
 ```
-#### 3. 自定义通知栏
+#### 3. 如何使用自定义通知栏?
+    播放器内部实现了一套通知栏UI样式以及交互功能。如果需要自行定义UI样式或者交互功能，请禁用内部通知功能并自行设置通知栏。步骤如下：<br/>
+
+##### 3.1 初始化时禁用通知栏
 ```
-
-    1.播放器内部实现了一套通知栏交互控制器，如需自定义需在开始播放前先调用MusicPlayerManager.getInstance().setLockForeground(false);
-    关闭播放器内部通知栏(常驻进程)功能。
-
-    2.然后再在开始播放后、恢复播放后、暂停等状态下调用 MusicPlayerManager.getInstance().startServiceForeground(Notification notification);
-    传入自己的Notification。
-
-    3.自行注册广播，处理点击交互事件。点击事件的广播处理可参考  “3.2 启动常驻进程(内部默认启动)”
+    //禁用内部通知栏功能
+    MusicPlayerManager.getInstance().setNotificationEnable(false);
 
 ```
-##### 3.1 关闭常驻进程
+##### 3.2 在收到播放状态回调时，设置自己的通知栏样式。
 ```
-    //关闭内部常驻进程功能(通知栏)，内部常驻进程默认是开启的
-    MusicPlayerManager.getInstance().setLockForeground(false)
-```
-##### 3.2 启动常驻进程(内部默认启动)
-```
-    //比如在开始播放后启动常驻进程，传入自己实现的Notification
-    MusicPlayerManager.getInstance().startServiceForeground(Notification notification);
-```
-创建Notification示例代码：
-```
+    //1：先注册播放事件监听
+    MusicPlayerManager.getInstance().addOnPlayerEventListener(this);
+
+    //2：在onMusicPlayerState回调中创建并显示你的通知栏，构建好自己的通知栏后调用如下方法显示出来，或者自行显示
+    MusicPlayerManager.getInstance().startNotification(Notification notification);
+
+    //构造Notification示例代码:
+
     /**
      * 构建一个前台进程通知
      * @param audioInfo 播放器正在处理的多媒体对象
-     * @param resource 封面
+     * @param cover 封面
      * @return 通知对象
      */
-    private Notification buildNotifyInstance(BaseAudioInfo audioInfo, Bitmap resource) {
+    private Notification buildNotifyInstance(BaseAudioInfo audioInfo, Bitmap cover) {
         if(null==audioInfo){
             return null;
         }
-        final NotificationCompat.Builder builder;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            setNotificationChannelID(MusicConstants.CHANNEL_ID);
-            builder= new NotificationCompat.Builder(MusicPlayerService.this,MusicConstants.CHANNEL_ID);
-        }else{
-            builder=new NotificationCompat.Builder(MusicPlayerService.this);
+        //8.0及以上系统需创建通知通道
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(MusicConstants.CHANNEL_ID,
+                    "COM_IMUSIC_MEDIA_PLAYER", NotificationManager.IMPORTANCE_LOW);
+            channel.enableVibration(false);
+            getNotificationManager().createNotificationChannel(channel);
         }
+        //通知栏根部点击意图
+        Intent rootIntent = new Intent(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW);
+        rootIntent.putExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,audioInfo.getAudioId());
+        PendingIntent pendClickIntent = PendingIntent.getBroadcast(this, 1,
+                rootIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        String appName = getString(R.string.music_text_now_play);
         //默认布局
-        RemoteViews defaultremoteviews = new RemoteViews(getPackageName(), R.layout.music_notify_default_controller);
-        defaultremoteviews.setImageViewBitmap(R.id.music_notice_def_cover, resource);
-            defaultremoteviews.setImageViewResource(R.id.music_notice_def_btn_pause,getPauseIcon(getPlayerState()));
-            defaultremoteviews.setTextViewText(R.id.music_notice_def_title, audioInfo.getAudioName());
-            defaultremoteviews.setTextViewText(R.id.music_notice_def_subtitle, audioInfo.getNickname());
-            //通知栏根点击意图
-            Intent clickIntent = new Intent(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW);
-            clickIntent.putExtra(MusicConstants.MUSIC_KEY_MEDIA_ID,audioInfo.getAudioId());
-            PendingIntent pendClickIntent = PendingIntent.getBroadcast(this, 1, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            //上一首
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_last, getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_LAST));
-            //下一首
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_next, getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_NEXT));
-            //暂停、开始
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_pause, getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_PAUSE));
-            //关闭
-            defaultremoteviews.setOnClickPendingIntent(R.id.music_notice_def_btn_close, getClickPending(MusicConstants.MUSIC_INTENT_ACTION_CLICK_CLOSE));
-            //大样式布局
-            //RemoteViews bigRemoteViews=new RemoteViews(getPackageName(),R.layout.music_notify_big_controller);
-            builder.setContent(defaultremoteviews)
-                    .setContentIntent(pendClickIntent)
-                    .setWhen(System.currentTimeMillis())
-                    .setTicker("正在播放")
-                    .setOngoing(true)//禁止滑动删除
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setSmallIcon(R.drawable.ic_music_push);
-            if(MusicRomUtil.getInstance().isMiui()){
-                builder.setFullScreenIntent(pendClickIntent,false);//禁用悬挂
-            }else{
-                builder.setFullScreenIntent(null,false);//禁用悬挂
-            }
-        Notification notify = builder.build();
-        notify.flags = Notification.FLAG_ONGOING_EVENT;
-        return notify;
-    }
-```
-##### 3.3 播放状态交互
-通知栏中与播放器交互是需要广播来实现的，在setOnClickPendingIntent时指定对应的意图后，监听广播，在监听到了用户点击通知栏的广播时，处理意图即可。
-```
-    private class HeadsetBroadcastReceiver extends BroadcastReceiver{
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Logger.d(TAG,"onReceive:action:"+action);
-            //前台进程-通知栏根点击事件，注意：需在播放前开启setLockForeground，并配合setPlayerActivityName和setMainctivityName使用
-            if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_ROOT_VIEW)){
-                long audioID = intent.getLongExtra(MusicConstants.MUSIC_KEY_MEDIA_ID, 0);
-                if(audioID>0){
-                    if(!TextUtils.isEmpty(mPlayerActivityClass)){
-
-                        //请注意，这里如果APP处于非活跃状态，默认是打开你清单文件的LAUNCHER Activity，
-                        // 并入参audioid,Long类型：MusicConstants.KEY_MUSIC_ID。分两种场景处理
-
-                        //1：如果你的APP正在运行并且播放器界面正在显示关心onNewIntent（），
-                        // 如果APP正在再运行但播放器界面未打开，关心onCreate()。最终从intent取出MusicConstants.KEY_MUSIC_ID。
-
-                        //2：如果你的APP被关闭了，没有Activity在栈中，关心你的LAUNCHER Activity 的 onCreate()
-                        // 并获取intent,从intent取出MusicConstants.KEY_MUSIC_ID。自行处理跳转至播放器界面
-                        boolean appRunning = MusicUtils.getInstance().isAppRunning(getApplicationContext(), getApplicationContext().getPackageName());
-                        Logger.d(TAG,"onReceive-->appRunning:"+appRunning);
-                        if(appRunning){
-                            //MAIN
-                            Intent mainIntent = new Intent();
-                            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            mainIntent.setClassName(getPackageName(),mMainActivityClass);
-                            //Player Activity
-                            Intent startIntent=new Intent();
-                            startIntent.setClassName(getPackageName(),mPlayerActivityClass);
-                            startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, audioID);
-                            //如果播放器组件未启用，创建新的实例
-                            //如果播放器组件已启用且在栈顶，复用播放器不传递任何意图
-                            //反之则清除播放器之上的所有栈，让播放器组件显示在最顶层
-                            startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            Intent[] intents = new Intent[]{mainIntent,startIntent};
-                            getApplicationContext().startActivities(intents);
-                        }else{
-                            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-                            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                            launchIntent.putExtra(MusicConstants.KEY_MUSIC_ID, audioID);
-                            context.startActivity(launchIntent);
-                        }
-                    }
-                }
-            //前台进程-上一首
-            }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_LAST)){
-                MusicPlayerManager.getInstance().playLastMusic();
-            //前台进程-下一首
-            }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_NEXT)){
-                MusicPlayerManager.getInstance().playNextMusic();
-            //前台进程-暂停、开始
-            }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_PAUSE)){
-                MusicPlayerManager.getInstance().playOrPause();
-            //前台进程-关闭前台进程
-            }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_CLOSE)){
-                MusicPlayerManager.getInstance().stopServiceForeground();
-            }
+        RemoteViews defaultRemoteViews= getDefaultCoustomRemoteView(audioInfo,cover);
+        //扩展布局
+        RemoteViews bigRemoteViews = getBigCoustomRemoteView(audioInfo,cover);
+        //构造通知栏
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setContentIntent(pendClickIntent)
+                .setTicker(appName)
+                .setSmallIcon(R.drawable.ic_music_push)
+                .setWhen(System.currentTimeMillis())
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setCustomContentView(defaultRemoteViews)
+                .setCustomBigContentView(bigRemoteViews)
+                .setChannelId(MusicConstants.CHANNEL_ID)
+                .setPriority(Notification.PRIORITY_HIGH);
+        if(MusicRomUtil.getInstance().isMiui()){
+            builder.setFullScreenIntent(pendClickIntent,false);//禁用悬挂
+        }else{
+            builder.setFullScreenIntent(null,false);//禁用悬挂
         }
+        return builder.build();
     }
+```
+##### 3.3 交互处理
+```
+    //1：在构建通知栏时，设定好广播意图
+    ImageButton button;
+    button.setOnClickPendingIntent(R.id.xxx.xxx, getClickPending("你的自定义意图"));
+
+    //2：注册广播
+    此处省略若干行代码。。。注册“你的自定义意图”到广播中
+
+    //3：在监听到广播的地方处理你的通知栏点击意图，示例代码：
+        String action = intent.getAction();
+        Logger.d(TAG,"onReceive:action:"+action);
+        //通知栏点击Action
+        if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_LAST)){
+            MusicPlayerManager.getInstance().playLastMusic();
+        //前台进程-下一首
+        }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_NEXT)){
+            MusicPlayerManager.getInstance().playNextMusic();
+        //前台进程-暂停、开始
+        }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_PAUSE)){
+            MusicPlayerManager.getInstance().playOrPause();
+        //前台进程-关闭前台进程
+        }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_CLOSE)){
+            MusicPlayerManager.getInstance().stopServiceForeground();
+        //收藏
+        }else if(action.equals(MusicConstants.MUSIC_INTENT_ACTION_CLICK_COLLECT)){
+             SqlLiteCacheManager.getInstance().insertCollectAudio(MusicPlayerManager.getInstance().getCurrentPlayerMusic());
+        }
+
 ```
 ### 四、播放器内部协调工作说明
 ```
@@ -236,12 +189,12 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     //调用此代码继续尝试播放。
     MusicPlayerManager.getInstance().continuePlay(String sourcePath);
 ```
-### 七、后台播放避免被系统杀死
+### 七、常驻进程播放
 ```
-    在开始播放前，需设置MusicPlayerManager中的setLockForeground(boolean enable);方法，设置为true即可，播放器内部以兼容处理8.0手机和国产部分机型通知栏显示。
+    在开始播放前，初始化设置时设置MusicPlayerManager.getInstance().setLockForeground(true);为true即可。前提是没有禁用内部通知功能。和用户没有禁用软件通知功能。
 ```
 ### 八、播放器歌词
-内部封装了播放器歌词显示及交互控件MusicLrcView，支持常规属性设置，内部提供了默认的本地、网络歌词解析器，当然你也可以完全自定义你自己的歌词解析器。
+    内部封装了播放器歌词显示及交互控件MusicLrcView，支持常规属性设置，内部提供了默认的本地、网络歌词解析器，当然你也可以完全自定义你自己的歌词解析器。
 自定义解析器需继承MusicLrcRowParser类，重写内部两个重要的方法实现自己的逻辑即可。
 ```
     默认歌词解析器支持歌词结构示例：
@@ -328,7 +281,14 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     public MusicPlayerManager setMusicPlayerConfig(MusicPlayerConfig musicPlayerConfig);
 
     /**
-     * 是否开启前台进程
+     * 是否开启默认的通知栏交互，默认开启状态
+     * @param enable enable true：开启默认的通知栏交互
+     * @return MusicPlayerManager
+     */
+    MusicPlayerManager setNotificationEnable(boolean enable);
+
+    /**
+     * 是否开启前台进程，默认开启状态
      * @param enable true：开启前台进程（通知栏）
      * @return MusicPlayerManager
      */
@@ -653,12 +613,33 @@ iMusic实现了一套示例的锁屏播放界面交互，Activity是MusicLockAct
     @Override
     public void stopServiceForeground();
 
-    /**
-     * 关闭指定前台进程
-     * @param notificeid 前台通知ID
+   /**
+     * 打开常驻进程，在通知栏创建一个守护通知
      */
-    @Override
-    public void stopServiceForeground(int notificeid);
+    void startNotification();
+
+    /**
+     * 打开常驻进程
+     * @param notification 通知对象
+     */
+    void startNotification(Notification notification);
+
+    /**
+     * 打开常驻进程
+     * @param notification 通知对象
+     * @param notificeid 通知ID
+     */
+    void startNotification(Notification notification,int notificeid);
+
+    /**
+     * 更新通知栏，一般在使用内部默认的通知栏时，收藏了音频后调用
+     */
+    void updateNotification();
+
+    /**
+     * 结束常驻进程并清除默认通知
+     */
+    void cleanNotification();
 
     /**
      * 添加对播放器状态关心的 内容观察者，轻量级的状态通知，包括但不限于：开始播放、暂停、继续、停止、销毁 等状态

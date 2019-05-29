@@ -25,13 +25,11 @@ import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicSearchAdapter;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
-import com.android.imusic.music.bean.SearchHistroy;
 import com.android.imusic.music.bean.SearchMusicAnchor;
 import com.android.imusic.music.bean.SearchMusicData;
 import com.android.imusic.music.bean.SearchResult;
 import com.android.imusic.music.bean.SearchResultInfo;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
-import com.android.imusic.music.manager.SqlLiteCacheManager;
 import com.android.imusic.music.manager.VersionUpdateManager;
 import com.android.imusic.music.ui.contract.MusicSearchContract;
 import com.android.imusic.music.ui.presenter.MusicSearchPersenter;
@@ -39,11 +37,12 @@ import com.android.imusic.music.utils.MediaUtils;
 import com.google.android.flexbox.FlexboxLayout;
 import com.music.player.lib.adapter.base.OnLoadMoreListener;
 import com.music.player.lib.bean.MusicStatus;
+import com.music.player.lib.bean.SearchHistroy;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
-import com.music.player.lib.util.Logger;
+import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.music.player.lib.util.MusicUtils;
 import java.util.List;
 import java.util.Observable;
@@ -343,7 +342,7 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
             cacheAudioInfo.setAudioCover(audioInfo.getAlbum_img());
             cacheAudioInfo.setAudioPath(audioInfo.getSource());
             if(!TextUtils.isEmpty(cacheAudioInfo.getAudioPath())){
-                boolean toCollect = SqlLiteCacheManager.getInstance().insertCollectAudio(cacheAudioInfo);
+                boolean toCollect = MusicPlayerManager.getInstance().collectMusic(cacheAudioInfo);
                 if(toCollect){
                     Toast.makeText(MusicSearchActivity.this,"已添加至收藏列表",
                             Toast.LENGTH_SHORT).show();

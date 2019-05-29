@@ -25,7 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
-import com.android.imusic.music.manager.SqlLiteCacheManager;
+import com.music.player.lib.manager.MusicSubjectObservable;
+import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.model.MusicLrcRowParserEngin;
 import com.android.imusic.music.utils.MediaUtils;
 import com.music.player.lib.bean.BaseAudioInfo;
@@ -47,6 +48,8 @@ import com.music.player.lib.view.dialog.MusicAlarmSettingDialog;
 import com.music.player.lib.view.dialog.MusicPlayerListDialog;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * TinyHung@Outlook.com
@@ -65,7 +68,7 @@ import java.util.List;
  */
 
 public class MusicPlayerActivity extends AppCompatActivity implements
-        MusicJukeBoxStatusListener, MusicPlayerEventListener {
+        MusicJukeBoxStatusListener, MusicPlayerEventListener, Observer {
 
     private static final String TAG = "MusicPlayerActivity";
     private MusicJukeBoxView mMusicJukeBoxView;
@@ -96,6 +99,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         initViews();
         //注册播放器状态监听器
         MusicPlayerManager.getInstance().addOnPlayerEventListener(this);
+        MusicPlayerManager.getInstance().addObservable(this);
         mHandler=new Handler(Looper.getMainLooper());
         mClickControler=new MusicClickControler();
         mClickControler.init(1,600);
@@ -276,12 +280,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                         if(null!=mMusicJukeBoxView&&null!=mMusicJukeBoxView.getCurrentMedia()){
                             BaseAudioInfo currentMedia = mMusicJukeBoxView.getCurrentMedia();
                             if(mBtnCollect.isSelected()){
-                                boolean isSuccess = SqlLiteCacheManager.getInstance().deteleCollectByID(currentMedia.getAudioId());
+                                boolean isSuccess = MusicPlayerManager.getInstance().unCollectMusic(currentMedia.getAudioId());
                                 if(isSuccess){
                                     mBtnCollect.setSelected(false);
                                 }
                             }else{
-                                boolean isSuccess = SqlLiteCacheManager.getInstance().insertCollectAudio(currentMedia);
+                                boolean isSuccess = MusicPlayerManager.getInstance().collectMusic(currentMedia);
                                 if(isSuccess){
                                     mBtnCollect.setSelected(true);
                                     MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
@@ -883,5 +887,21 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             mRootLayout=null;
         }
         isTouchSeekBar=false;
+    }
+
+    /**
+     * 监听并更新收藏状态，一般是服务组建中发出的通知状态
+     * @param o Observable
+     * @param arg 入参
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        if(o instanceof MusicSubjectObservable && null!=arg&& arg instanceof MusicStatus){
+            //收藏状态,针对可能在锁屏界面收藏的同步
+            if(null!=mBtnCollect&&null!=mMusicJukeBoxView&&null!=mMusicJukeBoxView.getCurrentMedia()){
+                boolean isExist = SqlLiteCacheManager.getInstance().isExistToCollectByID(mMusicJukeBoxView.getCurrentMedia().getAudioId());
+                mBtnCollect.setSelected(isExist);
+            }
+        }
     }
 }

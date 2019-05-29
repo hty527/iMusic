@@ -1,4 +1,4 @@
-package com.android.imusic.music.model;
+package com.music.player.lib.model;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

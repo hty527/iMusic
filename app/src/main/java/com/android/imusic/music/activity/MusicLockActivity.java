@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
-import com.android.imusic.music.manager.SqlLiteCacheManager;
+import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.utils.MediaUtils;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
@@ -105,14 +105,12 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
                         if(null!=mMusicCollect.getTag()){
                             BaseAudioInfo audioInfo = (BaseAudioInfo) mMusicCollect.getTag();
                             if(mMusicCollect.isSelected()){
-                                boolean isSuccess = SqlLiteCacheManager.getInstance().deteleCollectByID(audioInfo.getAudioId());
-                                Logger.d(TAG,"removeState:"+isSuccess);
+                                boolean isSuccess = MusicPlayerManager.getInstance().unCollectMusic(audioInfo.getAudioId());
                                 if(isSuccess){
                                     mMusicCollect.setSelected(false);
                                 }
                             }else{
-                                boolean isSuccess = SqlLiteCacheManager.getInstance().insertCollectAudio(audioInfo);
-                                Logger.d(TAG,"addState:"+isSuccess);
+                                boolean isSuccess = MusicPlayerManager.getInstance().collectMusic(audioInfo);
                                 if(isSuccess){
                                     mMusicCollect.setSelected(true);
                                     MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());

@@ -30,6 +30,36 @@ public class MusicPlayerBinder extends Binder{
         }
     }
 
+    public void setLockForeground(boolean enable) {
+        if(null!=mPresenter){
+            mPresenter.setLockForeground(enable);
+        }
+    }
+
+    public void setNotificationEnable(boolean notificationEnable) {
+        if(null!=mPresenter){
+            mPresenter.setNotificationEnable(notificationEnable);
+        }
+    }
+
+    public void setPlayerActivityName(String className) {
+        if(null!=mPresenter){
+            mPresenter.setPlayerActivityName(className);
+        }
+    }
+
+    public void setLockActivityName(String className) {
+        if(null!=mPresenter){
+            mPresenter.setLockActivityName(className);
+        }
+    }
+
+    public void setMainctivityName(String mMainActivityClass) {
+        if(null!=mPresenter){
+            mPresenter.setMainctivityName(mMainActivityClass);
+        }
+    }
+
     public void startPlayMusic(int position){
         if(null!=mPresenter){
             mPresenter.startPlayMusic(position);
@@ -267,9 +297,9 @@ public class MusicPlayerBinder extends Binder{
         }
     }
 
-    public void startServiceForeground(Notification notification,int notificeid){
+    public void startServiceForeground(Notification notification,int notifiid){
         if(null!=mPresenter){
-            mPresenter.startServiceForeground(notification,notificeid);
+            mPresenter.startServiceForeground(notification,notifiid);
         }
     }
 
@@ -279,39 +309,39 @@ public class MusicPlayerBinder extends Binder{
         }
     }
 
-    public void stopServiceForeground(int notificeid){
-        if(null!=mPresenter){
-            mPresenter.stopServiceForeground(notificeid);
-        }
-    }
-
     public void createWindowJukebox(){
         if(null!=mPresenter){
             mPresenter.createWindowJukebox();
         }
     }
 
-    public void setPlayerActivityName(String className) {
+    public void startNotification() {
         if(null!=mPresenter){
-            mPresenter.setPlayerActivityName(className);
+            mPresenter.startNotification();
         }
     }
 
-    public void setLockActivityName(String className) {
+    public void startNotification(Notification notification) {
         if(null!=mPresenter){
-            mPresenter.setLockActivityName(className);
+            mPresenter.startNotification(notification);
         }
     }
 
-    public void setMainctivityName(String mMainActivityClass) {
+    public void startNotification(Notification notification, int notifiid) {
         if(null!=mPresenter){
-            mPresenter.setMainctivityName(mMainActivityClass);
+            mPresenter.startNotification(notification,notifiid);
         }
     }
 
-    public void setLockForeground(boolean enable) {
+    public void updateNotification() {
         if(null!=mPresenter){
-            mPresenter.setLockForeground(enable);
+            mPresenter.updateNotification();
+        }
+    }
+
+    public void cleanNotification() {
+        if(null!=mPresenter){
+            mPresenter.cleanNotification();
         }
     }
 }

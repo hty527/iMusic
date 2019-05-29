@@ -1,4 +1,4 @@
-package com.android.imusic.music.bean;
+package com.music.player.lib.bean;
 
 import java.io.Serializable;
 

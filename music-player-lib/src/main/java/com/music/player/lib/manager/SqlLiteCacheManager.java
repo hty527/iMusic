@@ -1,15 +1,16 @@
-package com.android.imusic.music.manager;
+package com.music.player.lib.manager;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import com.android.imusic.MusicApplication;
-import com.android.imusic.music.bean.SearchHistroy;
-import com.android.imusic.music.model.SQLCollectHelper;
-import com.android.imusic.music.model.SQLHistroyHelper;
-import com.android.imusic.music.model.SQLSearchHelper;
+import com.music.player.lib.bean.SearchHistroy;
+import com.music.player.lib.model.SQLCollectHelper;
+import com.music.player.lib.model.SQLHistroyHelper;
+import com.music.player.lib.model.SQLSearchHelper;
 import com.music.player.lib.bean.BaseAudioInfo;
+import com.music.player.lib.util.MusicUtils;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,7 +48,7 @@ public class SqlLiteCacheManager {
 
     private synchronized WeakReference<SQLCollectHelper> createCollectDB() {
         if(null==mCollectDB||null==mCollectDB.get()){
-            SQLCollectHelper sqlCollectHelper =new SQLCollectHelper(MusicApplication.getContext());
+            SQLCollectHelper sqlCollectHelper =new SQLCollectHelper(MusicUtils.getInstance().getApplicationContext());
             mCollectDB=new WeakReference<SQLCollectHelper>(sqlCollectHelper);
         }
         return mCollectDB;
@@ -237,7 +238,7 @@ public class SqlLiteCacheManager {
 
     private synchronized WeakReference<SQLHistroyHelper> createHistroyDB() {
         if(null==mHistroyDB||null==mHistroyDB.get()){
-            SQLHistroyHelper sqlHistroyHelper =new SQLHistroyHelper(MusicApplication.getContext());
+            SQLHistroyHelper sqlHistroyHelper =new SQLHistroyHelper(MusicUtils.getInstance().getApplicationContext());
             mHistroyDB=new WeakReference<SQLHistroyHelper>(sqlHistroyHelper);
         }
         return mHistroyDB;
@@ -416,7 +417,7 @@ public class SqlLiteCacheManager {
 
     private synchronized WeakReference<SQLSearchHelper> createSearchDB() {
         if(null==mSearchDB||null==mSearchDB.get()){
-            SQLSearchHelper searchHelper =new SQLSearchHelper(MusicApplication.getContext());
+            SQLSearchHelper searchHelper =new SQLSearchHelper(MusicUtils.getInstance().getApplicationContext());
             mSearchDB=new WeakReference<SQLSearchHelper>(searchHelper);
         }
         return mSearchDB;

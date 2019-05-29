@@ -23,7 +23,7 @@ import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicLoadingView;
-import com.android.imusic.music.manager.SqlLiteCacheManager;
+import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
@@ -412,7 +412,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                 Toast.makeText(BaseActivity.this,"分享失败："+e.getMessage(),Toast.LENGTH_SHORT).show();
             }
         }else if(itemId==MusicDetails.ITEM_ID_COLLECT){
-            boolean toCollect = SqlLiteCacheManager.getInstance().insertCollectAudio(audioInfo);
+            boolean toCollect = MusicPlayerManager.getInstance().collectMusic(audioInfo);
             if(toCollect){
                 Toast.makeText(BaseActivity.this,"已添加至收藏列表",Toast.LENGTH_SHORT).show();
                 MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());

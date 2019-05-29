@@ -1,7 +1,7 @@
 package com.android.imusic.music.model;
 
 import com.android.imusic.base.BaseEngin;
-import com.android.imusic.music.manager.SqlLiteCacheManager;
+import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.net.OnResultCallBack;
 import com.music.player.lib.bean.BaseAudioInfo;
 import java.util.List;

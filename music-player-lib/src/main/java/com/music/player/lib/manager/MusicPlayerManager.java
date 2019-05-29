@@ -37,8 +37,8 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     private static MusicPlayerBinder mBinder;
     //播放器配置
     private static MusicPlayerConfig mMusicPlayerConfig;
-    //前台进程默认是开启的
-    private boolean mForegroundEnable=true;
+    //前台进程默认是开启的,默认通知栏交互是开启的
+    private boolean mForegroundEnable=true,mNotificationEnable=true;
     //播放器界面路径、锁屏界面路径、主界面路径
     private static String mActivityPlayerClassName, mActivityLockClassName,mMainActivityClass;
     //临时存储的变量，防止在初始化时设置监听内部Service还未启动
@@ -113,6 +113,8 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
         mActivityLockClassName=null;
         if(null!=mBinder&&mBinder.pingBinder()){
             mBinder.setLockActivityName(null);
+            //回收监听器
+            mBinder.setPlayInfoListener(null);
         }
         unBindService(context,destroy);
         removeObservers();
@@ -208,6 +210,15 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
 
+    @Override
+    public MusicPlayerManager setNotificationEnable(boolean enable) {
+        MusicPlayerManager.this.mNotificationEnable = enable;
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.setNotificationEnable(mNotificationEnable);
+        }
+        return mInstance;
+    }
+
     /**
      * 是否开启前台进程
      * @param enable true：开启前台进程（通知栏）
@@ -270,6 +281,28 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
             mBinder.setMainctivityName(mMainActivityClass);
         }
         return mInstance;
+    }
+
+    /**
+     * 收藏音频
+     * @param audioInfo 音频对象
+     * @return true:收藏成功
+     */
+    public boolean collectMusic(BaseAudioInfo audioInfo) {
+        boolean collectAudio = SqlLiteCacheManager.getInstance().insertCollectAudio(audioInfo);
+        updateNotification();
+        return collectAudio;
+    }
+
+    /**
+     * 反收藏音频
+     * @param audioID 音频ID
+     * @return true:收藏成功
+     */
+    public boolean unCollectMusic(long audioID) {
+        boolean collectAudio = SqlLiteCacheManager.getInstance().deteleCollectByID(audioID);
+        updateNotification();
+        return collectAudio;
     }
 
     /**
@@ -674,10 +707,9 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      */
     @Override
     public MusicPlayerManager setPlayInfoListener(MusicPlayerInfoListener listener) {
+        this.mTempInfoListener=listener;
         if(null!=mBinder&&mBinder.pingBinder()){
             mBinder.setPlayInfoListener(listener);
-        }else{
-            mTempInfoListener=listener;
         }
         return mInstance;
     }
@@ -735,12 +767,12 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     /**
      * 开启一个前台进程
      * @param notification 自定义前台进程
-     * @param notificeid 通知栏通道ID
+     * @param notifiid 通知栏通道ID
      */
     @Override
-    public void startServiceForeground(Notification notification, int notificeid) {
+    public void startServiceForeground(Notification notification, int notifiid) {
         if(null!=mBinder&&mBinder.pingBinder()){
-            mBinder.startServiceForeground(notification,notificeid);
+            mBinder.startServiceForeground(notification,notifiid);
         }
     }
 
@@ -755,13 +787,55 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
     /**
-     * 关闭指定前台进程
-     * @param notificeid 前台通知ID
+     * 开启默认的通知栏
      */
     @Override
-    public void stopServiceForeground(int notificeid) {
+    public void startNotification() {
         if(null!=mBinder&&mBinder.pingBinder()){
-            mBinder.stopServiceForeground(notificeid);
+            mBinder.startNotification();
+        }
+    }
+
+    /**
+     * 开启通知栏
+     * @param notification 通知对象
+     */
+    @Override
+    public void startNotification(Notification notification) {
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.startNotification(notification);
+        }
+    }
+
+    /**
+     * 开启通知栏
+     * @param notification 通知对象
+     * @param notifiid 通知ID
+     */
+    @Override
+    public void startNotification(Notification notification, int notifiid) {
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.startNotification(notification,notifiid);
+        }
+    }
+
+    /**
+     * 更新通知栏，一般在使用内部默认的通知栏时，收藏了音频后调用
+     */
+    @Override
+    public void updateNotification() {
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.updateNotification();
+        }
+    }
+
+    /**
+     * 清除通知栏
+     */
+    @Override
+    public void cleanNotification() {
+        if(null!=mBinder&&mBinder.pingBinder()){
+            mBinder.cleanNotification();
         }
     }
 
@@ -823,14 +897,13 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
             if (null != service) {
                 if(service instanceof MusicPlayerBinder){
                     mBinder = (MusicPlayerBinder) service;
-                    if(null!=mTempInfoListener){
-                        mBinder.setPlayInfoListener(mTempInfoListener);
-                    }
                     //初始化配置
+                    mBinder.setPlayInfoListener(mTempInfoListener);
                     mBinder.setPlayerActivityName(mActivityPlayerClassName);
                     mBinder.setLockActivityName(mActivityLockClassName);
                     mBinder.setMainctivityName(mMainActivityClass);
                     mBinder.setLockForeground(mForegroundEnable);
+                    mBinder.setNotificationEnable(mNotificationEnable);
                     if(null!=mCallBack){
                         mCallBack.onFinish();
                     }

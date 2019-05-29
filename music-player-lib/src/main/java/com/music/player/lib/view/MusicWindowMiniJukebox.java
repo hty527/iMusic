@@ -8,7 +8,6 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Region;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -28,7 +27,7 @@ import com.music.player.lib.util.MusicUtils;
  * TinyHung@Outlook.com
  * 2019/3/12
  * Window MiniJukebox
- * 迷你悬浮窗容器，只处理用户交互
+ * 迷你悬浮窗容器，只处理用户手势和回收器碰撞交互
  */
 
 public class MusicWindowMiniJukebox extends RelativeLayout {
@@ -139,7 +138,7 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
 //	}
 
     /**
-     * 悬浮窗交互
+     * 扇形悬浮窗回收期碰撞交互
      * @param event 手势事件
      */
     private void showTrachWindow(MotionEvent event) {

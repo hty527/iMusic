@@ -16,7 +16,7 @@ import com.android.imusic.music.adapter.holder.IndexDefaultViewHolder;
 import com.android.imusic.music.adapter.holder.IndexMusicViewHolder;
 import com.android.imusic.music.adapter.holder.IndexTitleViewHolder;
 import com.android.imusic.music.bean.AudioInfo;
-import com.android.imusic.music.manager.SqlLiteCacheManager;
+import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.utils.MediaUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;

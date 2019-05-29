@@ -14,7 +14,7 @@ import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
-import com.android.imusic.music.manager.SqlLiteCacheManager;
+import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.ui.contract.MusicHistroyContract;
 import com.android.imusic.music.ui.presenter.MusicHistroyPersenter;
 import com.music.player.lib.bean.BaseAudioInfo;
@@ -128,7 +128,7 @@ public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> im
                     .setPositiveButton(getString(R.string.text_detele), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            boolean flag = SqlLiteCacheManager.getInstance().deteleCollectByID(audioInfo.getAudioId());
+                            boolean flag = MusicPlayerManager.getInstance().unCollectMusic(audioInfo.getAudioId());
                             if(flag){
                                 MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
                                 Toast.makeText(MusicCollectActivity.this,getString(R.string.text_detele_succ),Toast.LENGTH_SHORT).show();

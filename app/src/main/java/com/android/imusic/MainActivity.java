@@ -18,7 +18,7 @@ import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
-import com.android.imusic.music.manager.SqlLiteCacheManager;
+import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.manager.VersionUpdateManager;
 import com.android.imusic.music.ui.fragment.IndexMusicFragment;
 import com.android.imusic.music.utils.MediaUtils;
@@ -145,6 +145,8 @@ public class MainActivity extends BaseActivity {
                 .init(getApplicationContext())
                 //应用播放器配置
                 .setMusicPlayerConfig(config)
+                //通知栏交互，默认开启
+                .setNotificationEnable(true)
                 //常驻进程开关，默认开启
                 .setLockForeground(true)
                 //设置点击通知栏跳转的播放器界面,需开启常驻进程开关
@@ -155,9 +157,9 @@ public class MainActivity extends BaseActivity {
                 .setMainctivityName(MainActivity.class.getCanonicalName())
                 //监听播放状态
                 .setPlayInfoListener(new MusicPlayerInfoListener() {
+                    //此处自行存储播放记录
                     @Override
                     public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {
-                        //使用SQL存储本地播放记录
                         SqlLiteCacheManager.getInstance().insertHistroyAudio(musicInfo);
                     }
                 })

@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.imusic.R;
 import com.android.imusic.music.bean.MusicDetails;
-import com.android.imusic.music.manager.SqlLiteCacheManager;
+import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.music.player.lib.adapter.base.BaseAdapter;
 import com.music.player.lib.manager.MusicPlayerManager;
 import java.util.List;

@@ -14,9 +14,14 @@ import java.util.List;
  */
 
 public interface MusicPlayerPresenter {
-
     /**
-     * 设置是否开启前台进程(通知栏)
+     * 是否开启默认的通知栏交互，默认开启状态
+     * @param enable enable true：开启默认的通知栏交互
+     * @return MusicPlayerManager
+     */
+    MusicPlayerManager setNotificationEnable(boolean enable);
+    /**
+     * 设置是否开启常驻进程(通知栏)
      * @param enable true：开启前台进程（通知栏）
      * @return MusicPlayerManager
      */
@@ -283,9 +288,9 @@ public interface MusicPlayerPresenter {
     /**
      * 打开常驻进程
      * @param notification 通知对象
-     * @param notificeid 通知ID
+     * @param notifiid 通知ID
      */
-    void startServiceForeground(Notification notification,int notificeid);
+    void startServiceForeground(Notification notification,int notifiid);
 
     /**
      * 结束常驻进程并清除默认通知
@@ -293,10 +298,32 @@ public interface MusicPlayerPresenter {
     void stopServiceForeground();
 
     /**
-     * 结束常驻进程并指定通知
-     * @param notificeid 指定通知ID
+     * 打开常驻进程，在通知栏创建一个守护通知
      */
-    void stopServiceForeground(int notificeid);
+    void startNotification();
+
+    /**
+     * 打开常驻进程
+     * @param notification 通知对象
+     */
+    void startNotification(Notification notification);
+
+    /**
+     * 打开常驻进程
+     * @param notification 通知对象
+     * @param notifiid 通知ID
+     */
+    void startNotification(Notification notification,int notifiid);
+
+    /**
+     * 更新通知栏，一般在使用内部默认的通知栏时，收藏了音频后调用
+     */
+    void updateNotification();
+
+    /**
+     * 结束常驻进程并清除默认通知
+     */
+    void cleanNotification();
 
     /**
      * 创建一个窗口播放器

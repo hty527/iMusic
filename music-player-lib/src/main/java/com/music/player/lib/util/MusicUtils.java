@@ -1715,4 +1715,24 @@ public class MusicUtils {
         }
         return false;
     }
+
+    /**
+     * 反射获取Context
+     * @return APP的全局上下文
+     */
+    public Context getApplicationContext() {
+        try {
+            Class<?> ActivityThread = Class.forName("android.app.ActivityThread");
+
+            Method method = ActivityThread.getMethod("currentActivityThread");
+            Object currentActivityThread = method.invoke(ActivityThread);//获取currentActivityThread 对象
+
+            Method method2 = currentActivityThread.getClass().getMethod("getApplication");
+            return (Context)method2.invoke(currentActivityThread);//获取 Context对象
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
