@@ -65,7 +65,7 @@ ___
 **1.依赖**
 ```
     dependencies {
-        implementation 'com.imusic.player:music-player:1.0.9'
+        implementation 'com.imusic.player:music-player:1.1.0'
     }
 ```
 **2.MainActivity播放器初始化**
