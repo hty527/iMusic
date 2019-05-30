@@ -142,7 +142,7 @@ ___
     <com.video.player.lib.view.VideoPlayerTrackView
         android:id="@+id/video_track"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         app:video_autoSetCoverController="true"
         app:video_autoSetVideoController="true"/>
 ```
