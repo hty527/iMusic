@@ -20,6 +20,7 @@
             android:id="@+id/music_notice_def_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
             android:singleLine="true"
             android:ellipsize="marquee"
             android:layout_marginTop="10dp"

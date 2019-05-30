@@ -42,13 +42,6 @@ public interface MusicPlayerPresenter {
     MusicPlayerManager setLockActivityName(String className);
 
     /**
-     * 设置主界面绝对路径
-     * @param className 绝对路径
-     * @return MusicPlayerManager
-     */
-    MusicPlayerManager setMainctivityName(String className);
-
-    /**
      * 开始播放任务
      * @param audios 待播放的数据集，对象需要继承BaseaudioInfo
      * @param index 指定要播放的位置 0-data.size()

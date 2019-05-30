@@ -54,12 +54,6 @@ public class MusicPlayerBinder extends Binder{
         }
     }
 
-    public void setMainctivityName(String mMainActivityClass) {
-        if(null!=mPresenter){
-            mPresenter.setMainctivityName(mMainActivityClass);
-        }
-    }
-
     public void startPlayMusic(int position){
         if(null!=mPresenter){
             mPresenter.startPlayMusic(position);

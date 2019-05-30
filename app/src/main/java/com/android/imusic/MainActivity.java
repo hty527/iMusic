@@ -153,8 +153,6 @@ public class MainActivity extends BaseActivity {
                 .setPlayerActivityName(MusicPlayerActivity.class.getCanonicalName())
                 //设置锁屏界面，如果禁用，不需要设置或者设置为null
                 .setLockActivityName(MusicLockActivity.class.getCanonicalName())
-                //设置主界面路径，在APP退出后点击通知栏用到
-                .setMainctivityName(MainActivity.class.getCanonicalName())
                 //监听播放状态
                 .setPlayInfoListener(new MusicPlayerInfoListener() {
                     //此处自行存储播放记录

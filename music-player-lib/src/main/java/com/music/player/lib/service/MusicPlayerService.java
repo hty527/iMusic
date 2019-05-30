@@ -80,7 +80,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     //前台进程默认是开启的,通知交互默认是开启的
     private boolean mForegroundEnable=true,mNotificationEnable=true;
     //播放器绝对路径、锁屏绝对路径
-    private String mPlayerActivityClass,mLockActivityClass,mMainActivityClass;
+    private String mPlayerActivityClass,mLockActivityClass;
     //待播放音频队列池子
     private static List<Object> mAudios = new ArrayList<>();
     //当前播放播放器正在处理的对象位置
@@ -1235,12 +1235,6 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         return null;
     }
 
-    @Override
-    public MusicPlayerManager setMainctivityName(String className) {
-        this.mMainActivityClass=className;
-        return null;
-    }
-
     /**
      * 开始计时任务
      */
@@ -1707,7 +1701,6 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
 
                         //请注意，这里如果APP处于非活跃状态，默认是打开你清单文件的LAUNCHER Activity，
                         // 并入参audioid,Long类型：MusicConstants.KEY_MUSIC_ID。分两种场景处理
-
                         //1：如果你的APP正在运行并且播放器界面正在显示关心onNewIntent（），
                         // 如果APP正在再运行但播放器界面未打开，关心onCreate()。最终从intent取出MusicConstants.KEY_MUSIC_ID。
 
@@ -1715,10 +1708,6 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                         // 并获取intent,从intent取出MusicConstants.KEY_MUSIC_ID。自行处理跳转至播放器界面
                         boolean appRunning = MusicUtils.getInstance().isAppRunning(getApplicationContext(), getApplicationContext().getPackageName());
                         if(appRunning){
-                            //MAIN
-                            Intent mainIntent = new Intent();
-                            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            mainIntent.setClassName(getPackageName(),mMainActivityClass);
                             //Player Activity
                             Intent startIntent=new Intent();
                             startIntent.setClassName(getPackageName(),mPlayerActivityClass);
@@ -1729,8 +1718,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                             startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            Intent[] intents = new Intent[]{mainIntent,startIntent};
-                            getApplicationContext().startActivities(intents);
+                            getApplicationContext().startActivity(startIntent);
                         }else{
                             Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
                             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);

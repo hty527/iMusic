@@ -20,6 +20,7 @@ import com.music.player.lib.util.MusicUtils;
  * hty_Yuye@Outlook.com
  * 2019/3/6
  * MusicJukeBoxCoverPager
+ * 这个版本控件做法是将封面、圆盘合并绘制到Drawable
  */
 
 public class MusicJukeBoxCoverPager extends LinearLayout{

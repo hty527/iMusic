@@ -17,12 +17,14 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.music.player.lib.R;
+import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicImageCache;
 import com.music.player.lib.util.MusicUtils;
 
@@ -30,11 +32,12 @@ import com.music.player.lib.util.MusicUtils;
  * TinyHung@Outlook.com
  * 2019/3/6
  * PlayerJukeBox BG
- * 要开启渐变，需指定backgroundEnable属性为true， 渐变特效只支持 >=23 API
+ * 支持所有版本的渐变Layout
  */
 
-public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
+public class MusicJukeBoxBackgroundLayout1 extends RelativeLayout {
 
+    private static final String TAG = "recyclerImageViewBitmap";
     private Context mContext;
     private int DURATION_ANIMATION = 500;
     //背景图层
@@ -47,87 +50,80 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
     private int mScreenWidth;
     private int mScreenHeight;
     private SetBackgroundRunnable mBackgroundRunnable;
+    private ImageView mImageViewBg;
+    private ImageView mImageViewFg;
 
-    public MusicJukeBoxBackgroundLayout(Context context) {
+    public MusicJukeBoxBackgroundLayout1(Context context) {
         this(context, null);
     }
 
-    public MusicJukeBoxBackgroundLayout(Context context, AttributeSet attrs) {
+    public MusicJukeBoxBackgroundLayout1(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-
-    public MusicJukeBoxBackgroundLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    //R.drawable.music_default_music_bg
+    public MusicJukeBoxBackgroundLayout1(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext=context;
-        boolean isEnable= false;
-        if(null!=attrs){
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicJukeBoxBackgroundLayout);
-            isEnable= typedArray.getBoolean(R.styleable.MusicJukeBoxBackgroundLayout_backgroundEnable, false);
-            typedArray.recycle();
-        }
-        if(isEnable){
-            initObjectAnimator();
-        }else{
-            MusicJukeBoxBackgroundLayout.this.setBackgroundResource(R.drawable.music_default_music_bg);
-        }
+        RelativeLayout.LayoutParams layoutParams=new RelativeLayout.LayoutParams(-1,-1);
+        mImageViewBg = new ImageView(context);
+        mImageViewBg.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        mImageViewBg.setLayoutParams(layoutParams);
+        mImageViewFg = new ImageView(context);
+        mImageViewFg.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        mImageViewFg.setLayoutParams(layoutParams);
+        this.addView(mImageViewBg);
+        this.addView(mImageViewFg);
         mScreenWidth = MusicUtils.getInstance().getScreenWidth(getContext());
         mScreenHeight = MusicUtils.getInstance().getScreenHeight(getContext());
+        Bitmap resource = BitmapFactory.decodeResource(getResources(), R.drawable.music_default_music_bg);
+        mImageViewBg.setImageBitmap(resource);
+        initObjectAnimator();
     }
 
-    /**
-     * 此特效只支持6.0及以上API
-     */
+
     @SuppressLint("ObjectAnimatorBinding")
     private void initObjectAnimator() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            //初始化默认图层
-            Drawable defaultBackgroundDrawable = ContextCompat.getDrawable(getContext(),R.drawable.music_default_music_bg);
-            Drawable[] drawables=new Drawable[2];
-            drawables[BACKGROUND_DRAWABLE]=defaultBackgroundDrawable;
-            drawables[FOREGROUND_DRAWABLE]=defaultBackgroundDrawable;
-            mLayerDrawable = new LayerDrawable(drawables);
-            MusicJukeBoxBackgroundLayout.this.setBackground(mLayerDrawable);
-            //渐变动画
-            objectAnimator = ObjectAnimator.ofFloat(this, "number", 0f, 1.0f);
-            objectAnimator.setDuration(DURATION_ANIMATION);
-            objectAnimator.setInterpolator(new AccelerateInterpolator());
-            objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    if(null!=mLayerDrawable){
-                        //前景图层慢慢显示
-                        int foregroundAlpha = (int) ((float) animation.getAnimatedValue() * 255);
-                        mLayerDrawable.getDrawable(FOREGROUND_DRAWABLE).setAlpha(foregroundAlpha);
-                        MusicJukeBoxBackgroundLayout.this.setBackground(mLayerDrawable);
+        //渐变动画
+        objectAnimator = ObjectAnimator.ofFloat(this, "number", 0f, 1.0f);
+        objectAnimator.setDuration(DURATION_ANIMATION);
+        objectAnimator.setInterpolator(new AccelerateInterpolator());
+        objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if(null!=mImageViewFg){
+                    int foregroundAlpha = (int) ((float) animation.getAnimatedValue() * 255);
+                    mImageViewFg.getDrawable().mutate().setAlpha(foregroundAlpha);
+                }
+            }
+        });
+        objectAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                //将当前前景图层赋值到背景图层上
+                if(null!=mImageViewBg&&null!=mImageViewFg){
+                    recyclerImageViewBitmap(mImageViewBg);
+                    if(null!=mImageViewFg.getDrawable()){
+                        BitmapDrawable drawable = (BitmapDrawable) mImageViewFg.getDrawable();
+                        mImageViewBg.setImageBitmap(drawable.getBitmap());
                     }
                 }
-            });
-            objectAnimator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                }
+            }
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    //将当前前景图层赋值到背景图层上
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M&&null!=mLayerDrawable) {
-                        mLayerDrawable.setDrawable(BACKGROUND_DRAWABLE,mLayerDrawable.getDrawable(FOREGROUND_DRAWABLE));
-                    }
-                }
+            @Override
+            public void onAnimationCancel(Animator animation) {
 
-                @Override
-                public void onAnimationCancel(Animator animation) {
+            }
 
-                }
+            @Override
+            public void onAnimationRepeat(Animator animation) {
 
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-        }else{
-            MusicJukeBoxBackgroundLayout.this.setBackgroundResource(R.drawable.music_default_music_bg);
-        }
+            }
+        });
     }
 
     /**
@@ -177,11 +173,11 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
             }
             if(null!=mBackgroundRunnable){
                 mBackgroundRunnable.onReset();
-                MusicJukeBoxBackgroundLayout.this.removeCallbacks(mBackgroundRunnable);
+                MusicJukeBoxBackgroundLayout1.this.removeCallbacks(mBackgroundRunnable);
                 mBackgroundRunnable=null;
             }
             mBackgroundRunnable = new SetBackgroundRunnable(imageUrl,isBlur,blurRadius,shadeEnable);
-            MusicJukeBoxBackgroundLayout.this.postDelayed(mBackgroundRunnable,delayMillis);
+            MusicJukeBoxBackgroundLayout1.this.postDelayed(mBackgroundRunnable,delayMillis);
         }
     }
 
@@ -250,20 +246,26 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
                                         if(null==foregroundDrawable){
                                             foregroundDrawable = ContextCompat.getDrawable(getContext(),R.drawable.music_default_music_bg);
                                         }
-                                        setForeground(foregroundDrawable);
+                                        BitmapDrawable bitmapDrawable= (BitmapDrawable) foregroundDrawable;
+                                        if(null!=mImageViewFg){
+                                            mImageViewFg.setImageBitmap(bitmapDrawable.getBitmap());
+                                        }
+                                        bitmapDrawable.getBitmap().recycle();
                                     }else{
-                                        BitmapDrawable drawable = new BitmapDrawable(bitmap);
-                                        setForeground(drawable);
+                                        if(null!=mImageViewFg){
+                                            mImageViewFg.setImageBitmap(bitmap);
+                                        }
                                         bitmap.recycle();
                                     }
                                 }
 
                                 @Override
                                 public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                                    Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.music_default_music_bg);
-                                    if(null!=drawable){
-                                        setForeground(drawable);
+                                    Bitmap resource = BitmapFactory.decodeResource(getResources(), R.drawable.music_default_music_bg);
+                                    if(null!=mImageViewFg){
+                                        mImageViewFg.setImageBitmap(resource);
                                     }
+                                    resource.recycle();
                                 }
                             });
                 }else{
@@ -281,8 +283,11 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
                     if(null==foregroundDrawable){
                         foregroundDrawable = ContextCompat.getDrawable(getContext(),R.drawable.music_default_music_bg);
                     }
-                    setForeground(foregroundDrawable);
-                    bitmap.recycle();
+                    BitmapDrawable bitmapDrawable= (BitmapDrawable) foregroundDrawable;
+                    if(null!=mImageViewFg){
+                        mImageViewFg.setImageBitmap(bitmapDrawable.getBitmap());
+                    }
+                    bitmapDrawable.getBitmap().recycle();
                 }
             }
         }
@@ -296,10 +301,32 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
         }
     }
 
+    /**
+     * 回收ImageView的Bitmap
+     * @param imageView imageView
+     */
+    private void recyclerImageViewBitmap(ImageView imageView) {
+        if(null!=imageView&&null!=imageView.getDrawable()){
+            try {
+                Drawable drawable = imageView.getDrawable();
+                if(drawable instanceof BitmapDrawable){
+                    BitmapDrawable bitmapDrawable= (BitmapDrawable) drawable;
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                    if(!bitmap.isRecycled()){
+                        Logger.d(TAG,"recyclerImageViewBitmap-->");
+                        bitmap.recycle();
+                    }
+                }
+            }catch (RuntimeException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void onDestroy(){
         if(null!=mBackgroundRunnable){
             mBackgroundRunnable.onReset();
-            MusicJukeBoxBackgroundLayout.this.removeCallbacks(mBackgroundRunnable);
+            MusicJukeBoxBackgroundLayout1.this.removeCallbacks(mBackgroundRunnable);
             mBackgroundRunnable=null;
         }
         if(null!=objectAnimator){

@@ -43,7 +43,7 @@ import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicClickControler;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicJukeBoxBackgroundLayout;
-import com.music.player.lib.view.MusicJukeBoxView;
+import com.music.player.lib.view.MusicJukeBoxView2;
 import com.music.player.lib.view.dialog.MusicAlarmSettingDialog;
 import com.music.player.lib.view.dialog.MusicPlayerListDialog;
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         MusicJukeBoxStatusListener, MusicPlayerEventListener, Observer {
 
     private static final String TAG = "MusicPlayerActivity";
-    private MusicJukeBoxView mMusicJukeBoxView;
+    private MusicJukeBoxView2 mMusicJukeBoxView;
     private SeekBar mSeekBar;
     private MusicJukeBoxBackgroundLayout mRootLayout;
     private ImageView mMusicBtnPlayPause,mMusicPlayerModel,mBtnCollect;
@@ -313,7 +313,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         mBtnCollect = (ImageView) findViewById(R.id.music_top_collect);
         mBtnCollect.setOnClickListener(onClickListener);
         //唱片
-        mMusicJukeBoxView = (MusicJukeBoxView) findViewById(R.id.music_discview);
+        mMusicJukeBoxView = (MusicJukeBoxView2) findViewById(R.id.music_discview);
         mSeekBar = (SeekBar) findViewById(R.id.music_seek_bar);
         mRootLayout = (MusicJukeBoxBackgroundLayout) findViewById(R.id.root_layout);
         mMusicJukeBoxView.setPlayerInfoListener(this);
@@ -726,10 +726,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements
 
     /**
      * 更新播放器数据
-     * @param totalDurtion
-     * @param currentDurtion
-     * @param alarmResidueDurtion
-     * @param bufferProgress
+     * @param totalDurtion 总时间 毫秒
+     * @param currentDurtion 已经播放的时间 毫秒
+     * @param alarmResidueDurtion 闹钟定时关闭剩余时间，毫秒，大于 60*1000 毫秒被视为定时任务已关闭
+     * @param bufferProgress 缓冲进度，为什么要在这里回调，因为当缓冲完成，再次来到播放器界面要回显缓冲进度
+     *                       这个缓冲进度由播放器内部持有并控制生命周期
      */
     private synchronized void updataPlayerParams(final long totalDurtion, final long currentDurtion,
                                                  final long alarmResidueDurtion, int bufferProgress) {
@@ -748,7 +749,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                 @Override
                 public void run() {
                     //缓冲、播放进度
-                    if(totalDurtion>-1){
+                    if(!isTouchSeekBar&&totalDurtion>-1){
                         if(null!=mTotalTime){
                             mTotalTime.setText(MusicUtils.getInstance().stringForAudioTime(totalDurtion));
                             mCurrentTime.setText(MusicUtils.getInstance().stringForAudioTime(currentDurtion));

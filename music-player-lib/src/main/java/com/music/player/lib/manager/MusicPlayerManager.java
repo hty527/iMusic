@@ -270,20 +270,6 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
     /**
-     * 设置主界面Class
-     * @param className 绝对路径
-     * @return MusicPlayerManager
-     */
-    @Override
-    public MusicPlayerManager setMainctivityName(String className) {
-        MusicPlayerManager.this.mMainActivityClass = className;
-        if(null!=mBinder&&mBinder.pingBinder()){
-            mBinder.setMainctivityName(mMainActivityClass);
-        }
-        return mInstance;
-    }
-
-    /**
      * 收藏音频
      * @param audioInfo 音频对象
      * @return true:收藏成功
@@ -901,7 +887,6 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
                     mBinder.setPlayInfoListener(mTempInfoListener);
                     mBinder.setPlayerActivityName(mActivityPlayerClassName);
                     mBinder.setLockActivityName(mActivityLockClassName);
-                    mBinder.setMainctivityName(mMainActivityClass);
                     mBinder.setLockForeground(mForegroundEnable);
                     mBinder.setNotificationEnable(mNotificationEnable);
                     if(null!=mCallBack){

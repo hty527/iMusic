@@ -501,7 +501,7 @@ public class DefaultVideoController extends BaseVideoController implements
                 +",currentDurtion:"+currentDurtion);
         if(totalDurtion>-1){
             mOldPlayProgress=currentDurtion;
-            if(null!=mVideoTotal){
+            if(!isTouchSeekBar&&null!=mVideoTotal){
                 mVideoTotal.setText(VideoUtils.getInstance().stringForAudioTime(totalDurtion));
                 mVideoCurrent.setText(VideoUtils.getInstance().stringForAudioTime(currentDurtion));
             }
