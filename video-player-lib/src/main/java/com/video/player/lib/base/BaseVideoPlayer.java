@@ -132,6 +132,10 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
             mGestureDetector = new GestureDetector(context,new TouchOnGestureListener());
             mSurfaceView.setOnTouchListener(this);
         }
+        AppCompatActivity appCompActivity = VideoUtils.getInstance().getAppCompActivity(context);
+        if(null!=appCompActivity){
+            appCompActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
     }
 
     //========================================播放器手势处理=========================================
