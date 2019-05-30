@@ -145,6 +145,11 @@ ___
         android:layout_height="200dp"
         app:video_autoSetCoverController="true"
         app:video_autoSetVideoController="true"/>
+
+        //开启默认封面控制器
+        app:video_autoSetCoverController="true"
+        //开启默认视频交互控制器
+        app:video_autoSetVideoController="true"
 ```
 [视频播放器Wiki介绍]: https://github.com/Yuye584312311/iMusic/wiki/VideoPlayerWiki "视频播放器API介绍"
 你也可以在java代码中创建播放器，前往[视频播放器Wiki介绍]<br/>
