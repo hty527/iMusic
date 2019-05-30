@@ -18,6 +18,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -338,6 +339,60 @@ public class MusicUtils {
 
     public int dpToPxInt(Context context,float dp) {
         return (int) (dpToPx(context,dp) + 0.5f);
+    }
+
+    /**
+     * filterBitmap
+     * @param bitmap 位图
+     * @param filterColor color
+     * @return 全新的Bitmap
+     */
+    public Bitmap filterBitmap(Bitmap bitmap,int filterColor){
+        if(null==bitmap){
+            return null;
+        }
+        Bitmap bmp = Bitmap.createBitmap(bitmap.getWidth(),bitmap.getHeight(),Bitmap.Config.RGB_565);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        Canvas canvas = new Canvas(bmp);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap,0,0,paint);
+        canvas.drawColor(filterColor);
+        return bmp;
+    }
+
+    /**
+     * Bitmap转换高斯模糊
+     * @param bitmap 位图
+     * @param screenWidth 屏幕宽
+     * @param screenHeight 屏幕高
+     * @param radius 半径>=1 越大越模糊
+     * @param filterColor 遮罩层颜色
+     * @return Drawable
+     */
+    public Bitmap getForegroundBitmap(Bitmap bitmap,int screenWidth,int screenHeight,int radius,int filterColor) {
+        if(radius<=0) radius=8;
+        if(null!=bitmap&&bitmap.getWidth()>0){
+            //得到屏幕的宽高比，以便按比例切割图片一部分
+            final float widthHeightSize = (float) (screenWidth * 1.0 / screenHeight * 1.0);
+            int cropBitmapWidth = (int) (widthHeightSize * bitmap.getHeight());
+            int cropBitmapWidthX = (int) ((bitmap.getWidth() - cropBitmapWidth) / 2.0);
+            try {
+                //切割部分图片
+                Bitmap cropBitmap = Bitmap.createBitmap(bitmap, cropBitmapWidthX, 0, cropBitmapWidth, bitmap.getHeight());
+                //缩小图片
+                Bitmap scaleBitmap = Bitmap.createScaledBitmap(cropBitmap, bitmap.getWidth()
+                        / 50, bitmap.getHeight() / 50, false);
+                //模糊化
+                Bitmap blurBitmap = doBlur(scaleBitmap, radius, true);
+                return filterBitmap(blurBitmap, filterColor);
+            }catch (IllegalArgumentException e){
+                e.printStackTrace();
+            }catch (RuntimeException e){
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     /**

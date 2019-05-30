@@ -112,8 +112,6 @@ public class MusicJukeBoxCoverPager2 extends LinearLayout {
         if(null!=bitmap&&null!=mDiseCover){
             Bitmap resultBitmap = MusicUtils.getInstance().drawRoundBitmap(bitmap);
             mDiseCover.setImageBitmap(resultBitmap);
-            bitmap.recycle();
-            resultBitmap.recycle();
         }
     }
 
@@ -227,7 +225,7 @@ public class MusicJukeBoxCoverPager2 extends LinearLayout {
     }
 
     public void onDestroy(){
-        recyclerImageViewBitmap(mDiseCover);
+//        recyclerImageViewBitmap(mDiseCover);
         mContext=null;mDiseCover=null;mDiscObjectAnimator=null;mJukeBoxCoverFgSize=0;mJukeBoxCoverFgSize=0;
     }
 }

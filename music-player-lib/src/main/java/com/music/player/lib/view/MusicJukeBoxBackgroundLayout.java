@@ -254,7 +254,6 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
                                     }else{
                                         BitmapDrawable drawable = new BitmapDrawable(bitmap);
                                         setForeground(drawable);
-                                        bitmap.recycle();
                                     }
                                 }
 
@@ -282,7 +281,6 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
                         foregroundDrawable = ContextCompat.getDrawable(getContext(),R.drawable.music_default_music_bg);
                     }
                     setForeground(foregroundDrawable);
-                    bitmap.recycle();
                 }
             }
         }
