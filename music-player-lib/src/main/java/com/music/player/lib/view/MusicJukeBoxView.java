@@ -213,15 +213,9 @@ public class MusicJukeBoxView extends RelativeLayout{
                     mHandAnimator.start();
                 }
             }else{
-                //直接开始胶盘旋转动画,避免太快显的不自然，歇一会儿再开始动画吧
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(null!=mPagerAdapter&&mPagerAdapter.getCount()>0){
-                            playDiscAnimator(mViewPager.getCurrentItem());
-                        }
-                    }
-                },100);
+                if(null!=mPagerAdapter&&mPagerAdapter.getCount()>0){
+                    playDiscAnimator(mViewPager.getCurrentItem());
+                }
             }
         }
     }
