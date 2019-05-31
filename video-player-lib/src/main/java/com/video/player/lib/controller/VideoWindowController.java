@@ -267,8 +267,8 @@ public class VideoWindowController extends BaseVideoController implements SeekBa
      */
     @Override
     public void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent) {
-        Logger.d("播放实时进度","onTaskRuntime-->totalDurtion:"
-                +totalDurtion+",currentDurtion:"+currentDurtion);
+//        Logger.d("onTaskRuntime-->","onTaskRuntime-->totalDurtion:"
+//                +totalDurtion+",currentDurtion:"+currentDurtion);
         if(totalDurtion>-1){
             if(null!=mVideoTotal){
                 mVideoTotal.setText(VideoUtils.getInstance().stringForAudioTime(totalDurtion));

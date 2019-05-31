@@ -27,7 +27,6 @@ import com.music.player.lib.listener.MusicAnimatorListener;
 
 public class MusicWindowTrash extends RelativeLayout {
 
-    private static final String TAG = "MusicWindowTrash";
     private Context mContext;
     private Animation mShakeAnimation;
 	private ImageView mIcTrash;
@@ -99,13 +98,13 @@ public class MusicWindowTrash extends RelativeLayout {
     @SuppressLint("ObjectAnimatorBinding")
 	public synchronized void startTrashWindowAnimation(){
         //alpha\scaleX\rotation\rotationX\translationX
-        MusicWindowTrash.this.setVisibility(VISIBLE);
         ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(MusicWindowTrash.this, "translationX", viewWidth,0);
         ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(MusicWindowTrash.this, "translationY", viewHeight,0);
-        AnimatorSet animatorSet=new AnimatorSet();
+        AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(objectAnimator1,objectAnimator2);
         animatorSet.setDuration(500);
         animatorSet.setInterpolator(new LinearInterpolator());
+        MusicWindowTrash.this.setVisibility(VISIBLE);
         animatorSet.start();
 	}
 
@@ -116,7 +115,7 @@ public class MusicWindowTrash extends RelativeLayout {
 	public synchronized void startHideAnimation(final MusicAnimatorListener animatorListener){
         ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(MusicWindowTrash.this, "translationX", 0,viewWidth);
         ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(MusicWindowTrash.this, "translationY", 0,viewHeight);
-        AnimatorSet animatorSet=new AnimatorSet();
+        AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(objectAnimator1,objectAnimator2);
         animatorSet.setDuration(350);
         animatorSet.setInterpolator(new AccelerateInterpolator());
@@ -148,7 +147,11 @@ public class MusicWindowTrash extends RelativeLayout {
 			mShakeAnimation.cancel();
 			mShakeAnimation=null;
 		}
-		MusicWindowTrash.this.clearAnimation();
-		mIcTrash=null;mContext=null;
+        MusicWindowTrash.this.clearAnimation();
+        if(null!=mTrashLayout){
+            mTrashLayout.onDestroy();
+            mTrashLayout=null;
+        }
+		mIcTrash=null;mContext=null;mTrashLayout=null;
 	}
 }

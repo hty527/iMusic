@@ -42,8 +42,8 @@ import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicClickControler;
 import com.music.player.lib.util.MusicUtils;
-import com.music.player.lib.view.MusicJukeBoxBackgroundLayout1;
-import com.music.player.lib.view.MusicJukeBoxView2;
+import com.music.player.lib.view.MusicJukeBoxBackgroundLayout;
+import com.music.player.lib.view.MusicJukeBoxView;
 import com.music.player.lib.view.dialog.MusicAlarmSettingDialog;
 import com.music.player.lib.view.dialog.MusicPlayerListDialog;
 import java.util.ArrayList;
@@ -71,9 +71,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         MusicJukeBoxStatusListener, MusicPlayerEventListener, Observer {
 
     private static final String TAG = "MusicPlayerActivity";
-    private MusicJukeBoxView2 mMusicJukeBoxView;
+    private MusicJukeBoxView mMusicJukeBoxView;
     private SeekBar mSeekBar;
-    private MusicJukeBoxBackgroundLayout1 mRootLayout;
+    private MusicJukeBoxBackgroundLayout mRootLayout;
     private ImageView mMusicBtnPlayPause,mMusicPlayerModel,mBtnCollect;
     private TextView mViewTitle,mTotalTime,mCurrentTime,mMusicAlarm,mSubTitle;
     private Handler mHandler;
@@ -164,6 +164,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                     public void onAnimationStart() {}
                     @Override
                     public void onAnimationEnd() {
+                        //只使用一次监听器后回收
                         mMusicJukeBoxView.resetAnimationListener();
                         //开始播放
                         MusicPlayerManager.getInstance().startPlayMusic(thisMusicLists,index);
@@ -313,9 +314,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         mBtnCollect = (ImageView) findViewById(R.id.music_top_collect);
         mBtnCollect.setOnClickListener(onClickListener);
         //唱片
-        mMusicJukeBoxView = (MusicJukeBoxView2) findViewById(R.id.music_discview);
+        mMusicJukeBoxView = (MusicJukeBoxView) findViewById(R.id.music_discview);
         mSeekBar = (SeekBar) findViewById(R.id.music_seek_bar);
-        mRootLayout = (MusicJukeBoxBackgroundLayout1) findViewById(R.id.root_layout);
+        mRootLayout = (MusicJukeBoxBackgroundLayout) findViewById(R.id.root_layout);
         mMusicJukeBoxView.setPlayerInfoListener(this);
         mViewTitle = (TextView) findViewById(R.id.music_title);
         mSubTitle = (TextView) findViewById(R.id.music_sub_title);
@@ -452,7 +453,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      */
     @Override
     public void onJukeBoxState(int playerState) {
-//        Logger.d(TAG,"onJukeBoxState-->JUKEBOX_STATE:"+playerState);
+        Logger.d(TAG,"onJukeBoxState-->JUKEBOX_STATE:"+playerState);
 //        if(null!=mMusicBtnPlayPause){
 //            if(playerState==MusicConstants.JUKE_BOX_PLAY){
 //                mMusicBtnPlayPause.setImageResource(R.drawable.music_player_pause_selector);

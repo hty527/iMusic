@@ -132,10 +132,6 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
             mGestureDetector = new GestureDetector(context,new TouchOnGestureListener());
             mSurfaceView.setOnTouchListener(this);
         }
-        AppCompatActivity appCompActivity = VideoUtils.getInstance().getAppCompActivity(context);
-        if(null!=appCompActivity){
-            appCompActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
     }
 
     //========================================播放器手势处理=========================================
@@ -1521,12 +1517,14 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         if(null!=mCoverController&&mCoverController.getVisibility()!=GONE){
                             mCoverController.setVisibility(GONE);
                         }
+                        startScreenKeepBrightness();
                         if(null!=mVideoController){
                             mVideoController.play();
                         }
                         break;
                     //恢复播放
                     case VideoConstants.MUSIC_PLAYER_PLAY:
+                        startScreenKeepBrightness();
                         if(null!=mVideoController){
                             mVideoController.repeatPlay();
                         }
@@ -1568,6 +1566,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         if(null!=mVideoController){
                             mVideoController.reset();
                         }
+                        stopScreenKeepBrightness();
                         VideoWindowManager.getInstance().onDestroy();
                         //停止、结束 播放时，检测当前播放器如果处于非常规状态下，退出全屏、或小窗
                         if(SCRREN_ORIENTATION!= VideoConstants.SCREEN_ORIENTATION_PORTRAIT){
@@ -1583,6 +1582,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                         if(null!=mCoverController&&mCoverController.getVisibility()!=VISIBLE){
                             mCoverController.setVisibility(VISIBLE);
                         }
+                        stopScreenKeepBrightness();
                         VideoWindowManager.getInstance().onDestroy();
                         //播放失败，检测当前播放器如果处于非常规状态下，退出全屏、或小窗
                         if(SCRREN_ORIENTATION!= VideoConstants.SCREEN_ORIENTATION_PORTRAIT){
@@ -1596,6 +1596,26 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                 }
             }
         });
+    }
+
+    /**
+     * 开启屏幕常量保持
+     */
+    private void startScreenKeepBrightness() {
+        AppCompatActivity appCompActivity = VideoUtils.getInstance().getAppCompActivity(getContext());
+        if(null!=appCompActivity){
+            appCompActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+    }
+
+    /**
+     * 结束屏幕常量保持
+     */
+    private void stopScreenKeepBrightness() {
+        AppCompatActivity appCompActivity = VideoUtils.getInstance().getAppCompActivity(getContext());
+        if(null!=appCompActivity){
+            appCompActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
     }
 
     /**

@@ -10,25 +10,31 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import com.bumptech.glide.Glide;
 import com.music.player.lib.R;
 import com.music.player.lib.constants.MusicConstants;
+import com.music.player.lib.model.MusicGlideCircleTransform;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.music.player.lib.util.MusicImageCache;
 import com.music.player.lib.util.MusicUtils;
 
 /**
  * hty_Yuye@Outlook.com
  * 2019/3/6
  * MusicJukeBoxCoverPager
- * 这个版本控件做法是将封面、圆盘合并绘制到Drawable
  */
 
-public class MusicJukeBoxCoverPager extends LinearLayout{
+public class MusicJukeBoxCoverPager extends LinearLayout {
 
+    private Context mContext;
     //唱片机旋转一圈耗时
-    private int mRotationDurtion = MusicConstants.BOX_REVOLVE_MINUTE;
+    private int mRotationDurtion;
     private ObjectAnimator mDiscObjectAnimator;
     private ImageView mDiseCover;
+    private int mJukeBoxCoverFgSize;
 
     public MusicJukeBoxCoverPager(Context context) {
         this(context,null);
@@ -40,36 +46,70 @@ public class MusicJukeBoxCoverPager extends LinearLayout{
 
     public MusicJukeBoxCoverPager(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        View.inflate(context, R.layout.music_view_cover_pager,this);
+        View.inflate(context, R.layout.music_view_cover_pager2,this);
+        this.mContext=context;
+        FrameLayout coverLayout = (FrameLayout) findViewById(R.id.cover_frame_layout);
+        //胶片背景
+        ImageView discBg = (ImageView) findViewById(R.id.view_dise_bg);
+        //胶片封面
+        mDiseCover = (ImageView) findViewById(R.id.view_dise_cover);
+        int screenWidth = MusicUtils.getInstance().getScreenWidth(context);
+        //背景图片大小
+        int jukeBoxCoverBgSize = (int) (screenWidth * MusicConstants.SCALE_DISC_SIZE);
+        //封面大小
+        mJukeBoxCoverFgSize = (int) (screenWidth * MusicConstants.SCALE_MUSIC_PIC_SIZE);
+        //背景距离顶部高度
+        int marginTop = (int) (MusicConstants.SCALE_DISC_MARGIN_TOP * screenWidth);
+        //封面View
+        LinearLayout.LayoutParams layoutParams = (LayoutParams) coverLayout.getLayoutParams();
+        layoutParams.setMargins(0,marginTop,0,0);
+        layoutParams.width=jukeBoxCoverBgSize;
+        layoutParams.height=jukeBoxCoverBgSize;
+        coverLayout.setLayoutParams(layoutParams);
+
+        //确定背景圆盘大小及位置
+        FrameLayout.LayoutParams bgLayoutParams = (FrameLayout.LayoutParams) discBg.getLayoutParams();
+        bgLayoutParams.width=jukeBoxCoverBgSize;
+        bgLayoutParams.height=jukeBoxCoverBgSize;
+        discBg.setLayoutParams(bgLayoutParams);
+
+        //确定其大小和位置,正好位于父容器的中央背景圆盘位置
+        FrameLayout.LayoutParams coverLayoutParams = (FrameLayout.LayoutParams) mDiseCover.getLayoutParams();
+        coverLayoutParams.width= mJukeBoxCoverFgSize;
+        coverLayoutParams.height= mJukeBoxCoverFgSize;
+        mDiseCover.setLayoutParams(coverLayoutParams);
+
+        discBg.setImageResource(R.drawable.ic_music_disc);
         if(null!=attrs){
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicJukeBoxCoverPager);
             mRotationDurtion = typedArray.getInteger(R.styleable.MusicJukeBoxCoverPager_musicJukeRotationDurtion,
                     MusicConstants.BOX_REVOLVE_MINUTE);
             typedArray.recycle();
+        }else{
+            mRotationDurtion=MusicConstants.BOX_REVOLVE_MINUTE;
         }
-        mDiseCover = (ImageView) findViewById(R.id.view_dise_cover);
     }
 
     /**
      * 设置封面
-     * @param drawable
+     * @param drawable 封面位图
      */
     public void setMusicCover(Drawable drawable){
-        if(null!=drawable){
+        if(null!=drawable&&null!=mDiseCover){
             BitmapDrawable bitmapDrawable= (BitmapDrawable) drawable;
-            MusicUtils.getInstance().setMusicComposeFront(getContext(),mDiseCover,bitmapDrawable.getBitmap(),
-                    MusicConstants.SCALE_DISC_SIZE
-                    ,MusicConstants.SCALE_MUSIC_PIC_SIZE,R.drawable.ic_music_disc,R.drawable.ic_music_juke_default_cover);
+            setMusicCover(bitmapDrawable.getBitmap());
         }
     }
 
     /**
      * 设置封面
-     * @param bitmap
+     * @param bitmap 封面位图
      */
     public void setMusicCover(Bitmap bitmap){
-        MusicUtils.getInstance().setMusicComposeFront(getContext(),mDiseCover,bitmap,MusicConstants.SCALE_DISC_SIZE
-                ,MusicConstants.SCALE_MUSIC_PIC_SIZE,R.drawable.ic_music_disc,R.drawable.ic_music_juke_default_cover);
+        if(null!=bitmap&&null!=mDiseCover){
+            Bitmap resultBitmap = MusicUtils.getInstance().drawRoundBitmap(bitmap);
+            mDiseCover.setImageBitmap(resultBitmap);
+        }
     }
 
     /**
@@ -77,17 +117,31 @@ public class MusicJukeBoxCoverPager extends LinearLayout{
      * @param filePath http 或者 file://
      */
     public void setMusicCover(String filePath){
-        MusicUtils.getInstance().setMusicComposeFront(getContext(),mDiseCover,filePath,MusicConstants.SCALE_DISC_SIZE
-                ,MusicConstants.SCALE_MUSIC_PIC_SIZE,R.drawable.ic_music_disc,R.drawable.ic_music_juke_default_cover);
-    }
-
-    /**
-     * 设置封面
-     * @param drawable
-     */
-    private void setImageDrawable(Drawable drawable) {
-        if(null==drawable||null==mDiseCover) return;
-        mDiseCover.setImageDrawable(drawable);
+        if(null==mDiseCover) return;
+        //HTTP || HTTPS
+        if(filePath.startsWith("http:")|| filePath.startsWith("https:")){
+            Glide.with(getContext())
+                    .load(filePath)
+                    .asBitmap()
+                    .error(R.drawable.ic_music_juke_default_cover)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop()
+                    .transform(new MusicGlideCircleTransform(getContext()))
+                    .into(mDiseCover);
+        }else{
+            //File
+            Bitmap bitmap;
+            bitmap = MusicImageCache.getInstance().getBitmap(filePath);
+            //缓存为空，获取音频文件自身封面
+            if(null==bitmap){
+                bitmap=MusicImageCache.getInstance().createBitmap(filePath);
+            }
+            if(null!=bitmap){
+                setMusicCover(bitmap);
+            }else{
+                mDiseCover.setImageResource(R.drawable.ic_music_juke_default_cover);
+            }
+        }
     }
 
     /**
@@ -107,7 +161,6 @@ public class MusicJukeBoxCoverPager extends LinearLayout{
         objectAnimator.setRepeatCount(ValueAnimator.INFINITE);
         objectAnimator.setDuration(mRotationDurtion * 1000);
         objectAnimator.setInterpolator(new LinearInterpolator());
-        this.mDiscObjectAnimator=objectAnimator;
         return objectAnimator;
     }
 
@@ -115,13 +168,11 @@ public class MusicJukeBoxCoverPager extends LinearLayout{
      * 控制器透明度
      * @param alpha
      */
-    public void setConntrollerAlpha(float alpha) {
-
-    }
+    public void setConntrollerAlpha(float alpha) {}
 
     public ObjectAnimator getObjectAnimator() {
         if(null==mDiscObjectAnimator){
-            return getDiscObjectAnimator();
+            mDiscObjectAnimator = getDiscObjectAnimator();
         }
         return mDiscObjectAnimator;
     }
@@ -145,7 +196,30 @@ public class MusicJukeBoxCoverPager extends LinearLayout{
         onStop();
     }
 
+    /**
+     * 回收ImageView的Bitmap，在复用的模式下回收后有BUG
+     * @param imageView imageView
+     */
+    private void recyclerImageViewBitmap(ImageView imageView) {
+        if(null!=imageView&&null!=imageView.getDrawable()){
+            try {
+                Drawable drawable = imageView.getDrawable();
+                if(drawable instanceof BitmapDrawable){
+                    BitmapDrawable bitmapDrawable= (BitmapDrawable) drawable;
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                    if(!bitmap.isRecycled()){
+                        bitmap.recycle();
+                    }
+                }
+            }catch (RuntimeException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void onDestroy(){
-        if(null!=mDiseCover) mDiseCover.setImageResource(0);
+//        recyclerImageViewBitmap(mDiseCover);
+        mDiseCover.setImageBitmap(null);
+        mContext=null;mDiseCover=null;mDiscObjectAnimator=null;mJukeBoxCoverFgSize=0;mJukeBoxCoverFgSize=0;
     }
 }

@@ -3,12 +3,7 @@ package com.music.player.lib.view;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +32,7 @@ import java.util.Map;
  * TinyHung@Outlook.com
  * 2019/3/6
  * BIG JukeBox
- * 示例唱片机，负责UI的展示和播放、暂停系列通话，次组件不直接参与下一首、上一首的业务逻辑
+ * 示例唱片机容器，负责同步播放器的UI状态，歌词交互等，封面显示：MusicJukeBoxCoverPager
  * 内部并持有歌词显示控件
  * 将此类事件一律抛出至持有此组件的活动
  */
@@ -51,18 +46,20 @@ public class MusicJukeBoxView extends RelativeLayout{
     //当前手指松手后的位置
     private int mOffsetPosition=0;
     private MusicJukeBoxStatusListener mPlayerInfoListener;
+    //唱针动画
     private ObjectAnimator mHandAnimator;
     private Map<Integer, MusicJukeBoxCoverPager> mFragments =new HashMap<>();//存放封面片段的集合
     private List<Object> mMusicDatas = new ArrayList<>();//音频数据集
     //标记ViewPager是否处于偏移的状态
     private boolean mViewPagerIsOffset = false;
-    //标记唱针复位后，是否需要重新偏移到唱片处
-    private boolean mIsNeed2StartPlayAnimator = false;
+    //唱片机内部状态
     private DiscStatus mDiscStatus = DiscStatus.STOP;
-    public static final int DURATION_NEEDLE_ANIAMTOR = 500;
-    private NeedleAnimatorStatus needleAnimatorStatus = NeedleAnimatorStatus.IN_FAR_END;
+    //屏幕宽
     private int mScreenWidth;
     private MusicViewPagerScroller mScroller;//缓慢滚动
+    //唱针动画展开、静止
+    private float HANDLE_EXPAND =-30.0f,HANDLE_STATIC=0.0f;
+    //唱片机指针动画状态监听
     private MusicAnimatorListener mAnimatorListener;
     //此标记记录ViewPager调用setCurrentItem()后是否禁用回调onPageSelected(int pisotion);方法
     private boolean mEchoPageSelectedEnable;
@@ -72,20 +69,6 @@ public class MusicJukeBoxView extends RelativeLayout{
     private FrameLayout mLrcLayout;
     //唱片容器
     private View mDiscRoot;
-
-    /**
-     * 唱针当前所处的状态
-     */
-    private enum NeedleAnimatorStatus {
-        //移动时：从唱盘往远处移动
-        TO_FAR_END,
-        //移动时：从远处往唱盘移动
-        TO_NEAR_END,
-        //静止时：离开唱盘
-        IN_FAR_END,
-        //静止时：贴近唱盘
-        IN_NEAR_END
-    }
 
     /**
      * 胶盘状态
@@ -114,6 +97,7 @@ public class MusicJukeBoxView extends RelativeLayout{
         initViewPager();
         initHandView();
         initObjectAnimator();
+        //歌词容器
         mLrcLayout = (FrameLayout) findViewById(R.id.msuic_lrc_view);
     }
 
@@ -129,15 +113,19 @@ public class MusicJukeBoxView extends RelativeLayout{
      */
     private void initDiscBlackground() {
         ImageView mDiscBlackground = (ImageView) findViewById(R.id.view_disc_backgound);
-        mDiscBlackground.setImageDrawable(getDiscBlackgroundDrawable());
+        int discSize = (int) (mScreenWidth * MusicConstants.SCALE_DISC_BG_SIZE);
         int marginTop = (int) (MusicConstants.SCALE_DISC_BG_MARGIN_TOP * mScreenWidth);
         LayoutParams layoutParams = (LayoutParams) mDiscBlackground.getLayoutParams();
+        layoutParams.width=discSize;
+        layoutParams.height=discSize;
         layoutParams.setMargins(0, marginTop, 0, 0);
         mDiscBlackground.setLayoutParams(layoutParams);
+        mDiscBlackground.setImageResource(R.drawable.ic_music_disc_blackground);
     }
 
     /**
-     * 初始化横向滑动Pager
+     * 初始化横向滑动Pager,在源代码中在这里是将ViewPager的整体高度下移，此处新代码做法是不下移ViewPager,
+     * 下移子View中的专辑封面,避免单击事件无效问题
      */
     private void initViewPager() {
         mDiscRoot = findViewById(R.id.music_disc_root);
@@ -150,21 +138,19 @@ public class MusicJukeBoxView extends RelativeLayout{
                 }
             }
         });
-        //禁止滑动阴影
+        //禁止滑动阻尼阴影
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mPagerAdapter = new ViewPagerAdapter();
         mViewPager.setAdapter(mPagerAdapter);
-        LayoutParams layoutParams = (LayoutParams) mViewPager.getLayoutParams();
-        int marginTop = (int) (MusicConstants.SCALE_DISC_MARGIN_TOP * mScreenWidth);
-        layoutParams.setMargins(0, marginTop, 0, 0);
-        mViewPager.setLayoutParams(layoutParams);
         mViewPager.setOffscreenPageLimit(1);
         mScroller = new MusicViewPagerScroller(getContext());
+        //自定义滚动
         mScroller.initViewPagerScroll(mViewPager);
     }
 
     /**
      * 初始化指针
+     * getRotation():0.0：禁止不动 -30：动画已经被展开
      */
     private void initHandView() {
         mHandImage = (ImageView) findViewById(R.id.view_disc_hand);
@@ -173,70 +159,133 @@ public class MusicJukeBoxView extends RelativeLayout{
         //设置手柄的外边距为负数，让其隐藏一部分
         int marginTop = (int) (MusicConstants.SCALE_NEEDLE_MARGIN_TOP * mScreenWidth) * -1;
         int marginLeft = (int) (MusicConstants.SCALE_NEEDLE_MARGIN_LEFT * mScreenWidth);
-        Bitmap originBitmap = BitmapFactory.decodeResource(getResources(), R.drawable
-                .ic_music_cover_hand);
-        Bitmap bitmap = Bitmap.createScaledBitmap(originBitmap, needleWidth, needleHeight, true);
+        //Bitmap originBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_music_cover_hand);
+        //Bitmap bitmap = Bitmap.createScaledBitmap(originBitmap, needleWidth, needleHeight, true);
         LayoutParams layoutParams = (LayoutParams) mHandImage.getLayoutParams();
         layoutParams.setMargins(marginLeft, marginTop, 0, 0);
+        layoutParams.width=needleWidth;
+        layoutParams.height=needleHeight;
         int pivotX = (int) (MusicConstants.SCALE_NEEDLE_PIVOT_X * mScreenWidth);
         int pivotY = (int) (MusicConstants.SCALE_NEEDLE_PIVOT_Y * mScreenWidth);
+        //设置旋转中心锚点坐标，View默认的锚点是View的中心X,Y
         mHandImage.setPivotX(pivotX);
         mHandImage.setPivotY(pivotY);
         mHandImage.setRotation(MusicConstants.ROTATION_INIT_NEEDLE);
-        mHandImage.setImageBitmap(bitmap);
         mHandImage.setLayoutParams(layoutParams);
+        mHandImage.setImageResource( R.drawable.ic_music_cover_hand);
     }
 
     /**
-     * 指针动画
+     * 唱片机指针动画
      */
     private void initObjectAnimator() {
         mHandAnimator = ObjectAnimator.ofFloat(mHandImage, View.ROTATION, MusicConstants.ROTATION_INIT_NEEDLE, 0);
-        mHandAnimator.setDuration(DURATION_NEEDLE_ANIAMTOR);
+        mHandAnimator.setDuration(MusicConstants.DURATION_NEEDLE_ANIAMTOR);
         mHandAnimator.setInterpolator(new AccelerateInterpolator());
         mHandAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                //根据动画开始前NeedleAnimatorStatus的状态，即可得出动画进行时NeedleAnimatorStatus的状态
-                if (needleAnimatorStatus == NeedleAnimatorStatus.IN_FAR_END) {
-                    needleAnimatorStatus = NeedleAnimatorStatus.TO_NEAR_END;
-                } else if (needleAnimatorStatus == NeedleAnimatorStatus.IN_NEAR_END) {
-                    needleAnimatorStatus = NeedleAnimatorStatus.TO_FAR_END;
-                }
-            }
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                if (needleAnimatorStatus == NeedleAnimatorStatus.TO_NEAR_END) {
-                    needleAnimatorStatus = NeedleAnimatorStatus.IN_NEAR_END;
+                //指针动画播放完毕并且唱针处于附着胶盘状态（Rotation 为0：附着，大于0(-30)为与胶盘分离状态）
+                // ，立即开始播放胶盘旋转动画
+                if(mHandImage.getRotation()>=HANDLE_STATIC&&null!=mPagerAdapter&&mPagerAdapter.getCount()>0){
                     playDiscAnimator(mViewPager.getCurrentItem());
-                    mDiscStatus = DiscStatus.PLAY;
-                } else if (needleAnimatorStatus == NeedleAnimatorStatus.TO_FAR_END) {
-                    needleAnimatorStatus = NeedleAnimatorStatus.IN_FAR_END;
-                    if (mDiscStatus == DiscStatus.STOP) {
-                        mIsNeed2StartPlayAnimator = true;
-                    }
-                }
-                if (mIsNeed2StartPlayAnimator) {
-                    mIsNeed2StartPlayAnimator = false;
-                    //只有在ViewPager不处于偏移状态时，才开始唱盘旋转动画
-                    if (!mViewPagerIsOffset&&MusicPlayerManager.getInstance().isPlaying()) {
-                        MusicJukeBoxView.this.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                playAnimator();
-                            }
-                        }, 50);
-                    }
                 }
             }
 
             @Override
+            public void onAnimationStart(Animator animator) {}
+            @Override
             public void onAnimationCancel(Animator animator) {}
-
             @Override
             public void onAnimationRepeat(Animator animator) {}
         });
+    }
+
+    /**
+     * 播放唱针动画,此方法会在不同交互场景下短时间同时被调用多次，这里已经过滤了重复调用
+     */
+    private synchronized void playHandlerAnimator() {
+        if(!mViewPagerIsOffset&&null!=mHandAnimator&&null!=mHandImage){
+            //仅当完全静止不动并且动画没有开始执行时，开始播放指针动画
+            if(mHandImage.getRotation()<HANDLE_STATIC){
+                if(!mHandAnimator.isRunning()){
+                    mHandAnimator.start();
+                }
+            }else{
+                //直接开始胶盘旋转动画,避免太快显的不自然，歇一会儿再开始动画吧
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(null!=mPagerAdapter&&mPagerAdapter.getCount()>0){
+                            playDiscAnimator(mViewPager.getCurrentItem());
+                        }
+                    }
+                },100);
+            }
+        }
+    }
+
+    /**
+     * 暂停唱针动画
+     */
+    private void pauseHandlerAnimator() {
+        if(null!=mHandAnimator&&null!=mHandImage){
+            //仅当唱针附着胶盘时，让唱针恢复至停止状态
+            if(mHandImage.getRotation()!=HANDLE_EXPAND&&!mHandAnimator.isRunning()){
+                mHandAnimator.reverse();
+            }
+            if(null!=mViewPager){
+                int index = mViewPager.getCurrentItem();
+                pauseDiscAnimatior(index);
+            }
+        }
+    }
+
+    /**
+     * 播放唱盘动画
+     * @param position Page的ID
+     */
+    private void playDiscAnimator(int position) {
+        if(!mViewPagerIsOffset&&null!= mFragments && mFragments.size()>0){
+            mDiscStatus = DiscStatus.PLAY;
+            MusicJukeBoxCoverPager musicJukeBoxCoverPager = mFragments.get(position);
+            ObjectAnimator animator=musicJukeBoxCoverPager.getObjectAnimator();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (animator.isPaused()) {
+                    animator.resume();
+                } else {
+                    if(animator.isRunning()){
+                        return;
+                    }
+                    animator.start();
+                }
+            }else{
+                animator.start();
+            }
+            notifyMusicStatusChanged(MusicConstants.JUKE_BOX_PLAY);
+            if(null!=mAnimatorListener){
+                mAnimatorListener.onAnimationEnd();
+            }
+        }
+    }
+
+    /**
+     * 暂停唱盘动画
+     * @param position Page的ID
+     */
+    private void pauseDiscAnimatior(int position) {
+        if(null!= mFragments && mFragments.size()>0){
+            MusicJukeBoxCoverPager musicJukeBoxCoverPager = mFragments.get(position);
+            ObjectAnimator animator=musicJukeBoxCoverPager.getObjectAnimator();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                animator.pause();
+            }else{
+                animator.cancel();
+            }
+            mDiscStatus = DiscStatus.PAUSE;
+            notifyMusicStatusChanged(MusicConstants.JUKE_BOX_PAUSE);
+        }
     }
 
     /**
@@ -297,9 +346,8 @@ public class MusicJukeBoxView extends RelativeLayout{
                     mFragments.get(mOffsetPosition).onReset();
                 }
             }catch (RuntimeException e){
-
+                e.printStackTrace();
             }finally {
-
                 if(null!=mMusicLrcView){
                     mMusicLrcView.onReset();
                     //只有当歌词已经在显示了，尝试隐藏歌词控件
@@ -326,130 +374,41 @@ public class MusicJukeBoxView extends RelativeLayout{
 
         @Override
         public void onPageScrollStateChanged(int state) {
+            Logger.d(TAG,"onPageScrollStateChanged-->state:"+state);
             switch (state) {
-                //用户松手了
+                //用户已经松手了
                 case MusicViewPager.SCROLL_STATE_SETTLING:
 
                     break;
-                //动画静止
+                //界面完全静止
                 case MusicViewPager.SCROLL_STATE_IDLE:
                     mViewPagerIsOffset = false;
                     //松手后还是停留在此Pager
                     if(null!=mViewPager){
                         if(mOffsetPosition==mViewPager.getCurrentItem()){
-                            //松手时若播放器内部正在播放，恢复动画
+                            //松手后还是停留在当前Pager,根据播放状态尝试恢复动画播放
                             if(MusicPlayerManager.getInstance().isPlaying()){
-                                playAnimator();
+                                playHandlerAnimator();
                             }
                         }else{
                             //切换了Pager，一律开始播放动作
-                            playAnimator();
+                            playHandlerAnimator();
                         }
                     }
                     break;
-                //用户开始滚动Pager
+                //手势开始滑动PagerView
                 case MusicViewPager.SCROLL_STATE_DRAGGING:
                     mViewPagerIsOffset = true;
+                    //立即开启自动以Scroll动画
                     if(null!=mScroller) {
                         mScroller.setScroller(true);
                     }
-                    pauseAnimator();
+                    //尝试暂停正在进行的所有动画
+                    pauseHandlerAnimator();
                     break;
             }
         }
     };
-
-    /**
-     * 播放唱针动画
-     */
-    private synchronized void playAnimator() {
-        if(null!=mHandAnimator){
-            //唱针处于远端时，直接播放动画
-            if (needleAnimatorStatus == NeedleAnimatorStatus.IN_FAR_END) {
-                notifyMusicStatusChanged(MusicConstants.JUKE_BOX_PLAY);
-                mHandAnimator.start();
-            }else if (needleAnimatorStatus == NeedleAnimatorStatus.TO_FAR_END) {
-                ////唱针处于往远端移动时，设置标记，等动画结束后再播放动画
-                mIsNeed2StartPlayAnimator = true;
-            }else if(needleAnimatorStatus == NeedleAnimatorStatus.IN_NEAR_END){
-                if(null!=mViewPager){
-                    playDiscAnimator(mViewPager.getCurrentItem());
-                    mDiscStatus = DiscStatus.PLAY;
-                }
-            }
-        }
-    }
-
-    /**
-     * 暂停唱针动画
-     */
-    private void pauseAnimator() {
-        if(null!=mHandAnimator){
-            //播放时暂停动画
-            if (needleAnimatorStatus == NeedleAnimatorStatus.IN_NEAR_END) {
-                if(null!=mViewPager){
-                    int index = mViewPager.getCurrentItem();
-                    pauseDiscAnimatior(index);
-                }
-            } else if (needleAnimatorStatus == NeedleAnimatorStatus.TO_NEAR_END) {
-                //唱针往唱盘移动时暂停动画
-                mHandAnimator.reverse();
-                //若动画在没结束时执行reverse方法，则不会执行监听器的onStart方法，此时需要手动设置
-                needleAnimatorStatus = NeedleAnimatorStatus.TO_FAR_END;
-            }
-            //动画可能执行多次，只有音乐处于停止 / 暂停状态时，才执行暂停命令
-            if (mDiscStatus == DiscStatus.STOP) {
-                notifyMusicStatusChanged(MusicConstants.JUKE_BOX_STOP);
-            }else if (mDiscStatus == DiscStatus.PAUSE) {
-                notifyMusicStatusChanged(MusicConstants.JUKE_BOX_PAUSE);
-            }
-        }
-    }
-
-    /**
-     * 播放唱盘动画
-     * @param position
-     */
-    private void playDiscAnimator(int position) {
-        if(null!= mFragments && mFragments.size()>0){
-            MusicJukeBoxCoverPager musicJukeBoxCoverPager = mFragments.get(position);
-            if(null!=musicJukeBoxCoverPager){
-                ObjectAnimator animator=musicJukeBoxCoverPager.getObjectAnimator();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    if (animator.isPaused()) {
-                        animator.resume();
-                    } else {
-                        if(animator.isRunning()){
-                            return;
-                        }
-                        animator.start();
-                    }
-                }else{
-                    animator.start();
-                }
-                if(null!=mAnimatorListener){
-                    mAnimatorListener.onAnimationEnd();
-                }
-            }
-        }
-    }
-
-    /**
-     * 暂停唱盘动画
-     * @param position
-     */
-    private void pauseDiscAnimatior(int position) {
-        if(null!= mFragments && mFragments.size()>0){
-            MusicJukeBoxCoverPager musicJukeBoxCoverPager = mFragments.get(position);
-            if(null!=musicJukeBoxCoverPager){
-                ObjectAnimator animator=musicJukeBoxCoverPager.getObjectAnimator();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    animator.pause();
-                }
-            }
-        }
-        if(null!=mHandAnimator) mHandAnimator.reverse();
-    }
 
     /**
      * 通知数据源发生了改变s
@@ -502,7 +461,6 @@ public class MusicJukeBoxView extends RelativeLayout{
             mViewPager.setCurrentItem(position,smoothScroll);
         }
         if(isPlayAnimator){
-            needleAnimatorStatus = NeedleAnimatorStatus.IN_FAR_END;
             onStart();
         }
     }
@@ -543,7 +501,6 @@ public class MusicJukeBoxView extends RelativeLayout{
             mMusicLrcView.setLrcViewListener(new MusicLrcViewListener() {
                 @Override
                 public void onLrcSeeked(int position, MusicLrcRow lrcRow) {
-                    Logger.d(TAG,"onLrcSeeked-->position:"+position+",lrcRow:"+lrcRow.toString());
                     if(null!=mPlayerInfoListener){
                         mPlayerInfoListener.onLrcSeek(lrcRow);
                     }
@@ -551,7 +508,6 @@ public class MusicJukeBoxView extends RelativeLayout{
 
                 @Override
                 public void onClick(View view) {
-                    Logger.d(TAG,"onClick-->");
                     removeViewByGroupVoew(mMusicLrcView);
                     showLrcView(false);
                 }
@@ -575,7 +531,6 @@ public class MusicJukeBoxView extends RelativeLayout{
             mMusicLrcView.setLrcViewListener(new MusicLrcViewListener() {
                 @Override
                 public void onLrcSeeked(int position, MusicLrcRow lrcRow) {
-                    Logger.d(TAG,"onLrcSeeked-->position:"+position+",lrcRow:"+lrcRow.toString());
                     if(null!=mPlayerInfoListener){
                         mPlayerInfoListener.onLrcSeek(lrcRow);
                     }
@@ -583,7 +538,6 @@ public class MusicJukeBoxView extends RelativeLayout{
 
                 @Override
                 public void onClick(View view) {
-                    Logger.d(TAG,"onClick-->");
                     removeViewByGroupVoew(mMusicLrcView);
                     showLrcView(false);
                 }
@@ -609,8 +563,7 @@ public class MusicJukeBoxView extends RelativeLayout{
      * 开始唱片机指针动画，指针动画结束后紧接着唱片机旋转动画
      */
     public void onStart() {
-        mDiscStatus = DiscStatus.PLAY;
-        playAnimator();
+        playHandlerAnimator();
     }
 
     /**
@@ -618,25 +571,22 @@ public class MusicJukeBoxView extends RelativeLayout{
      * @param animatorListener 对指针的动画状态监听
      */
     public void onStart(MusicAnimatorListener animatorListener) {
-        mDiscStatus = DiscStatus.PLAY;
         this.mAnimatorListener=animatorListener;
-        playAnimator();
+        playHandlerAnimator();
     }
 
     /**
      * 暂停
      */
     public void onPause() {
-        mDiscStatus = DiscStatus.PAUSE;
-        pauseAnimator();
+        pauseHandlerAnimator();
     }
 
     /**
      * 停止
      */
     public void onStop() {
-        mDiscStatus = DiscStatus.STOP;
-        pauseAnimator();
+        pauseHandlerAnimator();
     }
 
     public void resetAnimationListener() {
@@ -681,19 +631,6 @@ public class MusicJukeBoxView extends RelativeLayout{
     }
 
     /**
-     * 得到唱盘背后半透明的圆形背景
-     * @return 图形
-     */
-    private Drawable getDiscBlackgroundDrawable() {
-        int discSize = (int) (mScreenWidth * MusicConstants.SCALE_DISC_BG_SIZE);
-        Bitmap bitmapDisc = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R
-                .drawable.ic_music_disc_blackground), discSize, discSize, true);
-        RoundedBitmapDrawable roundDiscDrawable = RoundedBitmapDrawableFactory.create
-                (getResources(), bitmapDisc);
-        return roundDiscDrawable;
-    }
-
-    /**
      * Pager Adapter
      */
     private class ViewPagerAdapter extends MusicPagerAdapter {
@@ -727,10 +664,10 @@ public class MusicJukeBoxView extends RelativeLayout{
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
+            mFragments.remove(position);
             if(null!=object && object instanceof MusicJukeBoxCoverPager){
                 MusicJukeBoxCoverPager coverPager= (MusicJukeBoxCoverPager) object;
                 coverPager.onDestroy();
-                mFragments.remove(position);
             }
             container.removeView(((View) object));
         }
@@ -758,9 +695,10 @@ public class MusicJukeBoxView extends RelativeLayout{
             mHandAnimator.cancel();
             mHandAnimator=null;
         }
-        mViewPagerIsOffset=false;mIsNeed2StartPlayAnimator=false;mEchoPageSelectedEnable=false;
+
+        mViewPagerIsOffset=false;mEchoPageSelectedEnable=false;
         mDiscStatus = DiscStatus.STOP;
-        needleAnimatorStatus=NeedleAnimatorStatus.IN_FAR_END;mScreenWidth=0;
+        mScreenWidth=0;
         mPlayerInfoListener=null;mAnimatorListener=null;
         if(null!=mMusicLrcView){
             mMusicLrcView.onDestroy();

@@ -10,11 +10,8 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import com.music.player.lib.R;
-import com.music.player.lib.util.Logger;
 
 /**
  * hty_Yuye@Outlook.com
@@ -24,8 +21,8 @@ import com.music.player.lib.util.Logger;
 
 public class MusicFanLayout extends View {
 
-    private static final String TAG = "MusicFanLayout";
-    private final int mColor;
+    private int mColor;
+    private Context mContext;
     private Path mPath=new Path();
     Region mRegion=new Region();
 
@@ -35,6 +32,7 @@ public class MusicFanLayout extends View {
 
     public MusicFanLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.mContext=context;
         if(null!=attrs){
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicFanLayout);
             mColor = typedArray.getColor(R.styleable.MusicFanLayout_trashColor,
@@ -80,7 +78,6 @@ public class MusicFanLayout extends View {
     public boolean isContainsXY(int rawX,int rawY){
         if(null!=mRegion){
             boolean contains = mRegion.contains(rawX, rawY);
-            Logger.d(TAG,"isContainsXY-->contains:"+contains+",rawX:"+rawX+",rawY:"+rawY);
             return contains;
         }
         return false;
@@ -92,5 +89,13 @@ public class MusicFanLayout extends View {
      */
     public Region getRegion(){
         return mRegion;
+    }
+
+    public void onDestroy() {
+        if(null!=mPath){
+            mPath.close();
+            mPath=null;
+        }
+        mRegion=null;mContext=null;mColor=0;
     }
 }
