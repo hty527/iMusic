@@ -1,4 +1,16 @@
 更新记录中Video表示视频播放器库，Music表示音乐播放器库，APK为安装包，从近到远列出更新记录
+###  Music(1.1.1) && Video(1.0.7) && APK 1.1.2
+**更新日期：** 2019-05-31<br/>
+**更新内容：**<br/>
+>1. music播放器界面背景渐变Layout支持所有Android版本。<br/>
+>2. music库修复手指拖动进度条时，文字进度更新的BUG。<br/>
+>3. music优化默认唱片机组件动画及交互、优化封面加载控件，整体提升流畅度。<br/>
+>4. music优化歌词交互点击区域。<br/>
+>5. music库修复特定场景下点击通知栏重复开启MainActivity。<br/>
+>6. music删除setMainActivityName(String className)接口，无需设置了。<br/>
+>7. video库修复手指拖动进度条时，文字进度更新的BUG。<br/>
+>8. video库视频播放时增加屏幕常量，停止播放取消常量。<br/>
+___
 ###  Music(1.1.0) && APK 1.1.1
 **更新日期：** 2019-05-29<br/>
 **更新内容：**<br/>
