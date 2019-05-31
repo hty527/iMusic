@@ -206,6 +206,7 @@ public class MusicJukeBoxView extends RelativeLayout{
      * 播放唱针动画,此方法会在不同交互场景下短时间同时被调用多次，这里已经过滤了重复调用
      */
     private synchronized void playHandlerAnimator() {
+        Logger.d(TAG,"playHandlerAnimator-->");
         if(!mViewPagerIsOffset&&null!=mHandAnimator&&null!=mHandImage){
             //仅当完全静止不动并且动画没有开始执行时，开始播放指针动画
             if(mHandImage.getRotation()<HANDLE_STATIC){
@@ -224,9 +225,10 @@ public class MusicJukeBoxView extends RelativeLayout{
      * 暂停唱针动画
      */
     private void pauseHandlerAnimator() {
+        Logger.d(TAG,"pauseHandlerAnimator-->");
         if(null!=mHandAnimator&&null!=mHandImage){
             //仅当唱针附着胶盘时，让唱针恢复至停止状态
-            if(mHandImage.getRotation()!=HANDLE_EXPAND&&!mHandAnimator.isRunning()){
+            if(mHandImage.getRotation()!=HANDLE_EXPAND){
                 mHandAnimator.reverse();
             }
             if(null!=mViewPager){
@@ -241,6 +243,7 @@ public class MusicJukeBoxView extends RelativeLayout{
      * @param position Page的ID
      */
     private void playDiscAnimator(int position) {
+        Logger.d(TAG,"playDiscAnimator-->position:"+position);
         if(!mViewPagerIsOffset&&null!= mFragments && mFragments.size()>0){
             mDiscStatus = DiscStatus.PLAY;
             MusicJukeBoxCoverPager musicJukeBoxCoverPager = mFragments.get(position);
@@ -249,10 +252,9 @@ public class MusicJukeBoxView extends RelativeLayout{
                 if (animator.isPaused()) {
                     animator.resume();
                 } else {
-                    if(animator.isRunning()){
-                        return;
+                    if(!animator.isRunning()){
+                        animator.start();
                     }
-                    animator.start();
                 }
             }else{
                 animator.start();
@@ -269,6 +271,7 @@ public class MusicJukeBoxView extends RelativeLayout{
      * @param position Page的ID
      */
     private void pauseDiscAnimatior(int position) {
+        Logger.d(TAG,"pauseDiscAnimatior-->position:"+position);
         if(null!= mFragments && mFragments.size()>0){
             MusicJukeBoxCoverPager musicJukeBoxCoverPager = mFragments.get(position);
             ObjectAnimator animator=musicJukeBoxCoverPager.getObjectAnimator();

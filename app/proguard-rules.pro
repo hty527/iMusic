@@ -36,10 +36,6 @@
 -verbose
 -printmapping priguardMapping.txt
 
-# 指定混淆时采用的算法，后面的参数是一个过滤器
-# 这个过滤器是谷歌推荐的算法，一般不改变
--optimizations !code/simplification/artithmetic,!field/*,!class/merging/*
-
 # 保护代码中的Annotation不被混淆
 # 这在JSON实体映射时非常重要，比如fastJson
 -keepattributes *Annotation*

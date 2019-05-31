@@ -35,6 +35,7 @@ public class MusicJukeBoxCoverPager extends LinearLayout {
     private ObjectAnimator mDiscObjectAnimator;
     private ImageView mDiseCover;
     private int mJukeBoxCoverFgSize;
+    private FrameLayout mCoverLayout;
 
     public MusicJukeBoxCoverPager(Context context) {
         this(context,null);
@@ -48,7 +49,7 @@ public class MusicJukeBoxCoverPager extends LinearLayout {
         super(context, attrs, defStyleAttr);
         View.inflate(context, R.layout.music_view_cover_pager2,this);
         this.mContext=context;
-        FrameLayout coverLayout = (FrameLayout) findViewById(R.id.cover_frame_layout);
+        mCoverLayout = (FrameLayout) findViewById(R.id.cover_frame_layout);
         //胶片背景
         ImageView discBg = (ImageView) findViewById(R.id.view_dise_bg);
         //胶片封面
@@ -61,11 +62,11 @@ public class MusicJukeBoxCoverPager extends LinearLayout {
         //背景距离顶部高度
         int marginTop = (int) (MusicConstants.SCALE_DISC_MARGIN_TOP * screenWidth);
         //封面View
-        LinearLayout.LayoutParams layoutParams = (LayoutParams) coverLayout.getLayoutParams();
+        LinearLayout.LayoutParams layoutParams = (LayoutParams) mCoverLayout.getLayoutParams();
         layoutParams.setMargins(0,marginTop,0,0);
         layoutParams.width=jukeBoxCoverBgSize;
         layoutParams.height=jukeBoxCoverBgSize;
-        coverLayout.setLayoutParams(layoutParams);
+        mCoverLayout.setLayoutParams(layoutParams);
 
         //确定背景圆盘大小及位置
         FrameLayout.LayoutParams bgLayoutParams = (FrameLayout.LayoutParams) discBg.getLayoutParams();
@@ -157,7 +158,7 @@ public class MusicJukeBoxCoverPager extends LinearLayout {
      * @return
      */
     private ObjectAnimator getDiscObjectAnimator() {
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mDiseCover, View.ROTATION, 0, 360);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mCoverLayout, View.ROTATION, 0, 360);
         objectAnimator.setRepeatCount(ValueAnimator.INFINITE);
         objectAnimator.setDuration(mRotationDurtion * 1000);
         objectAnimator.setInterpolator(new LinearInterpolator());
@@ -189,7 +190,7 @@ public class MusicJukeBoxCoverPager extends LinearLayout {
             mDiscObjectAnimator.cancel();
             mDiscObjectAnimator=null;
         }
-        if(null!=mDiseCover) mDiseCover.setRotation(0);
+        if(null!=mCoverLayout) mCoverLayout.setRotation(0);
     }
 
     public void onReset() {
@@ -207,8 +208,10 @@ public class MusicJukeBoxCoverPager extends LinearLayout {
                 if(drawable instanceof BitmapDrawable){
                     BitmapDrawable bitmapDrawable= (BitmapDrawable) drawable;
                     Bitmap bitmap = bitmapDrawable.getBitmap();
+                    imageView.setImageBitmap(null);
                     if(!bitmap.isRecycled()){
                         bitmap.recycle();
+                        bitmap=null;
                     }
                 }
             }catch (RuntimeException e){
@@ -218,8 +221,9 @@ public class MusicJukeBoxCoverPager extends LinearLayout {
     }
 
     public void onDestroy(){
-//        recyclerImageViewBitmap(mDiseCover);
+        //recyclerImageViewBitmap(mDiseCover);
         mDiseCover.setImageBitmap(null);
         mContext=null;mDiseCover=null;mDiscObjectAnimator=null;mJukeBoxCoverFgSize=0;mJukeBoxCoverFgSize=0;
+        mCoverLayout=null;
     }
 }
