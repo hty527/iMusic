@@ -10,7 +10,7 @@ ext{
     musicModule = 'music-player'
     musicDesc = 'Android MusicPlayer Library'
     musicWebsite = 'https://github.com/Yuye584312311/IMusic'
-    musicVersion = '1.1.1'
+    musicVersion = '1.1.2'
     
     videoModule = 'video-player'
     videoDesc = 'Android VideoPlayer Library'
