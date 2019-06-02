@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.android.imusic.R;
 import com.android.imusic.video.bean.OpenEyesIndexItemBean;
 import com.music.player.lib.util.MusicUtils;
-import com.music.player.lib.view.MusicJukeBoxBackgroundLayout;
+import com.music.player.lib.view.MusicJukeBoxBackgroundLayout1;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +32,7 @@ import java.util.List;
 public class TransformerVideoPager extends RelativeLayout{
 
     private List<OpenEyesIndexItemBean> mDataBeans;
-    private MusicJukeBoxBackgroundLayout mBackgroundLayout;
+    private MusicJukeBoxBackgroundLayout1 mBackgroundLayout;
     private ViewPager mViewPager;
     private TransformerViewpager mAdapter;
     private TextView mVideoIndexNum;
@@ -75,7 +75,7 @@ public class TransformerVideoPager extends RelativeLayout{
         });
         //设置ViewPager切换效果
         mViewPager.setPageTransformer(true, new TransformerPageAnimation());
-        mBackgroundLayout = (MusicJukeBoxBackgroundLayout) findViewById(R.id.background_view);
+        mBackgroundLayout = (MusicJukeBoxBackgroundLayout1) findViewById(R.id.background_view);
         mVideoIndexNum = (TextView) findViewById(R.id.view_index_num);
     }
 

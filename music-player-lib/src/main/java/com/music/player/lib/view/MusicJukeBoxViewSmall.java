@@ -44,6 +44,7 @@ import java.util.Observer;
 public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
 
     private static final String TAG = "MusicJukeBoxViewSmall";
+    private Context mContext;
     private int mRotationDurtion=MusicConstants.BOX_MINI_REVOLVE_MINUTE;
     private final int mScreenWidth;
     private ImageView mViewCover;
@@ -59,6 +60,7 @@ public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
     public MusicJukeBoxViewSmall(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         View.inflate(context, R.layout.music_view_small_disc,this);
+        this.mContext=context;
         mViewCover = (ImageView) findViewById(R.id.view_cover);
         if(null!=attrs){
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicJukeBoxViewSmall);
@@ -349,7 +351,7 @@ public class MusicJukeBoxViewSmall extends FrameLayout implements Observer {
             mViewCover.setImageResource(0);
             mViewCover=null;
         }
-        mListener=null;mViewCover=null;
         MusicPlayerManager.getInstance().removeObserver(this);
+        mListener=null;mViewCover=null;mContext=null;
     }
 }

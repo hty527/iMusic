@@ -297,14 +297,20 @@ public class MusicJukeBoxBackgroundLayout extends RelativeLayout {
     }
 
     private void recyclerBitmap(ImageView imageView) {
-        if(null!=imageView&&null!=imageView.getDrawable()){
-            BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-            Bitmap bitmap = drawable.getBitmap();
+        if(null==imageView){
+            return;
+        }
+        Drawable drawable = imageView.getDrawable();
+        if(null!=drawable&& drawable instanceof BitmapDrawable){
+            BitmapDrawable drawableBitmap = (BitmapDrawable) drawable;
+            Bitmap bitmap = drawableBitmap.getBitmap();
             imageView.setImageBitmap(null);
             if(null!=bitmap&&bitmap.isRecycled()){
                 bitmap.recycle();
                 bitmap=null;
             }
+        }else{
+            imageView.setImageBitmap(null);
         }
     }
 

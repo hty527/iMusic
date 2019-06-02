@@ -40,6 +40,7 @@ import java.util.Map;
 public class MusicJukeBoxView extends RelativeLayout{
 
     private static final String TAG = "MusicJukeBoxView";
+    private Context mContext;
     private ImageView mHandImage;
     private MusicViewPager mViewPager;
     private ViewPagerAdapter mPagerAdapter;
@@ -88,6 +89,7 @@ public class MusicJukeBoxView extends RelativeLayout{
     public MusicJukeBoxView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mScreenWidth = MusicUtils.getInstance().getScreenWidth(context);
+        this.mContext=context;
     }
 
     @Override
@@ -715,5 +717,6 @@ public class MusicJukeBoxView extends RelativeLayout{
             mFragments.clear();
             mFragments=null;
         }
+        mContext=null;
     }
 }

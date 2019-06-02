@@ -4,7 +4,8 @@ ext {
          buildToolsVersion : "26.0.2",
          minSdkVersion     : 16,
          targetSdkVersion  : 26,
-         devMinSdk         : 16
+         devMinSdk         : 16,
+         supportLibVersion : "26.1.0"
     ]
     app=[
          applicationId  : "com.android.imusic",
