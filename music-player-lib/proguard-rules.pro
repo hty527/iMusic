@@ -59,14 +59,25 @@
 #    java.lang.Object writeReplace();
 #    java.lang.Object readResolve();
 #}
+#需要配置的混淆
 ##图片加载
 #-keep public class * implements com.bumptech.glide.module.GlideModule
 #-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
 #    **[] $VALUES;
 #    public *;
 #}
-##金山云MediaPlayer
-#-keep class com.ksyun.media.player.**{ *; }
-#-keep class com.ksy.statlibrary.**{ *;}
-##用到的反射
-#-keep class com.music.player.lib.service.** { *; }
+#JavaBean
+#-keep class com.music.player.lib.bean.**{*;}
+#rx
+#-keep class rx.android.**{*;}
+#-dontwarn sun.misc.**
+#-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+# long producerIndex;
+# long consumerIndex;
+#}
+#-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+# rx.internal.util.atomic.LinkedQueueNode producerNode;
+#}
+#-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+# rx.internal.util.atomic.LinkedQueueNode consumerNode;
+#}
