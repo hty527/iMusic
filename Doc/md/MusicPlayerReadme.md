@@ -2,7 +2,35 @@
 * 有关MusicPlayer全部API文档，请阅读[MusicPlayerAPI]<br/>
 ![MusicPlayerFrame](https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/music_player.png)
 
-### 一、iMusic完整功能权限
+### 一、代码混淆
+```
+    -keep public class * extends android.app.Service
+    -keep public class * extends android.content.BroadcastReceiver
+    #java bean
+    -keep class com.music.player.lib.bean.**{*;}
+    #保持自定义控件类不被混淆
+    -keepclasseswithmembers class * {
+        public <init>(android.content.Context, android.util.AttributeSet);
+    }
+    #保持自定义控件类不被混淆
+    -keepclasseswithmembers class * {
+        public <init>(android.content.Context, android.util.AttributeSet, int);
+    }
+    #rx
+    -keep class rx.android.**{*;}
+    -dontwarn sun.misc.**
+    -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+     long producerIndex;
+     long consumerIndex;
+    }
+    -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+     rx.internal.util.atomic.LinkedQueueNode producerNode;
+    }
+    -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+     rx.internal.util.atomic.LinkedQueueNode consumerNode;
+    }
+```
+### 二、iMusic完整功能权限
 ```
     <!--若开启垃圾桶回收播放器、悬浮窗口播放、常驻内存、状态栏控制、锁屏播放控制、耳机监控 等功能，请开启已下权限-->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -11,7 +39,7 @@
     <!--APP后台防杀死-->
     <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
 ```
-### 二、音乐播放器更多功能初始化设置及自定义保存播放记录
+### 三、音乐播放器更多功能初始化设置及自定义保存播放记录
 ```
     //音乐播放器配置
     MusicPlayerConfig config=MusicPlayerConfig.Build()
@@ -54,7 +82,7 @@
                 }
             });
 ```
-### 三、音乐播放器主界面UI和自定义锁屏、自定义通知栏实现
+### 四、音乐播放器主界面UI和自定义锁屏、自定义通知栏实现
 #### 1. 自定义播放器界面UI
     iMusic工程实现了一套近乎完整的播放器工程，内置自定义唱片机交互UI，播放器Activity是MusicPlayerActivity类，请参照该类实现自己的UI效果。
 ```
@@ -163,7 +191,7 @@
         }
 
 ```
-### 四、播放器内部协调工作说明
+### 五、播放器内部协调工作说明
 ```
      MusicPlayerService：内部播放器服务组件，负责音频的播放、暂停、停止、上一首、下一首、闹钟定时关闭等工作。
      MusicPlayerActivity：音乐播放器交互示例容器，负责用户交互。
@@ -174,11 +202,11 @@
      MusicAlarmSettingDialog：默认定制闹钟设置。
      MusicPlayerListDialog：默认当前正在播放的列表
 ```
-### 五、本地音乐与网络音频兼容
+### 六、本地音乐与网络音频兼容
 ```
     播放器完美支持本地音乐及网络音乐的兼容播放和音频封面显示兼容，如果本地音乐对象的未指定音频封面，则播放器内部将尝试获取音频自带封面作为唱片机封面显示和背景渐变图层显示。
 ```
-### 六、付费购买逻辑
+### 七、付费购买逻辑
 ```
   一般付费音频播放前，播放地址是为空的，播放器内部将抛出onMusicPathInvalid(BaseaudioInfo musicInfo, int position);事件，你可在此方法中处理购买付费逻辑，
   待获取到真实播放地址后，再调用下面方法继续尝试播放。也可以自行处理完购买逻辑后再开始调用播放音频事件。
@@ -187,11 +215,11 @@
     //调用此代码继续尝试播放。
     MusicPlayerManager.getInstance().continuePlay(String sourcePath);
 ```
-### 七、常驻进程播放
+### 八、常驻进程播放
 ```
     在开始播放前，初始化设置时设置MusicPlayerManager.getInstance().setLockForeground(true);为true即可。前提是没有禁用内部通知功能。和用户没有禁用软件通知功能。
 ```
-### 八、播放器歌词
+### 九、播放器歌词
     内部封装了播放器歌词显示及交互控件MusicLrcView，支持常规属性设置，内部提供了默认的本地、网络歌词解析器，当然你也可以完全自定义你自己的歌词解析器。
 自定义解析器需继承MusicLrcRowParser类，重写内部两个重要的方法实现自己的逻辑即可。
 ```
@@ -230,7 +258,7 @@
     </declare-styleable>
 ```
  ___
-### 九、MusicPlayerManager 常用API预览及说明：
+### 十、MusicPlayerManager 常用API预览及说明：
 ```
     /**
      * Activity初始化音乐服务组件，Activity中初始化后调用

@@ -109,25 +109,10 @@ ___
     <!--锁屏下继续缓冲-->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 ```
-**添加混淆**
-```
-    -keep public class * extends android.app.Service
-    -keep public class * extends android.content.BroadcastReceiver
-    #java bean
-    -keep class com.music.player.lib.bean.**{*;}
-    #保持自定义控件类不被混淆
-    -keepclasseswithmembers class * {
-        public <init>(android.content.Context, android.util.AttributeSet);
-    }
-    #保持自定义控件类不被混淆
-    -keepclasseswithmembers class * {
-        public <init>(android.content.Context, android.util.AttributeSet, int);
-    }
-```
 * Demo内置一套完整的UI交互播放器，请注册监听事件MusicPlayerManager.getInstance().addOnPlayerEventListener(this);并参照MusicPlayerActivity集成。<br/>
 
-[查看自定义交互及其他功能Wiki]: https://github.com/Yuye584312311/iMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
-**[查看自定义交互及其他功能Wiki]**
+[代码混淆和自定义交互及其他功能]: https://github.com/Yuye584312311/iMusic/wiki/MusicPlayerWiki "音乐播放器API介绍"
+**[代码混淆和自定义交互及其他功能]**
 ___
 
 ## 二.视频播放器集成:
