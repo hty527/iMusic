@@ -414,7 +414,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements
     }
 
     /**
-     * 唱片机切换了音频对象
+     * 这个是切换了Pager之后，完全静止下回调，配合onJukeBoxFlashObjectChanged使用，不要做重复的事
+     * 在这个回调里处理新的播放事件，避免和交互发生了激烈重合导致卡顿出现
      * @param position 索引
      * @param audioInfo 音频对象
      * @param isEchoDisplay 是否回显
@@ -423,13 +424,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements
     public void onJukeBoxObjectChanged(final int position, BaseAudioInfo audioInfo, boolean isEchoDisplay) {
         //清空唱片机播放器
         if(null!=audioInfo){
-            mViewTitle.setText(audioInfo.getAudioName());
-            mSubTitle.setText(audioInfo.getNickname());
-            mTotalTime.setText(MusicUtils.getInstance().stringForAudioTime(audioInfo.getAudioDurtion()));
-            //收藏状态
-            boolean isExist = SqlLiteCacheManager.getInstance().isExistToCollectByID(audioInfo.getAudioId());
-            mBtnCollect.setSelected(isExist);
-            mRootLayout.setBackgroundCover(MusicUtils.getInstance().getMusicFrontPath(audioInfo),1200);
             //非回显事件，释放原有播放器并开始播放
             if(!isEchoDisplay){
                 mCurrentTime.setText("00:00");
@@ -444,6 +438,34 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                         MusicPlayerManager.getInstance().startPlayMusic(position);
                     }
                 },200);
+            }
+        }
+    }
+
+    /**
+     * 这个是快闪的调用，发生在切换Pager瞬间，配合onJukeBoxObjectChanged使用，不要做重复的时间
+     * 在这个回调里释放播放器
+     * @param position 索引
+     * @param audioInfo 音频对象
+     * @param isEchoDisplay 是否回显
+     */
+    @Override
+    public void onJukeBoxFlashObjectChanged(int position, BaseAudioInfo audioInfo,boolean isEchoDisplay) {
+        //清空唱片机播放器
+        if(null!=audioInfo){
+            mViewTitle.setText(audioInfo.getAudioName());
+            mSubTitle.setText(audioInfo.getNickname());
+            mTotalTime.setText(MusicUtils.getInstance().stringForAudioTime(audioInfo.getAudioDurtion()));
+            //收藏状态
+            boolean isExist = SqlLiteCacheManager.getInstance().isExistToCollectByID(audioInfo.getAudioId());
+            mBtnCollect.setSelected(isExist);
+            mRootLayout.setBackgroundCover(MusicUtils.getInstance().getMusicFrontPath(audioInfo),1200);
+            //先还原内部播放器，避免界面绘制BUG
+            if(!isEchoDisplay){
+                mCurrentTime.setText("00:00");
+                mSeekBar.setSecondaryProgress(0);
+                mSeekBar.setProgress(0);
+                MusicPlayerManager.getInstance().onReset();
             }
         }
     }

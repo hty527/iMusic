@@ -1524,16 +1524,10 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
-     * 播放完成调用
+     * 播放完成调用,播放完成后不再主动停止，自动开始下一曲
      */
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        MusicPlayerService.this.mMusicPlayerState =MusicConstants.MUSIC_PLAYER_STOP;
-        if(null!= mOnPlayerEventListeners){
-            for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
-                onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,"播放完成");
-            }
-        }
         showNotification();
         //播放完成，根据用户设置的播放模式来自动播放下一首
         onCompletionPlay();
