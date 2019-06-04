@@ -526,6 +526,18 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     }
 
     /**
+     * 随机探测下一首歌曲位置，不会触发播放任务
+     * @return 合法的可播放位置
+     */
+    @Override
+    public int playRandomNextIndex() {
+        if(null!=mBinder&&mBinder.pingBinder()){
+            return mBinder.playRandomNextIndex();
+        }
+        return -1;
+    }
+
+    /**
      * 返回播放器内部工作状态
      * @return 开始准备、缓冲、正在播放等状态为 true，其他为 false
      */

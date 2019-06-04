@@ -168,6 +168,13 @@ public class MusicPlayerBinder extends Binder{
         return -1;
     }
 
+    public int playRandomNextIndex() {
+        if(null!=mPresenter){
+            return mPresenter.playRandomNextIndex();
+        }
+        return -1;
+    }
+
     public boolean isPlaying(){
         if(null!=mPresenter){
             return mPresenter.isPlaying();

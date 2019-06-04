@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
-
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
@@ -18,7 +17,6 @@ import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
 import com.android.imusic.music.ui.contract.MusicLocationContract;
 import com.android.imusic.music.ui.presenter.MusicLocationPersenter;
-import com.android.imusic.music.utils.MediaUtils;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
@@ -27,7 +25,6 @@ import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicCommentTitleView;
-
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -58,12 +55,21 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
                 finish();
             }
 
+            /**
+             * 随机播放
+             * @param v
+             */
             @Override
             public void onSubTitleClick(View v) {
                 if(null!=mAdapter&&null!=mAdapter.getData()&&mAdapter.getData().size()>0){
                     MusicPlayerManager.getInstance().setPlayingChannel(MusicConstants.CHANNEL_LOCATION);
+                    int index = MusicUtils.getInstance().getRandomNum(0, mAdapter.getData().size() - 1);
                     List<BaseAudioInfo> audioInfos = mAdapter.getData();
-                    startMusicPlayer(audioInfos.get(0).getAudioId(),audioInfos);
+                    mAdapter.notifyDataSetChanged(index);
+                    mLayoutManager.scrollToPositionWithOffset(index,0);
+                    MusicPlayerManager.getInstance().startPlayMusic(audioInfos,index);
+                    //如果悬浮窗权限未给定
+                    createMiniJukeboxWindow();
                 }
             }
         });

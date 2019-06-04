@@ -34,7 +34,7 @@
     <string name="text_histroy_detele_title">Are you sure you want to delete this song from the playback record?</string>
     <string name="text_histroy_remove_title">Are you sure you want to clear the most recent playback records?</string>
     <string name="text_local_title">Local music</string>
-    <string name="text_local_play_title">Play all</string>
+    <string name="text_local_play_title">Random play</string>
     <string name="text_local_premiss">You denied access to local storage and could not find local music</string>
     <string name="text_local_detele_title">Are you sure you want to remove this song from the list?</string>
     <string name="text_support_anchor">Support the author</string>

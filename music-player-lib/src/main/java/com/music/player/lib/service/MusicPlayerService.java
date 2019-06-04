@@ -660,95 +660,98 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
-     * 试探上一首的位置，不会启动播放任务
+     * 试探上一首的位置，不会启动播放任务,也不会改变正在播放的对象
      * @return 上一首的位置
      */
     @Override
     public int playLastIndex() {
+        int tempIndex=mCurrentPlayIndex;
         if (null != mAudios && mAudios.size() > 0) {
             switch (getPlayerModel()) {
-                //单曲：上一首不为0播放上一首，否则循环当前
-//                case MUSIC_MODEL_SINGLE:
-//                    if(mCurrentPlayIndex-1>-1){
-//                        mCurrentPlayIndex--;
-//                    }
-//                    break;
                 //单曲：等同列表循环
                 case MusicConstants.MUSIC_MODEL_SINGLE:
-                    mCurrentPlayIndex--;
-                    if(mCurrentPlayIndex<0){
-                        mCurrentPlayIndex=mAudios.size()-1;
+                    tempIndex--;
+                    if(tempIndex<0){
+                        tempIndex=mAudios.size()-1;
                     }
                     break;
                 //列表循环
                 case MusicConstants.MUSIC_MODEL_LOOP:
-                    mCurrentPlayIndex--;
-                    if(mCurrentPlayIndex<0){
-                        mCurrentPlayIndex=mAudios.size()-1;
+                    tempIndex--;
+                    if(tempIndex<0){
+                        tempIndex=mAudios.size()-1;
                     }
                     break;
                 //顺序：上一首不为0播放上一首，否则结束播放
                 case MusicConstants.MUSIC_MODEL_ORDER:
-                    if((mCurrentPlayIndex-1)>-1){
-                        mCurrentPlayIndex--;
+                    if((tempIndex-1)>-1){
+                        tempIndex--;
                     }
                     break;
                 //随机
                 case MusicConstants.MUSIC_MODEL_RANDOM:
                     int index = MusicUtils.getInstance().getRandomNum(0, mAudios.size() - 1);
-                    mCurrentPlayIndex=index;
+                    tempIndex=index;
                     break;
             }
         }
-        Logger.d(TAG,"playLastIndex--newPlayIndex:"+mCurrentPlayIndex+",MODE:"+getPlayerModel());
-        return mCurrentPlayIndex;
+        Logger.d(TAG,"playLastIndex--LAST_INDEX:"+tempIndex+",MODE:"+getPlayerModel()+",CURRENT_INDEX："+mCurrentPlayIndex);
+        return tempIndex;
     }
 
     /**
-     * 试探下一首的位置，不会启动播放任务
+     * 试探下一首的位置，不会启动播放任务,也不会改变正在播放的对象
      * @return 下一首的位置
      */
     @Override
     public int playNextIndex() {
+        int tempIndex=mCurrentPlayIndex;
         if (null != mAudios && mAudios.size() > 0) {
             switch (getPlayerModel()) {
-                //单曲：下一首存在，下一首，不存在重复当前播放
-//                case MUSIC_MODEL_SINGLE:
-//                    if(mCurrentPlayIndex<mAudios.size()-1){
-//                        mCurrentPlayIndex++;
-//                    }
-//                    break;
                 //单曲：等同列表循环
                 case MusicConstants.MUSIC_MODEL_SINGLE:
-                    if(mCurrentPlayIndex>=mAudios.size()-1){
-                        mCurrentPlayIndex=0;
+                    if(tempIndex>=mAudios.size()-1){
+                        tempIndex=0;
                     }else{
-                        mCurrentPlayIndex++;
+                        tempIndex++;
                     }
                     break;
                 //列表循环
                 case MusicConstants.MUSIC_MODEL_LOOP:
-                    if(mCurrentPlayIndex>=mAudios.size()-1){
-                        mCurrentPlayIndex=0;
+                    if(tempIndex>=mAudios.size()-1){
+                        tempIndex=0;
                     }else{
-                        mCurrentPlayIndex++;
+                        tempIndex++;
                     }
                     break;
                 //顺序：下一首存在，下一首，不存在结束播放
                 case MusicConstants.MUSIC_MODEL_ORDER:
-                    if(mAudios.size()-1>mCurrentPlayIndex){
-                        mCurrentPlayIndex++;
+                    if(mAudios.size()-1>tempIndex){
+                        tempIndex++;
                     }
                     break;
                 //随机
                 case MusicConstants.MUSIC_MODEL_RANDOM:
                     int index = MusicUtils.getInstance().getRandomNum(0, mAudios.size() - 1);
-                    mCurrentPlayIndex=index;
+                    tempIndex=index;
                     break;
             }
         }
-        Logger.d(TAG,"playNextIndex--newPlayIndex:"+mCurrentPlayIndex+",MODE:"+getPlayerModel());
-        return mCurrentPlayIndex;
+        Logger.d(TAG,"playNextIndex--NEWX_INDEX:"+tempIndex+",MODE:"+getPlayerModel()+",CURRENT_INDEX:"+mCurrentPlayIndex);
+        return tempIndex;
+    }
+
+    /**
+     * 随机试探下一首歌曲的位置
+     * @return 下一首的位置
+     */
+    @Override
+    public int playRandomNextIndex() {
+        if(null!=mAudios&&mAudios.size()>0){
+            int index = MusicUtils.getInstance().getRandomNum(0, mAudios.size() - 1);
+            return index;
+        }
+        return -1;
     }
 
     /**
@@ -889,7 +892,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                 for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
                     onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,null);
                     onPlayerEventListener.onPlayMusiconInfo(musicInfo,mCurrentPlayIndex);
-                    if(null!=mMediaPlayer){
+                    if(null!=mMediaPlayer&&isPlaying()){
                         try {
                             //+500毫秒是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
                             onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),

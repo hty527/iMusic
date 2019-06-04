@@ -35,7 +35,7 @@
     <string name="text_histroy_detele_title">确定要从播放记录中删除这首歌吗？</string>
     <string name="text_histroy_remove_title">确定要清空最近的播放记录吗？</string>
     <string name="text_local_title">本地音乐</string>
-    <string name="text_local_play_title">播放全部</string>
+    <string name="text_local_play_title">随机播放</string>
     <string name="text_local_premiss">你拒绝了读取本地存储的权限，无法查找本地音乐</string>
     <string name="text_local_detele_title">确定要从列表中删除这首歌吗？</string>
     <string name="text_support_anchor">支持作者</string>
