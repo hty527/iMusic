@@ -59,8 +59,6 @@ public class MusicJukeBoxView extends RelativeLayout{
     private MusicViewPagerScroller mScroller;//缓慢滚动
     //唱针动画展开、静止
     private float HANDLE_EXPAND =-30.0f,HANDLE_STATIC=0.0f;
-    //此标记记录ViewPager调用setCurrentItem()后是否禁用回调onPageSelected(int pisotion);方法
-    private boolean mEchoPageSelectedEnable;
     //歌词控件
     private MusicLrcView mMusicLrcView;
     //歌词控件容器
@@ -177,7 +175,6 @@ public class MusicJukeBoxView extends RelativeLayout{
         mHandAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationEnd(Animator animator) {
-                Logger.d(TAG,"onAnimationEnd-->Rotation():"+mHandImage.getRotation()+"TAG："+mHandImage.getTag());
                 //指针动画播放完毕并且唱针处于附着胶盘状态（Rotation 为0：附着，小于0(-30)为与胶盘分离状态）
                 if(mHandImage.getRotation()>=HANDLE_STATIC&&null!=mPagerAdapter&&mPagerAdapter.getCount()>0){
                     //开始播放胶盘旋转动画
@@ -187,7 +184,6 @@ public class MusicJukeBoxView extends RelativeLayout{
                 if(null!=mHandImage.getTag()&&null!=mPlayerInfoListener&&null!=mViewPager
                         &&null!=mMusicDatas&&mMusicDatas.size()>mViewPager.getCurrentItem()){
                     int currentItem = mViewPager.getCurrentItem();
-                    Logger.d(TAG,"onAnimationEnd-->CURRENT_ITEM:"+currentItem);
                     mPlayerInfoListener.onOffsetPosition(currentItem,(BaseAudioInfo)
                             mMusicDatas.get(currentItem),true);
                 }
@@ -228,7 +224,6 @@ public class MusicJukeBoxView extends RelativeLayout{
             }
             //仅当完全静止不动并且动画没有开始执行时，开始播放指针动画
             if (mHandImage.getRotation() < HANDLE_STATIC) {
-                Logger.d(TAG, "playHandlerAnimator--1111");
                 if (!mHandAnimator.isRunning()) {
                     mHandAnimator.start();
                 }
@@ -239,7 +234,6 @@ public class MusicJukeBoxView extends RelativeLayout{
                 //如果指针已经附体，则直接回调到组件新的偏移位置
                 if(null!=tag&&null!=mPlayerInfoListener&&null!=mViewPager&&null!=mMusicDatas
                         &&mMusicDatas.size()>mViewPager.getCurrentItem()){
-                    Logger.d(TAG,"playHandlerAnimator-->动画正在播放");
                     mPlayerInfoListener.onOffsetPosition(mViewPager.getCurrentItem(),(BaseAudioInfo)
                             mMusicDatas.get(mViewPager.getCurrentItem()),true);
                 }
@@ -420,12 +414,10 @@ public class MusicJukeBoxView extends RelativeLayout{
                     if(null!=mViewPager){
                         //若松手后还是停留在旧的PagerPosition,根据播放状态恢复动画
                         if(mOffsetPosition==mViewPager.getCurrentItem()){
-                            Logger.d(TAG,"Pager未做改变");
                             if(MusicPlayerManager.getInstance().isPlaying()){
                                 playHandlerAnimator(true,null);
                             }
                         }else{
-                            Logger.d(TAG,"切换了新的Pager，POSITION:"+mViewPager.getCurrentItem());
                             //开始播放唱针动画
                             playHandlerAnimator(true,TAG);
                         }
@@ -500,7 +492,6 @@ public class MusicJukeBoxView extends RelativeLayout{
         }
         //如果是静止状态下切换Pager，则不会回调OnPageChangeListener中的，onPageScrollStateChanged
         //需手动触发新的选中的项
-        Logger.d(TAG,"setCurrentMusicItem-->smoothScroll:"+smoothScroll+",startPlay:"+startPlay);
         if(!smoothScroll&&startPlay){
             playHandlerAnimator(true,TAG);
         }
@@ -735,7 +726,7 @@ public class MusicJukeBoxView extends RelativeLayout{
             mHandAnimator=null;
         }
 
-        mViewPagerIsOffset=false;mEchoPageSelectedEnable=false;
+        mViewPagerIsOffset=false;
         mDiscStatus = DiscStatus.STOP;
         mScreenWidth=0;mPlayerInfoListener=null;
         if(null!=mMusicLrcView){

@@ -483,6 +483,12 @@
     public int playNextIndex();
 
     /**
+     * 随机试探下一首的位置，不会启动播放任务
+     * @return 下一首的位置，如果内部播放器持有数据为空，则返回-1
+     */
+    int playRandomNextIndex();
+
+    /**
      * 返回播放器内部工作状态
      * @return 开始准备、缓冲、正在播放等状态为 true，其他为 false
      */

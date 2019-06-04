@@ -166,6 +166,12 @@ public interface MusicPlayerPresenter {
     int playNextIndex();
 
     /**
+     * 随机试探下一首的位置，不会启动播放任务
+     * @return 下一首的位置，如果内部播放器持有数据为空，则返回-1
+     */
+    int playRandomNextIndex();
+
+    /**
      * 播放器内部播放状态
      * @return 为true正在播放
      */

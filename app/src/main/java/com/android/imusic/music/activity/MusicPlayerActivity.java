@@ -408,8 +408,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * @param newPosition 刚刚处于可见状态的Position
      */
     @Override
-    public void onVisible(BaseAudioInfo audioInfo,int newPosition) {
-        Logger.d(TAG,"onVisible-->newPosition:"+newPosition);
+    public void onVisible(BaseAudioInfo audioInfo, int newPosition) {
         if(null!=audioInfo){
             mViewTitle.setText(audioInfo.getAudioName());
             mSubTitle.setText(audioInfo.getNickname());
@@ -427,7 +426,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      */
     @Override
     public void onInvisible(int oldPosition) {
-        Logger.d(TAG,"onInvisible-->oldPosition:"+oldPosition);
         if(null!=mCurrentTime){
             mCurrentTime.setText("00:00");
             mSeekBar.setSecondaryProgress(0);
@@ -438,13 +436,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements
 
     /**
      * 唱片机内部新的显示项，仅当ViewPager完全静止时将正在显示的项回调至此函数
+     * 用户主动触发的下一曲或上一曲、内部根据播放模式切换的上下曲等改变了播放源状态都会回调此方法
      * @param position 索引
      * @param audioInfo 音频对象
      * @param startPlayer true:开始播放 false:只是回显同步
      */
     @Override
     public void onOffsetPosition(int position, BaseAudioInfo audioInfo, boolean startPlayer) {
-        Logger.d(TAG,"onOffsetPosition-->position:"+position);
         if(null!=audioInfo&&startPlayer){
             mCurrentTime.setText("00:00");
             mSeekBar.setSecondaryProgress(0);
@@ -460,7 +458,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      */
     @Override
     public void onJukeBoxState(int playerState) {
-        Logger.d(TAG,"onJukeBoxState-->JUKEBOX_STATE:"+playerState);
 //        if(null!=mMusicBtnPlayPause){
 //            if(playerState==MusicConstants.JUKE_BOX_PLAY){
 //                mMusicBtnPlayPause.setImageResource(R.drawable.music_player_pause_selector);
@@ -579,7 +576,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      */
     @Override
     public void onPrepared(final long totalDurtion) {
-        Logger.d(TAG,"onPrepared:totalDurtion:"+totalDurtion);
         if(null!=mTotalTime){
             mTotalTime.setText(MusicUtils.getInstance().stringForAudioTime(totalDurtion));
         }
@@ -615,7 +611,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      */
     @Override
     public void onPlayMusiconInfo(BaseAudioInfo musicInfo,final int position) {
-        Logger.d(TAG,"onPlayMusiconInfo-->MUSIC_INFO:"+musicInfo.getAudioId()+",POSITION:"+position);
         getHandler().post(new Runnable() {
             @Override
             public void run() {

@@ -129,6 +129,11 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
         mMusicCollect.setOnClickListener(onClickListener);
         mMusicModel.setOnClickListener(onClickListener);
         mHandler=new Handler();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm-MM月dd日 E", Locale.CHINESE);
+        String date[] = simpleDateFormat.format(new Date()).split("-");
+        mMusicTime.setText(date[0]);
+        mMusicDate.setText(date[1]);
         //闹钟模式
         int playerModel = MusicPlayerManager.getInstance().getPlayerModel();
         mMusicModel.setImageResource(getResToPlayModel(playerModel,false));
