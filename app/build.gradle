@@ -86,9 +86,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.android.support:appcompat-v7:${rootProject.ext.android.supportLibVersion}'
-    implementation 'com.android.support:design:${rootProject.ext.android.supportLibVersion}'
-    implementation 'com.android.support:recyclerview-v7:${rootProject.ext.android.supportLibVersion}'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'
     implementation 'com.google.code.gson:gson:2.8.0'
@@ -102,9 +102,9 @@ dependencies {
     //implementation(name: 'music-player-1.0.0', ext: 'aar')
     //implementation(name: 'video-player-1.0.0', ext: 'aar')
     //音乐播放器
-    implementation 'com.imusic.player:music-player:1.1.2'
+//    implementation 'com.imusic.player:music-player:1.1.2'
     //视频播放器
-    implementation 'com.imusic.player:video-player:1.0.7'
-//    implementation project(':music-player-lib')
-//    implementation project(':video-player-lib')
+//    implementation 'com.imusic.player:video-player:1.0.7'
+    implementation project(':music-player-lib')
+    implementation project(':video-player-lib')
 }

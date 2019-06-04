@@ -1023,6 +1023,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      */
     @Override
     public void updateMusicPlayerData(List<?> audios, int index) {
+        if(null==mAudios){
+            mAudios=new ArrayList<>();
+        }
         if(null!=mAudios){
             mAudios.clear();
             mAudios.addAll(audios);
@@ -1450,21 +1453,21 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                     }else{
                         mCurrentPlayIndex++;
                     }
-                    postEchoCurrentPosition(mCurrentPlayIndex);
+                    postViewHandlerCurrentPosition(mCurrentPlayIndex);
                     startPlayMusic(mCurrentPlayIndex);
                     break;
                 //顺序
                 case MusicConstants.MUSIC_MODEL_ORDER:
                     if(mAudios.size()-1>mCurrentPlayIndex){
                         mCurrentPlayIndex++;
-                        postEchoCurrentPosition(mCurrentPlayIndex);
+                        postViewHandlerCurrentPosition(mCurrentPlayIndex);
                         startPlayMusic(mCurrentPlayIndex);
                     }
                     break;
                 //随机
                 case MusicConstants.MUSIC_MODEL_RANDOM:
                     mCurrentPlayIndex = MusicUtils.getInstance().getRandomNum(0, mAudios.size() - 1);
-                    postEchoCurrentPosition(mCurrentPlayIndex);
+                    postViewHandlerCurrentPosition(mCurrentPlayIndex);
                     startPlayMusic(mCurrentPlayIndex);
                     break;
             }
@@ -1472,20 +1475,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
-     * 上报给UI组件，当前内部自动正在处理的对象位置，只做回显
-     * @param mCurrentPlayIndex
-     */
-    private void postEchoCurrentPosition(int mCurrentPlayIndex) {
-        if (null != mOnPlayerEventListeners &&null!=mAudios&&mAudios.size()>mCurrentPlayIndex) {
-            for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
-                onPlayerEventListener.onEchoPlayCurrentIndex((BaseAudioInfo) mAudios.get(mCurrentPlayIndex),mCurrentPlayIndex);
-            }
-        }
-    }
-
-    /**
      * 上报给UI组件，当前内部自动正在处理的对象位置
-     * @param currentPlayIndex
+     * @param currentPlayIndex 数据源中的Index
      */
     private void postViewHandlerCurrentPosition(int currentPlayIndex) {
         if (null != mOnPlayerEventListeners &&null!=mAudios&&mAudios.size()>currentPlayIndex) {
@@ -1524,17 +1515,17 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
     }
 
     /**
-     * 播放完成调用
+     * 播放完成调用,播放完成后不再主动停止，自动开始下一曲
      */
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+        showNotification();
         MusicPlayerService.this.mMusicPlayerState =MusicConstants.MUSIC_PLAYER_STOP;
         if(null!= mOnPlayerEventListeners){
             for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
-                onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,"播放完成");
+                onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,null);
             }
         }
-        showNotification();
         //播放完成，根据用户设置的播放模式来自动播放下一首
         onCompletionPlay();
     }

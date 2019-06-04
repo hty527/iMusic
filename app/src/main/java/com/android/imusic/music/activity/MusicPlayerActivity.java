@@ -33,7 +33,6 @@ import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicLrcRow;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
-import com.music.player.lib.listener.MusicAnimatorListener;
 import com.music.player.lib.listener.MusicJukeBoxStatusListener;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.listener.MusicPlayerEventListener;
@@ -86,6 +85,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //这里就是全屏
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
@@ -99,8 +99,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         initViews();
         //注册播放器状态监听器
         MusicPlayerManager.getInstance().addOnPlayerEventListener(this);
+        //注册观察者模式，主要处理收藏事件
         MusicPlayerManager.getInstance().addObservable(this);
         mHandler=new Handler(Looper.getMainLooper());
+        //控制某个事件在某个时间段内不能超过n此点击
         mClickControler=new MusicClickControler();
         mClickControler.init(1,600);
         getIntentParams(getIntent(),true);
@@ -147,29 +149,18 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             final int index=MusicUtils.getInstance().getCurrentPlayIndex(thisMusicLists,musicID);
             if(null!=currentPlayerMusic&&currentPlayerMusic.getAudioId()==musicID&&
                     MusicPlayerManager.getInstance().getPlayerState()==MusicConstants.MUSIC_PLAYER_PLAYING){
-                Logger.d(TAG,"RESET PLAY,musicID:"+musicID);
                 //更新播放器内部数据
                 MusicPlayerManager.getInstance().updateMusicPlayerData(thisMusicLists,index);
                 onStatusResume(musicID);
             }else{
-                Logger.d(TAG,"NEW PLAY,musicID:"+musicID);
                 MusicPlayerManager.getInstance().onReset();
                 if(null!=mSeekBar){
                     mSeekBar.setSecondaryProgress(0);
                     mSeekBar.setProgress(0);
                 }
-                mMusicJukeBoxView.setNewData(thisMusicLists,index);
-                mMusicJukeBoxView.onStart(new MusicAnimatorListener() {
-                    @Override
-                    public void onAnimationStart() {}
-                    @Override
-                    public void onAnimationEnd() {
-                        //只使用一次监听器后回收
-                        mMusicJukeBoxView.resetAnimationListener();
-                        //开始播放
-                        MusicPlayerManager.getInstance().startPlayMusic(thisMusicLists,index);
-                    }
-                });
+                //设置数据，播放时间将在onOffsetPosition回调内被触发
+                MusicPlayerManager.getInstance().updateMusicPlayerData(thisMusicLists,index);
+                mMusicJukeBoxView.setNewData(thisMusicLists,index,true);
             }
         }else{
             if(null!=currentPlayerMusic){
@@ -183,12 +174,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * @param musicID
      */
     private void onStatusResume(long musicID) {
-        Logger.d(TAG,"onStatusResume-->musicID:"+musicID);
         List<BaseAudioInfo> currentPlayList = (List<BaseAudioInfo>) MusicPlayerManager.getInstance().getCurrentPlayList();
         int currentPlayIndex = MusicUtils.getInstance().getCurrentPlayIndex(currentPlayList, musicID);
-        mMusicJukeBoxView.setNewData(currentPlayList,currentPlayIndex);
+        mMusicJukeBoxView.setNewData(currentPlayList,currentPlayIndex,false);
         isVisibility=true;
-        //主动获取正在播放状态
+        //主动检查播放器内部处理的对象和状态
         MusicPlayerManager.getInstance().onCheckedCurrentPlayTask();
     }
 
@@ -209,15 +199,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                     case R.id.music_btn_last:
                         if(mClickControler.canTrigger()){
                             int lastPosition = MusicPlayerManager.getInstance().playLastIndex();
-                            if(-1!=lastPosition){
-                                if(Math.abs(mMusicJukeBoxView.getCurrentItem()-lastPosition)>2){
-                                    mMusicJukeBoxView.setCurrentMusicItem(lastPosition,
-                                            false,true);
-                                }else{
-                                    mMusicJukeBoxView.setCurrentMusicItem(lastPosition,
-                                            true,true);
-                                }
-                            }
+                            setCurrentMusicItem(lastPosition);
                         }
                         break;
                     //开始、暂停
@@ -230,46 +212,34 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                     case R.id.music_btn_next:
                         if(mClickControler.canTrigger()){
                             int nextPosition = MusicPlayerManager.getInstance().playNextIndex();
-                            if(-1!=nextPosition){
-                                if(Math.abs(mMusicJukeBoxView.getCurrentItem()-nextPosition)>2){
-                                    mMusicJukeBoxView.setCurrentMusicItem(nextPosition,
-                                            false,true);
-                                }else{
-                                    mMusicJukeBoxView.setCurrentMusicItem(nextPosition,
-                                            true,true);
-                                }
-                            }
+                            setCurrentMusicItem(nextPosition);
                         }
                         break;
                     //菜单
                     case R.id.music_btn_menu:
                         MusicPlayerListDialog.getInstance(MusicPlayerActivity.this).
                                 setMusicOnItemClickListener(new MusicOnItemClickListener() {
-                            @Override
-                            public void onItemClick(View view, int posotion,long musicID) {
-                                if(Math.abs(mMusicJukeBoxView.getCurrentItem()-posotion)>2){
-                                    mMusicJukeBoxView.setCurrentMusicItem(posotion,false,true);
-                                }else{
-                                    mMusicJukeBoxView.setCurrentMusicItem(posotion,true,true);
-                                }
-                            }
+                                    @Override
+                                    public void onItemClick(View view, int posotion,long musicID) {
+                                        setCurrentMusicItem(posotion);
+                                    }
                         }).show();
                         break;
                     //闹钟定时
                     case R.id.music_btn_alarm:
                         MusicAlarmSettingDialog.getInstance(MusicPlayerActivity.this).
                                 setOnAlarmModelListener(new MusicAlarmSettingDialog.OnAlarmModelListener() {
-                            @Override
-                            public void onAlarmModel(int alarmModel) {
-                                final int musicAlarmModel =
-                                        MusicPlayerManager.getInstance().setPlayerAlarmModel(alarmModel);
-                                getHandler().post(new Runnable() {
                                     @Override
-                                    public void run() {
-                                        setPlayerConfig(-1,musicAlarmModel,true);
+                                    public void onAlarmModel(int alarmModel) {
+                                        final int musicAlarmModel =
+                                                MusicPlayerManager.getInstance().setPlayerAlarmModel(alarmModel);
+                                        getHandler().post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                setPlayerConfig(-1,musicAlarmModel,true);
+                                            }
+                                        });
                                     }
-                                });
-                            }
                         }).show();
                         break;
                     //关闭
@@ -350,9 +320,27 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         });
         mClickControler = new MusicClickControler();
         mClickControler.init(3,1);
+        //状态栏的高度
         RelativeLayout toolBar = (RelativeLayout) findViewById(R.id.music_top_bar);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) toolBar.getLayoutParams();
         layoutParams.setMargins(0,MusicUtils.getInstance().getStatusBarHeight(this),0,0);
+    }
+
+    /**
+     * 设置显示项
+     * @param position 位置
+     */
+    private boolean setCurrentMusicItem(int position) {
+        boolean smoothScroll=false;
+        if(null!=mMusicJukeBoxView&&position>-1){
+            if(Math.abs(mMusicJukeBoxView.getCurrentItem()-position)>2){
+                mMusicJukeBoxView.setCurrentMusicItem(position, false,true);
+            }else{
+                smoothScroll=true;
+                mMusicJukeBoxView.setCurrentMusicItem(position, true,false);
+            }
+        }
+        return smoothScroll;
     }
 
     @Override
@@ -403,25 +391,25 @@ public class MusicPlayerActivity extends AppCompatActivity implements
     }
 
     //========================================唱片机内部状态==========================================
+
     /**
-     * 用户手指滑动触发
+     * 用户手指持续滑动ViewPager触发
      * @param audioInfo 音频对象
      */
     @Override
-    public void onJukeBoxOffsetObject(BaseAudioInfo audioInfo) {
+    public void onScrollOffsetObject(BaseAudioInfo audioInfo) {
         mViewTitle.setText(audioInfo.getAudioName());
         mSubTitle.setText(audioInfo.getNickname());
     }
 
     /**
-     * 唱片机切换了音频对象
-     * @param position 索引
+     * Pager某项正在显示了，更新基本UI
      * @param audioInfo 音频对象
-     * @param isEchoDisplay 是否回显
+     * @param newPosition 刚刚处于可见状态的Position
      */
     @Override
-    public void onJukeBoxObjectChanged(final int position, BaseAudioInfo audioInfo, boolean isEchoDisplay) {
-        //清空唱片机播放器
+    public void onVisible(BaseAudioInfo audioInfo,int newPosition) {
+        Logger.d(TAG,"onVisible-->newPosition:"+newPosition);
         if(null!=audioInfo){
             mViewTitle.setText(audioInfo.getAudioName());
             mSubTitle.setText(audioInfo.getNickname());
@@ -430,25 +418,44 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             boolean isExist = SqlLiteCacheManager.getInstance().isExistToCollectByID(audioInfo.getAudioId());
             mBtnCollect.setSelected(isExist);
             mRootLayout.setBackgroundCover(MusicUtils.getInstance().getMusicFrontPath(audioInfo),1200);
-            //非回显事件，释放原有播放器并开始播放
-            if(!isEchoDisplay){
-                mCurrentTime.setText("00:00");
-                mSeekBar.setSecondaryProgress(0);
-                mSeekBar.setProgress(0);
-                //先还原内部播放器，避免界面绘制BUG
-                MusicPlayerManager.getInstance().onReset();
-                getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //切换音频
-                        MusicPlayerManager.getInstance().startPlayMusic(position);
-                    }
-                },200);
-            }
         }
     }
 
     /**
+     * Pager某项处于不可见,释放内部播放器
+     * @param oldPosition 不可见状态的Position
+     */
+    @Override
+    public void onInvisible(int oldPosition) {
+        Logger.d(TAG,"onInvisible-->oldPosition:"+oldPosition);
+        if(null!=mCurrentTime){
+            mCurrentTime.setText("00:00");
+            mSeekBar.setSecondaryProgress(0);
+            mSeekBar.setProgress(0);
+        }
+        MusicPlayerManager.getInstance().onReset();
+    }
+
+    /**
+     * 唱片机内部新的显示项，仅当ViewPager完全静止时将正在显示的项回调至此函数
+     * @param position 索引
+     * @param audioInfo 音频对象
+     * @param startPlayer true:开始播放 false:只是回显同步
+     */
+    @Override
+    public void onOffsetPosition(int position, BaseAudioInfo audioInfo, boolean startPlayer) {
+        Logger.d(TAG,"onOffsetPosition-->position:"+position);
+        if(null!=audioInfo&&startPlayer){
+            mCurrentTime.setText("00:00");
+            mSeekBar.setSecondaryProgress(0);
+            mSeekBar.setProgress(0);
+            //切换音频
+            MusicPlayerManager.getInstance().startPlayMusic(position);
+        }
+    }
+
+    /**
+     * 唱片机内部状态,这个和内部播放器状态重复了，所以注释掉了
      * @param playerState 唱片机内部状态
      */
     @Override
@@ -558,7 +565,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                             mCurrentTime.setText("00:00");
                         }
                         if (null != mMusicJukeBoxView){
-                            mMusicJukeBoxView.onPause();
+                            mMusicJukeBoxView.onStop();
                         }
                         break;
                 }
@@ -612,27 +619,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         getHandler().post(new Runnable() {
             @Override
             public void run() {
-                if(null!= mMusicJukeBoxView){
-                    mMusicJukeBoxView.setCurrentMusicItem(position,false,false);
-                }
-            }
-        });
-    }
-
-    /**
-     * 回显播放器内部正在处理的对象位置
-     * @param musicInfo 音频对象
-     * @param position 内部播放器正在处理的对象位置,相对于当前播放队列
-     */
-    @Override
-    public void onEchoPlayCurrentIndex(BaseAudioInfo musicInfo, final int position) {
-        getHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                if(null!= mMusicJukeBoxView){
-                    mMusicJukeBoxView.setCurrentMusicItem(position,false,
-                            false,true);
-                }
+                setCurrentMusicItem(position);
             }
         });
     }
@@ -645,9 +632,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      */
     @Override
     public void onMusicPathInvalid(BaseAudioInfo musicInfo, int position) {
-        Logger.d(TAG,"onMusicPathInvalid-->MUSIC_INFO:"+musicInfo.getAudioId()+",POSITION:"+position);
         if(null!=mMusicJukeBoxView){
-            mMusicJukeBoxView.onPause();
+            mMusicJukeBoxView.onStop();
         }
     }
 
@@ -672,7 +658,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements
     @Override
     public void onPlayerConfig(final int playModel, final int alarmModel,
                                final boolean isToast) {
-        Logger.d(TAG,"onPlayerConfig--:playModel"+playModel+",alarmModel:"+alarmModel);
         getHandler().post(new Runnable() {
             @Override
             public void run() {
