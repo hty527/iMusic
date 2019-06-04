@@ -431,8 +431,6 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
     @Override
     public void onPlayMusiconInfo(BaseAudioInfo musicInfo, int position) {}
     @Override
-    public void onEchoPlayCurrentIndex(BaseAudioInfo musicInfo, int position) {}
-    @Override
     public void onMusicPathInvalid(BaseAudioInfo musicInfo, int position) {}
     @Override
     public void onTaskRuntime(long totalDurtion, long currentDurtion, long alarmResidueDurtion, int bufferProgress) {}

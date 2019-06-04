@@ -364,18 +364,6 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
     }
 
     @Override
-    public void onEchoPlayCurrentIndex(final BaseAudioInfo musicInfo, int position) {
-        if(null!=musicInfo&&null!=mHandler){
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    updateMusicData(musicInfo);
-                }
-            });
-        }
-    }
-
-    @Override
     public void onMusicPathInvalid(BaseAudioInfo musicInfo, int position) {}
 
     @Override

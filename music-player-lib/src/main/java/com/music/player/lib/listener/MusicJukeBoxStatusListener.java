@@ -13,26 +13,31 @@ import com.music.player.lib.bean.MusicLrcRow;
 public interface MusicJukeBoxStatusListener {
 
     /**
-     * 手指横向滚动过程对象不断变化
+     * 手指横向持续滚动过程对象不断的发生变化，持续调用，请不要在此方法做耗时操作
      * @param audioInfo 音频对象
      */
-    void onJukeBoxOffsetObject(BaseAudioInfo audioInfo);
+    void onScrollOffsetObject(BaseAudioInfo audioInfo);
 
     /**
-     * 音频对象切换了，这个是切换了Pager之后，完全静止下回调，配合onJukeBoxFlashObjectChanged使用，不要做重复的事
-     * @param position 索引
+     * Pager处于可见状态
      * @param audioInfo 音频对象
-     * @param isEchoDisplay 是否回显
+     * @param newPosition 刚刚处于可见状态的Position
      */
-    void onJukeBoxObjectChanged(int position, BaseAudioInfo audioInfo,boolean isEchoDisplay);
+    void onVisible(BaseAudioInfo audioInfo,int newPosition);
 
     /**
-     * 松手瞬间发生了变化，发生在切换Pager瞬间，配合onJukeBoxObjectChanged使用，不要做重复的时间
-     * @param position 索引
-     * @param audioInfo 音频对象
-     * @param isEchoDisplay 是否回显
+     * Pager处于不可见状态
+     * @param oldPosition 不可见状态的Position
      */
-    void onJukeBoxFlashObjectChanged(int position, BaseAudioInfo audioInfo,boolean isEchoDisplay);
+    void onInvisible(int oldPosition);
+
+    /**
+     * 新的Pager落地了，唱片机在Pager滚动后，最终静止不动，回调此方法
+     * @param offsetPosition 索引
+     * @param audioInfo 音频对象
+     * @param startPlayer true:播放事件 false:只是回显同步状态
+     */
+    void onOffsetPosition(int offsetPosition, BaseAudioInfo audioInfo,boolean startPlayer);
 
     /**
      * 唱片机状态发生了变化
