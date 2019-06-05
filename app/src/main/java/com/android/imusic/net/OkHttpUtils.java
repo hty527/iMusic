@@ -41,6 +41,7 @@ import okhttp3.ResponseBody;
 public final class OkHttpUtils {
 
     private static final String TAG = "OkHttpUtils";
+    private static final int REQUST_OK = 200;
     private static volatile OkHttpUtils mInstance;
     private static OkHttpClient mHttpClient;
     //调试模式开关
@@ -272,6 +273,275 @@ public final class OkHttpUtils {
     }
 
     /**
+     * 发送GET请求
+     * @param url host api
+     * @param params 键值对参数
+     * @param headers 键值对Header
+     * @param callBack 回调
+     * @param isSynchro 是否同步调用
+     */
+    private void sendGetRequst(String url,Map<String, String> params,Map<String,String> headers,OnResultCallBack
+            callBack,boolean isSynchro) {
+
+        Request.Builder builder = new Request.Builder();
+        //初始化共有参数
+        if(null==params){
+            params=new HashMap<>();
+        }
+        if(null!=mDefaultParams){
+            params.putAll(mDefaultParams);
+        }
+        //构建请求参数
+        if(null!=params&&params.size()>0){
+            url = buildParamsToUrl(url, params);
+        }
+        builder.url(url);
+        //构建Header
+        builder=buildHeaderToRequest(builder,headers);
+        final Request request = builder.build();
+        setdRequst(request,callBack,isSynchro);
+    }
+
+    /**
+     * 发送POST请求
+     * @param url host api
+     * @param params 键值对参数
+     * @param headers 键值对Header
+     * @param callBack 回调
+     * @param isSynchro 是否同步调用
+     */
+    private void sendPostRequst(String url, Map<String, String> params,Map<String,String> headers,
+                                OnResultCallBack callBack,boolean isSynchro) {
+        //构建请求Body参数
+        RequestBody requestBody = formatPostParams(params);
+        Request.Builder builder = new Request.Builder();
+        builder.url(url).post(requestBody);
+        //构建Header参数
+        builder=buildHeaderToRequest(builder,headers);
+        setdRequst(builder.build(),callBack,isSynchro);
+    }
+
+    /**
+     * 根据MAP构建URL
+     * @param url 原URL
+     * @param params 参数
+     * @return 组合后的URL
+     */
+    private String buildParamsToUrl(String url, Map<String, String> params) {
+        StringBuilder stringBuilder=new StringBuilder(url);
+        if(null!=params&&params.size()>0){
+            boolean hasParams=false;
+            if(url.contains("?")){
+                //如果URL中已经存在参数，标记一下
+                hasParams=true;
+            }
+            Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
+            int i = 0;
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> next = iterator.next();
+                if(i==0 && !hasParams){
+                    //如果不存在参数，拼接第一个参数
+                    stringBuilder.append( "?" +next.getKey()+ "=" +next.getValue());
+                }else{
+                    stringBuilder.append( "&" +next.getKey()+ "=" +next.getValue());
+                }
+                i++;
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * 添加Body参数
+     * @param params 键值对参数
+     * @return RequestBody
+     */
+    private RequestBody formatPostParams(Map<String, String> params) {
+        //初始化共有参数
+        if(null==params){
+            params=new HashMap<>();
+        }
+        if(null!=mDefaultParams){
+            params.putAll(mDefaultParams);
+        }
+        if(null!=params&&params.size()>0){
+            FormBody.Builder builder= new FormBody.Builder();
+            Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
+            while (iterator.hasNext()){
+                Map.Entry<String, String> next = iterator.next();
+                builder.add(next.getKey(), next.getValue());
+            }
+            return builder.build();
+        }
+        return null;
+    }
+
+    /**
+     * 添加Header参数
+     * @param builder requst
+     * @param headers 头部参数
+     * @return 设置参数后的builder
+     */
+    private Request.Builder buildHeaderToRequest(Request.Builder builder, Map<String, String> headers) {
+        if(null!=headers&&headers.size()>0){
+            Iterator<Map.Entry<String, String>> iterator = headers.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> next = iterator.next();
+                builder.header(next.getKey(),next.getValue());
+            }
+        }
+        return builder;
+    }
+
+    /**
+     * 发送请求
+     * @param request requst
+     * @param callBack callBack
+     * @param isSynchro 是否同步调用
+     */
+    private void setdRequst(final Request request, final OnResultCallBack callBack,
+                            boolean isSynchro) {
+        if(DEBUG){
+            Logger.d(TAG,"setdRequst-->URL:"+request.url()+",isSynchro:"+isSynchro);
+        }
+        if(null==mHandler){
+            mHandler=new Handler(Looper.getMainLooper());
+        }
+        //同步请求
+        if(isSynchro){
+            getThreadHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        isRequst=true;
+                        Response response = createHttpUtils().newCall(request).execute();
+                        formatResponse(response,callBack);
+                    } catch (final IOException e) {
+                        e.printStackTrace();
+                        isRequst=false;
+                        error(callBack,ERROR_IO,e.getMessage());
+                    }catch (final RuntimeException e){
+                        e.printStackTrace();
+                        isRequst=false;
+                        error(callBack,ERROR_IO,e.getMessage());
+                    }
+                }
+            });
+            return;
+        }
+        //异步请求
+        isRequst=true;
+        createHttpUtils().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                if(DEBUG)Logger.d(TAG,"onFailure-->e:"+e.getMessage()+call.toString());
+                isRequst=false;
+                error(callBack,ERROR_IO,e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                formatResponse(response,callBack);
+            }
+        });
+    }
+
+    /**
+     * 解析Response
+     * @param response response响应体
+     * @param callBack callBack回调
+     */
+    private void formatResponse(final Response response,final OnResultCallBack callBack) {
+        isRequst=false;
+        if(null!=mHandler&&null!=callBack){
+            if(null!=response){
+                if(REQUST_OK==response.code()){
+                    try {
+                        String string = response.body().string();
+                        response.close();
+                        if(!TextUtils.isEmpty(string)){
+                            if(DEBUG) Logger.d(TAG,"服务端返回数据-->"+string);
+                            final Object resultInfo = getResultInfo(string, callBack.getType());
+                            if(null!=mHandler&&null!=callBack){
+                                if(null!=resultInfo){
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            callBack.onResponse(resultInfo);
+                                        }
+                                    });
+                                }else{
+                                    error(callBack,ERROR_JSON_FORMAT,"Json format error");
+                                }
+                            }
+                        }else{
+                            int code = response.code();
+                            response.close();
+                            error(callBack,code,"body is empty");
+                        }
+                    } catch (final IOException e) {
+                        e.printStackTrace();
+                        error(callBack,ERROR_JSON_FORMAT,e.getMessage());
+                    }catch (final RuntimeException e){
+                        e.printStackTrace();
+                        error(callBack,ERROR_JSON_FORMAT,e.getMessage());
+                    }
+                }else{
+                    int code = response.code();
+                    String message = response.message();
+                    response.close();
+                    error(callBack,code,message);
+                }
+            }else{
+                error(callBack,ERROR_EMPTY,"response is empty");
+            }
+        }
+    }
+
+    /**
+     * 异常抛出
+     * @param callBack 回调
+     * @param errorCode 错误码
+     * @param msg 描述信息
+     */
+    private void error(final OnResultCallBack callBack, final int errorCode, final String msg) {
+        if(null!=mHandler&&null!=callBack){
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    callBack.onError(errorCode,
+                            msg);
+                }
+            });
+        }
+    }
+
+    /**
+     * JSON解析,这里不再返回T了，直接Object
+     * @param json json字符串
+     * @param type 指定class
+     * @return 泛型实体对象
+     */
+    public Object getResultInfo(String json,Type type){
+        Object resultData = null;
+        if(null==mGson){
+            mGson=new Gson();
+        }
+        try {
+            if(null!=type){
+                resultData=mGson.fromJson(json, type);
+            }else{
+                //如果用户没有指定Type,则直接使用String.class
+                resultData=mGson.fromJson(json, new TypeToken<String>(){}.getType());
+            }
+            return resultData;
+        }catch (RuntimeException e){
+            e.printStackTrace();
+            return resultData;
+        }
+    }
+
+    /**
      * 下载文件
      * @param path http\https 文件绝对路径地址
      * @param outPutPath 文件输出路径
@@ -430,330 +700,6 @@ public final class OkHttpUtils {
                 }
             }
         });
-    }
-
-
-    /**
-     * 发送GET请求
-     * @param url host api
-     * @param params 键值对参数
-     * @param headers 键值对Header
-     * @param callBack 回调
-     * @param isSynchro 是否同步调用
-     */
-    private void sendGetRequst(String url,Map<String, String> params,Map<String,String> headers,OnResultCallBack
-            callBack,boolean isSynchro) {
-
-        Request.Builder builder = new Request.Builder();
-        //初始化共有参数
-        if(null==params){
-            params=new HashMap<>();
-        }
-        if(null!=mDefaultParams){
-            params.putAll(mDefaultParams);
-        }
-        //构建请求参数
-        if(null!=params&&params.size()>0){
-            url = buildParamsToUrl(url, params);
-        }
-        builder.url(url);
-        //构建Header
-        builder=buildHeaderToRequest(builder,headers);
-        final Request request = builder.build();
-        setdRequst(request,callBack,isSynchro);
-    }
-
-    /**
-     * 发送POST请求
-     * @param url host api
-     * @param params 键值对参数
-     * @param headers 键值对Header
-     * @param callBack 回调
-     * @param isSynchro 是否同步调用
-     */
-    private void sendPostRequst(String url, Map<String, String> params,Map<String,String> headers,
-                                OnResultCallBack callBack,boolean isSynchro) {
-        //构建请求Body参数
-        RequestBody requestBody = formatPostParams(params);
-        Request.Builder builder = new Request.Builder();
-        builder.url(url).post(requestBody);
-        //构建Header参数
-        builder=buildHeaderToRequest(builder,headers);
-        setdRequst(builder.build(),callBack,isSynchro);
-    }
-
-    /**
-     * 根据MAP构建URL
-     * @param url 原URL
-     * @param params 参数
-     * @return 组合后的URL
-     */
-    private String buildParamsToUrl(String url, Map<String, String> params) {
-        StringBuilder stringBuilder=new StringBuilder(url);
-        if(null!=params&&params.size()>0){
-            boolean hasParams=false;
-            if(url.contains("?")){
-                //如果URL中已经存在参数，标记一下
-                hasParams=true;
-            }
-            Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
-            int i = 0;
-            while (iterator.hasNext()) {
-                Map.Entry<String, String> next = iterator.next();
-                if(i==0 && !hasParams){
-                    //如果不存在参数，拼接第一个参数
-                    stringBuilder.append( "?" +next.getKey()+ "=" +next.getValue());
-                }else{
-                    stringBuilder.append( "&" +next.getKey()+ "=" +next.getValue());
-                }
-                i++;
-            }
-        }
-        return stringBuilder.toString();
-    }
-
-    /**
-     * 添加Body参数
-     * @param params 键值对参数
-     * @return RequestBody
-     */
-    private RequestBody formatPostParams(Map<String, String> params) {
-        //初始化共有参数
-        if(null==params){
-            params=new HashMap<>();
-        }
-        if(null!=mDefaultParams){
-            params.putAll(mDefaultParams);
-        }
-        if(null!=params&&params.size()>0){
-            FormBody.Builder builder= new FormBody.Builder();
-            Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
-            while (iterator.hasNext()){
-                Map.Entry<String, String> next = iterator.next();
-                builder.add(next.getKey(), next.getValue());
-            }
-            return builder.build();
-        }
-        return null;
-    }
-
-    /**
-     * 添加Header参数
-     * @param builder requst
-     * @param headers 头部参数
-     * @return 设置参数后的builder
-     */
-    private Request.Builder buildHeaderToRequest(Request.Builder builder, Map<String, String> headers) {
-        if(null!=headers&&headers.size()>0){
-            Iterator<Map.Entry<String, String>> iterator = headers.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, String> next = iterator.next();
-                builder.header(next.getKey(),next.getValue());
-            }
-        }
-        return builder;
-    }
-
-    /**
-     * 发送请求
-     * @param request requst
-     * @param callBack callBack
-     * @param isSynchro 是否同步调用
-     */
-    private void setdRequst(final Request request, final OnResultCallBack callBack,
-                            boolean isSynchro) {
-        if(DEBUG){
-            Logger.d(TAG,"setdRequst-->URL:"+request.url()+",isSynchro:"+isSynchro);
-        }
-        if(null==mHandler){
-            mHandler=new Handler(Looper.getMainLooper());
-        }
-        //同步请求
-        if(isSynchro){
-            getThreadHandler().post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        isRequst=true;
-                        Response response = createHttpUtils().newCall(request).execute();
-                        formatResponse(response,callBack);
-                    } catch (final IOException e) {
-                        e.printStackTrace();
-                        isRequst=false;
-                        if(null!=mHandler&&null!=callBack){
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    callBack.onError(ERROR_IO,e.getMessage());
-                                }
-                            });
-                        }
-                    }catch (final RuntimeException e){
-                        e.printStackTrace();
-                        isRequst=false;
-                        if(null!=mHandler&&null!=callBack){
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    callBack.onError(ERROR_IO,e.getMessage());
-                                }
-                            });
-                        }
-                    }
-                }
-            });
-            return;
-        }
-        //异步请求
-        isRequst=true;
-        createHttpUtils().newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, final IOException e) {
-                if(DEBUG){
-                    Logger.d(TAG,"onFailure-->e:"+e.getMessage()+call.toString());
-                }
-                isRequst=false;
-                if(null!=callBack&&null!=mHandler){
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(null!=callBack){
-                                callBack.onError(ERROR_IO,e.getMessage());
-                            }
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                formatResponse(response,callBack);
-            }
-        });
-    }
-
-    /**
-     * 解析Response
-     * @param response response响应体
-     * @param callBack callBack回调
-     */
-    private void formatResponse(final Response response,final OnResultCallBack callBack) {
-        isRequst=false;
-        if(null!=mHandler&&null!=callBack){
-            if(null!=response){
-                if(200==response.code()){
-                    try {
-                        String string = response.body().string();
-                        response.close();
-                        if(!TextUtils.isEmpty(string)){
-                            if(DEBUG){
-                                Logger.d(TAG,"服务端返回数据-->"+string);
-                            }
-                            final Object resultInfo = getResultInfo(string, callBack.getType());
-                            if(null!=mHandler&&null!=callBack){
-                                if(null!=resultInfo){
-                                    mHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            callBack.onResponse(resultInfo);
-                                        }
-                                    });
-                                }else{
-                                    mHandler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            callBack.onError(ERROR_JSON_FORMAT,
-                                                    "Json format error");
-                                        }
-                                    });
-                                }
-                            }
-                        }else{
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    int code = response.code();
-                                    response.close();
-                                    if(null!=callBack){
-                                        callBack.onError(code,"body is empty");
-                                    }
-                                }
-                            });
-                        }
-                    } catch (final IOException e) {
-                        e.printStackTrace();
-                        if(null!=mHandler){
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(null!=callBack){
-                                        callBack.onError(ERROR_JSON_FORMAT,e.getMessage());
-                                    }
-                                }
-                            });
-                        }
-                    }catch (final RuntimeException e){
-                        e.printStackTrace();
-                        if(null!=mHandler){
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(null!=callBack){
-                                        callBack.onError(ERROR_JSON_FORMAT,e.getMessage());
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }else{
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            int code = response.code();
-                            String message = response.message();
-                            response.close();
-                            if(null!=callBack){
-                                callBack.onError(code,message);
-                            }
-                        }
-                    });
-                }
-            }else{
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(null!=callBack){
-                            callBack.onError(ERROR_EMPTY,"response is empty");
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    /**
-     * JSON解析,这里不再返回T了，直接Object
-     * @param json json字符串
-     * @param type 指定class
-     * @return 泛型实体对象
-     */
-    public Object getResultInfo(String json,Type type){
-        Object resultData = null;
-        if(null==mGson){
-            mGson=new Gson();
-        }
-        try {
-            if(null!=type){
-                resultData=mGson.fromJson(json, type);
-            }else{
-                //如果用户没有指定Type,则直接使用String.class
-                resultData=mGson.fromJson(json, new TypeToken<String>(){}.getType());
-            }
-            return resultData;
-        }catch (RuntimeException e){
-            e.printStackTrace();
-            return resultData;
-        }
     }
 
     /**
