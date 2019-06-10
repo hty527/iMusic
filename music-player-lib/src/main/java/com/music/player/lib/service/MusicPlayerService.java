@@ -889,21 +889,21 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         if (null != mMediaPlayer && null != mAudios && mAudios.size() > 0) {
             if (null != mOnPlayerEventListeners) {
                 BaseAudioInfo musicInfo = (BaseAudioInfo) mAudios.get(mCurrentPlayIndex);
-                for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
-                    onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,null);
-                    onPlayerEventListener.onPlayMusiconInfo(musicInfo,mCurrentPlayIndex);
-                    if(null!=mMediaPlayer&&isPlaying()){
-                        try {
+                try {
+                    for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
+                        onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,null);
+                        onPlayerEventListener.onPlayMusiconInfo(musicInfo,mCurrentPlayIndex);
+                        if(null!=mMediaPlayer||mMusicPlayerState==MusicConstants.MUSIC_PLAYER_PAUSE
+                                ||isPlaying()){
                             //+500毫秒是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
                             onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),
                                     mMediaPlayer.getCurrentPosition()+500,TIMER_DURTION,mBufferProgress);
-                        }catch (RuntimeException e){
-                            e.printStackTrace();
+                        }else{
                             onPlayerEventListener.onTaskRuntime(0,0,TIMER_DURTION,mBufferProgress);
                         }
-                    }else{
-                        onPlayerEventListener.onTaskRuntime(0,0,TIMER_DURTION,mBufferProgress);
                     }
+                }catch (RuntimeException e){
+                    e.printStackTrace();
                 }
             }
         }
