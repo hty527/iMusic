@@ -162,6 +162,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipre_layout);
         mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         mRefreshLayout.setProgressViewOffset(false,0,200);
+        findViewById(R.id.view_status_bar).getLayoutParams().height=MusicUtils.getInstance().getStatusBarHeight(this);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

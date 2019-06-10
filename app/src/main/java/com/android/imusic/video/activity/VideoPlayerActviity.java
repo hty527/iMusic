@@ -1,5 +1,6 @@
 package com.android.imusic.video.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -72,7 +73,9 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
         return new IndexVideoPersenter();
     }
 
+    @SuppressLint("WrongViewCast")
     private void initViews() {
+        findViewById(R.id.view_status_bar).getLayoutParams().height=MusicUtils.getInstance().getStatusBarHeight(this);
         //播放器控件宽高
         mVideoPlayer = (VideoDetailsPlayerTrackView) findViewById(R.id.video_player);
         int itemHeight = MusicUtils.getInstance().getScreenWidth(this) * 9 / 16;

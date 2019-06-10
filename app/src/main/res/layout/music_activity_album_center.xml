@@ -214,6 +214,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <View
+                android:id="@+id/view_status_bar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/statusbar_view_height"/>
             <RelativeLayout
