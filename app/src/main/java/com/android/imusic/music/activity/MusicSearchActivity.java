@@ -1,5 +1,6 @@
 package com.android.imusic.music.activity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -65,12 +66,13 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
     private RecyclerView mRecyclerView;
     private View mTagsRoot;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowEnable(true);
         setContentView(R.layout.music_activity_search);
-
+        findViewById(R.id.view_status_bar).getLayoutParams().height=MusicUtils.getInstance().getStatusBarHeight(this);
         View.OnClickListener onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View v) {

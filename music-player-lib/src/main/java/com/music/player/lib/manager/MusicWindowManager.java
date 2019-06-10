@@ -93,9 +93,9 @@ public class MusicWindowManager {
             WindowManager.LayoutParams miniJukeBoxLayoutParams = new WindowManager.LayoutParams();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            }else if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.M){
                 miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-            }else if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.KITKAT){
+            } if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.KITKAT){
                 miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
             }else{
                 miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
