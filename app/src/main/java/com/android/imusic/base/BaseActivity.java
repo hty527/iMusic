@@ -325,9 +325,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         if(!MusicFullWindowManager.getInstance().isWindowShowing()){
             if(null!= MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                 BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-                MusicFullWindowManager.getInstance().createMiniJukeBoxToWindown(BaseActivity.this.
-                                getApplicationContext(), MusicUtils.getInstance().dpToPxInt(BaseActivity.this,80f)
-                        ,MusicUtils.getInstance().dpToPxInt(BaseActivity.this,170f));
+                MusicFullWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext());
                 MusicStatus musicStatus=new MusicStatus();
                 musicStatus.setId(musicInfo.getAudioId());
                 String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);

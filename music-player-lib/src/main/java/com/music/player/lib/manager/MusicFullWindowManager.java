@@ -100,10 +100,11 @@ public class MusicFullWindowManager {
             miniJukeBoxLayoutParams.flags =  WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                     | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+//            miniJukeBoxLayoutParams.flags =  WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
             //背景透明
             miniJukeBoxLayoutParams.format = PixelFormat.RGBA_8888;
             //默认位于屏幕的左上角，具体位置定位定传X、Y偏移量
-            miniJukeBoxLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
+            miniJukeBoxLayoutParams.gravity =Gravity.CENTER;
             miniJukeBoxLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
             miniJukeBoxLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
             windowManager.addView(mMusicWindowPlayer, miniJukeBoxLayoutParams);

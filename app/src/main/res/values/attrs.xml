@@ -1,46 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--扇形菜单的属性-->
-    <declare-styleable name="MusicArcMenuView">
-        <!--圆形半径-->
-        <attr name="arcMenuRadius" format="dimension"></attr>
-        <!--圆形角度-->
-        <attr name="arcMenuAngle" format="integer"></attr>
-        <!--菜单展开动画时长-->
-        <attr name="arcExpandOpenDurtion" format="integer"></attr>
-        <!--菜单关闭动画时长-->
-        <attr name="arcExpandCloseDurtion" format="integer"></attr>
-        <!--默认的Btn ICON-->
-        <attr name="arcBtnIcon" format="reference"></attr>
-        <!--是否自动创建一个默认的弧形菜单，位于ParentView右下角-->
-        <attr name="arcAutoCreateDefaultMenus" format="boolean"></attr>
-        <!--菜单抛锚位置-->
-        <attr name="arcDropPosition">
-            <enum name="left_top" value="0"></enum>
-            <enum name="left_bottom" value="1"></enum>
-            <enum name="right_bottom" value="2"></enum>
-            <enum name="right_top" value="3"></enum>
-            <enum name="center" value="4"></enum>
-            <enum name="left" value="5"></enum>
-            <enum name="top" value="6"></enum>
-            <enum name="right" value="7"></enum>
-            <enum name="bottom" value="8"></enum>
-        </attr>
-        <!--菜单初始时在View中的位置-->
-        <attr name="arcGravity">
-            <flag name="top" value="48" />
-            <flag name="left" value="3" />
-            <flag name="right" value="5" />
-            <flag name="bottom" value="80" />
-            <flag name="center_horizontal" value="1" />
-            <flag name="center_vertical" value="16" />
-            <flag name="center" value="17" />
-            <flag name="clip_horizontal" value="8" />
-            <flag name="clip_vertical" value="128" />
-            <flag name="start" value="8388611" />
-            <flag name="end" value="8388613" />
-        </attr>
-    </declare-styleable>
     <!--ShapeButton-->
     <declare-styleable name="ShapeTextView">
         <!--Button圆角-->

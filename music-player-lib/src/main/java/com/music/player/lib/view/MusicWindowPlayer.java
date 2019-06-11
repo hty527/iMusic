@@ -4,13 +4,16 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -18,7 +21,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import com.music.player.lib.R;
 import com.music.player.lib.bean.MusicStatus;
-import com.music.player.lib.listener.MusicAnimatorListener;
+import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicFullWindowManager;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.util.Logger;
@@ -28,32 +31,30 @@ import com.music.player.lib.util.MusicUtils;
  * Created by TinyHung@outlook.com
  * 2019/6/11
  * Music Window Player
- * 一个包含唱片机、垃圾桶的窗口View
+ * 一个包含唱片机、垃圾桶的悬浮窗交互窗口View
  */
 
 public class MusicWindowPlayer extends FrameLayout {
 
     private static final String TAG = "MusicWindowPlayer";
-    //手势分发
-    private GestureDetector mGestureDetector;
+    //此窗口应用的场景,状态栏高度,容器的宽高,悬浮球停靠在屏幕边界的最小距离
+    private int mScrnrMode,mStatusBarHeight, mGroupWidth, mGroupHeight,mHorMiniMagin;
     //震动
     private Vibrator mVibrator;
     //迷你唱片机
     private MusicJukeBoxViewSmall mBoxViewSmall;
     //垃圾桶
     private MusicWindowTrash mWindowTrash;
-    //悬浮球停靠在屏幕边上的边界大小
-    private final int mMaginBorder;
     //手指在屏幕上的实时X、Y坐标
     private float xInScreen,yInScreen;
+    //手指按下X、Y坐标
+    private static float xDownInScreen,yDownInScreen;
     //手指按下此View在屏幕中X、Y坐标
     private float xInView,yInView;
-    //是否允许悬浮窗显示
-    private boolean isVisible=true;
     //手指是否持续触摸屏幕中,是否持续碰撞中
     private boolean isTouchIng =false,isCollideIng=false;
-    //容器的宽高
-    private static int mGroupWidth, mGroupHeight;
+    //单击事件的有效像素
+    public static int SCROLL_PIXEL=10;
 
     public MusicWindowPlayer(@NonNull Context context) {
         this(context,null);
@@ -69,13 +70,48 @@ public class MusicWindowPlayer extends FrameLayout {
         mWindowTrash = (MusicWindowTrash) findViewById(R.id.music_window_trash);
         mBoxViewSmall = (MusicJukeBoxViewSmall) findViewById(R.id.music_window_juke);
         mVibrator = (Vibrator)getContext().getSystemService(getContext().VIBRATOR_SERVICE);
-        //停靠边界
-        mMaginBorder = MusicUtils.getInstance().dpToPxInt(getContext(), 15f);
-        mGestureDetector = new GestureDetector(context,new TouchOnGestureListener());
+        if(null!=attrs){
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicWindowPlayer);
+            mScrnrMode = typedArray.getInteger(R.styleable.MusicWindowPlayer_musicWinSceneMode, 0);
+            mHorMiniMagin = typedArray.getDimensionPixelSize(R.styleable.MusicWindowPlayer_musicWinHorMagin, 15);
+            typedArray.recycle();
+        }else{
+            //停靠边界,四周
+            mHorMiniMagin = MusicUtils.getInstance().dpToPxInt(getContext(), 15f);
+        }
         mBoxViewSmall.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return mGestureDetector.onTouchEvent(event);
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        //记录手指按下时手指在唱片机View中的位置
+                        xInView = event.getX();
+                        yInView = event.getY();
+                        xDownInScreen=event.getRawX();
+                        if(mScrnrMode>0){
+                            yDownInScreen = event.getRawY();
+                        }else{
+                            yDownInScreen = event.getRawY()-getStatusBarHeight();
+                        }
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        //实时获取相对于屏幕X,Y位置刷新
+                        xInScreen = event.getRawX();
+                        if(mScrnrMode>0){
+                            yInScreen = event.getRawY();
+                        }else{
+                            yInScreen = event.getRawY()-getStatusBarHeight();
+                        }
+                        updateJukeLocation();
+                        updateTrachWindow(event);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        Logger.d(TAG,",ACTION_UP,ACTION_CANCEL");
+                        actionTouchUp(event);
+                        break;
+                }
+                return true;
             }
         });
     }
@@ -132,78 +168,6 @@ public class MusicWindowPlayer extends FrameLayout {
     }
 
     /**
-     * 拦截触摸屏幕的所有事件
-     */
-    private  class TouchOnGestureListener extends GestureDetector.SimpleOnGestureListener {
-        /**
-         * 拦截手势
-         * @param e
-         * @return
-         */
-        @Override
-        public boolean onDown(MotionEvent e) {
-            //记录手指按下时手指在唱片机View中的位置
-            xInView = e.getX();
-            yInView = e.getY();
-            return true;
-        }
-
-        /**
-         * 单击事件
-         * @param e
-         * @return
-         */
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            return super.onSingleTapUp(e);
-        }
-
-        /**
-         * 手势分发持续滚动事件
-         * @param event2
-         * @param event1
-         * @param distanceX
-         * @param distanceY
-         * @return
-         */
-        @Override
-        public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY) {
-            switch (event2.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    //实时获取相对于屏幕X,Y位置刷新
-                    xInScreen = event2.getRawX();
-                    yInScreen = event2.getRawY();
-                    updateJukeLocation();
-                    updateTrachWindow(event2);
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    Logger.d(TAG,",ACTION_UP,ACTION_CANCEL");
-                    actionTouchUp(event2);
-                    break;
-            }
-            return true;
-        }
-
-        /**
-         * 手势分发结束了
-         * @param e1
-         * @param e2
-         * @param velocityX
-         * @param velocityY
-         * @return
-         */
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            actionTouchUp(e2);
-            return true;
-        }
-    }
-
-
-    /**
      * 松手
      * @param event 手势事件
      */
@@ -217,6 +181,25 @@ public class MusicWindowPlayer extends FrameLayout {
                 MusicFullWindowManager.getInstance().removeMiniJukeBoxFromWindow(getContext().getApplicationContext());
             }else{
                 hideTrashAnimation(mWindowTrash);
+                //缓慢吸附到控件边侧
+                if(null!=mBoxViewSmall){
+                    int[] locations=new int[2];
+                    mBoxViewSmall.getLocationOnScreen(locations);
+                    scrollToPixel(locations[0],locations[1], (int) event.getRawX(),350);
+                }
+                //点击事件
+                if (Math.abs(xInScreen - xDownInScreen) < SCROLL_PIXEL && Math.abs(yInScreen - yDownInScreen) < SCROLL_PIXEL) {
+                    //前往播放器界面
+                    String activityName = MusicPlayerManager.getInstance().getPlayerActivityName();
+                    if(!TextUtils.isEmpty(activityName)&&null!=mBoxViewSmall.getTag()){
+                        Context context = getContext().getApplicationContext();
+                        Intent startIntent=new Intent();
+                        startIntent.setClassName(context.getPackageName(),activityName);
+                        startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, (Long) mBoxViewSmall.getTag());
+                        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(startIntent);
+                    }
+                }
             }
         }
     }
@@ -236,11 +219,54 @@ public class MusicWindowPlayer extends FrameLayout {
     }
 
     /**
+     * 设置唱片机的边距距离
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     */
+    public void setJukeMaigin(int left, int top, int right, int bottom){
+        if(null!=mBoxViewSmall){
+            FrameLayout.LayoutParams layoutParams = (LayoutParams) mBoxViewSmall.getLayoutParams();
+            layoutParams.setMargins(left,top,right,bottom);
+            mBoxViewSmall.setLayoutParams(layoutParams);
+        }
+    }
+
+    /**
+     * 设置横向的最小边距
+     * @param maginBorder
+     */
+    public void setHorMiniMagin(int maginBorder) {
+        this.mHorMiniMagin =maginBorder;
+    }
+
+    /**
+     * 设置窗口应用的场景
+     * @param scrnrMode 0：悬浮窗 1：普通Layout
+     */
+    public void setScrnrMode(int scrnrMode) {
+        mScrnrMode = scrnrMode;
+    }
+
+    /**
+     * 获取状态栏高度
+     * @return
+     */
+    private int getStatusBarHeight() {
+        if (mStatusBarHeight == 0) {
+            mStatusBarHeight =MusicUtils.getInstance().getStatusBarHeight(getContext());
+        }
+        return mStatusBarHeight;
+    }
+
+    /**
      * 持续移动中
      * @param event 手势事件
      */
     private void updateTrachWindow(MotionEvent event) {
-        if(null!=mWindowTrash){
+        //手势垃圾桶,在用户手指上下滑动10个像素触发垃圾桶
+        if(null!=mWindowTrash&&Math.abs(xInScreen-xDownInScreen)>=SCROLL_PIXEL||Math.abs(yInScreen-yDownInScreen)>=SCROLL_PIXEL){
             //持续碰撞检测
             boolean containsXY=isContainsXY(event);
             mWindowTrash.setText(containsXY?"松手取消悬浮":"取消悬浮播放");
@@ -261,8 +287,8 @@ public class MusicWindowPlayer extends FrameLayout {
             }else{
                 isCollideIng=false;
             }
+            isTouchIng =true;
         }
-        isTouchIng =true;
     }
 
     /**
@@ -288,10 +314,10 @@ public class MusicWindowPlayer extends FrameLayout {
         if(null!=mBoxViewSmall){
             float toX = xInScreen - xInView;
             float toY = yInScreen - yInView;
-            if(toX<0){
-                toX=0;
-            }else if(toX>(mGroupWidth -mBoxViewSmall.getWidth())){
-                toX= mGroupWidth -mBoxViewSmall.getWidth();
+            if(toX< mHorMiniMagin){
+                toX= mHorMiniMagin;
+            }else if(toX>(mGroupWidth -mBoxViewSmall.getWidth()- mHorMiniMagin)){
+                toX= mGroupWidth -mBoxViewSmall.getWidth()- mHorMiniMagin;
             }
             if(toY<0){
                 toY=0;
@@ -301,6 +327,41 @@ public class MusicWindowPlayer extends FrameLayout {
             mBoxViewSmall.setX(toX);
             mBoxViewSmall.setY(toY);
         }
+    }
+
+    /**
+     * 自动吸附至屏幕位置
+     * @param viewCurrentPixelX 悬浮窗当前所属位置X
+     * @param viewCurrentPixelY 悬浮窗当前所属位置Y
+     * @param currentRowX 手指松手所在的位置
+     * @param scrollDurtion 滚动耗时
+     */
+    @SuppressLint("ObjectAnimatorBinding")
+    private void scrollToPixel(int viewCurrentPixelX, final int viewCurrentPixelY, int currentRowX, int scrollDurtion) {
+        int toPixelX= mHorMiniMagin;
+        if(currentRowX>(mGroupWidth/2)){
+            //左边停靠最大X：屏幕宽-自身宽-边距大小
+            toPixelX=(mGroupWidth-mBoxViewSmall.getWidth()- mHorMiniMagin);
+        }
+        //Logger.d(TAG,"scrollToPixel:pixelX:"+viewCurrentPixelX+",pixelY:"+viewCurrentPixelY+",
+        // currentRowX:"+currentRowX+",scrollDurtion:"+scrollDurtion+",toPixelX:"+toPixelX);
+        if(scrollDurtion<=0){
+            mBoxViewSmall.setX(toPixelX);
+            //mBoxViewSmall.setY(viewCurrentPixelY);
+            return;
+        }
+        ObjectAnimator objectAnimator = ObjectAnimator.ofInt(this, "number", viewCurrentPixelX, toPixelX);
+        objectAnimator.setDuration(scrollDurtion);
+        objectAnimator.setInterpolator(new AccelerateInterpolator());
+        objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int animatedValue = (int) animation.getAnimatedValue();
+                mBoxViewSmall.setX(animatedValue);
+                //mBoxViewSmall.setY(viewCurrentPixelY);
+            }
+        });
+        objectAnimator.start();
     }
 
     /**
@@ -326,6 +387,7 @@ public class MusicWindowPlayer extends FrameLayout {
     @SuppressLint("ObjectAnimatorBinding")
     public synchronized void hideTrashAnimation(final View view){
         if(null==view)return;
+        view.clearAnimation();
         ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(view, "translationX", 0,view.getWidth());
         ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(view, "translationY", 0,view.getHeight());
         AnimatorSet animatorSet = new AnimatorSet();
@@ -416,7 +478,6 @@ public class MusicWindowPlayer extends FrameLayout {
      * 唱片机可见
      */
     public void onVisible() {
-        isVisible=true;
         if(null!=mBoxViewSmall){
             mBoxViewSmall.clearAnimation();
             mBoxViewSmall.onVisible();
@@ -429,7 +490,6 @@ public class MusicWindowPlayer extends FrameLayout {
      * @param audioID 音频ID
      */
     public void onVisible(long audioID) {
-        isVisible=true;
         if(null!=mBoxViewSmall){
             mBoxViewSmall.clearAnimation();
             if(audioID>0){
@@ -449,14 +509,11 @@ public class MusicWindowPlayer extends FrameLayout {
             mBoxViewSmall.onInvisible();
             if(mBoxViewSmall.getVisibility()!=GONE){
                 hideWindowAnimation(mBoxViewSmall);
-                
             }
         }
-        isVisible=false;
     }
 
     public void onDestroy() {
-        isVisible=false;
         if(null!=mBoxViewSmall){
             mBoxViewSmall.onDestroy();
             mBoxViewSmall=null;
@@ -469,7 +526,7 @@ public class MusicWindowPlayer extends FrameLayout {
             mVibrator.cancel();
             mVibrator=null;
         }
-        mGroupWidth=0;mGroupHeight=0;mGestureDetector=null;
+        mGroupWidth=0;mGroupHeight=0;
         xInScreen=0;yInScreen=0;xInView=0;yInView=0;isTouchIng=false;isCollideIng=false;
     }
 }

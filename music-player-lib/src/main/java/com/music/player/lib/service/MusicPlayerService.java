@@ -1002,12 +1002,12 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                 mMediaPlayer.release();
                 mMediaPlayer.reset();
             }
-        }catch (RuntimeException e){
-
-        }finally {
             if(null!=mWifiLock){
                 mWifiLock.release();
             }
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }finally {
             mMediaPlayer = null;
             MusicPlayerService.this.mMusicPlayerState =MusicConstants.MUSIC_PLAYER_STOP;
             MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_STOP));
@@ -1196,9 +1196,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             if(!MusicFullWindowManager.getInstance().isWindowShowing()){
                 BaseAudioInfo audioInfo = getCurrentPlayerMusic();
                 if(null!=audioInfo){
-                    MusicFullWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext(),
-                            MusicUtils.getInstance().dpToPxInt(getApplicationContext(),80f),
-                            MusicUtils.getInstance().dpToPxInt(getApplicationContext(),170f));
+                    MusicFullWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext());
                     MusicStatus musicStatus=new MusicStatus();
                     musicStatus.setId(audioInfo.getAudioId());
                     String frontPath=MusicUtils.getInstance().getMusicFrontPath(audioInfo);
@@ -1838,7 +1836,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         //8.0及以上系统需创建通知通道
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(MusicConstants.CHANNEL_ID,
-                    "COM_IMUSIC_MEDIA_PLAYER", NotificationManager.IMPORTANCE_LOW);
+                    "iMusic通知", NotificationManager.IMPORTANCE_LOW);
             channel.enableVibration(false);
             getNotificationManager().createNotificationChannel(channel);
         }

@@ -1,4 +1,4 @@
-package com.android.imusic.music.view;
+package com.music.player.lib.view;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.android.imusic.R;
+import com.music.player.lib.R;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import java.util.ArrayList;
@@ -228,8 +228,8 @@ public class MusicArcMenuView extends FrameLayout implements View.OnTouchListene
         int marginTop = MusicUtils.getInstance().dpToPxInt(getContext(),5f);
         mViews=new ArrayList<>();
         if(createRes){
-            resID=new int[]{R.drawable.ic_music_lock_model_random_pre,R.drawable.ic_music_model_loop_pre,
-                    R.drawable.ic_music_model_signle_pre,R.drawable.ic_music_play_alll};
+            resID=new int[]{R.drawable.ic_music_mini_pause_noimal,R.drawable.ic_music_mini_pause_noimal,
+                    R.drawable.ic_music_mini_pause_noimal,R.drawable.ic_music_juke_default_cover};
         }
         for (int i = 0; i < resID.length; i++) {
             ImageView imageView=new ImageView(getContext());

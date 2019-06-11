@@ -821,9 +821,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         if(!MusicFullWindowManager.getInstance().isWindowShowing()){
             if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                 BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-                MusicFullWindowManager.getInstance().createMiniJukeBoxToWindown(MusicPlayerActivity.this.getApplicationContext(),
-                        MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,80f),
-                        MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,170f));
+                MusicFullWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext());
                 MusicStatus musicStatus=new MusicStatus();
                 musicStatus.setId(musicInfo.getAudioId());
                 String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);
