@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
  * 2019/3/12
  * WindowManager
  */
-
+@Deprecated
 public class MusicWindowManager {
 
 	private static final String TAG = "MusicWindowManager";

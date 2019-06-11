@@ -37,8 +37,8 @@ import com.music.player.lib.iinterface.MusicPlayerPresenter;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.manager.MusicAudioFocusManager;
+import com.music.player.lib.manager.MusicFullWindowManager;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicImageCache;
@@ -1113,7 +1113,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      */
     @Override
     public void createMiniJukeboxWindow() {
-        MusicWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext());
+        MusicFullWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext());
     }
 
     /**
@@ -1192,11 +1192,11 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
      */
     @Override
     public void createWindowJukebox() {
-        if(MusicWindowManager.getInstance().checkAlertWindowsPermission(getApplicationContext())){
-            if(!MusicWindowManager.getInstance().isWindowShowing()){
+        if(MusicFullWindowManager.getInstance().checkAlertWindowsPermission(getApplicationContext())){
+            if(!MusicFullWindowManager.getInstance().isWindowShowing()){
                 BaseAudioInfo audioInfo = getCurrentPlayerMusic();
                 if(null!=audioInfo){
-                    MusicWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext(),
+                    MusicFullWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext(),
                             MusicUtils.getInstance().dpToPxInt(getApplicationContext(),80f),
                             MusicUtils.getInstance().dpToPxInt(getApplicationContext(),170f));
                     MusicStatus musicStatus=new MusicStatus();
@@ -1209,9 +1209,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                             || playerState==MusicConstants.MUSIC_PLAYER_PREPARE
                             || playerState==MusicConstants.MUSIC_PLAYER_BUFFER;
                     musicStatus.setPlayerStatus(playing?MusicStatus.PLAYER_STATUS_START:MusicStatus.PLAYER_STATUS_PAUSE);
-                    MusicWindowManager.getInstance().updateWindowStatus(musicStatus);
+                    MusicFullWindowManager.getInstance().updateWindowStatus(musicStatus);
                     //此处手动显示一把，避免悬浮窗还未成功创建,将正在播放得音频对象绑定到悬浮窗口
-                    MusicWindowManager.getInstance().onVisible(audioInfo.getAudioId());
+                    MusicFullWindowManager.getInstance().onVisible(audioInfo.getAudioId());
                 }
             }
         }

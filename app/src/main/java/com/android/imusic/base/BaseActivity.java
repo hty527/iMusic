@@ -23,12 +23,11 @@ import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicLoadingView;
-import com.music.player.lib.manager.SqlLiteCacheManager;
+import com.music.player.lib.manager.MusicFullWindowManager;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.MusicUtils;
 import java.io.Serializable;
 import java.util.List;
@@ -274,7 +273,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     protected void onResume() {
         super.onResume();
         if(isWindowEnable&&requstCode>0&&requstCode== MusicConstants.REQUST_WINDOWN_PERMISSION&&
-                MusicWindowManager.getInstance().checkAlertWindowsPermission(BaseActivity.this)){
+                MusicFullWindowManager.getInstance().checkAlertWindowsPermission(BaseActivity.this)){
             requstCode=0;
             createMiniJukeBoxToWindown();
         }
@@ -284,7 +283,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
      * 即将退出播放器
      */
     protected void createMiniJukeboxWindow() {
-        if(!MusicWindowManager.getInstance().checkAlertWindowsPermission(BaseActivity.this)){
+        if(!MusicFullWindowManager.getInstance().checkAlertWindowsPermission(BaseActivity.this)){
             new android.support.v7.app.AlertDialog.Builder(BaseActivity.this)
                     .setTitle(getString(R.string.text_music_play_tips))
                     .setMessage(getString(R.string.text_music_play_window_tips))
@@ -323,10 +322,10 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
      * 创建一个全局的迷你唱片至窗口
      */
     private void createMiniJukeBoxToWindown() {
-        if(!MusicWindowManager.getInstance().isWindowShowing()){
+        if(!MusicFullWindowManager.getInstance().isWindowShowing()){
             if(null!= MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                 BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(BaseActivity.this.
+                MusicFullWindowManager.getInstance().createMiniJukeBoxToWindown(BaseActivity.this.
                                 getApplicationContext(), MusicUtils.getInstance().dpToPxInt(BaseActivity.this,80f)
                         ,MusicUtils.getInstance().dpToPxInt(BaseActivity.this,170f));
                 MusicStatus musicStatus=new MusicStatus();
@@ -339,8 +338,8 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                         || playerState==MusicConstants.MUSIC_PLAYER_PREPARE
                         || playerState==MusicConstants.MUSIC_PLAYER_BUFFER;
                 musicStatus.setPlayerStatus(playing?MusicStatus.PLAYER_STATUS_START:MusicStatus.PLAYER_STATUS_PAUSE);
-                MusicWindowManager.getInstance().updateWindowStatus(musicStatus);
-                MusicWindowManager.getInstance().onVisible();
+                MusicFullWindowManager.getInstance().updateWindowStatus(musicStatus);
+                MusicFullWindowManager.getInstance().onVisible();
             }
         }
     }

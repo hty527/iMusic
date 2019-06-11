@@ -6,7 +6,7 @@ import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.manager.AppBackgroundManager;
 import com.android.imusic.music.manager.ForegroundManager;
 import com.android.imusic.net.OkHttpUtils;
-import com.music.player.lib.manager.MusicWindowManager;
+import com.music.player.lib.manager.MusicFullWindowManager;
 import com.tencent.bugly.crashreport.CrashReport;
 
 /**
@@ -29,7 +29,7 @@ public class MusicApplication extends Application {
             public void onAppStateChanged(String activityName,boolean isAppForceground) {
                 //APP不可见并且直接是从播放器界面不可见的，让悬浮窗显示出来
                 if(!isAppForceground&&activityName.equals(MusicPlayerActivity.class.getCanonicalName())){
-                    MusicWindowManager.getInstance().onVisible();
+                    MusicFullWindowManager.getInstance().onVisible();
                 }
 //                if(isAppForceground){
 //                    MusicWindowManager.getInstance().onVisible();

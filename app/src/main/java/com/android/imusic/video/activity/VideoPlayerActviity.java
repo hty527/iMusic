@@ -25,7 +25,7 @@ import com.android.imusic.video.ui.presenter.IndexVideoPersenter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.music.player.lib.adapter.base.OnItemClickListener;
-import com.music.player.lib.manager.MusicWindowManager;
+import com.music.player.lib.manager.MusicFullWindowManager;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.base.BaseVideoPlayer;
@@ -272,10 +272,10 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
         Logger.d(TAG,"onConfigurationChanged-->newConfig:"+newConfig.orientation);
         //转到横屏
         if(2==newConfig.orientation){
-            MusicWindowManager.getInstance().onInvisible();
+            MusicFullWindowManager.getInstance().onInvisible();
             //转到竖屏
         }else if(1==newConfig.orientation){
-            MusicWindowManager.getInstance().onVisible();
+            MusicFullWindowManager.getInstance().onVisible();
         }
     }
 

@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
+import com.music.player.lib.manager.MusicFullWindowManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.model.MusicLrcRowParserEngin;
@@ -37,7 +38,6 @@ import com.music.player.lib.listener.MusicJukeBoxStatusListener;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicClickControler;
 import com.music.player.lib.util.MusicUtils;
@@ -140,7 +140,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         if(!isOnCreate&&null!=currentPlayerMusic&&currentPlayerMusic.getAudioId()==musicID){
             return;
         }
-        MusicWindowManager.getInstance().onInvisible();
+        MusicFullWindowManager.getInstance().onInvisible();
         MusicPlayerManager.getInstance().onCheckedPlayerConfig();//检查播放器配置
         if(null!=intent.getSerializableExtra(MusicConstants.KEY_MUSIC_LIST)){
             List<AudioInfo> audioInfos = (List<AudioInfo>) intent.getSerializableExtra(MusicConstants.KEY_MUSIC_LIST);
@@ -358,7 +358,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                 mMusicJukeBoxView.onStart();
             }
         }
-        MusicWindowManager.getInstance().onInvisible();
+        MusicFullWindowManager.getInstance().onInvisible();
     }
 
     @Override
@@ -775,7 +775,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         if(null!=mMusicJukeBoxView&&!mMusicJukeBoxView.isBackPressed()){
             return;
         }
-        if(!MusicWindowManager.getInstance().checkAlertWindowsPermission(MusicPlayerActivity.this)){
+        if(!MusicFullWindowManager.getInstance().checkAlertWindowsPermission(MusicPlayerActivity.this)){
             new android.support.v7.app.AlertDialog.Builder(MusicPlayerActivity.this)
                     .setTitle(getString(R.string.text_music_close_tips))
                     .setMessage(getString(R.string.text_music_close_permission_tips))
@@ -818,10 +818,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * 创建一个全局的迷你唱片至窗口
      */
     private void createMiniJukeBoxToWindown() {
-        if(!MusicWindowManager.getInstance().isWindowShowing()){
+        if(!MusicFullWindowManager.getInstance().isWindowShowing()){
             if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                 BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(MusicPlayerActivity.this.getApplicationContext(),
+                MusicFullWindowManager.getInstance().createMiniJukeBoxToWindown(MusicPlayerActivity.this.getApplicationContext(),
                         MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,80f),
                         MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,170f));
                 MusicStatus musicStatus=new MusicStatus();
@@ -834,18 +834,18 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                         || playerState==MusicConstants.MUSIC_PLAYER_PREPARE
                         || playerState==MusicConstants.MUSIC_PLAYER_BUFFER;
                 musicStatus.setPlayerStatus(playing?MusicStatus.PLAYER_STATUS_START:MusicStatus.PLAYER_STATUS_PAUSE);
-                MusicWindowManager.getInstance().updateWindowStatus(musicStatus);
+                MusicFullWindowManager.getInstance().updateWindowStatus(musicStatus);
             }
         }
         //此处手动显示一把，避免悬浮窗还未成功创建
-        MusicWindowManager.getInstance().onVisible();
+        MusicFullWindowManager.getInstance().onVisible();
         finish();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(MusicWindowManager.getInstance().checkAlertWindowsPermission(MusicPlayerActivity.this)){
+        if(MusicFullWindowManager.getInstance().checkAlertWindowsPermission(MusicPlayerActivity.this)){
             createMiniJukeBoxToWindown();
         }
     }

@@ -40,4 +40,7 @@
                 android:textColor="@color/music_index_tab_color"
                 android:background="@drawable/music_right_tab_selector"/>
     </LinearLayout>
+    <com.music.player.lib.view.MusicWindowPlayer
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </FrameLayout>

@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
+import com.music.player.lib.manager.MusicFullWindowManager;
 import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.utils.MediaUtils;
 import com.music.player.lib.bean.BaseAudioInfo;
@@ -25,7 +26,6 @@ import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicClickControler;
 import com.music.player.lib.util.MusicUtils;
@@ -225,7 +225,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE);
-        MusicWindowManager.getInstance().onInvisible();
+        MusicFullWindowManager.getInstance().onInvisible();
         jukeBoxResume();
     }
 
@@ -233,7 +233,7 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
     protected void onPause() {
         super.onPause();
         Logger.d(TAG,"onPause");
-        MusicWindowManager.getInstance().onVisible();
+        MusicFullWindowManager.getInstance().onVisible();
         jukeBoxPause();
     }
 

@@ -102,38 +102,6 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
 		return true;
 	}
 
-	/**
-	 * 悬浮窗交互
-	 * @param event 手势事件
-	 */
-//	private void showTrachWindow(MotionEvent event) {
-//		//手势垃圾桶,在用户手指上下滑动10个像素触发垃圾桶
-//		if(Math.abs(xInScreen-xDownInScreen)>=SCROLL_PIXEL||Math.abs(yInScreen-yDownInScreen)>=SCROLL_PIXEL){
-//            Object toWindown = MusicWindowManager.getInstance().
-//                    addMiniJukeBoxTrashToWindown(getContext().getApplicationContext());
-//            //返回悬浮窗控件的size数组或者悬浮窗对象本身
-//            if(null!=toWindown&&toWindown instanceof int[]){
-//            	int[] window= (int[]) toWindown;
-//                mTrashLocationX=window[0];
-//                mTrashLocationY=window[1];
-//                MusicWindowManager.getInstance().startTrashWindowAnimation();
-//            }
-//            int rawX = (int) event.getRawX();
-//            int rawY = (int) event.getRawY();
-//            if(rawX>(mScreenWidth-mTrashLocationX)&&rawY>(mScreenHeight-mTrashLocationY)){
-//                if(!isPlayVibrate&&null!=mVibrator){
-//                    isPlayVibrate=true;
-//                    MusicWindowManager.getInstance().jukeBoxTrashFocusCap(true);
-//                    mVibrator.vibrate(50);
-//                    MusicWindowManager.getInstance().startShakeAnimation();
-//                }
-//            }else{
-//                MusicWindowManager.getInstance().jukeBoxTrashFocusCap(false);
-//                isPlayVibrate=false;
-//            }
-//		}
-//	}
-
     /**
      * 扇形悬浮窗回收期碰撞交互
      * @param event 手势事件
@@ -154,11 +122,12 @@ public class MusicWindowMiniJukebox extends RelativeLayout {
                 }
                 //仅当第一次走进onTouchEvent时&&悬浮窗本身为空，才显示悬浮窗出来
                 if(null== mMusicWindowTrash){
-                    MusicWindowManager.getInstance().startTrashWindowAnimation();
+					MusicWindowManager.getInstance().startTrashWindowAnimation();
                 }
                 //注意，这里需要使用屏幕坐标和和控件左边宽高的的 余集 的坐标位置，最终换算为垃圾桶View的view坐标
                 int rawX = (int) event.getRawX()-(mScreenWidth-mTrashLocationX);
-                int rawY = (int) event.getRawY()-(mScreenHeight-mTrashLocationY);
+                //Y轴点应该加上状态栏高度，避免响应不准确
+                int rawY = (int) event.getRawY()-(mScreenHeight-mTrashLocationY)+getStatusBarHeight();
 				if(null!=mMusicWindowTrash){
 					if(mMusicWindowTrash.isContainsXY(rawX,rawY)){
 						if(isPlayVibrate){

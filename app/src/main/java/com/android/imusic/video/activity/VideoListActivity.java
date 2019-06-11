@@ -24,7 +24,7 @@ import com.android.imusic.video.bean.OpenEyesIndexItemBean;
 import com.android.imusic.video.ui.contract.IndexVideoContract;
 import com.android.imusic.video.ui.presenter.IndexVideoPersenter;
 import com.music.player.lib.listener.MusicOnItemClickListener;
-import com.music.player.lib.manager.MusicWindowManager;
+import com.music.player.lib.manager.MusicFullWindowManager;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicCommentTitleView;
@@ -309,10 +309,10 @@ public class VideoListActivity extends BaseActivity<IndexVideoPersenter>
         Logger.d(TAG,"onConfigurationChanged-->newConfig:"+newConfig.orientation);
         //转到横屏
         if(2==newConfig.orientation){
-            MusicWindowManager.getInstance().onInvisible();
+            MusicFullWindowManager.getInstance().onInvisible();
             //转到竖屏
         }else if(1==newConfig.orientation){
-            MusicWindowManager.getInstance().onVisible();
+            MusicFullWindowManager.getInstance().onVisible();
         }
     }
 

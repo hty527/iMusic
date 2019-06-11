@@ -18,6 +18,7 @@ import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
+import com.music.player.lib.manager.MusicFullWindowManager;
 import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.manager.VersionUpdateManager;
 import com.android.imusic.music.ui.fragment.IndexMusicFragment;
@@ -30,7 +31,6 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicInitializeCallBack;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.model.MusicPlayerConfig;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
@@ -252,10 +252,10 @@ public class MainActivity extends BaseActivity {
         Logger.d(TAG,"onConfigurationChanged-->newConfig:"+newConfig.orientation);
         //转到横屏
         if(2==newConfig.orientation){
-            MusicWindowManager.getInstance().onInvisible();
+            MusicFullWindowManager.getInstance().onInvisible();
         //转到竖屏
         }else if(1==newConfig.orientation){
-            MusicWindowManager.getInstance().onVisible();
+            MusicFullWindowManager.getInstance().onVisible();
         }
     }
 
