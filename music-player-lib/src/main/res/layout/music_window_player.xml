@@ -17,16 +17,4 @@
         app:musicMiniJukeEnable="false"
         android:layout_marginBottom="80dp"
         android:layout_marginRight="15dp"/>
-    <com.music.player.lib.view.MusicArcMenuView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="right|bottom"
-        app:arcMenuRadius="88dp"
-        app:arcMenuAngle="90"
-        app:arcDropPosition="right_bottom"
-        app:arcGravity="right|bottom"
-        app:arcExpandOpenDurtion="500"
-        app:arcExpandCloseDurtion="500"
-        app:arcBtnIcon="@drawable/ic_music_collect_pre"
-        app:arcAutoCreateDefaultMenus="true"/>
 </FrameLayout>
