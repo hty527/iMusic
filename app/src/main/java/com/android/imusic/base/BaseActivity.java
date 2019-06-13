@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -23,12 +24,12 @@ import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicLoadingView;
-import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
+import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import java.io.Serializable;
 import java.util.List;
@@ -326,9 +327,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         if(!MusicWindowManager.getInstance().isWindowShowing()){
             if(null!= MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                 BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(BaseActivity.this.
-                                getApplicationContext(), MusicUtils.getInstance().dpToPxInt(BaseActivity.this,80f)
-                        ,MusicUtils.getInstance().dpToPxInt(BaseActivity.this,170f));
+                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext());
                 MusicStatus musicStatus=new MusicStatus();
                 musicStatus.setId(musicInfo.getAudioId());
                 String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);
@@ -456,6 +455,23 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getApplicationContext().startActivity(intent);
+    }
+
+    /**
+     * 屏幕方向变化监听
+     * @param newConfig
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Logger.d(TAG,"onConfigurationChanged-->newConfig:"+newConfig.orientation);
+        //转到横屏
+        if(2==newConfig.orientation){
+            MusicWindowManager.getInstance().onInvisible();
+            //转到竖屏
+        }else if(1==newConfig.orientation){
+            MusicWindowManager.getInstance().onVisible();
+        }
     }
 
     @Override

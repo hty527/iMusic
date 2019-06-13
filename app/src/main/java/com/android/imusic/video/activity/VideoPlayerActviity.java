@@ -1,7 +1,7 @@
 package com.android.imusic.video.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +24,6 @@ import com.android.imusic.video.ui.presenter.IndexVideoPersenter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.music.player.lib.adapter.base.OnItemClickListener;
-import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.base.BaseVideoPlayer;
@@ -72,7 +71,9 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
         return new IndexVideoPersenter();
     }
 
+    @SuppressLint("WrongViewCast")
     private void initViews() {
+        findViewById(R.id.view_status_bar).getLayoutParams().height=MusicUtils.getInstance().getStatusBarHeight(this);
         //播放器控件宽高
         mVideoPlayer = (VideoDetailsPlayerTrackView) findViewById(R.id.video_player);
         int itemHeight = MusicUtils.getInstance().getScreenWidth(this) * 9 / 16;
@@ -257,23 +258,6 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
     protected void onPause() {
         super.onPause();
         VideoPlayerManager.getInstance().onPause();
-    }
-
-    /**
-     * 屏幕方向变化监听
-     * @param newConfig
-     */
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Logger.d(TAG,"onConfigurationChanged-->newConfig:"+newConfig.orientation);
-        //转到横屏
-        if(2==newConfig.orientation){
-            MusicWindowManager.getInstance().onInvisible();
-            //转到竖屏
-        }else if(1==newConfig.orientation){
-            MusicWindowManager.getInstance().onVisible();
-        }
     }
 
     @Override

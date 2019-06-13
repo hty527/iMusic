@@ -29,7 +29,7 @@ public abstract class OnResultCallBack <T> {
         Type superclass = subclass.getGenericSuperclass();
         //JVM未识别到的,泛型、多态为空
         if (superclass instanceof Class) {
-            return null;
+            return String.class;
         }
         ParameterizedType parameterized = (ParameterizedType) superclass;
         return $Gson$Types.canonicalize(parameterized.getActualTypeArguments()[0]);

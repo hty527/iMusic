@@ -2,7 +2,6 @@ package com.android.imusic;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -30,9 +29,7 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.listener.MusicInitializeCallBack;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.model.MusicPlayerConfig;
-import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.manager.VideoWindowManager;
@@ -239,23 +236,6 @@ public class MainActivity extends BaseActivity {
                 //检查版本更新
                 VersionUpdateManager.getInstance().checkAppVersion();
             }
-        }
-    }
-
-    /**
-     * 屏幕方向变化监听
-     * @param newConfig
-     */
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Logger.d(TAG,"onConfigurationChanged-->newConfig:"+newConfig.orientation);
-        //转到横屏
-        if(2==newConfig.orientation){
-            MusicWindowManager.getInstance().onInvisible();
-        //转到竖屏
-        }else if(1==newConfig.orientation){
-            MusicWindowManager.getInstance().onVisible();
         }
     }
 

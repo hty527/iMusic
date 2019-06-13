@@ -90,8 +90,10 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
         MusicStatusUtils.getInstance().setStatusTextColor1(true,this);
 
         int width = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int statusBarHeight = MusicUtils.getInstance().getStatusBarHeight(this);
         //TopTitle
         mTopBar = (LinearLayout) findViewById(R.id.root_top_bar);
+        findViewById(R.id.view_status_bar).getLayoutParams().height=statusBarHeight;
         mMusicTopBar = (LinearLayout) findViewById(R.id.music_top_layout);
         mTopBar.setBackgroundColor(Color.parseColor("#FFFFFF"));
         mTopBar.getBackground().setAlpha(0);
@@ -99,11 +101,11 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
         //测量头部、标题栏高度
         mTopBar.measure(width,width);
-        //设定最小停靠距离
-        collapsingToolbarLayout.setMinimumHeight(mTopBar.getMeasuredHeight()
-                +MusicUtils.getInstance().dpToPxInt(this,7f));
+        //设定最小停靠距离,应该减去向上padding高度
+        collapsingToolbarLayout.setMinimumHeight(mTopBar.getMeasuredHeight());
         //Head样式距离顶部巨鹿
-        findViewById(R.id.music_empty_view).getLayoutParams().height= mTopBar.getMeasuredHeight();
+        findViewById(R.id.music_empty_view).getLayoutParams().height= mTopBar.getMeasuredHeight()
+            +MusicUtils.getInstance().dpToPxInt(this,10f);
 
         mMusicTopBar.measure(width,width);
         //HeadView整体高度
@@ -112,8 +114,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
         //背景封面高度最终确定
         mMusicTopBg.getLayoutParams().height=topBatLayoutHeight;
         //滚动阈值高度
-        mHeaderViewHeight=(topBatLayoutHeight-mTopBar.getMeasuredHeight()
-                -MusicUtils.getInstance().dpToPxInt(this,7f));
+        mHeaderViewHeight=(topBatLayoutHeight-mTopBar.getMeasuredHeight());
         mSongCover = (MusicRoundImageView) findViewById(R.id.music_song_cover);
         TextView  tvPlay = (TextView) findViewById(R.id.music_tv_play);
         tvPlay.setText(getString(R.string.text_all_play));
@@ -162,6 +163,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipre_layout);
         mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         mRefreshLayout.setProgressViewOffset(false,0,200);
+
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -180,6 +182,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         int abs = Math.abs(verticalOffset);
+        Logger.d(TAG,"onOffsetChanged-->mHeaderViewHeight:"+mHeaderViewHeight+",ABS:"+abs);
         //下拉刷新是否可用
         if(null!=mRefreshLayout){
             if(abs<=0){

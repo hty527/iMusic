@@ -889,21 +889,21 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         if (null != mMediaPlayer && null != mAudios && mAudios.size() > 0) {
             if (null != mOnPlayerEventListeners) {
                 BaseAudioInfo musicInfo = (BaseAudioInfo) mAudios.get(mCurrentPlayIndex);
-                for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
-                    onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,null);
-                    onPlayerEventListener.onPlayMusiconInfo(musicInfo,mCurrentPlayIndex);
-                    if(null!=mMediaPlayer&&isPlaying()){
-                        try {
+                try {
+                    for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
+                        onPlayerEventListener.onMusicPlayerState(mMusicPlayerState,null);
+                        onPlayerEventListener.onPlayMusiconInfo(musicInfo,mCurrentPlayIndex);
+                        if(null!=mMediaPlayer||mMusicPlayerState==MusicConstants.MUSIC_PLAYER_PAUSE
+                                ||isPlaying()){
                             //+500毫秒是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
                             onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),
                                     mMediaPlayer.getCurrentPosition()+500,TIMER_DURTION,mBufferProgress);
-                        }catch (RuntimeException e){
-                            e.printStackTrace();
+                        }else{
                             onPlayerEventListener.onTaskRuntime(0,0,TIMER_DURTION,mBufferProgress);
                         }
-                    }else{
-                        onPlayerEventListener.onTaskRuntime(0,0,TIMER_DURTION,mBufferProgress);
                     }
+                }catch (RuntimeException e){
+                    e.printStackTrace();
                 }
             }
         }
@@ -1002,12 +1002,12 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                 mMediaPlayer.release();
                 mMediaPlayer.reset();
             }
-        }catch (RuntimeException e){
-
-        }finally {
             if(null!=mWifiLock){
                 mWifiLock.release();
             }
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }finally {
             mMediaPlayer = null;
             MusicPlayerService.this.mMusicPlayerState =MusicConstants.MUSIC_PLAYER_STOP;
             MusicPlayerManager.getInstance().observerUpdata(new MusicStatus(MusicStatus.PLAYER_STATUS_STOP));
@@ -1196,9 +1196,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
             if(!MusicWindowManager.getInstance().isWindowShowing()){
                 BaseAudioInfo audioInfo = getCurrentPlayerMusic();
                 if(null!=audioInfo){
-                    MusicWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext(),
-                            MusicUtils.getInstance().dpToPxInt(getApplicationContext(),80f),
-                            MusicUtils.getInstance().dpToPxInt(getApplicationContext(),170f));
+                    MusicWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext());
                     MusicStatus musicStatus=new MusicStatus();
                     musicStatus.setId(audioInfo.getAudioId());
                     String frontPath=MusicUtils.getInstance().getMusicFrontPath(audioInfo);
@@ -1838,7 +1836,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         //8.0及以上系统需创建通知通道
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(MusicConstants.CHANNEL_ID,
-                    "COM_IMUSIC_MEDIA_PLAYER", NotificationManager.IMPORTANCE_LOW);
+                    "iMusic通知", NotificationManager.IMPORTANCE_LOW);
             channel.enableVibration(false);
             getNotificationManager().createNotificationChannel(channel);
         }

@@ -88,10 +88,9 @@ public class VideoWindowManager {
         WindowManager windowManager = getWindowManager(context);
         mVideoWindowPlayerGroup = new VideoWindowPlayerGroup(context,windowManager);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        //WindowManager.LayoutParams.TYPE_SYSTEM_ERROR
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
         }else if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.KITKAT){
             layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         }else{

@@ -142,6 +142,16 @@ public class MusicWindowTrash extends RelativeLayout {
 		}
 	}
 
+    /**
+     * 垃圾桶提示
+     * @param text
+     */
+    public void setText(String text) {
+        if(null!=mTvTrash){
+            mTvTrash.setText(text);
+        }
+    }
+
 	public void onDestroy(){
 		if(null!=mShakeAnimation){
 			mShakeAnimation.cancel();

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible">
-        <com.android.imusic.music.view.MusicArcMenuView
+        <com.music.player.lib.view.MusicArcMenuView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:arcMenuRadius="88dp"
@@ -18,7 +18,7 @@
             app:arcExpandCloseDurtion="500"
             app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
-        <com.android.imusic.music.view.MusicArcMenuView
+        <com.music.player.lib.view.MusicArcMenuView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:arcMenuRadius="88dp"
@@ -29,7 +29,7 @@
             app:arcExpandCloseDurtion="500"
             app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
-        <com.android.imusic.music.view.MusicArcMenuView
+        <com.music.player.lib.view.MusicArcMenuView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:arcMenuRadius="88dp"
@@ -40,7 +40,7 @@
             app:arcExpandCloseDurtion="500"
             app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
-        <com.android.imusic.music.view.MusicArcMenuView
+        <com.music.player.lib.view.MusicArcMenuView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:arcMenuRadius="88dp"
@@ -51,7 +51,7 @@
             app:arcExpandCloseDurtion="500"
             app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
-        <com.android.imusic.music.view.MusicArcMenuView
+        <com.music.player.lib.view.MusicArcMenuView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:arcMenuRadius="88dp"
@@ -62,7 +62,7 @@
             app:arcExpandCloseDurtion="500"
             app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
-        <com.android.imusic.music.view.MusicArcMenuView
+        <com.music.player.lib.view.MusicArcMenuView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:arcMenuRadius="88dp"
@@ -73,7 +73,7 @@
             app:arcExpandCloseDurtion="500"
             app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
-        <com.android.imusic.music.view.MusicArcMenuView
+        <com.music.player.lib.view.MusicArcMenuView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:arcMenuRadius="88dp"
@@ -84,7 +84,7 @@
             app:arcExpandCloseDurtion="500"
             app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
-        <com.android.imusic.music.view.MusicArcMenuView
+        <com.music.player.lib.view.MusicArcMenuView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:arcMenuRadius="88dp"
@@ -95,7 +95,7 @@
             app:arcExpandCloseDurtion="500"
             app:arcBtnIcon="@drawable/ic_music_collect_pre"
             app:arcAutoCreateDefaultMenus="true"/>
-        <com.android.imusic.music.view.MusicArcMenuView
+        <com.music.player.lib.view.MusicArcMenuView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:arcMenuRadius="88dp"
@@ -111,7 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/music_default_music_bg">
-        <com.music.player.lib.view.MusicLrcView
+        <com.music.player.lib.view.MusicArcMenuView
             android:id="@+id/lrc_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

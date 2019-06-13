@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
 import com.music.player.lib.manager.MusicSubjectObservable;
+import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.model.MusicLrcRowParserEngin;
 import com.android.imusic.music.utils.MediaUtils;
@@ -37,7 +38,6 @@ import com.music.player.lib.listener.MusicJukeBoxStatusListener;
 import com.music.player.lib.listener.MusicOnItemClickListener;
 import com.music.player.lib.listener.MusicPlayerEventListener;
 import com.music.player.lib.manager.MusicPlayerManager;
-import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicClickControler;
 import com.music.player.lib.util.MusicUtils;
@@ -821,9 +821,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         if(!MusicWindowManager.getInstance().isWindowShowing()){
             if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                 BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(MusicPlayerActivity.this.getApplicationContext(),
-                        MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,80f),
-                        MusicUtils.getInstance().dpToPxInt(MusicPlayerActivity.this,170f));
+                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext());
                 MusicStatus musicStatus=new MusicStatus();
                 musicStatus.setId(musicInfo.getAudioId());
                 String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);

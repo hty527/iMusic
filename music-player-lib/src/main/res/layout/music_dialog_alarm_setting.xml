@@ -11,7 +11,7 @@
         app:blurBlurRadius="25dp"
         app:blurFramRadius="6dp"
         app:blurOverlayColor="#993A1B59"
-        app:blurDownsampleFactor="8"
+        app:blurDownsampleFactor="10"
         app:blurTopLeft="true"
         app:blurTopRight="true"
         android:layout_gravity="bottom">
