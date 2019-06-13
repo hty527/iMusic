@@ -78,8 +78,8 @@ public class MusicPlayerWindow extends FrameLayout{
         mBoxViewSmall = (MusicJukeBoxViewSmall) findViewById(R.id.music_window_juke);
         mVibrator = (Vibrator)getContext().getSystemService(getContext().VIBRATOR_SERVICE);
         if(null!=attrs){
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicWindowPlayer);
-            mHorMiniMagin = typedArray.getDimensionPixelSize(R.styleable.MusicWindowPlayer_musicWinHorMagin, 15);
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicPlayerWindow);
+            mHorMiniMagin = typedArray.getDimensionPixelSize(R.styleable.MusicPlayerWindow_musicPlayerWinHorMagin, 15);
             typedArray.recycle();
         }else{
             //停靠边界,四周

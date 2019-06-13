@@ -54,6 +54,11 @@
         <!--横向间距-->
         <attr name="musicWinHorMagin" format="dimension"/>
     </declare-styleable>
+    <!--悬浮窗-->
+    <declare-styleable name="MusicPlayerWindow">
+        <!--横向间距-->
+        <attr name="musicPlayerWinHorMagin" format="dimension"/>
+    </declare-styleable>
     <!--Title-->
     <declare-styleable name="MusicCommentTitleView">
         <attr name="musicCommentTitle" format="string" />
