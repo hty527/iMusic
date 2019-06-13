@@ -7,14 +7,13 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +21,15 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import com.music.player.lib.R;
 import com.music.player.lib.bean.MusicStatus;
-import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.manager.MusicPlayerManager;
+import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by TinyHung@outlook.com
@@ -42,17 +44,17 @@ public class MusicPlayerWindow extends FrameLayout{
     //状态栏高度屏幕的宽高,悬浮球停靠在屏幕边界的最小距离
     private int mStatusBarHeight, mScreenWidth, mScreenHeight,mHorMiniMagin;
     //震动
-    private Vibrator mVibrator;
+    private Vibrator mVibrator=null;
     //窗口
-    private WindowManager mWindowManager;
+    private WindowManager mWindowManager=null;
     //窗口参数
-    private WindowManager.LayoutParams mWindowLayoutParams;
+    private WindowManager.LayoutParams mWindowLayoutParams=null;
     //迷你唱片机
-    private MusicJukeBoxViewSmall mBoxViewSmall;
+    private MusicJukeBoxViewSmall mBoxViewSmall=null;
     //垃圾桶
-    private MusicWindowTrash mWindowTrash;
+    private MusicWindowTrash mWindowTrash=null;
     //手势分发
-    private GestureDetector mGestureDetector;
+    private GestureDetector mGestureDetector=null;
     //手指在屏幕上的实时X、Y坐标
     private float xInScreen,yInScreen;
     //手指按下X、Y坐标
@@ -63,6 +65,17 @@ public class MusicPlayerWindow extends FrameLayout{
     private boolean isTouchIng =false,isCollideIng=false;
     //单击\滚动 事件的有效像素
     public static int SCROLL_PIXEL=5;
+
+    //扇形菜单容器
+    private FrameLayout mMusicMenuLayout;
+    //扇形菜单集
+    private List<ImageView> mViews =new ArrayList<>();
+    //展开后的菜单宽高
+    private int mMenusWidth;
+    //菜单的半径
+    private float mRadius;
+    //扇形菜单展开的总弧度(扇形总角度)，默认180°
+    private int mArcAngle =180;
 
     public MusicPlayerWindow(@NonNull Context context) {
         this(context,null);
@@ -80,15 +93,76 @@ public class MusicPlayerWindow extends FrameLayout{
         if(null!=attrs){
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MusicPlayerWindow);
             mHorMiniMagin = typedArray.getDimensionPixelSize(R.styleable.MusicPlayerWindow_musicPlayerWinHorMagin, 15);
+            mRadius = typedArray.getDimensionPixelSize(R.styleable.MusicPlayerWindow_musicPlayerWinArcRadius, 80);
+            mArcAngle = typedArray.getInt(R.styleable.MusicPlayerWindow_musicPlayerWinArcTotalAngle, 180);
             typedArray.recycle();
         }else{
             //停靠边界,四周
             mHorMiniMagin = MusicUtils.getInstance().dpToPxInt(getContext(), 15f);
+            mRadius=MusicUtils.getInstance().dpToPx(getContext(),80f);
         }
         mScreenWidth = MusicUtils.getInstance().getScreenWidth(context);
         mScreenHeight = MusicUtils.getInstance().getScreenHeight(context);
+        mMusicMenuLayout = (FrameLayout) findViewById(R.id.music_juke_menu);
         //手势分发
         mGestureDetector = new GestureDetector(getContext(),new JukeBoxGestureListener());
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);//如果是继承的viewgroup比如linearlayout时，可以先计算
+        int widthResult = 0;
+        //view根据xml中layout_width和layout_height测量出对应的宽度和高度值，
+        int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+        switch (widthSpecMode){
+            //match_parent
+            case MeasureSpec.UNSPECIFIED:
+                widthResult = widthSpecSize;
+                break;
+            //wrap_content
+            case MeasureSpec.AT_MOST:
+                widthResult = getContentWidth();
+                break;
+            //写死的固定高度
+            case MeasureSpec.EXACTLY:
+                //当xml布局中是准确的值，比如200dp是，判断一下当前view的宽度和准确值,取两个中大的，这样的好处是当view的宽度本事超过准确值不会出界
+                widthResult = Math.max(getContentWidth(), widthSpecSize);
+                break;
+        }
+        int heightResult = 0;
+        int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+        switch (heightSpecMode){
+            case MeasureSpec.UNSPECIFIED:
+                heightResult = heightSpecSize;
+                break;
+            case MeasureSpec.AT_MOST:
+                heightResult = getContentHeight();
+                break;
+            case MeasureSpec.EXACTLY:
+                heightResult = Math.max(getContentHeight(), heightSpecSize);
+                break;
+        }
+        setMeasuredDimension(widthResult, heightResult);
+    }
+
+    private int getContentWidth(){
+        float contentWidth = getWidth()+getPaddingLeft()+getPaddingRight();
+        return (int)contentWidth;
+    }
+
+    int getContentHeight(){
+        float contentHeight = getHeight()+getPaddingTop()+getPaddingBottom();
+        return (int)contentHeight;
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        int toPxInt = MusicUtils.getInstance().dpToPxInt(getContext(), 10f);
+        mMenusWidth = w-toPxInt;
+        Logger.d(TAG,"onMeasure-->onSizeChanged:W"+w+",H:"+h+",mMenusWidth:"+mMenusWidth);
     }
 
     @Override
@@ -127,18 +201,69 @@ public class MusicPlayerWindow extends FrameLayout{
         }
 
         @Override
-        public boolean onSingleTapUp(MotionEvent e) {
+        public boolean onSingleTapUp(MotionEvent event) {
             //前往播放器界面
-            String activityName = MusicPlayerManager.getInstance().getPlayerActivityName();
-            if(!TextUtils.isEmpty(activityName)&&null!=mBoxViewSmall.getTag()){
-                Context context = getContext().getApplicationContext();
-                Intent startIntent=new Intent();
-                startIntent.setClassName(context.getPackageName(),activityName);
-                startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, (Long) mBoxViewSmall.getTag());
-                startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(startIntent);
+//            String activityName = MusicPlayerManager.getInstance().getPlayerActivityName();
+//            if(!TextUtils.isEmpty(activityName)&&null!=mBoxViewSmall.getTag()){
+//                Context context = getContext().getApplicationContext();
+//                Intent startIntent=new Intent();
+//                startIntent.setClassName(context.getPackageName(),activityName);
+//                startIntent.putExtra(MusicConstants.KEY_MUSIC_ID, (Long) mBoxViewSmall.getTag());
+//                startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(startIntent);
+//            }
+            //展开扇形菜单
+            showMenus(event);
+            return super.onSingleTapUp(event);
+        }
+    }
+
+    /**
+     * 显示扇形菜单
+     * @param event 手势事件
+     */
+    private void showMenus(MotionEvent event) {
+        if(null!= mMusicMenuLayout){
+            if(mViews.size()<=0){
+                int[] resID=new int[]{R.drawable.ic_music_juke_default_cover,R.drawable.ic_music_juke_default_cover,
+                        R.drawable.ic_music_juke_default_cover,R.drawable.ic_music_juke_default_cover};
+                for (int i = 0; i < resID.length; i++) {
+                    ImageView imageView = new ImageView(getContext());
+                    imageView.setImageResource(resID[i]);
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    LayoutParams layoutParams = new LayoutParams(mMenusWidth, mMenusWidth);
+                    layoutParams.gravity = Gravity.CENTER;
+                    imageView.setLayoutParams(layoutParams);
+                    imageView.setTag(i);
+                    imageView.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+                    mMusicMenuLayout.addView(imageView,layoutParams);
+                    mViews.add(imageView);
+                }
             }
-            return super.onSingleTapUp(e);
+            //显示出来
+            //1.计算出单个Item之间的角度
+            int itemAngle = mArcAngle / (mViews.size()-1);
+            Logger.d(TAG,"showMenus-->itemAngle:"+itemAngle);
+            for (int i = 0; i < mViews.size(); i++) {
+                //计算每个Item的真实角度,第一个为0
+                int angle=itemAngle *i ;
+                float endX= (float) (mRadius*Math.cos(angle*(Math.PI/180)));
+                float endY= (float) (mRadius*Math.sin(angle*(Math.PI/180)));
+                Logger.d(TAG,"showMenus-->angle:"+angle+",endX:"+endX+",endY:"+endY);
+                ObjectAnimator objectAnimatorX,objectAnimatorY;
+                objectAnimatorX = ObjectAnimator.ofFloat(mViews.get(i), "translationX", 0, endX);
+                objectAnimatorY = ObjectAnimator.ofFloat(mViews.get(i), "translationY", 0, endY);
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.setDuration(300);
+                //设置同时播放x方向的位移动画和y方向的位移动画
+                animatorSet.play(objectAnimatorX).with(objectAnimatorY);
+                animatorSet.start();
+            }
         }
     }
 
@@ -343,7 +468,7 @@ public class MusicPlayerWindow extends FrameLayout{
         ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(view, "translationY", view.getHeight(),0);
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(objectAnimator1,objectAnimator2);
-        animatorSet.setDuration(350);
+        animatorSet.setDuration(300);
         animatorSet.setInterpolator(new LinearInterpolator());
         view.setVisibility(VISIBLE);
         animatorSet.start();
@@ -490,6 +615,12 @@ public class MusicPlayerWindow extends FrameLayout{
         if(null!=mVibrator){
             mVibrator.cancel();
             mVibrator=null;
+        }
+        if(null!= mMusicMenuLayout){
+            mMusicMenuLayout.removeAllViews();
+        }
+        if(null!=mViews){
+            mViews.clear();
         }
         mScreenWidth =0;
         mScreenHeight =0;
