@@ -18,32 +18,35 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import com.music.player.lib.R;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
-import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicWindowManager;
-import com.music.player.lib.util.Logger;
+import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.util.MusicUtils;
 
 /**
  * Created by TinyHung@outlook.com
  * 2019/6/11
  * Music Window Player
- * 一个包含唱片机、垃圾桶的悬浮窗交互窗口View,适用于ViewGroup
+ * 一个持有垃圾桶交互的音乐播放器mini窗口，适用于Window
  */
 
-public class MusicWindowPlayer extends FrameLayout implements View.OnTouchListener {
+public class MusicPlayerWindow extends FrameLayout{
 
-    private static final String TAG = "MusicWindowPlayer";
-    //状态栏高度,容器的宽高,悬浮球停靠在屏幕边界的最小距离
-    private int mStatusBarHeight, mGroupWidth, mGroupHeight,mHorMiniMagin;
+    private static final String TAG = "MusicPlayerWindow";
+    //状态栏高度屏幕的宽高,悬浮球停靠在屏幕边界的最小距离
+    private int mStatusBarHeight, mScreenWidth, mScreenHeight,mHorMiniMagin;
     //震动
     private Vibrator mVibrator;
+    //窗口
+    private WindowManager mWindowManager;
+    //窗口参数
+    private WindowManager.LayoutParams mWindowLayoutParams;
     //迷你唱片机
     private MusicJukeBoxViewSmall mBoxViewSmall;
     //垃圾桶
@@ -58,21 +61,20 @@ public class MusicWindowPlayer extends FrameLayout implements View.OnTouchListen
     private float xInView,yInView;
     //手指是否持续触摸屏幕中,是否持续碰撞中
     private boolean isTouchIng =false,isCollideIng=false;
-    //单击事件的有效像素
-    public static int SCROLL_PIXEL=10;
+    //单击\滚动 事件的有效像素
+    public static int SCROLL_PIXEL=5;
 
-    public MusicWindowPlayer(@NonNull Context context) {
+    public MusicPlayerWindow(@NonNull Context context) {
         this(context,null);
     }
 
-    public MusicWindowPlayer(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public MusicPlayerWindow(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs,0);
     }
 
-    public MusicWindowPlayer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public MusicPlayerWindow(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        View.inflate(context, R.layout.music_window_player,this);
-        mWindowTrash = (MusicWindowTrash) findViewById(R.id.music_window_trash);
+        View.inflate(context, R.layout.music_player_window,this);
         mBoxViewSmall = (MusicJukeBoxViewSmall) findViewById(R.id.music_window_juke);
         mVibrator = (Vibrator)getContext().getSystemService(getContext().VIBRATOR_SERVICE);
         if(null!=attrs){
@@ -83,66 +85,14 @@ public class MusicWindowPlayer extends FrameLayout implements View.OnTouchListen
             //停靠边界,四周
             mHorMiniMagin = MusicUtils.getInstance().dpToPxInt(getContext(), 15f);
         }
+        mScreenWidth = MusicUtils.getInstance().getScreenWidth(context);
+        mScreenHeight = MusicUtils.getInstance().getScreenHeight(context);
         //手势分发
         mGestureDetector = new GestureDetector(getContext(),new JukeBoxGestureListener());
-        //触摸事件监听
-        mBoxViewSmall.setOnTouchListener(this);
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);//如果是继承的viewgroup比如linearlayout时，可以先计算
-        int widthResult = 0;
-        //view根据xml中layout_width和layout_height测量出对应的宽度和高度值，
-        int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
-        switch (widthSpecMode){
-            //match_parent
-            case MeasureSpec.UNSPECIFIED:
-                widthResult = widthSpecSize;
-                break;
-            //wrap_content
-            case MeasureSpec.AT_MOST:
-                widthResult = getContentWidth();
-                break;
-            //写死的固定高度
-            case MeasureSpec.EXACTLY:
-                //当xml布局中是准确的值，比如200dp是，判断一下当前view的宽度和准确值,取两个中大的，这样的好处是当view的宽度本事超过准确值不会出界
-                widthResult = Math.max(getContentWidth(), widthSpecSize);
-                break;
-        }
-        int heightResult = 0;
-        int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
-        switch (heightSpecMode){
-            case MeasureSpec.UNSPECIFIED:
-                heightResult = heightSpecSize;
-                break;
-            case MeasureSpec.AT_MOST:
-                heightResult = getContentHeight();
-                break;
-            case MeasureSpec.EXACTLY:
-                heightResult = Math.max(getContentHeight(), heightSpecSize);
-                break;
-        }
-        this.mGroupWidth=widthResult;
-        this.mGroupHeight=heightResult;
-        setMeasuredDimension(widthResult, heightResult);
-    }
-
-    private int getContentWidth(){
-        float contentWidth = getWidth()+getPaddingLeft()+getPaddingRight();
-        return (int)contentWidth;
-    }
-
-    int getContentHeight(){
-        float contentHeight = getHeight()+getPaddingTop()+getPaddingBottom();
-        return (int)contentHeight;
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        Logger.d(TAG,"onTouch--"+event.getAction());
+    public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 //记录手指按下时手指在唱片机View中的位置
@@ -192,6 +142,18 @@ public class MusicWindowPlayer extends FrameLayout implements View.OnTouchListen
         }
     }
 
+    public void setWindowLayoutParams(WindowManager.LayoutParams windowLayoutParams) {
+        this.mWindowLayoutParams=windowLayoutParams;
+    }
+
+    public void setTrashWindow(MusicWindowTrash windowTrash) {
+        this.mWindowTrash=windowTrash;
+    }
+
+    public void setWindowManager(WindowManager windowManager) {
+        mWindowManager = windowManager;
+    }
+
     /**
      * 松手
      * @param event 手势事件
@@ -205,15 +167,14 @@ public class MusicWindowPlayer extends FrameLayout implements View.OnTouchListen
             if(containsXY){
                 MusicPlayerManager.getInstance().onStop();
                 MusicWindowManager.getInstance().removeAllWindowView(getContext().getApplicationContext());
+                return;
             }else{
                 //未重合，隐藏垃圾桶
                 hideTrashAnimation(mWindowTrash);
                 //自动吸附到控件边侧
-                if(null!=mBoxViewSmall){
-                    int[] locations=new int[2];
-                    mBoxViewSmall.getLocationOnScreen(locations);
-                    scrollToPixel(locations[0],locations[1], (int) event.getRawX(),350);
-                }
+                int[] locations=new int[2];
+                getLocationOnScreen(locations);
+                scrollToPixel(locations[0],locations[1], (int) event.getRawX(),350);
                 //判断是否触发单击事件 Math.abs(xInScreen - xDownInScreen) < SCROLL_PIXEL && Math.abs(yInScreen - yDownInScreen) < SCROLL_PIXEL
             }
         }
@@ -236,39 +197,10 @@ public class MusicWindowPlayer extends FrameLayout implements View.OnTouchListen
      * @param event
      */
     public boolean isLeftPoint(MotionEvent event){
-        if(event.getRawX()>(mGroupWidth/2)){
+        if(event.getRawX()>(mScreenWidth /2)){
             return false;
         }
         return true;
-    }
-
-    /**
-     * 迷你唱片机的X,Y轴偏移量
-     * @param offsetPixelX X轴位置
-     * @param offsetPixelY Y轴位置
-     */
-    public void setLayoutParamsOffset(int offsetPixelX, int offsetPixelY) {
-        if(offsetPixelX>-1&&offsetPixelY>-1){
-            if(null!=mBoxViewSmall){
-                mBoxViewSmall.setX(offsetPixelX);
-                mBoxViewSmall.setY(offsetPixelY);
-            }
-        }
-    }
-
-    /**
-     * 设置唱片机的边距距离
-     * @param left 左边边距
-     * @param top 顶部边距
-     * @param right 右边边距
-     * @param bottom 底部边距
-     */
-    public void setJukeMaigin(int left, int top, int right, int bottom){
-        if(null!=mBoxViewSmall){
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mBoxViewSmall.getLayoutParams();
-            layoutParams.setMargins(left,top,right,bottom);
-            mBoxViewSmall.setLayoutParams(layoutParams);
-        }
     }
 
     /**
@@ -329,9 +261,9 @@ public class MusicWindowPlayer extends FrameLayout implements View.OnTouchListen
     private boolean isContainsXY(MotionEvent event) {
         if(null!=mWindowTrash){
             //注意，这里需要使用屏幕坐标和和控件左边宽高的的 余集 的坐标位置，最终换算为垃圾桶View的view坐标
-            int rawX = (int) event.getRawX()-(mGroupWidth-mWindowTrash.getWidth());
+            int rawX = (int) event.getRawX()-(mScreenWidth -mWindowTrash.getWidth());
             //Y轴点应该加上状态栏高度，避免响应不准确
-            int rawY = (int) event.getRawY()-(mGroupHeight-mWindowTrash.getHeight());
+            int rawY = (int) event.getRawY()-(mScreenHeight -mWindowTrash.getHeight());
             return mWindowTrash.isContainsXY(rawX, rawY);
         }
         return false;
@@ -341,21 +273,22 @@ public class MusicWindowPlayer extends FrameLayout implements View.OnTouchListen
      * 更新唱片机显示位置
      */
     private void updateJukeLocation() {
-        if(null!=mBoxViewSmall){
+        if(null!=mWindowManager&&null!=mWindowLayoutParams){
             float toX = xInScreen - xInView;
             float toY = yInScreen - yInView;
             if(toX< mHorMiniMagin){
                 toX= mHorMiniMagin;
-            }else if(toX>(mGroupWidth -mBoxViewSmall.getWidth()- mHorMiniMagin)){
-                toX= mGroupWidth -mBoxViewSmall.getWidth()- mHorMiniMagin;
+            }else if(toX>(mScreenWidth -getWidth()- mHorMiniMagin)){
+                toX= mScreenWidth -getWidth()- mHorMiniMagin;
             }
             if(toY<0){
                 toY=0;
-            }else if(toY>(mGroupHeight -mBoxViewSmall.getHeight())){
-                toY= mGroupHeight -mBoxViewSmall.getHeight();
+            }else if(toY>(mScreenHeight -getHeight())){
+                toY= mScreenHeight -getHeight();
             }
-            mBoxViewSmall.setX(toX);
-            mBoxViewSmall.setY(toY);
+            mWindowLayoutParams.x = (int) toX;
+            mWindowLayoutParams.y = (int) toY;
+            mWindowManager.updateViewLayout(this, mWindowLayoutParams);
         }
     }
 
@@ -369,29 +302,33 @@ public class MusicWindowPlayer extends FrameLayout implements View.OnTouchListen
     @SuppressLint("ObjectAnimatorBinding")
     private void scrollToPixel(int viewCurrentPixelX, final int viewCurrentPixelY, int currentRowX, int scrollDurtion) {
         int toPixelX= mHorMiniMagin;
-        if(currentRowX>(mGroupWidth/2)){
+        if(currentRowX>(mScreenWidth /2)){
             //左边停靠最大X：屏幕宽-自身宽-边距大小
-            toPixelX=(mGroupWidth-mBoxViewSmall.getWidth()- mHorMiniMagin);
+            toPixelX=(mScreenWidth -getWidth()- mHorMiniMagin);
         }
         //Logger.d(TAG,"scrollToPixel:pixelX:"+viewCurrentPixelX+",pixelY:"+viewCurrentPixelY+",
         // currentRowX:"+currentRowX+",scrollDurtion:"+scrollDurtion+",toPixelX:"+toPixelX);
-        if(scrollDurtion<=0){
-            mBoxViewSmall.setX(toPixelX);
-            //mBoxViewSmall.setY(viewCurrentPixelY);
-            return;
-        }
-        ObjectAnimator objectAnimator = ObjectAnimator.ofInt(this, "number", viewCurrentPixelX, toPixelX);
-        objectAnimator.setDuration(scrollDurtion);
-        objectAnimator.setInterpolator(new AccelerateInterpolator());
-        objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int animatedValue = (int) animation.getAnimatedValue();
-                mBoxViewSmall.setX(animatedValue);
-                //mBoxViewSmall.setY(viewCurrentPixelY);
+        if(null!=mWindowManager&&null!=mWindowLayoutParams){
+            if(scrollDurtion<=0){
+                mWindowLayoutParams.x = toPixelX;
+                mWindowLayoutParams.y =  viewCurrentPixelY;
+                mWindowManager.updateViewLayout(this, mWindowLayoutParams);
+                return;
             }
-        });
-        objectAnimator.start();
+            ObjectAnimator objectAnimator = ObjectAnimator.ofInt(this, "number", viewCurrentPixelX, toPixelX);
+            objectAnimator.setDuration(scrollDurtion);
+            objectAnimator.setInterpolator(new AccelerateInterpolator());
+            objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int animatedValue = (int) animation.getAnimatedValue();
+                    mWindowLayoutParams.x = animatedValue;
+                    mWindowLayoutParams.y =  viewCurrentPixelY;
+                    mWindowManager.updateViewLayout(MusicPlayerWindow.this, mWindowLayoutParams);
+                }
+            });
+            objectAnimator.start();
+        }
     }
 
     /**
@@ -550,15 +487,12 @@ public class MusicWindowPlayer extends FrameLayout implements View.OnTouchListen
             mBoxViewSmall.onDestroy();
             mBoxViewSmall=null;
         }
-        if(null!=mWindowTrash){
-            mWindowTrash.onDestroy();
-            mWindowTrash=null;
-        }
         if(null!=mVibrator){
             mVibrator.cancel();
             mVibrator=null;
         }
-        mGroupWidth=0;mGroupHeight=0;
+        mScreenWidth =0;
+        mScreenHeight =0;
         xInScreen=0;yInScreen=0;xInView=0;yInView=0;isTouchIng=false;isCollideIng=false;
     }
 }

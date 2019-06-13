@@ -51,8 +51,6 @@
     </declare-styleable>
     <!--悬浮窗-->
     <declare-styleable name="MusicWindowPlayer">
-        <!--场景应用模式 0：悬浮窗 1：普通Layout-->
-        <attr name="musicWinSceneMode" format="integer"/>
         <!--横向间距-->
         <attr name="musicWinHorMagin" format="dimension"/>
     </declare-styleable>

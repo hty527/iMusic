@@ -46,28 +46,22 @@ public class MusicFanLayout extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mPath.addCircle(getWidth(), getHeight(), getWidth(), Path.Direction.CCW);
-        mPath.close();
-        //构造一个区域对象，左闭右开的。
-        RectF r=new RectF();
-        //计算控制点的边界
-        mPath.computeBounds(r, true);
-        //设置区域路径和剪辑描述的区域
-        mRegion.setPath(mPath, new Region((int)r.left,(int)r.top,(int)r.right,(int)r.bottom));
-        Paint paint=new Paint();
-        paint.setColor(mColor);
-        //设置抗锯齿。
-        paint.setAntiAlias(true);
-        canvas.drawPath(mPath, paint);
+        if(null!=mPath&&null!=mRegion){
+            mPath.addCircle(getWidth(), getHeight(), getWidth(), Path.Direction.CCW);
+            mPath.close();
+            //构造一个区域对象，左闭右开的。
+            RectF r=new RectF();
+            //计算控制点的边界
+            mPath.computeBounds(r, true);
+            //设置区域路径和剪辑描述的区域
+            mRegion.setPath(mPath, new Region((int)r.left,(int)r.top,(int)r.right,(int)r.bottom));
+            Paint paint=new Paint();
+            paint.setColor(mColor);
+            //设置抗锯齿。
+            paint.setAntiAlias(true);
+            canvas.drawPath(mPath, paint);
+        }
     }
-
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        if(event.getAction()==MotionEvent.ACTION_MOVE){
-//            isContainsXY((int) event.getX(), (int) event.getX());
-//        }
-//        return true;
-//    }
 
     /**
      * 检测某个X,Y点是否在扇形内

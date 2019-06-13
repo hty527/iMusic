@@ -119,7 +119,7 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
         removeObservers();
         removeAllPlayerListener();
         //音频悬浮窗口释放
-        MusicFullWindowManager.getInstance().onDestroy();
+        MusicWindowManager.getInstance().onDestroy();
         mConnection=null;mBinder=null;cMMusicSubjectObservable=null;mInstance=null;
         mMusicPlayerConfig=null;mTempInfoListener=null;mCallBack=null;
     }

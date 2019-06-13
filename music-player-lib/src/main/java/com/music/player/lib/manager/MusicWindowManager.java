@@ -9,28 +9,30 @@ import android.os.Binder;
 import android.os.Build;
 import android.provider.Settings;
 import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
 import com.music.player.lib.bean.MusicStatus;
-import com.music.player.lib.listener.MusicAnimatorListener;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
-import com.music.player.lib.view.MusicWindowMiniJukebox;
+import com.music.player.lib.view.MusicPlayerWindow;
 import com.music.player.lib.view.MusicWindowTrash;
 import java.lang.reflect.Method;
 
 /**
  * TinyHung@Outlook.com
- * 2019/3/12
+ * 2019/6/11
  * WindowManager
+ * 将悬浮窗改为全屏悬浮窗，垃圾桶交互在一个View之内，不再跨View通信和交互
  */
-@Deprecated
+
 public class MusicWindowManager {
 
-	private static final String TAG = "MusicWindowManager";
+	private static final String TAG = "MusicFullWindowManager";
 	private static volatile MusicWindowManager mInstance;
 	//迷你唱片机
-	private MusicWindowMiniJukebox mMusicWindowMiniJukebox;
-	private MusicWindowTrash mMusicWindowTrash;
+	private MusicPlayerWindow mMusicPlayerWindow;
+	//垃圾桶
+    private MusicWindowTrash mWindowTrash;
 	private static WindowManager mWindowManager;
 
     public static MusicWindowManager getInstance() {
@@ -47,8 +49,8 @@ public class MusicWindowManager {
 	private MusicWindowManager(){}
 
 	/**
-	 * 添加一个View到窗口
-	 * @param context
+	 * 添加一个播放器View到窗口
+	 * @param context Application全局上下文
 	 */
 	public synchronized MusicWindowManager createMiniJukeBoxToWindown(Context context) {
         createMiniJukeBoxToWindown(context,-1,-1);
@@ -56,10 +58,10 @@ public class MusicWindowManager {
 	}
 
     /**
-     * 添加一个View到窗口,默认位置是位于屏幕左上角，自行指定X、Y轴偏移量
-     * @param context 全局上下文
-     * @param offsetPixelX X轴偏移量 单位像素 -1:使用默认
-     * @param offsetPixelY Y轴偏移量 单位像素 -1:使用默认
+     * 添加一个播放器View到窗口,默认圆形播放器位于屏幕右下角
+     * @param context Application全局上下文
+     * @param offsetPixelX 圆形播放器X轴偏移量 单位像素 -1:使用默认
+     * @param offsetPixelY 圆形播放器Y轴偏移量 单位像素 -1:使用默认
      */
 	public synchronized void createMiniJukeBoxToWindown(Context context, int offsetPixelX, int offsetPixelY) {
         if(!isWindowShowing()){
@@ -67,7 +69,7 @@ public class MusicWindowManager {
                 if (!Settings.canDrawOverlays(context)) {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setData(Uri.parse( "package:"+MusicUtils.getInstance().getPackageName(context)));
+                    intent.setData(Uri.parse( "package:"+ MusicUtils.getInstance().getPackageName(context)));
                     context.startActivity(intent);
                 } else {
                     addMiniJukeBoxToWindown(context,offsetPixelX,offsetPixelY);
@@ -85,55 +87,101 @@ public class MusicWindowManager {
      * @param offsetPixelY Y轴偏移量 单位像素 -1:使用默认
      */
     private synchronized void addMiniJukeBoxToWindown(Context context, int offsetPixelX, int offsetPixelY) {
-        if (null== mMusicWindowMiniJukebox) {
-            WindowManager windowManager = getWindowManager(context);
+        //添加唱片机到窗口前，先添加一个垃圾桶到屏幕
+        addTrashToWindow(context);
+        if (null== mMusicPlayerWindow) {
             int screenWidth = MusicUtils.getInstance().getScreenWidth(context);
             int screenHeight = MusicUtils.getInstance().getScreenHeight(context);
-            mMusicWindowMiniJukebox = new MusicWindowMiniJukebox(context,windowManager);
-            WindowManager.LayoutParams miniJukeBoxLayoutParams = new WindowManager.LayoutParams();
+            WindowManager windowManager = getWindowManager(context);
+            mMusicPlayerWindow = new MusicPlayerWindow(context);
+            WindowManager.LayoutParams jukeBoxLayoutParams = new WindowManager.LayoutParams();
+            //绑定窗口和垃圾桶
+            mMusicPlayerWindow.setWindowLayoutParams(jukeBoxLayoutParams);
+            mMusicPlayerWindow.setTrashWindow(mWindowTrash);
+            mMusicPlayerWindow.setWindowManager(windowManager);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                jukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+                jukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
             }else if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.KITKAT){
-                miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+                jukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
             }else{
-                miniJukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+                jukeBoxLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
             }
-            //不拦截焦点、使焦点穿透到底层
-            miniJukeBoxLayoutParams.flags =  WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+            //FLAG_NOT_FOCUSABLE：屏蔽此Window所有触摸焦点
+            //FLAG_LAYOUT_IN_SCREEN：使用整个Window区域，包括状态栏在内
+            //FLAG_NOT_TOUCH_MODAL：自己窗口的焦点自己处理，其他窗口的焦点其他Window处理
+            //FLAG_WATCH_OUTSIDE_TOUCH：非此Window的触摸事件，在此Window只能接受到一次特殊的事件，需要配合FLAG_NOT_TOUCH_MODAL设置
+            jukeBoxLayoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                      |WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                      |WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                      |WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
             //背景透明
-            miniJukeBoxLayoutParams.format = PixelFormat.RGBA_8888;
+            jukeBoxLayoutParams.format = PixelFormat.RGBA_8888;
+            int viewWH = MusicUtils.getInstance().dpToPxInt(context, 60f);
             //默认位于屏幕的左上角，具体位置定位定传X、Y偏移量
-            miniJukeBoxLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
-            miniJukeBoxLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-            miniJukeBoxLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            jukeBoxLayoutParams.gravity =Gravity.LEFT | Gravity.TOP;
+            jukeBoxLayoutParams.width = viewWH;
+            jukeBoxLayoutParams.height = viewWH;
             if(offsetPixelX>-1){
-                int offsetX = screenWidth - offsetPixelX;
-                miniJukeBoxLayoutParams.x=offsetX;
+                jukeBoxLayoutParams.x=offsetPixelX;
             }else{
                 //X轴偏移量=screenWidth-(ViewHeight+marginBottomHeight)
-                int dpToPxIntX = MusicUtils.getInstance().dpToPxInt(context, 24f)+ mMusicWindowMiniJukebox.getViewWidth();
+                int dpToPxIntX = MusicUtils.getInstance().dpToPxInt(context, 15f)+ viewWH;
                 int offsetX = screenWidth - dpToPxIntX;
-                miniJukeBoxLayoutParams.x=offsetX;
+                jukeBoxLayoutParams.x=offsetX;
                 Logger.d(TAG,"X:"+offsetX);
             }
             if(offsetPixelY>-1){
-                int offsetY = screenHeight - offsetPixelY;
-                miniJukeBoxLayoutParams.y=offsetY;
-
+                jukeBoxLayoutParams.y=offsetPixelY;
             }else{
                 //Y轴偏移量=ScreenHeight-(ViewHeight+statusBarHeight+marginBottomHeight)
-                int dpToPxIntY = MusicUtils.getInstance().dpToPxInt(context, 42f)+ mMusicWindowMiniJukebox.getViewHeight();
+                int dpToPxIntY = MusicUtils.getInstance().dpToPxInt(context, 80f)+ viewWH;
                 int offsetY = screenHeight - dpToPxIntY;
-                miniJukeBoxLayoutParams.y=offsetY;
+                jukeBoxLayoutParams.y=offsetY;
                 Logger.d(TAG,"Y:"+offsetY);
             }
-            mMusicWindowMiniJukebox.setClipChildren(false);
-            mMusicWindowMiniJukebox.setWindowManagerParams(miniJukeBoxLayoutParams);
-            windowManager.addView(mMusicWindowMiniJukebox, miniJukeBoxLayoutParams);
+            windowManager.addView(mMusicPlayerWindow, jukeBoxLayoutParams);
+        }
+    }
+
+    /**
+     * 添加一个垃圾桶至窗口
+     * @param context 全局上下文
+     */
+    private void addTrashToWindow(Context context) {
+        if(null==mWindowTrash){
+            WindowManager windowManager = getWindowManager(context);
+            mWindowTrash=new MusicWindowTrash(context);
+            mWindowTrash.setVisibility(View.GONE);//默认是不可见的
+            WindowManager.LayoutParams trashLayoutParams = new WindowManager.LayoutParams();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                trashLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                trashLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+            }else if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.KITKAT){
+                trashLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+            }else{
+                trashLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+            }
+            //FLAG_NOT_FOCUSABLE：屏蔽此Window所有触摸焦点
+            //FLAG_LAYOUT_IN_SCREEN：使用整个Window区域，包括状态栏在内
+            //FLAG_NOT_TOUCH_MODAL：自己窗口的焦点自己处理，其他窗口的焦点其他Window处理
+            //FLAG_WATCH_OUTSIDE_TOUCH：非此Window的触摸事件，在此Window只能接受到一次特殊的事件，需要配合FLAG_NOT_TOUCH_MODAL设置
+            trashLayoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                    |WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    |WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                    |WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+            //背景透明
+            trashLayoutParams.format = PixelFormat.RGBA_8888;
+            int dpToPxInt = MusicUtils.getInstance().dpToPxInt(context, 120f);
+            //位于屏幕右下角
+            trashLayoutParams.gravity =Gravity.RIGHT|Gravity.BOTTOM;
+            trashLayoutParams.width = dpToPxInt;
+            trashLayoutParams.height = dpToPxInt;
+            trashLayoutParams.x=0;
+            trashLayoutParams.y=0;
+            windowManager.addView(mWindowTrash, trashLayoutParams);
         }
     }
 
@@ -141,101 +189,20 @@ public class MusicWindowManager {
 	 * 将小悬浮窗从屏幕上移除。
 	 * @param context 全局上下文
 	 */
-	public synchronized void removeMiniJukeBoxFromWindow(Context context) {
-		if(null!= mMusicWindowMiniJukebox){
+	public synchronized void removeAllWindowView(Context context) {
+		if(null!= mMusicPlayerWindow){
+            mMusicPlayerWindow.onDestroy();
 			WindowManager windowManager = getWindowManager(context);
-			windowManager.removeView(mMusicWindowMiniJukebox);
-			mMusicWindowMiniJukebox = null;
+			windowManager.removeView(mMusicPlayerWindow);
+            mMusicPlayerWindow = null;
 		}
-	}
-
-    /**
-     * 添加一个垃圾桶至窗口
-     * @param context 全局上下文,这个悬浮窗层级应该比唱片机低一级，使其显示在唱片机下方
-     * @return 控件的宽高，用来确定控件在屏幕的位置
-     */
-    public synchronized Object addMiniJukeBoxTrashToWindown(Context context) {
-        if (null== mMusicWindowTrash) {
+		if(null!=mWindowTrash){
+            mWindowTrash.onDestroy();
             WindowManager windowManager = getWindowManager(context);
-            mMusicWindowTrash = new MusicWindowTrash(context);
-            int dpToPxInt = MusicUtils.getInstance().dpToPxInt(context, 120f);
-            WindowManager.LayoutParams trachLayoutParams = new WindowManager.LayoutParams();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                trachLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            }else if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.KITKAT){
-                trachLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-            }else{
-                trachLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-            }
-            //不拦截焦点、使焦点穿透到底层
-            trachLayoutParams.flags =  WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-            //背景透明
-            trachLayoutParams.format = PixelFormat.RGBA_8888;
-            trachLayoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-            trachLayoutParams.width = dpToPxInt;
-            trachLayoutParams.height = dpToPxInt;
-            trachLayoutParams.x=0;
-            trachLayoutParams.y=0;
-            windowManager.addView(mMusicWindowTrash, trachLayoutParams);
-            return new int[]{dpToPxInt,dpToPxInt};
+            windowManager.removeView(mWindowTrash);
+            mWindowTrash=null;
         }
-        return mMusicWindowTrash;
-    }
-
-    /**
-     * 悬浮窗垃圾桶从屏幕移除
-     * @param context 全局上下文
-     */
-    public synchronized void removeTrashFromWindown(final Context context) {
-        if(null!= mMusicWindowTrash){
-            mMusicWindowTrash.startHideAnimation(new MusicAnimatorListener() {
-                @Override
-                public void onAnimationStart() {
-
-                }
-
-                @Override
-                public void onAnimationEnd() {
-                    if(null!=mMusicWindowTrash){
-                        mMusicWindowTrash.onDestroy();
-                        WindowManager windowManager = getWindowManager(context);
-                        windowManager.removeView(mMusicWindowTrash);
-                        mMusicWindowTrash = null;
-                    }
-                }
-            });
-        }
-    }
-
-    /**
-     * 垃圾桶焦点感应是否捕获
-     * @param focusCap 全局上下文
-     */
-    public void jukeBoxTrashFocusCap(boolean focusCap) {
-        if(null!= mMusicWindowTrash){
-            mMusicWindowTrash.jukeBoxTrashFocusCap(focusCap);
-        }
-    }
-
-    /**
-     * 垃圾桶抖动动画
-     */
-    public void startShakeAnimation() {
-        if(null!= mMusicWindowTrash){
-            mMusicWindowTrash.startShakeAnimation();
-        }
-    }
-
-    /**
-     * 开始显示垃圾桶
-     */
-    public void startTrashWindowAnimation(){
-        if(null!= mMusicWindowTrash){
-            mMusicWindowTrash.startTrashWindowAnimation();
-        }
-    }
+	}
 
     /**
      * 此应用是否拥有悬浮窗权限
@@ -288,8 +255,8 @@ public class MusicWindowManager {
 	 * 更新小悬浮窗的TextView上的数据，显示正在加载中
 	 */
 	public void updateWindowStatus(MusicStatus musicStatus) {
-		if(mMusicWindowMiniJukebox !=null){
-			mMusicWindowMiniJukebox.updateData(musicStatus);
+		if(mMusicPlayerWindow !=null){
+            mMusicPlayerWindow.updateData(musicStatus);
 		}
 	}
 
@@ -305,23 +272,15 @@ public class MusicWindowManager {
 	 * @return 为true标识当前窗口已经存在悬浮窗
 	 */
 	public boolean isWindowShowing() {
-		return null!= mMusicWindowMiniJukebox;
+		return null!= mMusicPlayerWindow;
 	}
-
-    /**
-     * 窗口是否有垃圾桶
-     * @return 为true表示当前窗口拥有垃圾桶
-     */
-    public boolean isTrashShowing() {
-        return null!= mMusicWindowTrash;
-    }
 
     /**
      * 悬浮窗中迷你唱片机动画开启
      */
     public void onResume() {
-	    if(null!= mMusicWindowMiniJukebox) {
-            mMusicWindowMiniJukebox.onResume();
+	    if(null!= mMusicPlayerWindow) {
+            mMusicPlayerWindow.onResume();
         }
     }
 
@@ -329,8 +288,8 @@ public class MusicWindowManager {
      * 悬浮窗中迷你唱片机动画关闭
      */
     public void onPause() {
-        if(null!= mMusicWindowMiniJukebox) {
-            mMusicWindowMiniJukebox.onPause();
+        if(null!= mMusicPlayerWindow) {
+            mMusicPlayerWindow.onPause();
         }
     }
 
@@ -338,8 +297,8 @@ public class MusicWindowManager {
      * MINIJukeBox悬浮窗可见
      */
     public void onVisible() {
-        if(null!= mMusicWindowMiniJukebox) {
-            mMusicWindowMiniJukebox.onVisible();
+        if(null!= mMusicPlayerWindow) {
+            mMusicPlayerWindow.onVisible();
         }
     }
 
@@ -348,8 +307,8 @@ public class MusicWindowManager {
      * @param audioID 音频ID
      */
     public void onVisible(long audioID) {
-        if(null!= mMusicWindowMiniJukebox) {
-            mMusicWindowMiniJukebox.onVisible(audioID);
+        if(null!= mMusicPlayerWindow) {
+            mMusicPlayerWindow.onVisible(audioID);
         }
     }
 
@@ -357,8 +316,8 @@ public class MusicWindowManager {
      * MINIJukeBox悬浮窗不可见
      */
     public void onInvisible() {
-        if(null!= mMusicWindowMiniJukebox) {
-            mMusicWindowMiniJukebox.onInvisible();
+        if(null!= mMusicPlayerWindow) {
+            mMusicPlayerWindow.onInvisible();
         }
     }
 
@@ -366,15 +325,10 @@ public class MusicWindowManager {
      * 组件中对应函数调用
      */
     public void onDestroy() {
-	    if(null!= mMusicWindowMiniJukebox &&null!=mWindowManager){
-            mMusicWindowMiniJukebox.onDestroy();
-            mWindowManager.removeViewImmediate(mMusicWindowMiniJukebox);
-            mMusicWindowMiniJukebox =null;
-        }
-        if(null!= mMusicWindowTrash &&null!=mWindowManager){
-            mMusicWindowTrash.onDestroy();
-            mWindowManager.removeViewImmediate(mMusicWindowTrash);
-            mMusicWindowTrash =null;
+        if(null!= mMusicPlayerWindow &&null!=mWindowManager){
+            mMusicPlayerWindow.onDestroy();
+            mWindowManager.removeViewImmediate(mMusicPlayerWindow);
+            mMusicPlayerWindow =null;
         }
         mWindowManager=null;mInstance=null;
     }

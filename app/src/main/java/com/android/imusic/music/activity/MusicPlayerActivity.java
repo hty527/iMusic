@@ -25,8 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
-import com.music.player.lib.manager.MusicFullWindowManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
+import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.model.MusicLrcRowParserEngin;
 import com.android.imusic.music.utils.MediaUtils;
@@ -140,7 +140,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         if(!isOnCreate&&null!=currentPlayerMusic&&currentPlayerMusic.getAudioId()==musicID){
             return;
         }
-        MusicFullWindowManager.getInstance().onInvisible();
+        MusicWindowManager.getInstance().onInvisible();
         MusicPlayerManager.getInstance().onCheckedPlayerConfig();//检查播放器配置
         if(null!=intent.getSerializableExtra(MusicConstants.KEY_MUSIC_LIST)){
             List<AudioInfo> audioInfos = (List<AudioInfo>) intent.getSerializableExtra(MusicConstants.KEY_MUSIC_LIST);
@@ -358,7 +358,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                 mMusicJukeBoxView.onStart();
             }
         }
-        MusicFullWindowManager.getInstance().onInvisible();
+        MusicWindowManager.getInstance().onInvisible();
     }
 
     @Override
@@ -775,7 +775,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         if(null!=mMusicJukeBoxView&&!mMusicJukeBoxView.isBackPressed()){
             return;
         }
-        if(!MusicFullWindowManager.getInstance().checkAlertWindowsPermission(MusicPlayerActivity.this)){
+        if(!MusicWindowManager.getInstance().checkAlertWindowsPermission(MusicPlayerActivity.this)){
             new android.support.v7.app.AlertDialog.Builder(MusicPlayerActivity.this)
                     .setTitle(getString(R.string.text_music_close_tips))
                     .setMessage(getString(R.string.text_music_close_permission_tips))
@@ -818,10 +818,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements
      * 创建一个全局的迷你唱片至窗口
      */
     private void createMiniJukeBoxToWindown() {
-        if(!MusicFullWindowManager.getInstance().isWindowShowing()){
+        if(!MusicWindowManager.getInstance().isWindowShowing()){
             if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                 BaseAudioInfo musicInfo = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
-                MusicFullWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext());
+                MusicWindowManager.getInstance().createMiniJukeBoxToWindown(getApplicationContext());
                 MusicStatus musicStatus=new MusicStatus();
                 musicStatus.setId(musicInfo.getAudioId());
                 String frontPath=MusicUtils.getInstance().getMusicFrontPath(musicInfo);
@@ -832,18 +832,18 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                         || playerState==MusicConstants.MUSIC_PLAYER_PREPARE
                         || playerState==MusicConstants.MUSIC_PLAYER_BUFFER;
                 musicStatus.setPlayerStatus(playing?MusicStatus.PLAYER_STATUS_START:MusicStatus.PLAYER_STATUS_PAUSE);
-                MusicFullWindowManager.getInstance().updateWindowStatus(musicStatus);
+                MusicWindowManager.getInstance().updateWindowStatus(musicStatus);
             }
         }
         //此处手动显示一把，避免悬浮窗还未成功创建
-        MusicFullWindowManager.getInstance().onVisible();
+        MusicWindowManager.getInstance().onVisible();
         finish();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(MusicFullWindowManager.getInstance().checkAlertWindowsPermission(MusicPlayerActivity.this)){
+        if(MusicWindowManager.getInstance().checkAlertWindowsPermission(MusicPlayerActivity.this)){
             createMiniJukeBoxToWindown();
         }
     }
