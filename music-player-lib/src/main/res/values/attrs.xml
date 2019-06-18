@@ -58,10 +58,6 @@
     <declare-styleable name="MusicPlayerWindow">
         <!--横向间距-->
         <attr name="musicPlayerWinHorMagin" format="dimension"/>
-        <!--扇形菜单的半径-->
-        <attr name="musicPlayerWinArcRadius" format="dimension"/>
-        <!--扇形菜单的总弧度-->
-        <attr name="musicPlayerWinArcTotalAngle" format="integer"/>
     </declare-styleable>
     <!--Title-->
     <declare-styleable name="MusicCommentTitleView">

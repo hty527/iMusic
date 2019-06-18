@@ -158,7 +158,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                     mSeekBar.setSecondaryProgress(0);
                     mSeekBar.setProgress(0);
                 }
-                //设置数据，播放时间将在onOffsetPosition回调内被触发
+                //设置数据，播放时间将在onPageSelected回调内被触发
                 MusicPlayerManager.getInstance().updateMusicPlayerData(thisMusicLists,index);
                 mMusicJukeBoxView.setNewData(thisMusicLists,index,true);
             }
@@ -199,7 +199,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                     case R.id.music_btn_last:
                         if(mClickControler.canTrigger()){
                             int lastPosition = MusicPlayerManager.getInstance().playLastIndex();
-                            setCurrentMusicItem(lastPosition);
+                            setCurrentMusicItem(lastPosition,true);
                         }
                         break;
                     //开始、暂停
@@ -212,7 +212,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                     case R.id.music_btn_next:
                         if(mClickControler.canTrigger()){
                             int nextPosition = MusicPlayerManager.getInstance().playNextIndex();
-                            setCurrentMusicItem(nextPosition);
+                            setCurrentMusicItem(nextPosition,true);
                         }
                         break;
                     //菜单
@@ -221,7 +221,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                                 setMusicOnItemClickListener(new MusicOnItemClickListener() {
                                     @Override
                                     public void onItemClick(View view, int posotion,long musicID) {
-                                        setCurrentMusicItem(posotion);
+                                        setCurrentMusicItem(posotion,true);
                                     }
                         }).show();
                         break;
@@ -329,15 +329,16 @@ public class MusicPlayerActivity extends AppCompatActivity implements
     /**
      * 设置显示项
      * @param position 位置
+     * @param isPlay 是否开始播放
      */
-    private boolean setCurrentMusicItem(int position) {
+    private boolean setCurrentMusicItem(int position,boolean isPlay) {
         boolean smoothScroll=false;
         if(null!=mMusicJukeBoxView&&position>-1){
             if(Math.abs(mMusicJukeBoxView.getCurrentItem()-position)>2){
-                mMusicJukeBoxView.setCurrentMusicItem(position, false,true);
+                mMusicJukeBoxView.setCurrentMusicItem(position, false,isPlay);
             }else{
                 smoothScroll=true;
-                mMusicJukeBoxView.setCurrentMusicItem(position, true,false);
+                mMusicJukeBoxView.setCurrentMusicItem(position, true,isPlay);
             }
         }
         return smoothScroll;
@@ -402,13 +403,26 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         mSubTitle.setText(audioInfo.getNickname());
     }
 
+    @Override
+    public void onPageInvisible(int oldPosition) {
+        MusicPlayerManager.getInstance().onReset();
+        if(null!=mCurrentTime){
+            mCurrentTime.setText("00:00");
+            if(null!=mSeekBar){
+                mSeekBar.setSecondaryProgress(0);
+                mSeekBar.setProgress(0);
+            }
+        }
+    }
+
     /**
-     * Pager某项正在显示了，更新基本UI
+     * 切换了新的显示项
+     * @param position 索引
      * @param audioInfo 音频对象
-     * @param newPosition 刚刚处于可见状态的Position
+     * @param startPlayer  true: 播放事件 false:只是回显同步状态
      */
     @Override
-    public void onVisible(BaseAudioInfo audioInfo, int newPosition) {
+    public void onPageSelected(int position, BaseAudioInfo audioInfo, boolean startPlayer) {
         if(null!=audioInfo){
             mViewTitle.setText(audioInfo.getAudioName());
             mSubTitle.setText(audioInfo.getNickname());
@@ -418,36 +432,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             mBtnCollect.setSelected(isExist);
             mRootLayout.setBackgroundCover(MusicUtils.getInstance().getMusicFrontPath(audioInfo),1200);
         }
-    }
-
-    /**
-     * Pager某项处于不可见,释放内部播放器
-     * @param oldPosition 不可见状态的Position
-     */
-    @Override
-    public void onInvisible(int oldPosition) {
-        if(null!=mCurrentTime){
-            mCurrentTime.setText("00:00");
-            mSeekBar.setSecondaryProgress(0);
-            mSeekBar.setProgress(0);
-        }
-        MusicPlayerManager.getInstance().onReset();
-    }
-
-    /**
-     * 唱片机内部新的显示项，仅当ViewPager完全静止时将正在显示的项回调至此函数
-     * 用户主动触发的下一曲或上一曲、内部根据播放模式切换的上下曲等改变了播放源状态都会回调此方法
-     * @param position 索引
-     * @param audioInfo 音频对象
-     * @param startPlayer true:开始播放 false:只是回显同步
-     */
-    @Override
-    public void onOffsetPosition(int position, BaseAudioInfo audioInfo, boolean startPlayer) {
-        if(null!=audioInfo&&startPlayer){
-            mCurrentTime.setText("00:00");
-            mSeekBar.setSecondaryProgress(0);
-            mSeekBar.setProgress(0);
-            //切换音频
+        //切换音频源播放
+        if(startPlayer){
             MusicPlayerManager.getInstance().startPlayMusic(position);
         }
     }
@@ -614,7 +600,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         getHandler().post(new Runnable() {
             @Override
             public void run() {
-                setCurrentMusicItem(position);
+                setCurrentMusicItem(position,false);
             }
         });
     }

@@ -231,6 +231,12 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         if(index<0){
             throw new IndexOutOfBoundsException("start play index must > 0");
         }
+        if(index==mCurrentPlayIndex&&(mMusicPlayerState==MusicConstants.MUSIC_PLAYER_PREPARE
+                ||mMusicPlayerState==MusicConstants.MUSIC_PLAYER_BUFFER
+                ||mMusicPlayerState==MusicConstants.MUSIC_PLAYER_PLAYING)){
+            Logger.d(TAG,"startPlayMusic--频繁重复调用");
+            return;
+        }
         if(null!=mAudios&&mAudios.size()>index){
             this.mCurrentPlayIndex=index;
             BaseAudioInfo baseMusicInfo = (BaseAudioInfo) mAudios.get(index);
@@ -968,8 +974,8 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         MusicPlayerService.this.mIsPassive=false;
         try {
             if(null!=mMediaPlayer){
+                mMediaPlayer.stop();
                 mMediaPlayer.reset();
-                mMediaPlayer.release();
                 mMediaPlayer = null;
             }
         }catch (RuntimeException e){

@@ -19,25 +19,18 @@ public interface MusicJukeBoxStatusListener {
     void onScrollOffsetObject(BaseAudioInfo audioInfo);
 
     /**
-     * Pager处于可见状态
-     * @param audioInfo 音频对象
-     * @param newPosition 刚刚处于可见状态的Position
+     * 某一个PageItem处于不可见状态
+     * @param oldPosition 不可见状态的Position角标
      */
-    void onVisible(BaseAudioInfo audioInfo,int newPosition);
+    void onPageInvisible(int oldPosition);
 
     /**
-     * Pager处于不可见状态
-     * @param oldPosition 不可见状态的Position
-     */
-    void onInvisible(int oldPosition);
-
-    /**
-     * 新的Pager落地了，唱片机在Pager滚动后，最终静止不动，回调此方法
-     * @param offsetPosition 索引
+     * 新的显示偏移位置
+     * @param position 索引
      * @param audioInfo 音频对象
-     * @param startPlayer true:播放事件 false:只是回显同步状态
+     * @param startPlayer  true: 播放事件 false:只是回显同步状态
      */
-    void onOffsetPosition(int offsetPosition, BaseAudioInfo audioInfo,boolean startPlayer);
+    void onPageSelected(int position, BaseAudioInfo audioInfo,boolean startPlayer);
 
     /**
      * 唱片机状态发生了变化
