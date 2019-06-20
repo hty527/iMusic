@@ -88,6 +88,6 @@
     <string name="text_version_download_finlsh_instanl">下载完成，点击安装</string>
     <string name="text_version_download_error">下载失败，点击重试</string>
     <string name="text_xiao_tips_title">小米用户使用提示</string>
-    <string name="text_xiao_tips_content">由于小米ROM的限制，iMusic在锁屏或者后台运行下无法缓冲和播放网络音乐。请前往\"系统设置\"-\"电量和性能\"-\"场景配置\"下，将睡眠模式关闭。即可正常体验。</string>
+    <string name="text_xiao_tips_content">由于小米ROM的限制，iMusic在锁屏或者后台运行下无法缓冲和播放网络音乐。请前往\"系统设置\"--\"电量和性能\"--\"场景配置\"中将\"睡眠模式\"关闭。即可正常体验。</string>
     <string name="text_xiao_tips_close">关闭</string>
 </resources>

@@ -52,11 +52,16 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     protected static final int PREMISSION_CANCEL=0;//权限被取消申请
     protected static final int PREMISSION_SUCCESS=1;//权限申请成功
     protected MusicLoadingView mLoadingView;
+    private boolean isTransparent=true;//is full transparent
+
+    public void setTransparent(boolean transparent) {
+        isTransparent = transparent;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (isTransparent&&Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);

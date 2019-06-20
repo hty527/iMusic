@@ -165,8 +165,8 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
             QuireDialog.getInstance(MusicSearchActivity.this)
                     .setTitleText(getString(R.string.text_search_play_tips))
                     .setContentText(getString(R.string.text_search_play_content))
-                    .setSubmitTitleText(getString(R.string.text_xiao_tips_close))
-                    .setCancelTitleText(getString(R.string.text_yse))
+                    .setSubmitTitleText(getString(R.string.text_yse))
+                    .setCancelTitleText(getString(R.string.text_xiao_tips_close))
                     .setTopImageRes(R.drawable.ic_setting_tips3)
                     .show();
             MusicUtils.getInstance().putInt(MusicConstants.SP_FIRST_SEARCH,1);

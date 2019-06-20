@@ -34,6 +34,7 @@
             android:lineSpacingExtra="5dp"
             android:includeFontPadding="false"
             android:textSize="15dp"
+            android:gravity="center_horizontal"
             android:text="--"
             android:textColor="#666666"/>
         <LinearLayout

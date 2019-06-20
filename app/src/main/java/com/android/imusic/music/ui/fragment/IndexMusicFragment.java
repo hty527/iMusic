@@ -2,7 +2,6 @@ package com.android.imusic.music.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +24,7 @@ import com.android.imusic.music.activity.MusicSearchActivity;
 import com.android.imusic.music.adapter.MusicIndexDataAdapter;
 import com.android.imusic.music.bean.AlbumInfo;
 import com.android.imusic.music.bean.AudioInfo;
+import com.android.imusic.music.dialog.QuireDialog;
 import com.android.imusic.music.ui.contract.MusicListContract;
 import com.android.imusic.music.ui.presenter.MusicListPersenter;
 import com.android.imusic.music.utils.MediaUtils;
@@ -143,14 +143,18 @@ public class IndexMusicFragment extends BaseFragment<MusicListPersenter>
 
             @Override
             public void onBack(View view) {
-                new android.support.v7.app.AlertDialog.Builder(getActivity())
-                        .setTitle(getString(R.string.text_support_anchor))
-                        .setMessage(getString(R.string.text_support_anchor_tips))
-                        .setNegativeButton(getString(R.string.text_support_support),new DialogInterface.OnClickListener() {
+                QuireDialog.getInstance(getActivity())
+                        .setTitleText(getString(R.string.text_support_anchor))
+                        .setContentText(getString(R.string.text_support_anchor_tips))
+                        .setSubmitTitleText(getString(R.string.text_support_support))
+                        .setCancelTitleText(getString(R.string.text_xiao_tips_close))
+                        .setTopImageRes(R.drawable.ic_setting_tips1)
+                        .setBtnClickDismiss(false)
+                        .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onConsent(QuireDialog dialog) {
+                                dialog.dismiss();
                                 String userSing="tsx05608jpga1ccy7yeej90";
-//                                String userSing="tsx07156kgzd8yafw8bi628";
                                 try {
                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("alipays://platformapi/startapp?saId=10000007&clientVersion=3.7.0.0718&qrcode=https%3A%2F%2Fqr.alipay.com%2F"+userSing+"%3F_s%3Dweb-other"));
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -159,7 +163,14 @@ public class IndexMusicFragment extends BaseFragment<MusicListPersenter>
                                     e.printStackTrace();
                                 }
                             }
+
+                            @Override
+                            public void onRefuse(QuireDialog dialog) {
+                                dialog.dismiss();
+                            }
                         }).show();
+
+
             }
 
             @Override
