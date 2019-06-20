@@ -73,7 +73,6 @@
         <activity android:name="com.android.imusic.video.activity.VideoPlayerActviity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:launchMode="singleTask"/>
         <!--视频排行榜-->
         <activity android:name="com.android.imusic.video.activity.VideoListActivity"
