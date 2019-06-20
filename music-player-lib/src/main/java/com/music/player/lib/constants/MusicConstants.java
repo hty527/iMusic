@@ -36,7 +36,7 @@ public interface MusicConstants {
     float ROTATION_INIT_NEEDLE = -30;
     //图片截图屏幕宽高
     float BASE_SCREEN_WIDTH = (float) 1080.0;
-    float BASE_SCREEN_HEIGHT = (float) 1920.0;
+//    float BASE_SCREEN_HEIGHT = (float) 1920.0;
 
     //唱针宽高、距离等比例
     float SCALE_NEEDLE_WIDTH = (float) (276.0 / BASE_SCREEN_WIDTH);

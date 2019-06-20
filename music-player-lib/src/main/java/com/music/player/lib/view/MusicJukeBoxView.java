@@ -180,6 +180,13 @@ public class MusicJukeBoxView extends RelativeLayout{
                     //开始播放胶盘旋转动画
                     playDiscAnimator(mViewPager.getCurrentItem());
                 }
+                //唱针动画执行完成后，最终回调偏移位置到组件
+                if(null!=mHandImage.getTag()&&null!=mPlayerInfoListener&&null!=mViewPager
+                        &&null!=mMusicDatas&&mMusicDatas.size()>mViewPager.getCurrentItem()){
+                    int currentItem = mViewPager.getCurrentItem();
+                    mPlayerInfoListener.onOffsetPosition(currentItem,(BaseAudioInfo)
+                            mMusicDatas.get(currentItem),true);
+                }
             }
 
             @Override
@@ -223,6 +230,12 @@ public class MusicJukeBoxView extends RelativeLayout{
             } else {
                 if (null != mPagerAdapter && mPagerAdapter.getCount() > 0) {
                     playDiscAnimator(mViewPager.getCurrentItem());
+                }
+                //如果指针已经附体，则直接回调到组件新的偏移位置
+                if(null!=tag&&null!=mPlayerInfoListener&&null!=mViewPager&&null!=mMusicDatas
+                        &&mMusicDatas.size()>mViewPager.getCurrentItem()){
+                    mPlayerInfoListener.onOffsetPosition(mViewPager.getCurrentItem(),(BaseAudioInfo)
+                            mMusicDatas.get(mViewPager.getCurrentItem()),true);
                 }
             }
         }
@@ -307,7 +320,8 @@ public class MusicJukeBoxView extends RelativeLayout{
                 this.mOffsetPosition=mCurrentPosition;
                 //立即同步状态到组件
                 if(null!=mPlayerInfoListener){
-                    mPlayerInfoListener.onPageSelected(position,(BaseAudioInfo) mMusicDatas.get(position),startPlayer);
+                    mPlayerInfoListener.onVisible((BaseAudioInfo) mMusicDatas.get(position),position);
+                    mPlayerInfoListener.onOffsetPosition(position,(BaseAudioInfo) mMusicDatas.get(position),startPlayer);
                 }
             }
             mViewPager.addOnPageChangeListener(onPageChangedListener);
@@ -354,7 +368,7 @@ public class MusicJukeBoxView extends RelativeLayout{
         public void onPageSelected(int position) {
             Logger.d(TAG,"onPageSelected-->position:"+position);
             try {
-                //先结束唱片机内部唱片机动画状态
+                //先结束内部唱片机动画状态
                 if(null!=mFragments){
                     mFragments.get(mCurrentPosition).onReset();
                 }
@@ -370,14 +384,14 @@ public class MusicJukeBoxView extends RelativeLayout{
                     }
                     removeViewByGroupVoew(mMusicLrcView);
                 }
-                //旧的position处于不可见
+                //将刚才不可见的项抛出
                 if(null!=mPlayerInfoListener){
-                    mPlayerInfoListener.onPageInvisible(mCurrentPosition);
+                    mPlayerInfoListener.onInvisible(mCurrentPosition);
                 }
                 mCurrentPosition=position;
                 //新的position可见
                 if(null!=mPlayerInfoListener&&null!=mMusicDatas&&mMusicDatas.size()>position){
-                    mPlayerInfoListener.onPageSelected(position,(BaseAudioInfo) mMusicDatas.get(position),true);
+                    mPlayerInfoListener.onVisible((BaseAudioInfo) mMusicDatas.get(position),position);
                 }
             }
         }
