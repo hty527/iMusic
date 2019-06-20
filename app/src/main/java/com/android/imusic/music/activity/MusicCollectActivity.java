@@ -1,6 +1,5 @@
 package com.android.imusic.music.activity;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,13 +7,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
-
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
-import com.music.player.lib.manager.SqlLiteCacheManager;
+import com.android.imusic.music.dialog.QuireDialog;
 import com.android.imusic.music.ui.contract.MusicHistroyContract;
 import com.android.imusic.music.ui.presenter.MusicHistroyPersenter;
 import com.music.player.lib.bean.BaseAudioInfo;
@@ -25,7 +23,6 @@ import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.util.MusicUtils;
 import com.music.player.lib.view.MusicCommentTitleView;
-
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -121,13 +118,15 @@ public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> im
     protected void onMusicMenuClick(int position, int itemId, final BaseAudioInfo audioInfo) {
         super.onMusicMenuClick(position, itemId, audioInfo);
         if(itemId== MusicDetails.ITEM_ID_DETELE){
-            new android.support.v7.app.AlertDialog.Builder(MusicCollectActivity.this)
-                    .setTitle(getString(R.string.text_detele_tips))
-                    .setMessage(getString(R.string.text_collect_detele_title))
-                    .setNegativeButton(getString(R.string.music_text_cancel),null)
-                    .setPositiveButton(getString(R.string.text_detele), new DialogInterface.OnClickListener() {
+            QuireDialog.getInstance(MusicCollectActivity.this)
+                    .setTitleText(getString(R.string.text_detele_tips))
+                    .setContentText(getString(R.string.text_collect_detele_title))
+                    .setSubmitTitleText(getString(R.string.text_detele))
+                    .setCancelTitleText(getString(R.string.music_text_cancel))
+                    .setTopImageRes(R.drawable.ic_setting_tips4)
+                    .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onConsent(QuireDialog dialog) {
                             boolean flag = MusicPlayerManager.getInstance().unCollectMusic(audioInfo.getAudioId());
                             if(flag){
                                 MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
@@ -137,7 +136,7 @@ public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> im
                                 }
                             }
                         }
-                    }).setCancelable(false).show();
+                    }).show();
         }
     }
 

@@ -1,7 +1,6 @@
 package com.android.imusic.music.activity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -9,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -31,7 +29,7 @@ import com.android.imusic.music.bean.SearchMusicData;
 import com.android.imusic.music.bean.SearchResult;
 import com.android.imusic.music.bean.SearchResultInfo;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
-import com.android.imusic.music.manager.VersionUpdateManager;
+import com.android.imusic.music.dialog.QuireDialog;
 import com.android.imusic.music.ui.contract.MusicSearchContract;
 import com.android.imusic.music.ui.presenter.MusicSearchPersenter;
 import com.android.imusic.music.utils.MediaUtils;
@@ -89,19 +87,21 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
                     case R.id.music_btn_remove:
                         if(mSearchHistroyCount>0){
                             MusicUtils.getInstance().closeKeybord(MusicSearchActivity.this,mEtInput);
-                            new android.support.v7.app.AlertDialog.Builder(MusicSearchActivity.this)
-                                    .setTitle(getString(R.string.text_detele_tips))
-                                    .setMessage(getString(R.string.text_detele_content))
-                                    .setNegativeButton(getString(R.string.music_text_cancel),null)
-                                    .setPositiveButton(getString(R.string.text_detele_continue), new DialogInterface.OnClickListener() {
+                            QuireDialog.getInstance(MusicSearchActivity.this)
+                                    .setTitleText(getString(R.string.text_detele_tips))
+                                    .setContentText(getString(R.string.text_detele_content))
+                                    .setSubmitTitleText(getString(R.string.text_detele_continue))
+                                    .setCancelTitleText(getString(R.string.music_text_cancel))
+                                    .setTopImageRes(R.drawable.ic_setting_tips4)
+                                    .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
                                         @Override
-                                        public void onClick(DialogInterface dialog, int which) {
+                                        public void onConsent(QuireDialog dialog) {
                                             boolean deteleAllSearch = SqlLiteCacheManager.getInstance().deteleAllSearch();
                                             if(deteleAllSearch){
                                                 createSearchCache();
                                             }
                                         }
-                                    }).setCancelable(false).show();
+                                    }).show();
                         }else{
                             Toast.makeText(MusicSearchActivity.this,getString(R.string.text_detele_empty),
                                     Toast.LENGTH_SHORT).show();
@@ -161,20 +161,14 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
         MusicPlayerManager.getInstance().addObservable(this);
         //搜索记录回显
         createSearchCache();
-
         if(MusicUtils.getInstance().getInt(MusicConstants.SP_FIRST_SEARCH,0)==0){
-            AlertDialog.Builder builder = new AlertDialog.Builder(MusicSearchActivity.this)
-                    .setTitle(getString(R.string.text_search_play_tips))
-                    .setMessage(getString(R.string.text_search_play_content))
-                    .setPositiveButton(getString(R.string.text_yse), null).setCancelable(false);
-            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    //检查版本更新
-                    VersionUpdateManager.getInstance().checkAppVersion();
-                }
-            });
-            builder.show();
+            QuireDialog.getInstance(MusicSearchActivity.this)
+                    .setTitleText(getString(R.string.text_search_play_tips))
+                    .setContentText(getString(R.string.text_search_play_content))
+                    .setSubmitTitleText(getString(R.string.text_xiao_tips_close))
+                    .setCancelTitleText(getString(R.string.text_yse))
+                    .setTopImageRes(R.drawable.ic_setting_tips3)
+                    .show();
             MusicUtils.getInstance().putInt(MusicConstants.SP_FIRST_SEARCH,1);
         }
     }

@@ -7,9 +7,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.base.BaseActivity;
@@ -17,6 +18,8 @@ import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
+import com.android.imusic.music.dialog.CommonDialog;
+import com.android.imusic.music.dialog.QuireDialog;
 import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.manager.VersionUpdateManager;
 import com.android.imusic.music.ui.fragment.IndexMusicFragment;
@@ -30,6 +33,8 @@ import com.music.player.lib.listener.MusicInitializeCallBack;
 import com.music.player.lib.listener.MusicPlayerInfoListener;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.model.MusicPlayerConfig;
+import com.music.player.lib.util.Logger;
+import com.music.player.lib.util.MusicRomUtil;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.manager.VideoWindowManager;
@@ -190,13 +195,15 @@ public class MainActivity extends BaseActivity {
         //检查并获取通知权限
         boolean premission = MusicUtils.getInstance().hasNiticePremission(getApplicationContext());
         if(!premission){
-            new android.support.v7.app.AlertDialog.Builder(MainActivity.this)
-                    .setTitle(getString(R.string.text_sys_tips))
-                    .setMessage(getString(R.string.text_tips_notice))
-                    .setNegativeButton(getString(R.string.music_text_cancel),null)
-                    .setPositiveButton(getString(R.string.text_start_open), new DialogInterface.OnClickListener() {
+            QuireDialog.getInstance(MainActivity.this)
+                    .setTitleText(getString(R.string.text_sys_tips))
+                    .setContentText(getString(R.string.text_tips_notice))
+                    .setSubmitTitleText(getString(R.string.text_start_open))
+                    .setCancelTitleText(getString(R.string.music_text_cancel))
+                    .setTopImageRes(R.drawable.ic_setting_tips4)
+                    .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onConsent(QuireDialog dialog) {
                             try {
                                 Intent intent = new Intent();
                                 intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -208,35 +215,76 @@ public class MainActivity extends BaseActivity {
                                 e.printStackTrace();
                             }
                         }
-                    }).setCancelable(false).show();
+                    }).show();
         }else{
             if(MusicUtils.getInstance().getInt(MusicConstants.SP_FIRST_START,0)==0){
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle(getString(R.string.text_action_tips))
-                        .setMessage(getString(R.string.text_action_content))
-                        .setNegativeButton(getString(R.string.text_start_now_open), new DialogInterface.OnClickListener() {
+                //使用提示
+                QuireDialog.getInstance(MainActivity.this)
+                        .setTitleText(getString(R.string.text_action_tips))
+                        .setContentText(getString(R.string.text_action_content))
+                        .setSubmitTitleText(getString(R.string.text_start_now_open))
+                        .setCancelTitleText(getString(R.string.text_yse))
+                        .setTopImageRes(R.drawable.ic_setting_tips1)
+                        .setBtnClickDismiss(false)
+                        .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onConsent(QuireDialog dialog) {
                                 MediaUtils.getInstance().setLocalImageEnable(true);
                                 Toast.makeText(MainActivity.this, getString(R.string.text_start_open_success),
                                         Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
                             }
-                        })
-                        .setPositiveButton(getString(R.string.text_yse), null).setCancelable(false);
-                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        //检查版本更新
-                        VersionUpdateManager.getInstance().checkAppVersion();
-                    }
-                });
-                builder.show();
+
+                            @Override
+                            public void onRefuse(QuireDialog dialog) {
+                                dialog.dismiss();
+                            }
+
+                            @Override
+                            public void onDissmiss() {
+                                Logger.d(TAG,"onDissmiss--->");
+                                if(MusicRomUtil.getInstance().isMiui()){
+                                    showXiaoMiTips();
+                                }else{
+                                    //检查版本更新
+                                    VersionUpdateManager.getInstance().checkAppVersion();
+                                }
+                            }
+                        }).show();
                 MusicUtils.getInstance().putInt(MusicConstants.SP_FIRST_START,1);
             }else{
                 //检查版本更新
                 VersionUpdateManager.getInstance().checkAppVersion();
             }
         }
+    }
+
+    /**
+     * 小米用户使用提示
+     */
+    private void showXiaoMiTips() {
+        final CommonDialog dialog = CommonDialog.getInstance(MainActivity.this);
+        View contentView = LayoutInflater.from(MainActivity.this).inflate(R.layout.music_dialog_quire_layout, null);
+        ((ImageView) contentView.findViewById(R.id.ic_top)).setImageResource(R.drawable.ic_setting_tips2);
+        ((TextView) contentView.findViewById(R.id.tv_title)).setText(getString(R.string.text_xiao_tips_title));
+        ((TextView) contentView.findViewById(R.id.tv_content)).setText(getString(R.string.text_xiao_tips_content));
+        ((TextView) contentView.findViewById(R.id.btn_cancel)).setText(getString(R.string.text_yse));
+        ((TextView) contentView.findViewById(R.id.btn_submit)).setText(getString(R.string.text_xiao_tips_close));
+        View.OnClickListener onClickListener=new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        };
+        contentView.findViewById(R.id.btn_cancel).setOnClickListener(onClickListener);
+        contentView.findViewById(R.id.btn_submit).setOnClickListener(onClickListener);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                VersionUpdateManager.getInstance().checkAppVersion();
+            }
+        });
+        dialog.setContent(contentView).show();
     }
 
     /**

@@ -89,31 +89,32 @@ public class MusicPlayerWindow extends FrameLayout{
         mScreenHeight = MusicUtils.getInstance().getScreenHeight(context);
         //手势分发
         mGestureDetector = new GestureDetector(getContext(),new JukeBoxGestureListener());
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                //记录手指按下时手指在唱片机View中的位置
-                xInView = event.getX();
-                yInView = event.getY();
-                xDownInScreen=event.getRawX();
-                yDownInScreen = event.getRawY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                //实时获取相对于屏幕X,Y位置刷新
-                xInScreen = event.getRawX();
-                yInScreen = event.getRawY();
-                updateJukeLocation();
-                updateTrachWindow(event);
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                actionTouchUp(event);
-                break;
-        }
-        return mGestureDetector.onTouchEvent(event);
+        mBoxViewSmall.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        //记录手指按下时手指在唱片机View中的位置
+                        xInView = event.getX();
+                        yInView = event.getY();
+                        xDownInScreen=event.getRawX();
+                        yDownInScreen = event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        //实时获取相对于屏幕X,Y位置刷新
+                        xInScreen = event.getRawX();
+                        yInScreen = event.getRawY();
+                        updateJukeLocation();
+                        updateTrachWindow(event);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        actionTouchUp(event);
+                        break;
+                }
+                return mGestureDetector.onTouchEvent(event);
+            }
+        });
     }
 
     /**
