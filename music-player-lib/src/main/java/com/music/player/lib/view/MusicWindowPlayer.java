@@ -43,13 +43,13 @@ public class MusicWindowPlayer extends FrameLayout implements View.OnTouchListen
     //状态栏高度,容器的宽高,悬浮球停靠在屏幕边界的最小距离
     private int mStatusBarHeight, mGroupWidth, mGroupHeight,mHorMiniMagin;
     //震动
-    private Vibrator mVibrator=null;
+    private Vibrator mVibrator;
     //迷你唱片机
-    private MusicJukeBoxViewSmall mBoxViewSmall=null;
+    private MusicJukeBoxViewSmall mBoxViewSmall;
     //垃圾桶
-    private MusicWindowTrash mWindowTrash=null;
+    private MusicWindowTrash mWindowTrash;
     //手势分发
-    private GestureDetector mGestureDetector=null;
+    private GestureDetector mGestureDetector;
     //手指在屏幕上的实时X、Y坐标
     private float xInScreen,yInScreen;
     //手指按下X、Y坐标

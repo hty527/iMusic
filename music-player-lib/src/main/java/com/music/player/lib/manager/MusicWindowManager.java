@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
  * 将悬浮窗改为全屏悬浮窗，垃圾桶交互在一个View之内，不再跨View通信和交互
  */
 
-public final class MusicWindowManager {
+public class MusicWindowManager {
 
 	private static final String TAG = "MusicFullWindowManager";
 	private static volatile MusicWindowManager mInstance;
@@ -112,7 +112,6 @@ public final class MusicWindowManager {
             //FLAG_LAYOUT_IN_SCREEN：使用整个Window区域，包括状态栏在内
             //FLAG_NOT_TOUCH_MODAL：自己窗口的焦点自己处理，其他窗口的焦点其他Window处理
             //FLAG_WATCH_OUTSIDE_TOUCH：非此Window的触摸事件，在此Window只能接受到一次特殊的事件，需要配合FLAG_NOT_TOUCH_MODAL设置
-            //FLAG_LAYOUT_NO_LIMITS：允许Window超出屏幕边界显示
             jukeBoxLayoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                       |WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                       |WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
