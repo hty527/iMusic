@@ -1,6 +1,5 @@
 package com.android.imusic.music.activity;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,6 +12,7 @@ import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
+import com.android.imusic.music.dialog.QuireDialog;
 import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.ui.contract.MusicHistroyContract;
 import com.android.imusic.music.ui.presenter.MusicHistroyPersenter;
@@ -56,13 +56,15 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
 
             @Override
             public void onSubTitleClick(View v) {
-                new android.support.v7.app.AlertDialog.Builder(MusicHistroyActivity.this)
-                        .setTitle(getString(R.string.text_remove_tips))
-                        .setMessage(getString(R.string.text_histroy_remove_title))
-                        .setNegativeButton(getString(R.string.music_text_cancel),null)
-                        .setPositiveButton(getString(R.string.text_remove_title), new DialogInterface.OnClickListener() {
+                QuireDialog.getInstance(MusicHistroyActivity.this)
+                        .setTitleText(getString(R.string.text_remove_tips))
+                        .setContentText(getString(R.string.text_histroy_remove_title))
+                        .setSubmitTitleText(getString(R.string.text_remove_title))
+                        .setCancelTitleText(getString(R.string.music_text_cancel))
+                        .setTopImageRes(R.drawable.ic_setting_tips4)
+                        .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onConsent(QuireDialog dialog) {
                                 boolean allHistroy = SqlLiteCacheManager.getInstance().deteleAllHistroy();
                                 if(allHistroy){
                                     Toast.makeText(MusicHistroyActivity.this,getString(R.string.text_remove_succ),Toast.LENGTH_SHORT).show();
@@ -71,7 +73,7 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
                                     MusicPlayerManager.getInstance().observerUpdata(new MusicStatus());
                                 }
                             }
-                        }).setCancelable(false).show();
+                        }).show();
             }
         });
         ((SwipeRefreshLayout) findViewById(R.id.swipre_layout)).setEnabled(false);
@@ -141,13 +143,15 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
     protected void onMusicMenuClick(int position, int itemId, final BaseAudioInfo audioInfo) {
         super.onMusicMenuClick(position, itemId, audioInfo);
         if(itemId== MusicDetails.ITEM_ID_DETELE){
-            new android.support.v7.app.AlertDialog.Builder(MusicHistroyActivity.this)
-                    .setTitle(getString(R.string.text_detele_tips))
-                    .setMessage(getString(R.string.text_histroy_detele_title))
-                    .setNegativeButton(getString(R.string.music_text_cancel),null)
-                    .setPositiveButton(getString(R.string.text_detele), new DialogInterface.OnClickListener() {
+            QuireDialog.getInstance(MusicHistroyActivity.this)
+                    .setTitleText(getString(R.string.text_detele_tips))
+                    .setContentText(getString(R.string.text_histroy_detele_title))
+                    .setSubmitTitleText(getString(R.string.text_detele))
+                    .setCancelTitleText(getString(R.string.music_text_cancel))
+                    .setTopImageRes(R.drawable.ic_setting_tips4)
+                    .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onConsent(QuireDialog dialog) {
                             boolean deteleHistroy = SqlLiteCacheManager.getInstance().deteleHistroyByID(audioInfo.getAudioId());
                             if(deteleHistroy){
                                 Toast.makeText(MusicHistroyActivity.this,getString(R.string.text_detele_succ),Toast.LENGTH_SHORT).show();
@@ -156,7 +160,7 @@ public class MusicHistroyActivity extends BaseActivity<MusicHistroyPersenter> im
                                 }
                             }
                         }
-                    }).setCancelable(false).show();
+                    }).show();
         }
     }
 

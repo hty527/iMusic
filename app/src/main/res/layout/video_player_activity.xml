@@ -20,27 +20,12 @@
             android:background="#FFFFFF"
             android:overScrollMode="never"/>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/ll_top_bar_bg"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <View
-            android:id="@+id/view_status_bar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/statusbar_view_height"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:src="@drawable/video_controller_back_white_selector"
-                android:layout_centerVertical="true" />
-        </RelativeLayout>
-    </LinearLayout>
+        android:padding="12dp"
+        android:src="@drawable/video_controller_back_white_selector"/>
     <TextView
         android:id="@+id/btn_tiny"
         android:layout_width="wrap_content"

@@ -1,5 +1,6 @@
 package com.android.imusic.video.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -41,9 +42,12 @@ public class TransformerVideoPager extends RelativeLayout{
         this(context,null);
     }
 
+    @SuppressLint("WrongViewCast")
     public TransformerVideoPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         View.inflate(context, R.layout.video_pager_transforme,this);
+        int emptyHeight = MusicUtils.getInstance().getStatusBarHeight(getContext()) + MusicUtils.getInstance().dpToPxInt(getContext(), 20f);
+        findViewById(R.id.view_empty).getLayoutParams().height=emptyHeight;
         mViewPager = (ViewPager) findViewById(R.id.view_item_pager);
         //ViewPager的父容器高度确定
         RelativeLayout pagerLayout = (RelativeLayout) findViewById(R.id.re_item_pager_view);

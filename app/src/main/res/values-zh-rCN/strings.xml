@@ -65,7 +65,7 @@
     <string name="text_music_open">开启</string>
     <string name="text_music_active_open">请在设置中手动开启</string>
     <string name="text_music_play_tips">播放提示</string>
-    <string name="text_music_play_window_tips">前往开启悬浮窗，更好的体验播放功能</string>
+    <string name="text_music_play_window_tips">音乐播放需要开启悬浮窗权限，方便您更好的体验播放功能！悬浮窗权限开启后小米用户还请允许\"后台弹出界面\"。是否立即前往开启悬浮窗权限？</string>
     <string name="text_music_play_no_open">暂不开启</string>
     <string name="text_per_storage_read">读取本地音频文件需要\'读取本地存储\'权限</string>
     <string name="text_per_storage_write">播放记录存储需要\'写入数据到存储\'权限</string>
@@ -87,4 +87,7 @@
     <string name="text_version_download_loading_tips">下载中</string>
     <string name="text_version_download_finlsh_instanl">下载完成，点击安装</string>
     <string name="text_version_download_error">下载失败，点击重试</string>
+    <string name="text_xiao_tips_title">小米用户使用提示</string>
+    <string name="text_xiao_tips_content">由于小米ROM的限制，iMusic在锁屏或者后台运行下无法缓冲和播放网络音乐。请前往\"系统设置\"--\"电量和性能\"--\"场景配置\"中将\"睡眠模式\"关闭。即可正常体验。</string>
+    <string name="text_xiao_tips_close">关闭</string>
 </resources>

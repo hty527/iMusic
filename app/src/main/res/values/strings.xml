@@ -64,7 +64,7 @@
     <string name="text_music_open">Open</string>
     <string name="text_music_active_open">Please turn it on manually in the settings</string>
     <string name="text_music_play_tips">Play prompt</string>
-    <string name="text_music_play_window_tips">Go to open the suspension window to better experience the playback function</string>
+    <string name="text_music_play_window_tips">Music playback needs to open the suspension window permissions, so that you can better experience the playback function! After the suspension window permission is turned on, Xiaomi users should also allow the backstage pop-up interface. Do you want to open the suspension window immediately?</string>
     <string name="text_music_play_no_open">Not open for the time being</string>
     <string name="text_per_storage_read">Read local audio files require read local storage permission</string>
     <string name="text_per_storage_write">The write data to Storage permission is required to play the record store</string>
@@ -86,4 +86,7 @@
     <string name="text_version_download_loading_tips">Downloading</string>
     <string name="text_version_download_finlsh_instanl">Download complete, click install</string>
     <string name="text_version_download_error">Download failed, click retry</string>
+    <string name="text_xiao_tips_title">Xiaomi user usage Tips</string>
+    <string name="text_xiao_tips_content">Due to the limitations of Xiaomi ROM, iMusic can not buffer and play online music under the lock screen or background. Go to system Settings-Power and performance-scene configuration to turn off sleep mode. You can experience it normally.</string>
+    <string name="text_xiao_tips_close">Close</string>
 </resources>

@@ -1,9 +1,17 @@
 package com.android.imusic.music.utils;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
@@ -43,6 +51,29 @@ public class MediaUtils {
     }
 
     private MediaUtils(){}
+
+    public int setDialogWidth(Dialog context) {
+        Window window = context.getWindow();
+        WindowManager.LayoutParams attributes = window.getAttributes();
+        WindowManager systemService = (WindowManager) context.getContext().getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        systemService.getDefaultDisplay().getMetrics(displayMetrics);
+        int hight = LinearLayout.LayoutParams.WRAP_CONTENT;
+        attributes.height = hight;
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        int screenWidth = systemService.getDefaultDisplay().getWidth();
+        if (screenWidth <= 720) {
+            attributes.width = screenWidth - 100;
+        } else if (screenWidth > 720 && screenWidth < 1100) {
+            attributes.width = screenWidth - 200;
+        } else if (screenWidth > 1100 && screenWidth < 1500) {
+            attributes.width = screenWidth - 280;
+        } else {
+            attributes.width = screenWidth - 200;
+        }
+        attributes.gravity = Gravity.CENTER;
+        return attributes.width;
+    }
 
     /**
      * 获取SD卡所有音频文件

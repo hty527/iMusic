@@ -24,6 +24,7 @@ import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicLoadingView;
+import com.android.imusic.music.dialog.QuireDialog;
 import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.bean.MusicStatus;
 import com.music.player.lib.constants.MusicConstants;
@@ -51,11 +52,16 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     protected static final int PREMISSION_CANCEL=0;//权限被取消申请
     protected static final int PREMISSION_SUCCESS=1;//权限申请成功
     protected MusicLoadingView mLoadingView;
+    private boolean isTransparent=true;//is full transparent
+
+    public void setTransparent(boolean transparent) {
+        isTransparent = transparent;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (isTransparent&&Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -286,19 +292,18 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
      */
     protected void createMiniJukeboxWindow() {
         if(!MusicWindowManager.getInstance().checkAlertWindowsPermission(BaseActivity.this)){
-            new android.support.v7.app.AlertDialog.Builder(BaseActivity.this)
-                    .setTitle(getString(R.string.text_music_play_tips))
-                    .setMessage(getString(R.string.text_music_play_window_tips))
-                    .setNegativeButton(getString(R.string.text_music_play_no_open), new DialogInterface.OnClickListener() {
+            QuireDialog.getInstance(BaseActivity.this)
+                    .setTitleText(getString(R.string.text_music_play_tips))
+                    .setContentText(getString(R.string.text_music_play_window_tips))
+                    .setSubmitTitleText(getString(R.string.text_start_open))
+                    .setCancelTitleText(getString(R.string.text_music_play_no_open))
+                    .setTopImageRes(R.drawable.ic_setting_tips1)
+                    .setBtnClickDismiss(false)
+                    .setDialogCancelable(false)
+                    .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            MusicPlayerManager.getInstance().onStop();
-                            finish();
-                        }
-                    })
-                    .setPositiveButton(getString(R.string.text_start_open), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onConsent(QuireDialog dialog) {
+                            dialog.dismiss();
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -314,7 +319,14 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                                 startActivityForResult(intent,MusicConstants.REQUST_WINDOWN_PERMISSION);
                             }
                         }
-                    }).setCancelable(false).show();
+
+                        @Override
+                        public void onRefuse(QuireDialog dialog) {
+                            dialog.dismiss();
+                            MusicPlayerManager.getInstance().onStop();
+                            finish();
+                        }
+                    }).show();
             return;
         }
         createMiniJukeBoxToWindown();

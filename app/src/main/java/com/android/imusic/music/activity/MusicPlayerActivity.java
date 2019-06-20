@@ -1,7 +1,6 @@
 package com.android.imusic.music.activity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -25,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
+import com.android.imusic.music.dialog.QuireDialog;
 import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.manager.SqlLiteCacheManager;
@@ -776,19 +776,18 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             return;
         }
         if(!MusicWindowManager.getInstance().checkAlertWindowsPermission(MusicPlayerActivity.this)){
-            new android.support.v7.app.AlertDialog.Builder(MusicPlayerActivity.this)
-                    .setTitle(getString(R.string.text_music_close_tips))
-                    .setMessage(getString(R.string.text_music_close_permission_tips))
-                    .setNegativeButton(getString(R.string.text_music_stop_play), new DialogInterface.OnClickListener() {
+            QuireDialog.getInstance(MusicPlayerActivity.this)
+                    .setTitleText(getString(R.string.text_music_close_tips))
+                    .setContentText(getString(R.string.text_music_close_permission_tips))
+                    .setSubmitTitleText(getString(R.string.text_music_open))
+                    .setCancelTitleText(getString(R.string.text_music_stop_play))
+                    .setTopImageRes(R.drawable.ic_setting_tips1)
+                    .setBtnClickDismiss(false)
+                    .setDialogCancelable(false)
+                    .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            MusicPlayerManager.getInstance().onStop();
-                            finish();
-                        }
-                    })
-                    .setPositiveButton(getString(R.string.text_music_open), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onConsent(QuireDialog dialog) {
+                            dialog.dismiss();
                             try {
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
@@ -808,7 +807,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements
                                 e.printStackTrace();
                             }
                         }
-                    }).setCancelable(false).show();
+
+                        @Override
+                        public void onRefuse(QuireDialog dialog) {
+                            dialog.dismiss();
+                            MusicPlayerManager.getInstance().onStop();
+                            finish();
+                        }
+                    }).show();
             return;
         }
         createMiniJukeBoxToWindown();
