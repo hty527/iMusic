@@ -12,7 +12,6 @@ import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
@@ -23,7 +22,6 @@ import com.music.player.lib.bean.BaseAudioInfo;
 import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.util.MusicUtils;
 import com.video.player.lib.bean.VideoParams;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +34,7 @@ public class MediaUtils {
 
     private static final String TAG = "MediaUtils";
     private static volatile MediaUtils mInstance;
-    private List<BaseAudioInfo> mLocationMusic=null;
+    private List<AudioInfo> mLocationMusic=null;
     private static boolean mLocalImageEnable;//本地音乐图片获取开关,默认关闭
 
     public static MediaUtils getInstance() {
@@ -79,8 +77,8 @@ public class MediaUtils {
      * 获取SD卡所有音频文件
      * @return
      */
-    public ArrayList<BaseAudioInfo> queryLocationMusics(Context context) {
-        ArrayList<BaseAudioInfo> audioInfos=new ArrayList<>();
+    public ArrayList<AudioInfo> queryLocationMusics(Context context) {
+        ArrayList<AudioInfo> audioInfos=new ArrayList<>();
         if(null!=context.getContentResolver()){
             Cursor cursor = context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -100,7 +98,7 @@ public class MediaUtils {
             if (null!=cursor&&cursor.moveToFirst()) {
                 do {
                     if(!TextUtils.isEmpty(cursor.getString(9))){
-                        BaseAudioInfo audioInfo = new BaseAudioInfo();
+                        AudioInfo audioInfo = new AudioInfo();
                         if(!TextUtils.isEmpty(cursor.getString(0))){
                             audioInfo.setAudioId(Long.parseLong(cursor.getString(0)));
                         }else{
@@ -279,11 +277,11 @@ public class MediaUtils {
         return dataList;
     }
 
-    public void setLocationMusic(List<BaseAudioInfo> locationMusic) {
+    public void setLocationMusic(List<AudioInfo> locationMusic) {
         mLocationMusic = locationMusic;
     }
 
-    public List<BaseAudioInfo> getLocationMusic() {
+    public List<AudioInfo> getLocationMusic() {
         return mLocationMusic;
     }
 

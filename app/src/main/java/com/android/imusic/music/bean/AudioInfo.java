@@ -114,4 +114,16 @@ public class AudioInfo extends BaseAudioInfo {
     public void setItemType(int itemType) {
         this.itemType = itemType;
     }
+
+    @Override
+    public String toString() {
+        return "AudioInfo{" +
+                "itemType=" + itemType +
+                ", image=" + image +
+                ", title='" + title + '\'' +
+                ", desp='" + desp + '\'' +
+                ", tag_id='" + tag_id + '\'' +
+                ", class_enty='" + class_enty + '\'' +
+                '}';
+    }
 }

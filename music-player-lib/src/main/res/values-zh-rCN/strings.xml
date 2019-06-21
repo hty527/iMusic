@@ -10,4 +10,5 @@
     <string name="music_text_lrc_empty">暂时没有找到歌词</string>
     <string name="music_text_lrc_loading">歌词获取中...</string>
     <string name="music_text_now_play">正在播放</string>
+    <string name="music_text_notice_name">iMusic通知栏音乐播放</string>
 </resources>

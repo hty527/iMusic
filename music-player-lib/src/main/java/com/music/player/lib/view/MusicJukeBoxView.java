@@ -439,6 +439,15 @@ public class MusicJukeBoxView extends RelativeLayout{
     };
 
     /**
+     * 定位最新的显示项，用在当界面不可见，内部切换播放源时后界面可见时动画开始执行导致的BUG
+     */
+    public void updatePosition() {
+        if(null!=mViewPager){
+            mOffsetPosition=mViewPager.getCurrentItem();
+        }
+    }
+
+    /**
      * 通知数据源发生了改变s
      * @param position
      */

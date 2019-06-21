@@ -575,7 +575,6 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
     @Override
     public void onReset() {
         onStop(true);
-        mOnPlayerEventListeners=null;
         //销毁可能存在的悬浮窗
         VideoWindowManager.getInstance().onDestroy();
         if(null!=mWindownPlayer){

@@ -74,7 +74,7 @@
             .initialize(MainActivity.this, new MusicInitializeCallBack() {
 
                 @Override
-                public void onFinish() {
+                public void onSuccess() {
                     //如果系统正在播放音乐
                     if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                         MusicPlayerManager.getInstance().createWindowJukebox();

@@ -65,7 +65,7 @@ ___
 **1.依赖**
 ```
     dependencies {
-        implementation 'com.imusic.player:music-player:1.1.5'
+        implementation 'com.imusic.player:music-player:1.1.6'
     }
 ```
 **2.MainActivity播放器初始化**
@@ -219,7 +219,7 @@ ___
 [前往fir下载]: https://fir.im/iMusic "fir下载"
 **fir托管下载：** **[前往fir下载]**
 
-[点击下载Apk]: https://raw.githubusercontent.com/Yuye584312311/ConfigFile/master/apk/iMusic-1.1.6.apk "apk下载"
+[点击下载Apk]: https://raw.githubusercontent.com/Yuye584312311/ConfigFile/master/apk/iMusic-1.1.7.apk "apk下载"
 **本地下载：** **[点击下载Apk]**<br/>
 <br/>
 **或者扫描二维码下载<br/>**

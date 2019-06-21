@@ -1,6 +1,7 @@
 package com.android.imusic.music.ui.presenter;
 
 import com.android.imusic.base.BasePresenter;
+import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.model.MusicHistroyEngin;
 import com.android.imusic.music.ui.contract.MusicHistroyContract;
 import com.android.imusic.net.OnResultCallBack;
@@ -28,10 +29,10 @@ public class MusicHistroyPersenter extends BasePresenter<MusicHistroyContract.Vi
     public void getHistroyAudios() {
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
-            getNetEngin().get().getMusicsByHistroy(new OnResultCallBack<List<BaseAudioInfo>>() {
+            getNetEngin().get().getMusicsByHistroy(new OnResultCallBack<List<AudioInfo>>() {
 
                 @Override
-                public void onResponse(List<BaseAudioInfo> data) {
+                public void onResponse(List<AudioInfo> data) {
                     if(null!=mViewRef&&null!=mViewRef.get()){
                         mViewRef.get().showAudios(data);
                     }
@@ -54,10 +55,10 @@ public class MusicHistroyPersenter extends BasePresenter<MusicHistroyContract.Vi
     public void getCollectAudios() {
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
-            getNetEngin().get().getMusicsByCollect(new OnResultCallBack<List<BaseAudioInfo>>() {
+            getNetEngin().get().getMusicsByCollect(new OnResultCallBack<List<AudioInfo>>() {
 
                 @Override
-                public void onResponse(List<BaseAudioInfo> data) {
+                public void onResponse(List<AudioInfo> data) {
                     if(null!=mViewRef&&null!=mViewRef.get()){
                         mViewRef.get().showAudios(data);
                     }

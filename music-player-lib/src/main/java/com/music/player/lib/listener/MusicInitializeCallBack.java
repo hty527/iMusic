@@ -7,5 +7,5 @@ package com.music.player.lib.listener;
  */
 
 public interface MusicInitializeCallBack {
-    void onFinish();
+    void onSuccess();
 }

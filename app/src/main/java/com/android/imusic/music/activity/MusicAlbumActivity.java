@@ -130,7 +130,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
                     case R.id.btn_play_all:
                         if(null!=mAdapter&&null!=mAdapter.getData()&&mAdapter.getData().size()>0){
                             MusicPlayerManager.getInstance().setPlayingChannel(MusicConstants.CHANNEL_NET);
-                            List<BaseAudioInfo> audioInfos = mAdapter.getData();
+                            List<AudioInfo> audioInfos = mAdapter.getData();
                             startMusicPlayer(audioInfos.get(0).getAudioId(),audioInfos);
                         }
                         break;

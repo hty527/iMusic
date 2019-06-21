@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.bean.AudioInfo;
+import com.android.imusic.music.bean.MusicParams;
+import com.google.gson.Gson;
 import com.music.player.lib.constants.MusicConstants;
 import java.io.Serializable;
 import java.util.List;
@@ -90,7 +92,10 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
      */
     protected void startToMusicPlayer(long musicID,List<AudioInfo> audioInfos){
         Intent intent=new Intent(getContext().getApplicationContext(), MusicPlayerActivity.class);
-        intent.putExtra(MusicConstants.KEY_MUSIC_LIST, (Serializable) audioInfos);
+        MusicParams params=new MusicParams();
+        params.setAudioInfos(audioInfos);
+        String json = new Gson().toJson(params);
+        intent.putExtra(MusicConstants.KEY_MUSIC_LIST, json);
         intent.putExtra(MusicConstants.KEY_MUSIC_ID, musicID);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getContext().getApplicationContext().startActivity(intent);

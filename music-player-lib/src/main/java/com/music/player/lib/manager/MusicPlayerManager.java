@@ -901,7 +901,7 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
                     mBinder.setLockForeground(mForegroundEnable);
                     mBinder.setNotificationEnable(mNotificationEnable);
                     if(null!=mCallBack){
-                        mCallBack.onFinish();
+                        mCallBack.onSuccess();
                     }
                 }
             }

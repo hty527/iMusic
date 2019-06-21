@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.android.imusic.R;
 import com.android.imusic.music.adapter.holder.MusicListViewHolder;
+import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.utils.MediaUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -27,7 +28,7 @@ import java.util.concurrent.Executors;
  * Commend Music List Adapter
  */
 
-public class MusicCommenListAdapter extends BaseAdapter<BaseAudioInfo,MusicListViewHolder> {
+public class MusicCommenListAdapter extends BaseAdapter<AudioInfo,MusicListViewHolder> {
 
     //是否来自专辑界面持有适配器
     private final boolean mIsAlbum;
@@ -35,12 +36,12 @@ public class MusicCommenListAdapter extends BaseAdapter<BaseAudioInfo,MusicListV
     private MusicOnItemClickListener mListener;
     private int mCurrentPosition;
 
-    public MusicCommenListAdapter(Context context, List<BaseAudioInfo> data,
+    public MusicCommenListAdapter(Context context, List<AudioInfo> data,
                                   MusicOnItemClickListener listener) {
         this(context,data,listener,false);
     }
 
-    public MusicCommenListAdapter(Context context, List<BaseAudioInfo> data,
+    public MusicCommenListAdapter(Context context, List<AudioInfo> data,
                                   MusicOnItemClickListener listener,boolean isAlbum) {
         super(context,data);
         this.mListener=listener;
@@ -166,7 +167,7 @@ public class MusicCommenListAdapter extends BaseAdapter<BaseAudioInfo,MusicListV
      * @param position
      */
     public void notifyDataSetChanged(int position){
-        List<BaseAudioInfo> data = getData();
+        List<AudioInfo> data = getData();
         data.get(mCurrentPosition).setSelected(false);
         data.get(position).setSelected(true);
         notifyItemChanged(mCurrentPosition,"NITIFY_DATA");

@@ -43,7 +43,7 @@
             android:drawablePadding="3dp"
             android:textSize="15dp"
             android:gravity="center_vertical"
-            android:padding="10dp"
+            android:padding="8dp"
             android:text="定时关闭"/>
     </RelativeLayout>
     <!--歌词-->

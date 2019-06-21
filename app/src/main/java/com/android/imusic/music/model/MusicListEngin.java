@@ -2,9 +2,9 @@ package com.android.imusic.music.model;
 
 import android.content.Context;
 import com.android.imusic.base.BaseEngin;
+import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.utils.MediaUtils;
 import com.android.imusic.net.OnResultCallBack;
-import com.music.player.lib.bean.BaseAudioInfo;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Subscription;
@@ -46,10 +46,10 @@ public class MusicListEngin extends BaseEngin {
      */
     public void getLocationAudios(final Context context, final OnResultCallBack callBack){
         //内存中已经存在本地歌曲列表，不再重复查询
-        List<BaseAudioInfo> audioInfos = MediaUtils.getInstance().getLocationMusic();
+        List<AudioInfo> audioInfos = MediaUtils.getInstance().getLocationMusic();
         if(null!=audioInfos){
             if(null!=callBack){
-                List<BaseAudioInfo> medias=new ArrayList<>();
+                List<AudioInfo> medias=new ArrayList<>();
                 medias.addAll(audioInfos);
                 if(medias.size()>0){
                     callBack.onResponse(medias);
@@ -62,17 +62,17 @@ public class MusicListEngin extends BaseEngin {
         mContext=context;
         mSubscribe =rx.Observable
                 .just(context)
-                .map(new Func1<Context, List<BaseAudioInfo>>() {
+                .map(new Func1<Context, List<AudioInfo>>() {
                     @Override
-                    public List<BaseAudioInfo> call(Context cts) {
+                    public List<AudioInfo> call(Context cts) {
                         return MediaUtils.getInstance().queryLocationMusics(cts);
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<BaseAudioInfo>>() {
+                .subscribe(new Action1<List<AudioInfo>>() {
                     @Override
-                    public void call(List<BaseAudioInfo> data) {
+                    public void call(List<AudioInfo> data) {
                         if(null!=data&&data.size()>0){
                             callBack.onResponse(data);
                         }else{

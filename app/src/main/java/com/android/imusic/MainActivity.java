@@ -1,6 +1,5 @@
 package com.android.imusic;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,9 +7,7 @@ import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.base.BaseActivity;
@@ -18,7 +15,6 @@ import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
-import com.android.imusic.music.dialog.CommonDialog;
 import com.android.imusic.music.dialog.QuireDialog;
 import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.manager.VersionUpdateManager;
@@ -167,7 +163,7 @@ public class MainActivity extends BaseActivity {
                 .initialize(MainActivity.this, new MusicInitializeCallBack() {
 
                     @Override
-                    public void onFinish() {
+                    public void onSuccess() {
                         //如果系统正在播放音乐
                         if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                             MusicPlayerManager.getInstance().createWindowJukebox();
@@ -263,28 +259,18 @@ public class MainActivity extends BaseActivity {
      * 小米用户使用提示
      */
     private void showXiaoMiTips() {
-        final CommonDialog dialog = CommonDialog.getInstance(MainActivity.this);
-        View contentView = LayoutInflater.from(MainActivity.this).inflate(R.layout.music_dialog_quire_layout, null);
-        ((ImageView) contentView.findViewById(R.id.ic_top)).setImageResource(R.drawable.ic_setting_tips2);
-        ((TextView) contentView.findViewById(R.id.tv_title)).setText(getString(R.string.text_xiao_tips_title));
-        ((TextView) contentView.findViewById(R.id.tv_content)).setText(getString(R.string.text_xiao_tips_content));
-        ((TextView) contentView.findViewById(R.id.btn_cancel)).setText(getString(R.string.text_yse));
-        ((TextView) contentView.findViewById(R.id.btn_submit)).setText(getString(R.string.text_xiao_tips_close));
-        View.OnClickListener onClickListener=new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        };
-        contentView.findViewById(R.id.btn_cancel).setOnClickListener(onClickListener);
-        contentView.findViewById(R.id.btn_submit).setOnClickListener(onClickListener);
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                VersionUpdateManager.getInstance().checkAppVersion();
-            }
-        });
-        dialog.setContent(contentView).show();
+        QuireDialog.getInstance(MainActivity.this)
+                .setTitleText(getString(R.string.text_xiao_tips_title))
+                .setContentText(getString(R.string.text_xiao_tips_content))
+                .setSubmitTitleText(getString(R.string.text_xiao_tips_close))
+                .setCancelTitleText(getString(R.string.text_yse))
+                .setTopImageRes(R.drawable.ic_setting_tips2)
+                .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
+                    @Override
+                    public void onDissmiss() {
+                        VersionUpdateManager.getInstance().checkAppVersion();
+                    }
+                }).show();
     }
 
     /**
