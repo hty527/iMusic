@@ -1,7 +1,6 @@
 package com.android.imusic.music.activity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -15,6 +14,7 @@ import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
+import com.android.imusic.music.dialog.QuireDialog;
 import com.android.imusic.music.ui.contract.MusicLocationContract;
 import com.android.imusic.music.ui.presenter.MusicLocationPersenter;
 import com.music.player.lib.bean.BaseAudioInfo;
@@ -181,17 +181,19 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
     protected void onMusicMenuClick(final int position, int itemId, final BaseAudioInfo audioInfo) {
         super.onMusicMenuClick(position,itemId, audioInfo);
         if(itemId== MusicDetails.ITEM_ID_DETELE){
-            new android.support.v7.app.AlertDialog.Builder(MusicLocalActivity.this)
-                    .setTitle(getString(R.string.text_detele_tips))
-                    .setMessage(getString(R.string.text_local_detele_title))
-                    .setNegativeButton(getString(R.string.music_text_cancel),null)
-                    .setPositiveButton(getString(R.string.text_detele), new DialogInterface.OnClickListener() {
+            QuireDialog.getInstance(MusicLocalActivity.this)
+                    .setTitleText(getString(R.string.text_detele_tips))
+                    .setContentText(getString(R.string.text_local_detele_title))
+                    .setSubmitTitleText(getString(R.string.text_detele))
+                    .setCancelTitleText(getString(R.string.music_text_cancel))
+                    .setTopImageRes(R.drawable.ic_setting_tips4)
+                    .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onConsent(QuireDialog dialog) {
                             mAdapter.removeItem(position);
                             Toast.makeText(MusicLocalActivity.this,getString(R.string.text_detele_succ),Toast.LENGTH_SHORT).show();
                         }
-                    }).setCancelable(false).show();
+                    }).show();
         }
     }
 
