@@ -97,8 +97,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="32dp"
-        android:layout_marginTop="32dp">
+        android:layout_marginBottom="28dp"
+        android:layout_marginTop="25dp">
         <ImageView
             android:id="@+id/music_btn_model"
             android:layout_width="0dp"

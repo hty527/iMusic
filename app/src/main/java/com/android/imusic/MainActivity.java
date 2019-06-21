@@ -263,28 +263,19 @@ public class MainActivity extends BaseActivity {
      * 小米用户使用提示
      */
     private void showXiaoMiTips() {
-        final CommonDialog dialog = CommonDialog.getInstance(MainActivity.this);
-        View contentView = LayoutInflater.from(MainActivity.this).inflate(R.layout.music_dialog_quire_layout, null);
-        ((ImageView) contentView.findViewById(R.id.ic_top)).setImageResource(R.drawable.ic_setting_tips2);
-        ((TextView) contentView.findViewById(R.id.tv_title)).setText(getString(R.string.text_xiao_tips_title));
-        ((TextView) contentView.findViewById(R.id.tv_content)).setText(getString(R.string.text_xiao_tips_content));
-        ((TextView) contentView.findViewById(R.id.btn_cancel)).setText(getString(R.string.text_yse));
-        ((TextView) contentView.findViewById(R.id.btn_submit)).setText(getString(R.string.text_xiao_tips_close));
-        View.OnClickListener onClickListener=new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        };
-        contentView.findViewById(R.id.btn_cancel).setOnClickListener(onClickListener);
-        contentView.findViewById(R.id.btn_submit).setOnClickListener(onClickListener);
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                VersionUpdateManager.getInstance().checkAppVersion();
-            }
-        });
-        dialog.setContent(contentView).show();
+        QuireDialog.getInstance(MainActivity.this)
+                .setTitleText(getString(R.string.text_xiao_tips_title))
+                .setContentText(getString(R.string.text_xiao_tips_content))
+                .setSubmitTitleText(getString(R.string.text_xiao_tips_close))
+                .setCancelTitleText(getString(R.string.text_yse))
+                .setTopImageRes(R.drawable.ic_setting_tips2)
+                .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
+                    @Override
+                    public void onDissmiss() {
+                        Toast.makeText(MainActivity.this,"版本检测",Toast.LENGTH_SHORT).show();
+                        VersionUpdateManager.getInstance().checkAppVersion();
+                    }
+                }).show();
     }
 
     /**

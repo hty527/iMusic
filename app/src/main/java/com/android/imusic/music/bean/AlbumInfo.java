@@ -1,6 +1,5 @@
 package com.android.imusic.music.bean;
 
-import com.music.player.lib.bean.BaseAudioInfo;
 import java.util.List;
 
 /**
@@ -11,7 +10,7 @@ import java.util.List;
 public class AlbumInfo {
 
     private SingerInfo singer;
-    private List<BaseAudioInfo> list;
+    private List<AudioInfo> list;
 
     public SingerInfo getSinger() {
         return singer;
@@ -21,11 +20,11 @@ public class AlbumInfo {
         this.singer = singer;
     }
 
-    public List<BaseAudioInfo> getList() {
+    public List<AudioInfo> getList() {
         return list;
     }
 
-    public void setList(List<BaseAudioInfo> list) {
+    public void setList(List<AudioInfo> list) {
         this.list = list;
     }
 

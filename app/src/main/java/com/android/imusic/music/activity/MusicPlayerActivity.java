@@ -24,7 +24,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.music.bean.AudioInfo;
+import com.android.imusic.music.bean.MusicParams;
 import com.android.imusic.music.dialog.QuireDialog;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.music.player.lib.manager.MusicSubjectObservable;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.music.player.lib.manager.SqlLiteCacheManager;
@@ -134,6 +137,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             finish();
             return;
         }
+
         //正在播放的对象
         BaseAudioInfo currentPlayerMusic = MusicPlayerManager.getInstance().getCurrentPlayerMusic();
         //点击了通知栏回显
@@ -142,25 +146,32 @@ public class MusicPlayerActivity extends AppCompatActivity implements
         }
         MusicWindowManager.getInstance().onInvisible();
         MusicPlayerManager.getInstance().onCheckedPlayerConfig();//检查播放器配置
-        if(null!=intent.getSerializableExtra(MusicConstants.KEY_MUSIC_LIST)){
-            List<AudioInfo> audioInfos = (List<AudioInfo>) intent.getSerializableExtra(MusicConstants.KEY_MUSIC_LIST);
-            final List<AudioInfo> thisMusicLists=new ArrayList<>();
-            thisMusicLists.addAll(audioInfos);
-            final int index=MusicUtils.getInstance().getCurrentPlayIndex(thisMusicLists,musicID);
-            if(null!=currentPlayerMusic&&currentPlayerMusic.getAudioId()==musicID&&
-                    MusicPlayerManager.getInstance().getPlayerState()==MusicConstants.MUSIC_PLAYER_PLAYING){
-                //更新播放器内部数据
-                MusicPlayerManager.getInstance().updateMusicPlayerData(thisMusicLists,index);
-                onStatusResume(musicID);
-            }else{
-                MusicPlayerManager.getInstance().onReset();
-                if(null!=mSeekBar){
-                    mSeekBar.setSecondaryProgress(0);
-                    mSeekBar.setProgress(0);
+        String musicList = intent.getStringExtra(MusicConstants.KEY_MUSIC_LIST);
+        if(!TextUtils.isEmpty(musicList)){
+            MusicParams params= new Gson().fromJson(musicList,new TypeToken< MusicParams>(){}.getType());
+            if(null!=params&&null!=params.getAudioInfos()){
+                final List<AudioInfo> thisMusicLists=new ArrayList<>();
+                thisMusicLists.addAll(params.getAudioInfos());
+                final int index=MusicUtils.getInstance().getCurrentPlayIndex(thisMusicLists,musicID);
+                if(null!=currentPlayerMusic&&currentPlayerMusic.getAudioId()==musicID&&
+                        MusicPlayerManager.getInstance().getPlayerState()==MusicConstants.MUSIC_PLAYER_PLAYING){
+                    //更新播放器内部数据
+                    MusicPlayerManager.getInstance().updateMusicPlayerData(thisMusicLists,index);
+                    onStatusResume(musicID);
+                }else{
+                    MusicPlayerManager.getInstance().onReset();
+                    if(null!=mSeekBar){
+                        mSeekBar.setSecondaryProgress(0);
+                        mSeekBar.setProgress(0);
+                    }
+                    //设置数据，播放时间将在onOffsetPosition回调内被触发
+                    MusicPlayerManager.getInstance().updateMusicPlayerData(thisMusicLists,index);
+                    mMusicJukeBoxView.setNewData(thisMusicLists,index,true);
                 }
-                //设置数据，播放时间将在onOffsetPosition回调内被触发
-                MusicPlayerManager.getInstance().updateMusicPlayerData(thisMusicLists,index);
-                mMusicJukeBoxView.setNewData(thisMusicLists,index,true);
+            }else{
+                if(null!=currentPlayerMusic){
+                    onStatusResume(musicID);
+                }
             }
         }else{
             if(null!=currentPlayerMusic){
@@ -431,7 +442,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements
             mSeekBar.setSecondaryProgress(0);
             mSeekBar.setProgress(0);
         }
-        MusicPlayerManager.getInstance().onReset();
+        if(isVisibility){
+            MusicPlayerManager.getInstance().onReset();
+        }else{
+            if(null!=mMusicJukeBoxView){
+                mMusicJukeBoxView.updatePosition();
+            }
+        }
     }
 
     /**

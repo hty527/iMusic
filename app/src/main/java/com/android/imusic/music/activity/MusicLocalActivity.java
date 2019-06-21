@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
+import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
 import com.android.imusic.music.dialog.QuireDialog;
@@ -64,7 +65,7 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
                 if(null!=mAdapter&&null!=mAdapter.getData()&&mAdapter.getData().size()>0){
                     MusicPlayerManager.getInstance().setPlayingChannel(MusicConstants.CHANNEL_LOCATION);
                     int index = MusicUtils.getInstance().getRandomNum(0, mAdapter.getData().size() - 1);
-                    List<BaseAudioInfo> audioInfos = mAdapter.getData();
+                    List<AudioInfo> audioInfos = mAdapter.getData();
                     mAdapter.notifyDataSetChanged(index);
                     mLayoutManager.scrollToPositionWithOffset(index,0);
                     MusicPlayerManager.getInstance().startPlayMusic(audioInfos,index);
@@ -212,7 +213,7 @@ public class MusicLocalActivity extends BaseActivity<MusicLocationPersenter> imp
      * @param data 本地音频列表
      */
     @Override
-    public void showAudios(List<BaseAudioInfo> data) {
+    public void showAudios(List<AudioInfo> data) {
         if(null!=mAdapter){
             mTitleView.setSubTitle(getString(R.string.text_local_play_title));
             mAdapter.setNewData(data);

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.music.adapter.MusicCommenListAdapter;
+import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
 import com.android.imusic.music.dialog.QuireDialog;
@@ -145,7 +146,7 @@ public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> im
      * @param data 收藏、历史播放 记录
      */
     @Override
-    public void showAudios(List<BaseAudioInfo> data) {
+    public void showAudios(List<AudioInfo> data) {
         if(null!=mAdapter){
             mAdapter.setNewData(data);
         }

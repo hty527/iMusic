@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.android.imusic.R;
 import com.android.imusic.music.adapter.holder.IndexAlbumViewHolder;
 import com.android.imusic.music.adapter.holder.IndexDefaultViewHolder;
@@ -27,7 +26,6 @@ import com.music.player.lib.constants.MusicConstants;
 import com.music.player.lib.manager.MusicPlayerManager;
 import com.music.player.lib.util.Logger;
 import com.music.player.lib.util.MusicUtils;
-
 import java.util.List;
 
 /**
@@ -105,7 +103,7 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                             isVisible=true;
                         }
                         //本地音频个数获取
-                        List<BaseAudioInfo> locationMusic = MediaUtils.getInstance().getLocationMusic();
+                        List<AudioInfo> locationMusic = MediaUtils.getInstance().getLocationMusic();
                         if(null!=locationMusic&&locationMusic.size()>0){
                             defaultViewHolder.textDesp.setText(String.format("(%s首)",locationMusic.size()));
                         }else{

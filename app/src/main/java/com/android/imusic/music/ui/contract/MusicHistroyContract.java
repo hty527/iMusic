@@ -1,7 +1,7 @@
 package com.android.imusic.music.ui.contract;
 
 import com.android.imusic.base.BaseContract;
-import com.music.player.lib.bean.BaseAudioInfo;
+import com.android.imusic.music.bean.AudioInfo;
 import java.util.List;
 
 /**
@@ -17,7 +17,7 @@ public interface MusicHistroyContract {
          * 显示历史、收藏音频列表
          * @param data 本地历史、收藏音频列表
          */
-        void showAudios(List<BaseAudioInfo> data);
+        void showAudios(List<AudioInfo> data);
     }
 
     interface Presenter<V> extends BaseContract.BasePresenter<V>{
