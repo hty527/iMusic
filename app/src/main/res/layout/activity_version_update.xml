@@ -101,10 +101,12 @@
                 tools:text="下次更新"
                 android:textSize="15dp"
                 android:gravity="center"
-                android:textColor="#FFFFFF"
-                app:shapeBackgroundColor="#AAAAAA"
-                app:shapeBackgroundSelectorColor="#CCCCCC"
-                app:shapeRadius="5dp"
+                android:textColor="#8000ff"
+                app:shapeBackgroundColor="#00000000"
+                app:shapeStrokeWidth="1dp"
+                app:shapeStrokeColor="#8000ff"
+                app:shapeBackgroundSelectorColor="#4D8000ff"
+                app:shapeRadius="21dp"
                 android:clickable="true"/>
             <com.android.imusic.music.view.ShapeTextView
                 android:id="@+id/btn_next"
@@ -119,7 +121,7 @@
                 android:textColor="#FFFFFF"
                 app:shapeBackgroundColor="#8000FF"
                 app:shapeBackgroundSelectorColor="#9C37FF"
-                app:shapeRadius="5dp"
+                app:shapeRadius="21dp"
                 android:clickable="true"/>
         </LinearLayout>
     </LinearLayout>
