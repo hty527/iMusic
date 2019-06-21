@@ -1,6 +1,5 @@
 package com.android.imusic;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,9 +7,7 @@ import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.base.BaseActivity;
@@ -18,7 +15,6 @@ import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
-import com.android.imusic.music.dialog.CommonDialog;
 import com.android.imusic.music.dialog.QuireDialog;
 import com.music.player.lib.manager.SqlLiteCacheManager;
 import com.android.imusic.music.manager.VersionUpdateManager;
@@ -167,7 +163,7 @@ public class MainActivity extends BaseActivity {
                 .initialize(MainActivity.this, new MusicInitializeCallBack() {
 
                     @Override
-                    public void onFinish() {
+                    public void onSuccess() {
                         //如果系统正在播放音乐
                         if(null!=MusicPlayerManager.getInstance().getCurrentPlayerMusic()){
                             MusicPlayerManager.getInstance().createWindowJukebox();
@@ -272,7 +268,6 @@ public class MainActivity extends BaseActivity {
                 .setOnQueraConsentListener(new QuireDialog.OnQueraConsentListener() {
                     @Override
                     public void onDissmiss() {
-                        Toast.makeText(MainActivity.this,"版本检测",Toast.LENGTH_SHORT).show();
                         VersionUpdateManager.getInstance().checkAppVersion();
                     }
                 }).show();
