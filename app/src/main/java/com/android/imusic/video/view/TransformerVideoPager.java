@@ -36,7 +36,7 @@ public class TransformerVideoPager extends RelativeLayout{
     private MusicJukeBoxBackgroundLayout1 mBackgroundLayout;
     private ViewPager mViewPager;
     private TransformerViewpager mAdapter;
-    private TextView mVideoIndexNum;
+    private TextView mVideoIndexNum,mViewTitle;
 
     public TransformerVideoPager(Context context) {
         this(context,null);
@@ -81,6 +81,7 @@ public class TransformerVideoPager extends RelativeLayout{
         mViewPager.setPageTransformer(true, new TransformerPageAnimation());
         mBackgroundLayout = (MusicJukeBoxBackgroundLayout1) findViewById(R.id.background_view);
         mVideoIndexNum = (TextView) findViewById(R.id.view_index_num);
+        mViewTitle = (TextView) findViewById(R.id.music_tr_item_title);
     }
 
     /**
@@ -91,6 +92,7 @@ public class TransformerVideoPager extends RelativeLayout{
         if(null!=mDataBeans&&mDataBeans.size()>position) {
             //取出Card元素
             OpenEyesIndexItemBean indexItemBean = mDataBeans.get(position).getData().getContent().getData();
+            mViewTitle.setText(indexItemBean.getTitle());
             mVideoIndexNum.setText((position + 1) + "/" + mDataBeans.size());
             if(null!=mBackgroundLayout){
                 mBackgroundLayout.setBackgroundCover(indexItemBean.getCover().getBlurred(),

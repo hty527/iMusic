@@ -9,36 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="bottom">
-        <TextView
-            android:id="@+id/music_tr_item_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="13dp"
-            android:textColor="#FFFFFF"
-            android:gravity="center_vertical"
-            android:shadowColor="#000000"
-            android:shadowRadius="2"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:layout_margin="10dp"
-            android:text="--"/>
-    </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="9dp"
-        android:textColor="#FFFFFF"
-        android:text="@string/text_recommend"
-        android:paddingLeft="10dp"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:paddingRight="10dp"
-        android:background="@drawable/video_item_tag_bg"/>
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="9dp"-->
+        <!--android:textColor="#FFFFFF"-->
+        <!--android:text="@string/text_recommend"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:paddingTop="3dp"-->
+        <!--android:paddingBottom="3dp"-->
+        <!--android:paddingRight="10dp"-->
+        <!--android:background="@drawable/video_item_tag_bg"/>-->
 </FrameLayout>

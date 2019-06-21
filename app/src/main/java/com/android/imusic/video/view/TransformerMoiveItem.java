@@ -42,7 +42,6 @@ public class TransformerMoiveItem extends FrameLayout {
     public void setData(OpenEyesIndexItemBean item) {
         if(null!=item&&null!=item.getData()){
             OpenEyesIndexItemBean data = item.getData().getContent().getData();
-            ((TextView) findViewById(R.id.music_tr_item_title)).setText(data.getTitle());
 //            TextView tvDurtion = (TextView) findViewById(R.id.music_tr_item_durtion);
 //            tvDurtion.setText(MusicUtils.getInstance().stringForAudioTime(data.getDuration()*1000));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
