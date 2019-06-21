@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.R;
@@ -82,6 +83,10 @@ public class MusicLockActivity extends AppCompatActivity implements MusicPlayerE
         });
         sildingLayout.setTouchView(getWindow().getDecorView());
         mMusicTime = (TextView) findViewById(R.id.music_lock_time);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mMusicTime.getLayoutParams();
+        int marginTop = MusicUtils.getInstance().getStatusBarHeight(this) + MusicUtils.getInstance().dpToPxInt(this, 25f);
+        layoutParams.setMargins(0,marginTop,0,0);
+        mMusicTime.setLayoutParams(layoutParams);
         mMusicDate = (TextView) findViewById(R.id.music_lock_date);
         mMusicTitle = (TextView) findViewById(R.id.music_lock_name);
         mMusicAnchor = (TextView) findViewById(R.id.music_lock_anchor);
