@@ -10,4 +10,5 @@
     <string name="music_text_lrc_empty">No lyrics were found</string>
     <string name="music_text_lrc_loading">The lyrics being obtained....</string>
     <string name="music_text_now_play">Playing.</string>
+    <string name="music_text_notice_name">iMusic Notification bar music playback</string>
 </resources>

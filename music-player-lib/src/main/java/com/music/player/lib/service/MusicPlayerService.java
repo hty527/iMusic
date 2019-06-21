@@ -1835,8 +1835,9 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         }
         //8.0及以上系统需创建通知通道
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String name = getResources().getString(R.string.music_text_notice_name);
             NotificationChannel channel = new NotificationChannel(MusicConstants.CHANNEL_ID,
-                    "iMusic通知", NotificationManager.IMPORTANCE_LOW);
+                    name, NotificationManager.IMPORTANCE_LOW);
             channel.enableVibration(false);
             getNotificationManager().createNotificationChannel(channel);
         }

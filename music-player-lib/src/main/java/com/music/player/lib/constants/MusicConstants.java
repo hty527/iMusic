@@ -55,10 +55,10 @@ public interface MusicConstants {
     float SCALE_DISC_SIZE = (float) (824.0 / BASE_SCREEN_WIDTH);
     //唱盘背景比例
     float SCALE_DISC_BG_SIZE = (float) (828.0 / BASE_SCREEN_WIDTH);
-    //唱盘距离顶部边距
-    float SCALE_DISC_MARGIN_TOP = (float) (180.0 / BASE_SCREEN_WIDTH);
+    //唱盘距离顶部边距时
+    float SCALE_DISC_MARGIN_TOP = (float) (190.0 / BASE_SCREEN_WIDTH);
     //唱盘背景距离顶部边距
-    float SCALE_DISC_BG_MARGIN_TOP = (float) (177.0 / BASE_SCREEN_WIDTH);
+    float SCALE_DISC_BG_MARGIN_TOP = (float) (186.0 / BASE_SCREEN_WIDTH);
     //专辑图片比例
     float SCALE_MUSIC_PIC_SIZE = (float) (544.0 / BASE_SCREEN_WIDTH);
 
