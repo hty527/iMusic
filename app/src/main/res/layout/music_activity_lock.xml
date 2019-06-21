@@ -17,7 +17,6 @@
             android:fontFamily="sans-serif-thin"
             android:textStyle="normal"
             android:layout_marginTop="40dp"
-            android:layout_marginLeft="38dp"
             android:layout_alignParentTop="true"
             android:text="00:00"
             android:textSize="72dp" />
