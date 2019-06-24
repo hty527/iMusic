@@ -27,6 +27,10 @@ public class VersionInfo implements Parcelable{
     private String version;
     private int version_code;
 
+    public VersionInfo(){
+        super();
+    }
+
     protected VersionInfo(Parcel in) {
         compel_update = in.readInt();
         down_url = in.readString();
