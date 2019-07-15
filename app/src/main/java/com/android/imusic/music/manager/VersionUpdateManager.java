@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.Settings;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
@@ -114,6 +113,14 @@ public class VersionUpdateManager {
     /**
      * 下载文件
      * @param path 绝对地址
+     */
+    public void downloadAPK(String path){
+        downloadAPK(path,mListener);
+    }
+
+    /**
+     * 下载文件
+     * @param path 绝对地址
      * @param listener 监听器
      */
     public void downloadAPK(String path, final OnDownloadListener listener) {
@@ -142,7 +149,6 @@ public class VersionUpdateManager {
                 if(null!=listener){
                     listener.onSuccess(file);
                 }
-                instanllApk(file);
             }
 
             @Override
@@ -162,7 +168,6 @@ public class VersionUpdateManager {
      */
     public boolean isEqualNewVersion(int newVersionCode){
         File file=new File(OUT_PATH,FILE_NAME);
-        Logger.d(TAG,"isExistApk-->"+file.getAbsolutePath());
         boolean isExistApk=false;
         if(file.exists()&&file.isFile()){
             PackageManager packageManager = MusicApplication.getContext().getPackageManager();
@@ -201,6 +206,23 @@ public class VersionUpdateManager {
     }
 
     /**
+     * 是否存在相同版本的APK
+     * @param versionCode 目标版本号
+     * @return false：不存在，true：存在，内部直接抛出下载完成回调
+     */
+    public boolean isExistEqualVersionApk(int versionCode) {
+        boolean equalNewVersion = isEqualNewVersion(versionCode);
+        if(!equalNewVersion){
+            return false;
+        }
+        File file=new File(OUT_PATH,FILE_NAME);
+        if(null!=mListener){
+            mListener.onSuccess(file);
+        }
+        return true;
+    }
+
+    /**
      * 安装APK文件
      * @param urlPath http\https apk url绝对路径
      */
@@ -225,40 +247,23 @@ public class VersionUpdateManager {
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setAction(Intent.ACTION_VIEW);
+            Uri uri;
             //6.0使用fileProvider
             if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-                //8.0还需检查是否拥有安装外部应用的权限
-                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-                    if(MusicApplication.getContext().getPackageManager().canRequestPackageInstalls()){
-                        //authority:Provider主机地址 和配置文件中保持一致 ,file: 共享的文件
-                        Uri uriForFile = FileProvider.getUriForFile(MusicApplication.getContext(),
-                                MusicApplication.getContext()
-                                        //fileProvider必须和Manifest中的authorities配置一致
-                                        .getPackageName() + ".fileProvider", file);
-                        //添加这一句表示对目标应用临时授权该Uri所代表的文件
-                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
-                    }else{
-                        //如果8.0的设备未设置允许安装外部应用，则引导前往设置界面
-                        Uri parse = Uri.parse("package:" + MusicApplication.getContext().getPackageName());
-                        Intent settingIntent=new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,parse);
-                        settingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        MusicApplication.getContext().startActivity(settingIntent);
-                    }
-                }else{
-                    //介于6.0-8.0之间 authority:Provider主机地址 和配置文件中保持一致 ,file: 共享的文件
-                    Uri uriForFile = FileProvider.getUriForFile(MusicApplication.getContext(),
-                            MusicApplication.getContext()
-                                    //fileProvider必须和Manifest中的authorities配置一致
-                                    .getPackageName() + ".fileProvider", file);
-                    //添加这一句表示对目标应用临时授权该Uri所代表的文件
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
-                }
+                //介于6.0-8.0之间 authority:Provider主机地址 和配置文件中保持一致 ,file: 共享的文件
+                uri = FileProvider.getUriForFile(MusicApplication.getContext(),
+                        MusicApplication.getContext()
+                                //fileProvider必须和Manifest中的authorities配置一致
+                                .getPackageName() + ".fileProvider", file);
+                //添加这一句表示对目标应用临时授权该Uri所代表的文件
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+
             }else{
                 //6.0以下的
-                intent.setDataAndType(Uri.fromFile(file), getMIMEType(file));
+                uri = Uri.parse("file://" + file.toString());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
             MusicApplication.getContext().startActivity(intent);
         } catch (RuntimeException e) {
             e.printStackTrace();

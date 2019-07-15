@@ -1,8 +1,15 @@
 package com.android.imusic.music.activity;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -35,6 +42,8 @@ import java.io.File;
 
 public class VersionUpdateActivity extends BaseActivity{
 
+    private static final int REQUEST_INSTALL_STATE = 1001;
+    private static final int REQUEST_INSTALL_UNKNOW_SOURCE = 1002;
     private ShapeTextView mBtnNext,mBtnCancel;
     private ImageView mBtnClose;
     private ProgressBar mProgressBar;
@@ -88,6 +97,59 @@ public class VersionUpdateActivity extends BaseActivity{
         mBtnCancel.setOnClickListener(onClickListener);
         mBtnClose.setOnClickListener(onClickListener);
         mBtnNext.setOnClickListener(onClickListener);
+        //下载状态监听器设置
+        VersionUpdateManager.getInstance().setDownloadListener(new OnDownloadListener() {
+            @Override
+            public void progress(int progress, final long totloLength, final long readLength) {
+                Logger.d(TAG,"progress-->progress:"+progress+",totloLength:"+totloLength+",readLength:"+readLength);
+                if(null!=mProgressBar){
+                    mProgressBar.setProgress(progress);
+                }
+                if(null!=mTvDownloadProgress){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTvDownloadProgress.setText(FileUtils.getInstance().formatSizeToString(readLength)
+                                    +"/"+FileUtils.getInstance().formatSizeToString(totloLength));
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onSuccess(File file) {
+                Logger.d(TAG,"onSuccess-->file:"+file.getAbsolutePath());
+                if(null!=mTvDownloadTips){
+                    mTvDownloadTips.setText(getString(R.string.text_version_download_finlsh));
+                }
+                if(null!=mBtnNext){
+                    mBtnNext.setEnabled(true);
+                    mBtnNext.setText(getString(R.string.text_version_download_finlsh_instanl));
+                }
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    if(getPackageManager().canRequestPackageInstalls()){
+                        VersionUpdateManager.getInstance().instanllApk(file);
+                    }else{
+                        //申请安装外部APK权限
+                        ActivityCompat.requestPermissions(VersionUpdateActivity.this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, REQUEST_INSTALL_STATE);
+                    }
+                }else{
+                    VersionUpdateManager.getInstance().instanllApk(file);
+                }
+            }
+
+            @Override
+            public void onError(int errorCode, String message) {
+                Logger.d(TAG,"onError-->errorCode:"+errorCode+",message:"+message);
+                if(null!=mTvDownloadTips){
+                    mTvDownloadTips.setText(message);
+                }
+                if(null!=mBtnNext){
+                    mBtnNext.setEnabled(true);
+                    mBtnNext.setText(getString(R.string.text_version_download_error));
+                }
+            }
+        });
     }
 
     /**
@@ -163,66 +225,49 @@ public class VersionUpdateActivity extends BaseActivity{
      * @param versionInfo 版本信息
      */
     private void startDownloadApk(VersionInfo versionInfo) {
-        boolean existApk = VersionUpdateManager.getInstance().isEqualNewVersion(versionInfo.getVersion_code());
-        Logger.d(TAG,"startDownloadApk-->existApk:"+existApk);
-        if(existApk){
-            mTvDownloadTips.setText(getString(R.string.text_version_download_finlsh));
-            mBtnNext.setText(getString(R.string.text_version_instanll));
-            VersionUpdateManager.getInstance().instanllApk(versionInfo.getDown_url());
-            return;
+        if(!VersionUpdateManager.getInstance().isExistEqualVersionApk(versionInfo.getVersion_code())){
+            mBtnCancel.setVisibility(View.GONE);
+            mBtnClose.setVisibility(View.GONE);
+            mDownloadView.setVisibility(View.VISIBLE);
+            mUpdateContent.setVisibility(View.GONE);
+            //开始下载后禁止点击外部关闭弹窗
+            setFinishOnTouchOutside(false);
+            //非强制更新允许用户切换至后台安装
+            mBtnNext.setEnabled(false);
+            mBtnNext.setText(getString(R.string.text_version_download_loading));
+            mTvDownloadTips.setText(getString(R.string.text_version_download_loading_tips));
+            VersionUpdateManager.getInstance().downloadAPK(versionInfo.getDown_url());
         }
-        mBtnCancel.setVisibility(View.GONE);
-        mBtnClose.setVisibility(View.GONE);
-        mDownloadView.setVisibility(View.VISIBLE);
-        mUpdateContent.setVisibility(View.GONE);
-        //开始下载后禁止点击外部关闭弹窗
-        setFinishOnTouchOutside(false);
-        //非强制更新允许用户切换至后台安装
-        mBtnNext.setEnabled(false);
-        mBtnNext.setText(getString(R.string.text_version_download_loading));
-        mTvDownloadTips.setText(getString(R.string.text_version_download_loading_tips));
-        VersionUpdateManager.getInstance().downloadAPK(versionInfo.getDown_url(), new OnDownloadListener() {
-            @Override
-            public void progress(int progress, final long totloLength, final long readLength) {
-                Logger.d(TAG,"progress-->progress:"+progress+",totloLength:"+totloLength+",readLength:"+readLength);
-                if(null!=mProgressBar){
-                    mProgressBar.setProgress(progress);
-                }
-                if(null!=mTvDownloadProgress){
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mTvDownloadProgress.setText(FileUtils.getInstance().formatSizeToString(readLength)
-                                    +"/"+FileUtils.getInstance().formatSizeToString(totloLength));
-                        }
-                    });
-                }
-            }
+    }
 
-            @Override
-            public void onSuccess(File file) {
-                Logger.d(TAG,"onSuccess-->file:"+file.getAbsolutePath());
-                if(null!=mTvDownloadTips){
-                    mTvDownloadTips.setText(getString(R.string.text_version_download_finlsh));
+    /**
+     * 加个获取权限的监听
+     */
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(requestCode==REQUEST_INSTALL_STATE){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if(null!=mBtnNext.getTag()){
+                    VersionInfo versionInfo= (VersionInfo) mBtnNext.getTag();
+                    VersionUpdateManager.getInstance().instanllApk(versionInfo.getDown_url());
                 }
-                if(null!=mBtnNext){
-                    mBtnNext.setEnabled(true);
-                    mBtnNext.setText(getString(R.string.text_version_download_finlsh_instanl));
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startInstallPermissionSettingActivity();
                 }
             }
+        }
+    }
 
-            @Override
-            public void onError(int errorCode, String message) {
-                Logger.d(TAG,"onError-->errorCode:"+errorCode+",message:"+message);
-                if(null!=mTvDownloadTips){
-                    mTvDownloadTips.setText(message);
-                }
-                if(null!=mBtnNext){
-                    mBtnNext.setEnabled(true);
-                    mBtnNext.setText(getString(R.string.text_version_download_error));
-                }
-            }
-        });
+    /**
+     * 注意这个是8.0新API
+     * 进入设置界面 打开未知来源安装
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void startInstallPermissionSettingActivity() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+        startActivityForResult(intent, REQUEST_INSTALL_UNKNOW_SOURCE);
     }
 
     @Override

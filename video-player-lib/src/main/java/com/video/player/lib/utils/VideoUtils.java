@@ -224,7 +224,7 @@ public class VideoUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0;
+        return dpToPxInt(context,25f);
     }
 
     /**

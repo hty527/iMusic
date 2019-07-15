@@ -15,5 +15,5 @@ ext{
     videoModule = 'video-player'
     videoDesc = 'Android VideoPlayer Library'
     videoWebsite = 'https://github.com/Yuye584312311/IMusic'
-    videoVersion = '1.0.7'
+    videoVersion = '1.0.71'
 }
