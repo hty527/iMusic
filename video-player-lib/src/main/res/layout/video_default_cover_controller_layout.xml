@@ -20,8 +20,7 @@
             android:layout_centerVertical="true"
             android:padding="6dp"
             android:textColor="#FFFFFFFF"
-            android:textSize="11dp"
-            android:text="--"/>
+            android:textSize="11dp"/>
         <TextView
             android:id="@+id/view_cover_durtion"
             android:layout_width="wrap_content"
@@ -33,7 +32,6 @@
             android:textColor="#FFFFFFFF"
             android:textSize="11dp"
             android:singleLine="true"
-            android:ellipsize="end"
-            android:text="--"/>
+            android:ellipsize="end"/>
     </RelativeLayout>
 </FrameLayout>
