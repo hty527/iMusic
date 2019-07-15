@@ -9,8 +9,8 @@ ext {
     ]
     app=[
          applicationId  : "com.android.imusic",
-         versionCode    : 101070,
-         versionName    : "1.1.7"
+         versionCode    : 101071,
+         versionName    : "1.1.71"
     ]
     music=[
             versionCode    : 101050,
@@ -18,8 +18,8 @@ ext {
             bintrayVersion    : '1.1.6'
     ]
     video=[
-            versionCode    : 100070,
-            versionName    : "1.0.7",
-            bintrayVersion    : '1.0.7'
+            versionCode    : 100071,
+            versionName    : "1.0.71",
+            bintrayVersion    : '1.0.71'
     ]
 }

@@ -104,7 +104,7 @@ dependencies {
     //音乐播放器
     implementation 'com.imusic.player:music-player:1.1.6'
     //视频播放器
-    implementation 'com.imusic.player:video-player:1.0.7'
+    implementation 'com.imusic.player:video-player:1.0.71'
 //    implementation project(':music-player-lib')
 //    implementation project(':video-player-lib')
 }

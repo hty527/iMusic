@@ -1,7 +1,11 @@
 package com.android.imusic.video.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +14,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import com.android.imusic.R;
@@ -49,12 +54,16 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
         implements IndexVideoContract.View {
 
     private static final String TAG = "VideoPlayerActviity";
+    //自动隐藏小窗口按钮倒计时
+    public static final int HIDE_VIEW_MILLISS=3000;
     private VideoDetailsPlayerTrackView  mVideoPlayer;
     private VideoDetailsAdapter mAdapter;
     //视频参数
     private VideoParams mVideoParams;
     private boolean mIsPlaying;
     private LinearLayoutManager mLayoutManager;
+    private View mBtnTiny;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,6 +90,27 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
         mVideoPlayer.setGlobaEnable(true);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(Math.abs(dy)>0){
+                    showViewTpVisible(mBtnTiny);
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Logger.d(TAG,"onScrollStateChanged-->newState:"+newState);
+                if(0==newState&&null!=mHandler){
+                    mHandler.removeCallbacksAndMessages(null);
+                    mHandler.removeCallbacks(mScrollRunnable);
+                    mHandler.postDelayed(mScrollRunnable,HIDE_VIEW_MILLISS);
+                }
+            }
+        });
         recyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new VideoDetailsAdapter(VideoPlayerActviity.this,null);
         //条目点击事件
@@ -105,18 +135,85 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
                 onBackPressed();
             }
         });
+        mBtnTiny = findViewById(R.id.btn_tiny);
         //小窗口测试
-        findViewById(R.id.btn_tiny).setOnClickListener(new View.OnClickListener() {
+        mBtnTiny.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(null!=mVideoPlayer){
                     int startY=mVideoPlayer.getMeasuredHeight()
-                            +VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f);
+                            +VideoUtils.getInstance().dpToPxInt(VideoPlayerActviity.this,10f)
+                            +VideoUtils.getInstance().getStatusBarHeight(VideoPlayerActviity.this);
                     mVideoPlayer.startMiniWindowToLocaion(Gravity.RIGHT,startY,1280,720,null);
                 }
             }
         });
+        mHandler = new Handler();
+        //两秒后自动隐藏小窗口转向
+        mHandler.postDelayed(mScrollRunnable,HIDE_VIEW_MILLISS);
     }
+
+    /**
+     * 显示小窗口View
+     * @param view
+     */
+    private void showViewTpVisible(View view) {
+        if(null!=mHandler){
+            mHandler.removeCallbacks(mScrollRunnable);
+        }
+        if(null!=view){
+            if(view.getVisibility()!=View.VISIBLE){
+                view.setVisibility(View.VISIBLE);
+                ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationX", view.getWidth(),0);
+                animator.setDuration(300);
+                animator.setInterpolator(new LinearInterpolator());
+                animator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        if(null!=mHandler){
+                            mHandler.removeCallbacks(mScrollRunnable);
+                            mHandler.postDelayed(mScrollRunnable,HIDE_VIEW_MILLISS);
+                        }
+                    }
+                });
+                animator.start();
+            }
+        }
+    }
+
+    /**
+     * 隐藏小窗口View
+     * @param view
+     */
+    private void hideViewTpGone(final View view) {
+        if(null!=view){
+            if(view.getVisibility()==View.GONE){
+                return;
+            }
+            ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationX", 0,view.getMeasuredWidth());
+            animator.setDuration(300);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    view.setVisibility(View.GONE);
+                }
+            });
+            animator.start();
+        }
+    }
+
+    /**
+     * token任务
+     */
+    public Runnable mScrollRunnable=new Runnable() {
+        @Override
+        public void run() {
+            hideViewTpGone(mBtnTiny);
+        }
+    };
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -170,7 +267,6 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(mVideoPlayer.getCoverController().mVideoCover);
             }
-            Logger.d(TAG,"initVideoParams-->"+mIsPlaying);
             //无缝衔接外部播放任务
             if(mIsPlaying&&null!= IMediaPlayer.getInstance().getTextureView()){
                 addTextrueViewToView(mVideoPlayer);
@@ -285,6 +381,11 @@ public class VideoPlayerActviity extends BaseActivity<IndexVideoPersenter>
         if(null!=mVideoPlayer){
             mVideoPlayer.onDestroy();
             mVideoPlayer=null;
+        }
+        if(null!=mHandler&&null!=mScrollRunnable){
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler.removeCallbacks(mScrollRunnable);
+            mHandler=null;
         }
         mLayoutManager=null;mVideoParams=null;
     }
