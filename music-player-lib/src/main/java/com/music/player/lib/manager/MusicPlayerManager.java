@@ -673,7 +673,7 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
     @Override
     public void addOnPlayerEventListener(MusicPlayerEventListener listener) {
         if(null!=mBinder&&mBinder.pingBinder()){
-            mBinder.setOnPlayerEventListener(listener);
+            mBinder.addOnPlayerEventListener(listener);
         }
     }
 
