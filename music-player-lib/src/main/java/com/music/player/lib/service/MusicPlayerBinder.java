@@ -253,7 +253,7 @@ public class MusicPlayerBinder extends Binder{
         }
     }
 
-    public void setOnPlayerEventListener(MusicPlayerEventListener listener) {
+    public void addOnPlayerEventListener(MusicPlayerEventListener listener) {
         if(null!=mPresenter) mPresenter.addOnPlayerEventListener(listener);
     }
 
