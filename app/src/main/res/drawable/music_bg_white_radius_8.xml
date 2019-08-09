@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- 没有给Shape图形设置大小的情况下默认和空间大小一样 -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android" >
-    <solid android:color="#FFFFFF"/>
-    <corners android:bottomLeftRadius="6dp" android:bottomRightRadius="6dp"></corners>
-</shape>
