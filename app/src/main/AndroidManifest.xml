@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.imusic">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+    <uses-permission android:name="android.permission.GET_TOP_ACTIVITY_INFO" />
+    <!--8.0及以上请求安装APK-->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+
+    <application
+        android:name="com.android.imusic.MusicApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_music_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <!--
+        //当用户每次离开APP 任务栈时，系统都将会将此APP栈中的所有Activity销毁,返回此任务栈时重新创建根栈
+        android:finishOnTaskLaunch="true"
+        //当用户离开此APP任务栈时，请求系统尽可能的保留所有任务的状态
+        android:alwaysRetainTaskState="true"
+            -->
+        <activity android:name="com.android.imusic.MainActivity"
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--音乐播放器-->
+        <activity android:name="com.android.imusic.music.activity.MusicPlayerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--锁屏-->
+        <activity android:name="com.android.imusic.music.activity.MusicLockActivity"
+            android:theme="@style/MusicLockScreenTheme"
+            android:screenOrientation="portrait"
+            android:taskAffinity="imusic.player.lock"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true">
+        </activity>
+        <!--本地音乐-->
+        <activity android:name="com.android.imusic.music.activity.MusicLocalActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--搜索,默认软键盘不显示-->
+        <activity android:name="com.android.imusic.music.activity.MusicSearchActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <!--专辑-->
+        <activity android:name="com.android.imusic.music.activity.MusicAlbumActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--历史记录-->
+        <activity android:name="com.android.imusic.music.activity.MusicHistroyActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--收藏记录-->
+        <activity android:name="com.android.imusic.music.activity.MusicCollectActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!--视频播放-->
+        <activity android:name="com.android.imusic.video.activity.VideoPlayerActviity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:launchMode="singleTask"/>
+        <!--视频排行榜-->
+        <activity android:name="com.android.imusic.video.activity.VideoListActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+        <!--版本更新-->
+        <activity android:name="com.android.imusic.music.activity.VersionUpdateActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityCenterDialogAnimation"
+            android:launchMode="singleTask"/>
+        <activity android:name=".music.activity.TestActivity"
+            android:screenOrientation="portrait"/>
+        <!--版本升级,适配6.0及以上-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"
+                />
+        </provider>
+    </application>
+</manifest>

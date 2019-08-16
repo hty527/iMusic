@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <com.video.player.lib.view.VideoDetailsPlayerTrackView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:video_autoSetVideoController="true"
+            android:id="@+id/video_player"/>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recycler_view"
+            android:background="#FFFFFF"
+            android:overScrollMode="never"/>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:src="@drawable/video_controller_back_white_selector"/>
+    <TextView
+        android:id="@+id/btn_tiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:textColor="#FFFFFF"
+        android:textSize="15dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textStyle="bold"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/video_btn_ledt_round_bg"
+        android:text="@string/text_start_mini_window"
+        android:visibility="visible"/>
+</FrameLayout>

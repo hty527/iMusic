@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+    可以声明为共享的几种路径
+    files-path：Context.getFilesDir()
+    cache-path：Context.getCacheDir()
+    external-path：Environment.getExternalStorageDirectory()，比如:/storage/emulated/0/
+    external-files-path：Context.getExternalFilesDir(null)
+    external-cache-path：Context.getExternalCacheDir()
+    -->
+    <!--声明SD卡为共享路径以及指定目录为共享目录-->
+    <external-path name="external_files" path="iMusic/Download"/>
+</paths>
