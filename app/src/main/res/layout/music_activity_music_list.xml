@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <com.music.player.lib.view.MusicCommentTitleView
+        android:id="@+id/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:musicCommentBackRes="@drawable/video_controller_back_white_selector"
+        android:background="@drawable/music_top_title_bg"/>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swipre_layout">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="vertical"
+            android:scrollbarSize="5dp"
+            android:scrollbarThumbVertical="@drawable/music_list_scroll_bar"
+            android:background="#FFF0F2F5" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>
