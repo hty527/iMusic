@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: 'tinkerpatch.gradle'
 
 def minSdk = android.defaultConfig.minSdkVersion
 
@@ -11,6 +12,9 @@ android {
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.app.versionCode
         versionName rootProject.ext.app.versionName
+        //添加部分
+        multiDexEnabled true
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath true } }
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -69,6 +73,10 @@ android {
         }
     }
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     //依赖.aar文件需要用到
 //    repositories {
 //        flatDir {
@@ -107,4 +115,8 @@ dependencies {
     implementation 'com.imusic.player:video-player:1.0.71'
 //    implementation project(':music-player-lib')
 //    implementation project(':video-player-lib')
+
+    // 热更新: 若使用annotation需要单独引用,对于tinker的其他库都无需再引用
+    compileOnly 'com.tinkerpatch.tinker:tinker-android-anno:1.9.13.3'
+    implementation 'com.tinkerpatch.sdk:tinkerpatch-android-sdk:1.2.13.3'
 }
