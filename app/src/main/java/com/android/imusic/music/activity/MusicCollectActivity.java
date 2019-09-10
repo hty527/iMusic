@@ -9,8 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.android.imusic.R;
 import com.android.imusic.base.BaseActivity;
-import com.android.imusic.music.adapter.MusicCommenListAdapter;
-import com.android.imusic.music.bean.AudioInfo;
+import com.android.imusic.music.adapter.MusicCollectListAdapter;
 import com.android.imusic.music.bean.MusicDetails;
 import com.android.imusic.music.dialog.MusicMusicDetailsDialog;
 import com.android.imusic.music.dialog.QuireDialog;
@@ -37,7 +36,7 @@ import java.util.Observer;
 public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> implements
         MusicOnItemClickListener, Observer,MusicHistroyContract.View {
 
-    private MusicCommenListAdapter mAdapter;
+    private MusicCollectListAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
     @Override
@@ -57,7 +56,7 @@ public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> im
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MusicCommenListAdapter(MusicCollectActivity.this,null,this);
+        mAdapter = new MusicCollectListAdapter(MusicCollectActivity.this,null,this);
         recyclerView.setAdapter(mAdapter);
         MusicPlayerManager.getInstance().addObservable(this);
     }
@@ -146,7 +145,7 @@ public class MusicCollectActivity extends BaseActivity<MusicHistroyPersenter> im
      * @param data 收藏、历史播放 记录
      */
     @Override
-    public void showAudios(List<AudioInfo> data) {
+    public void showAudios(List<BaseAudioInfo> data) {
         if(null!=mAdapter){
             mAdapter.setNewData(data);
         }

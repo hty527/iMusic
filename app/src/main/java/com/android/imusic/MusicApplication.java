@@ -20,7 +20,6 @@ import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
 public class MusicApplication extends Application {
 
     private ApplicationLike mTinkerApplicationLike;
-
     private static Context sContext;
 
     @Override
@@ -60,7 +59,7 @@ public class MusicApplication extends Application {
         if (null==mTinkerApplicationLike) {
             mTinkerApplicationLike = TinkerPatchApplicationLike.getTinkerPatchApplicationLike();
         }
-        if (mTinkerApplicationLike!=null) {
+        try {
             // 初始化TinkerPatch SDK, 更多配置可参照API章节中的,初始化SDK
             TinkerPatch.init(mTinkerApplicationLike)
                     .reflectPatchLibrary()
@@ -70,6 +69,10 @@ public class MusicApplication extends Application {
             // 每隔3个小时(通过setFetchPatchIntervalByHours设置)去访问后台时候有更新,通过handler实现轮训的效果
             TinkerPatch.with().fetchPatchUpdateAndPollWithInterval();
             TinkerPatch.with().fetchPatchUpdate(true); // 为 true, 每次强制访问服务器更新
+        }catch (NoSuchMethodError e){
+            e.printStackTrace();
+        }catch (RuntimeException e){
+            e.printStackTrace();
         }
     }
 

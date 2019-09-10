@@ -29,10 +29,10 @@ public class MusicHistroyPersenter extends BasePresenter<MusicHistroyContract.Vi
     public void getHistroyAudios() {
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
-            getNetEngin().get().getMusicsByHistroy(new OnResultCallBack<List<AudioInfo>>() {
+            getNetEngin().get().getMusicsByHistroy(new OnResultCallBack<List<BaseAudioInfo>>() {
 
                 @Override
-                public void onResponse(List<AudioInfo> data) {
+                public void onResponse(List<BaseAudioInfo> data) {
                     if(null!=mViewRef&&null!=mViewRef.get()){
                         mViewRef.get().showAudios(data);
                     }
@@ -55,10 +55,10 @@ public class MusicHistroyPersenter extends BasePresenter<MusicHistroyContract.Vi
     public void getCollectAudios() {
         if(null!=mViewRef&&null!=mViewRef.get()){
             mViewRef.get().showLoading();
-            getNetEngin().get().getMusicsByCollect(new OnResultCallBack<List<AudioInfo>>() {
+            getNetEngin().get().getMusicsByCollect(new OnResultCallBack<List<BaseAudioInfo>>() {
 
                 @Override
-                public void onResponse(List<AudioInfo> data) {
+                public void onResponse(List<BaseAudioInfo> data) {
                     if(null!=mViewRef&&null!=mViewRef.get()){
                         mViewRef.get().showAudios(data);
                     }
