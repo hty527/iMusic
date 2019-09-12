@@ -182,9 +182,13 @@ public class MainActivity extends BaseActivity {
     protected void onRequstPermissionResult(int resultCode) {
         super.onRequstPermissionResult(resultCode);
         if(resultCode==PREMISSION_SUCCESS){
-            if(null!=mPagerAdapter){
-                if(mPagerAdapter.getItem(0) instanceof IndexMusicFragment){
-                    ((IndexMusicFragment) mPagerAdapter.getItem(0)).queryLocationMusic(MainActivity.this);
+            if(null!=mPagerAdapter&&mPagerAdapter.getCount()>0){
+                try {
+                    if(mPagerAdapter.getItem(0) instanceof IndexMusicFragment){
+                        ((IndexMusicFragment) mPagerAdapter.getItem(0)).queryLocationMusic(MainActivity.this);
+                    }
+                }catch (RuntimeException e){
+                    e.printStackTrace();
                 }
             }
         }

@@ -131,11 +131,15 @@ public final class MusicPlayerManager implements MusicPlayerPresenter {
      */
     private void unBindService(Context context, boolean destroy) {
         if(null!=context&&context instanceof Activity){
-            if(null!=mConnection){
-                context.unbindService(mConnection);
-            }
-            if(destroy){
-                context.stopService(new Intent(context, MusicPlayerService.class));
+            try {
+                if(null!=mConnection&&null!=mBinder){
+                    context.unbindService(mConnection);
+                }
+                if(destroy){
+                    context.stopService(new Intent(context, MusicPlayerService.class));
+                }
+            }catch (RuntimeException e){
+                e.printStackTrace();
             }
         }else{
             new IllegalStateException("Must pass in Activity type Context!");

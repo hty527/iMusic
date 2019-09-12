@@ -1286,10 +1286,22 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                         }
                     }
                 }
+            }catch (IllegalStateException e){
+                e.fillInStackTrace();
+                onTaskRuntime();
             }catch (RuntimeException e){
                 e.printStackTrace();
+                onTaskRuntime();
             }finally {
                 TIMER_DURTION--;
+            }
+        }
+    }
+
+    private void onTaskRuntime() {
+        if(null!= mOnPlayerEventListeners){
+            for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
+                onPlayerEventListener.onTaskRuntime(-1,-1,TIMER_DURTION,mBufferProgress);
             }
         }
     }
