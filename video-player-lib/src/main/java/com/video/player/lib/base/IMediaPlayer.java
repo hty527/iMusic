@@ -630,23 +630,26 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
      */
     @Override
     public void seekTo(long currentTime) {
-        try {
-            if(null!=mMediaPlayer){
-                //非暂停状态下置为加载中状态
-                if(IMediaPlayer.getInstance().getVideoPlayerState()!=VideoConstants.MUSIC_PLAYER_PAUSE){
-                    IMediaPlayer.this.mMusicPlayerState= VideoConstants.MUSIC_PLAYER_SEEK;
-                    if(null!=mOnPlayerEventListeners){
-                        mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
+        if(getDurtion()>0){
+            Logger.d(TAG,"seekTo-->currentTime:"+currentTime);
+            try {
+                if(null!=mMediaPlayer){
+                    //非暂停状态下置为加载中状态
+                    if(IMediaPlayer.getInstance().getVideoPlayerState()!=VideoConstants.MUSIC_PLAYER_PAUSE){
+                        IMediaPlayer.this.mMusicPlayerState= VideoConstants.MUSIC_PLAYER_SEEK;
+                        if(null!=mOnPlayerEventListeners){
+                            mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);
+                        }
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        mMediaPlayer.seekTo(currentTime,MediaPlayer.SEEK_CLOSEST);
+                    }else{
+                        mMediaPlayer.seekTo((int) currentTime);
                     }
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    mMediaPlayer.seekTo(currentTime,MediaPlayer.SEEK_CLOSEST);
-                }else{
-                    mMediaPlayer.seekTo((int) currentTime);
-                }
+            }catch (RuntimeException e){
+                e.printStackTrace();
             }
-        }catch (RuntimeException e){
-            e.printStackTrace();
         }
     }
 
@@ -920,8 +923,13 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        stopTimer();
         Logger.d(TAG,"onError,what:"+what+",extra:"+extra);
+        if(what==-2147483648){
+            Logger.e(TAG,"直播流，无法快进快退！");
+            return false;
+        }
+        stopTimer();
+        reset();
         IMediaPlayer.this.mMusicPlayerState = VideoConstants.MUSIC_PLAYER_ERROR;
         if(null!=mOnPlayerEventListeners){
             mOnPlayerEventListeners.onVideoPlayerState(mMusicPlayerState,null);

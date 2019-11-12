@@ -128,7 +128,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="invisible"
-        android:background="#A6000000"
+        android:background="#8C000000"
         android:clickable="true">
         <TextView
             android:layout_width="wrap_content"
@@ -159,7 +159,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="invisible"
-        android:background="#A6000000"
+        android:background="#8C000000"
         android:clickable="true">
         <TextView
             android:layout_width="match_parent"
