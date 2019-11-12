@@ -239,7 +239,10 @@ public class MusicLrcView extends View{
         if(null==lrcRowParser){
             mLrcRowParser=new MusicDefaultLrcParser();
         }
-        loadLrcRows(mLrcRowParser,audioID,lrcString,textLoading,false);
+        if(null==mLrcRowParser){
+            mLrcRowParser=new MusicDefaultLrcParser();
+        }
+        loadLrcRows(mLrcRowParser,audioID,lrcString,textLoading);
     }
 
     /**
@@ -251,7 +254,7 @@ public class MusicLrcView extends View{
      */
     public void setNetLrcRow(MusicLrcRowParser lrcRowParser, final String audioID, String hashKey,
                              String loadingTips) {
-        loadLrcRows(lrcRowParser,audioID,hashKey,loadingTips,true);
+        loadLrcRows(lrcRowParser,audioID,hashKey,loadingTips);
     }
 
     /**
@@ -260,13 +263,12 @@ public class MusicLrcView extends View{
      * @param audioID 音频ID
      * @param object 如果是加载网络歌词，lrcString为歌曲唯一标识
      * @param textLoading 加载中提示文字
-     * @param isNet 是否加载来自网络的? true:网络歌词
      * 注意：没错，你看到的这里的代码加载网络和加载本地的入口个方法都是一模一样的，关键就在解析器，
      * 内部内置了一个默认的解析器，MusicDefaultLrcParser，如果无法满足你的解析需求，
      * 请继承MusicLrcRowParser重写两个重要的方法！！！
      */
     private void loadLrcRows(MusicLrcRowParser lrcRowParser, final String audioID, String object,
-                             String textLoading, boolean isNet) {
+                             String textLoading) {
         //如果已经绘制了不做任何处理
         if(null!=mLrcRows&&mLrcRows.size()>0){
             return;

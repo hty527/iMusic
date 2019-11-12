@@ -122,7 +122,7 @@ ___
 **1.依赖**
 ```
     dependencies {
-        implementation 'com.imusic.player:video-player:1.0.71'
+        implementation 'com.imusic.player:video-player:1.0.8'
     }
 ```
 **2.xml中引入播放器通道布局</br>**

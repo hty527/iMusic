@@ -898,6 +898,7 @@ public abstract class BaseVideoPlayer<V extends BaseVideoController,C extends Ba
                     if(null!=mGestureController){
                         mGestureController.onReset(0);
                     }
+                    Logger.d(TAG,"mSpeedTime:"+mSpeedTime);
                     IMediaPlayer.getInstance().seekTo(mSpeedTime);
                     isSpeedSeek=false;
                 }else{

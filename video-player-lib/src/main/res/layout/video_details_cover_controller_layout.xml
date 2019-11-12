@@ -7,6 +7,6 @@
         android:id="@+id/video_cover_icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_video_default_cover"/>
+        android:src="@drawable/ic_player_loading_back_bg"
+        android:scaleType="centerCrop"/>
 </FrameLayout>

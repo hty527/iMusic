@@ -41,6 +41,10 @@ public class DetailsCoverController extends BaseCoverController {
         Logger.d(TAG,"onFinishInflate");
     }
 
+    public ImageView getVideoCover() {
+        return mVideoCover;
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

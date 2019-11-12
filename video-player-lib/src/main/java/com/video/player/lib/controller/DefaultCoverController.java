@@ -44,7 +44,10 @@ public class DefaultCoverController extends BaseCoverController {
     protected void onFinishInflate() {
         super.onFinishInflate();
         Logger.d(TAG,"onFinishInflate");
+    }
 
+    public ImageView getVideoCover() {
+        return mVideoCover;
     }
 
     @Override
