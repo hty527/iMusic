@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import com.video.player.lib.R;
 import com.video.player.lib.base.BaseVideoController;
 import com.video.player.lib.base.IMediaPlayer;
@@ -77,7 +76,7 @@ public class DefaultVideoController extends BaseVideoController implements
             @Override
             public void onClick(View v) {
                 int id = v.getId();
-                if (id == R.id.error_layout) {
+                if (id == R.id.video_btn_error_play) {
                     IMediaPlayer.getInstance().reStartVideoPlayer(mOldPlayProgress);
                 }else if(id == R.id.video_btn_reset_play){
                     VideoPlayerManager.getInstance().setMobileWorkEnable(true);
@@ -106,11 +105,11 @@ public class DefaultVideoController extends BaseVideoController implements
                 }
             }
         };
-        mErrorLayout.setOnClickListener(onClickListener);
         btnResetPlay.setOnClickListener(onClickListener);
         mBtnBackTiny.setOnClickListener(onClickListener);
         btnBack.setOnClickListener(onClickListener);
         btnMenu.setOnClickListener(onClickListener);
+        findViewById(R.id.video_btn_error_play).setOnClickListener(onClickListener);
         mBtnStart.setOnClickListener(onClickListener);
         mBtnFull.setOnClickListener(onClickListener);
         if(null!=mBtnFullWindow){
@@ -458,7 +457,6 @@ public class DefaultVideoController extends BaseVideoController implements
             mVideoTitle.setText(videoTitle);
         }
     }
-
 
     /**
      * 跳转至某处尝试开始播放中

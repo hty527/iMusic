@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <!--顶部菜单-->
     <LinearLayout
         android:id="@+id/video_top_tab"
@@ -128,7 +128,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="invisible"
-        android:background="#8C000000"
+        android:background="#33000000"
         android:clickable="true">
         <TextView
             android:layout_width="wrap_content"
@@ -136,19 +136,18 @@
             android:text="@string/video_text_player_error"
             android:textColor="#F0F0F0"
             android:textSize="15dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="5dp"
+        <com.video.player.lib.view.VideoShapeTextView
+            android:id="@+id/video_btn_error_play"
+            android:layout_width="130dp"
+            android:layout_height="35dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:background="@drawable/video_text_play_bg"
             android:text="@string/video_text_reset"
-            android:textColor="#F0F0F0"
-            android:textSize="14dp" />
+            android:textColor="#FFFFFF"
+            android:textSize="15dp"
+            app:shapeRadius="5dp"
+            app:shapeBackgroundColor="#4DFFFFFF"
+            app:shapeBackgroundSelectorColor="#80FFFFFF"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/mobile_layout"
@@ -159,7 +158,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="invisible"
-        android:background="#8C000000"
+        android:background="#33000000"
         android:clickable="true">
         <TextView
             android:layout_width="match_parent"
@@ -171,20 +170,18 @@
             android:text="@string/video_text_mobile_tips"
             android:textColor="#FFFFFF"
             android:textSize="15dp"/>
-        <TextView
+        <com.video.player.lib.view.VideoShapeTextView
             android:id="@+id/video_btn_reset_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="25dp"
-            android:paddingRight="25dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
+            android:layout_width="130dp"
+            android:layout_height="35dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:background="@drawable/video_text_play_bg"
             android:text="@string/video_text_continue"
             android:textColor="#FFFFFF"
-            android:textSize="14dp" />
+            android:textSize="15dp"
+            app:shapeRadius="5dp"
+            app:shapeBackgroundColor="#4DFFFFFF"
+            app:shapeBackgroundSelectorColor="#80FFFFFF"/>
     </LinearLayout>
     <!--Progress-->
     <ProgressBar

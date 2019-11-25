@@ -30,4 +30,17 @@
         <!--是否自动设置封面控制器-->
         <attr name="video_autoSetCoverController" format="boolean"/>
     </declare-styleable>
+    <!--ShapeButton-->
+    <declare-styleable name="VideoShapeTextView">
+        <!--Button圆角-->
+        <attr name="shapeRadius" format="dimension"></attr>
+        <!--边框宽度-->
+        <attr name="shapeStrokeWidth" format="dimension"></attr>
+        <!--边框颜色-->
+        <attr name="shapeStrokeColor" format="color"></attr>
+        <!--背景颜色-->
+        <attr name="shapeBackgroundColor" format="color"></attr>
+        <!--背景按下的颜色-->
+        <attr name="shapeBackgroundSelectorColor" format="color"></attr>
+    </declare-styleable>
 </resources>

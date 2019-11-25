@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.video.player.lib.constants.VideoConstants;
 import com.video.player.lib.listener.VideoPlayerEventListener;
 import com.video.player.lib.manager.MediaPlayerPresenter;
+import com.video.player.lib.manager.ThreadPoolManager;
 import com.video.player.lib.manager.VideoAudioFocusManager;
 import com.video.player.lib.manager.VideoPlayerManager;
 import com.video.player.lib.manager.VideoWindowManager;
@@ -441,7 +442,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
      */
     public void reStartVideoPlayer(long percentIndex) {
         if(!TextUtils.isEmpty(mDataSource)){
-            startVideoPlayer(mDataSource,mContext, (int) percentIndex);
+            startVideoPlayer(mDataSource,null, (int) percentIndex);
         }
     }
 
@@ -452,7 +453,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
     @Override
     public boolean isPlaying() {
         return null!=mMediaPlayer&&(mMusicPlayerState==VideoConstants.MUSIC_PLAYER_PLAY
-                || mMusicPlayerState==VideoConstants.MUSIC_PLAYER_START|| mMusicPlayerState==VideoConstants.MUSIC_PLAYER_BUFFER);
+                || mMusicPlayerState==VideoConstants.MUSIC_PLAYER_START);
     }
 
     /**
@@ -770,9 +771,6 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
                 if(isWorking()){
                     Logger.d(TAG,"onPause");
                     pause();
-                }else{
-                    Logger.d(TAG,"onPause-->onStop");
-                    onStop(true);
                 }
             }
         }else{
@@ -795,7 +793,19 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
             mAudioFocusManager.onDestroy();
             mAudioFocusManager=null;
         }
-        onStop(true);
+        stopTimer();
+        removeTextureView();
+        mBufferPercent=0;
+        if(null!=mAudioFocusManager){
+            mAudioFocusManager.releaseAudioFocus();
+        }
+        //销毁可能存在的悬浮窗
+        VideoWindowManager.getInstance().onDestroy();
+        if(null!=mWindownPlayer){
+            mWindownPlayer.onDestroy();
+            mWindownPlayer=null;
+        }
+
         mContext=null;mDataSource=null;mInstance=null;VideoPlayerManager.getInstance().setContinuePlay(false);
         if(null!=mFullScrrenPlayer){
             mFullScrrenPlayer.onDestroy();
@@ -812,6 +822,25 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
         if(null!=mWindownPlayer){
             mWindownPlayer.onDestroy();
             mWindownPlayer=null;
+        }
+        if(null!=mMediaPlayer){
+            ThreadPoolManager.getInstance().run(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if(mMediaPlayer.isPlaying()){
+                            mMediaPlayer.stop();
+                        }
+                        mMediaPlayer.reset();
+                        mMediaPlayer.release();
+                        mMediaPlayer=null;
+                    }catch (RuntimeException e){
+                        e.printStackTrace();
+                    }finally {
+
+                    }
+                }
+            });
         }
     }
 
