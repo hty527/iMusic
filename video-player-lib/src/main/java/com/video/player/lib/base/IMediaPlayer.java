@@ -441,7 +441,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
      */
     public void reStartVideoPlayer(long percentIndex) {
         if(!TextUtils.isEmpty(mDataSource)){
-            startVideoPlayer(mDataSource,null, (int) percentIndex);
+            startVideoPlayer(mDataSource,mContext, (int) percentIndex);
         }
     }
 
@@ -452,7 +452,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
     @Override
     public boolean isPlaying() {
         return null!=mMediaPlayer&&(mMusicPlayerState==VideoConstants.MUSIC_PLAYER_PLAY
-                || mMusicPlayerState==VideoConstants.MUSIC_PLAYER_START);
+                || mMusicPlayerState==VideoConstants.MUSIC_PLAYER_START|| mMusicPlayerState==VideoConstants.MUSIC_PLAYER_BUFFER);
     }
 
     /**
