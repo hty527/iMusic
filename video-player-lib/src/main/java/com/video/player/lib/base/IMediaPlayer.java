@@ -494,7 +494,7 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
     public void playOrPause() {
         switch (getVideoPlayerState()) {
             case VideoConstants.MUSIC_PLAYER_STOP:
-                startVideoPlayer(mDataSource,null);
+                startVideoPlayer(mDataSource,mContext);
                 break;
             case VideoConstants.MUSIC_PLAYER_PREPARE:
                 pause();
@@ -515,10 +515,10 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
                 play();
                 break;
             case VideoConstants.MUSIC_PLAYER_ERROR:
-                startVideoPlayer(mDataSource,null);
+                startVideoPlayer(mDataSource,mContext);
                 break;
             case VideoConstants.MUSIC_PLAYER_MOBILE:
-
+                startVideoPlayer(mDataSource,mContext);
                 break;
         }
     }
@@ -939,7 +939,10 @@ public final class IMediaPlayer implements MediaPlayerPresenter, TextureView.Sur
 
     @Override
     public void onSeekComplete(MediaPlayer mp) {
-        Logger.d(TAG,"onSeekComplete");
+        if(IMediaPlayer.this.mMusicPlayerState==VideoConstants.MUSIC_PLAYER_START){
+            return;
+        }
+        Logger.d(TAG,"onSeekComplete:mp:"+mp.isPlaying());
         //非用户主动暂停下，处理为恢复播放事件
         if(IMediaPlayer.this.mMusicPlayerState!= VideoConstants.MUSIC_PLAYER_PAUSE){
             startTimer();

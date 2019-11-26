@@ -495,9 +495,9 @@ public class DefaultVideoController extends BaseVideoController implements
      */
     @Override
     public void onTaskRuntime(long totalDurtion, long currentDurtion,int bufferPercent) {
-        Logger.d("播放实时进度","onTaskRuntime-->totalDurtion:"+totalDurtion
-                +",currentDurtion:"+currentDurtion);
-        if(totalDurtion>-1){
+        if(totalDurtion>0){
+            Logger.d("播放实时进度","onTaskRuntime-->totalDurtion:"+totalDurtion
+                    +",currentDurtion:"+currentDurtion);
             mOldPlayProgress=currentDurtion;
             if(!isTouchSeekBar&&null!=mVideoTotal){
                 mVideoTotal.setText(VideoUtils.getInstance().stringForAudioTime(totalDurtion));
@@ -524,7 +524,7 @@ public class DefaultVideoController extends BaseVideoController implements
      */
     @Override
     protected void currentPosition(long totalPosition, long currentPosition, int bufferPercent) {
-        if(null!=mBottomProgressBar&&currentPosition>-1){
+        if(totalPosition>0&&null!=mBottomProgressBar&&currentPosition>-1){
             //播放进度，这里比例是1/1000
             int progress = (int) (((float) currentPosition / totalPosition) * 1000);
             mBottomProgressBar.setProgress(progress);
@@ -541,9 +541,11 @@ public class DefaultVideoController extends BaseVideoController implements
      */
     @Override
     public void onBufferingUpdate(int percent) {
-        Logger.d("onBufferingUpdate","percent-->"+percent);
-        if(null!=mSeekBar&&mSeekBar.getSecondaryProgress()<100){
-            mSeekBar.setSecondaryProgress(percent);
+        if(percent>0){
+            Logger.d("onBufferingUpdate","percent-->"+percent);
+            if(null!=mSeekBar&&mSeekBar.getSecondaryProgress()<100){
+                mSeekBar.setSecondaryProgress(percent);
+            }
         }
     }
 
