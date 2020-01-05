@@ -63,7 +63,8 @@ public final class VideoAudioFocusManager {
                                 AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
                     }
                     if(null!=mFocusListener){
-                        mFocusListener.onFocusGet();
+                        // TODO: 2019/11/19 重新获取到焦点不做自动播放处理
+                        //mFocusListener.onFocusGet();
                     }
                     break;
                 //被其他播放器抢占
