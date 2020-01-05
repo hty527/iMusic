@@ -4,6 +4,7 @@ import android.content.Context;
 import com.android.imusic.base.BaseEngin;
 import com.android.imusic.music.bean.AudioInfo;
 import com.android.imusic.music.utils.MediaUtils;
+import com.android.imusic.net.Constants;
 import com.android.imusic.net.OnResultCallBack;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class MusicListEngin extends BaseEngin {
      * @param callBack 回调监听器
      */
     public void getAudios(OnResultCallBack callBack){
-        sendGetRequst("https://gitee.com/hty_Yuye/OpenFile/raw/master/index/index_list.json",null,callBack);
+        sendGetRequst(Constants.H5_GIT_HOST+"imusic/index/index_list.json",null,callBack);
     }
 
     /**
@@ -37,7 +38,7 @@ public class MusicListEngin extends BaseEngin {
      * @param callBack 回调监听器
      */
     public void getAudiosByTag(String tagID,OnResultCallBack callBack){
-        sendGetRequst("https://gitee.com/hty_Yuye/OpenFile/raw/master/index/"+tagID+".json",null,callBack);
+        sendGetRequst(Constants.H5_GIT_HOST+"imusic/index/"+tagID+".json",null,callBack);
     }
 
     /**

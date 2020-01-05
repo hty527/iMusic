@@ -14,6 +14,7 @@ import com.android.imusic.MusicApplication;
 import com.android.imusic.music.activity.VersionUpdateActivity;
 import com.android.imusic.music.bean.VersionInfo;
 import com.android.imusic.music.utils.FileUtils;
+import com.android.imusic.net.Constants;
 import com.android.imusic.net.OkHttpUtils;
 import com.android.imusic.net.OnDownloadListener;
 import com.android.imusic.net.OnResultCallBack;
@@ -30,7 +31,7 @@ import java.io.File;
 public class VersionUpdateManager {
 
     private static final String TAG = "VersionUpdateManager";
-    public static final String VERSION_API="https://raw.githubusercontent.com/Yuye584312311/ConfigFile/master/version/imusic_version.json";
+    public static final String VERSION_API= Constants.H5_GIT_HOST+"imusic/version/imusic_version.json";
     private static volatile VersionUpdateManager mInstance;
     private String OUT_PATH= Environment.getExternalStorageDirectory().getAbsoluteFile()
             + File.separator + "iMusic" + File.separator + "Download" + File.separator;

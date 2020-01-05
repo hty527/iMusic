@@ -13,7 +13,7 @@ public class VersionInfo implements Parcelable{
 
     /**
      * compel_update : 0
-     * down_url : https://raw.githubusercontent.com/Yuye584312311/IMusic/master/Doc/apk/iMusic-1.0.2.apk
+     * down_url : http://hty_yuye.gitee.io/openfile/apk/iMusic-1.1.72.apk
      * size : 2.64
      * update_log : 更新内容： 1.全新电影界面，呈现更多精彩 2.全新视频播放交互，更懂你的播放器 3.全新盒子中心，精彩内容不再错过
      * version : 1.0.2
