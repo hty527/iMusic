@@ -19,12 +19,12 @@ ___
 #### 功能演示:(更多功能快照在结尾处)
 * 音乐播放器预览(如播放不流畅请点击图片查看)</br>
 <div>
-    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/video/Music.gif" height="480" width="270">
+    <img src="http://hty_yuye.gitee.io/openfile/imusic/screenshot/Music.gif" height="480" width="270">
 </div>
 
 * 视频播放器预览</br>
 <div>
-    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/video/Video.gif" height="480" width="270">
+    <img src="http://hty_yuye.gitee.io/openfile/imusic/screenshot/Video.gif" height="480" width="270">
 </div>
 
 #### 功能概述:
@@ -207,14 +207,14 @@ ___
 **强烈建议集成前先下载体验此APP，根据APP中的功能对照对应的API集成开发！！<br/>**
 #### 功能快照预览:
 <div align="center">
-    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162033.jpg" height="480" width="270">
-    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162126.jpg" height="480" width="270">
-    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190418_135655.jpg" height="480" width="270">
+    <img src="http://hty_yuye.gitee.io/openfile/imusic/screenshot/20190417_162033.jpg" height="480" width="270">
+    <img src="http://hty_yuye.gitee.io/openfile/imusic/screenshot/20190417_162126.jpg" height="480" width="270">
+    <img src="http://hty_yuye.gitee.io/openfile/imusic/screenshot/20190418_135655.jpg" height="480" width="270">
 </div>
 <div align="center">
-    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190418_135654.jpg" height="480" width="270">
-    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162345.jpg" height="480" width="270">
-    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/20190417_162453.jpg" height="480" width="270">
+    <img src="http://hty_yuye.gitee.io/openfile/imusic/screenshot/20190418_135654.jpg" height="480" width="270">
+    <img src="http://hty_yuye.gitee.io/openfile/imusic/screenshot/20190417_162345.jpg" height="480" width="270">
+    <img src="http://hty_yuye.gitee.io/openfile/imusic/screenshot/20190417_162453.jpg" height="480" width="270">
 </div>
 
 #### 下载地址:
@@ -227,7 +227,7 @@ ___
 <br/>
 **或者扫描二维码下载<br/>**
 <div align="center">
-    <img src="https://github.com/Yuye584312311/iMusic/blob/master/Doc/screenshot/code.png" height="300" width="300">
+    <img src="http://hty_yuye.gitee.io/openfile/imusic/screenshot/code.png" height="300" width="300">
 </div>
 <br/>
 
