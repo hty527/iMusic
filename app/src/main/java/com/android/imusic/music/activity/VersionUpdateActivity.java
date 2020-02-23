@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -225,6 +226,17 @@ public class VersionUpdateActivity extends BaseActivity{
      * @param versionInfo 版本信息
      */
     private void startDownloadApk(VersionInfo versionInfo) {
+        if(!versionInfo.getDown_url().contains(".apk")){
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse(versionInfo.getDown_url()));
+                startActivity(intent);
+            }catch (RuntimeException e){
+                e.printStackTrace();
+            }
+            return;
+        }
         if(!VersionUpdateManager.getInstance().isExistEqualVersionApk(versionInfo.getVersion_code())){
             mBtnCancel.setVisibility(View.GONE);
             mBtnClose.setVisibility(View.GONE);
