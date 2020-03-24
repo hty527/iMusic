@@ -12,7 +12,7 @@
         android:padding="10dp"
         android:orientation="vertical">
         <!--视频标题-->
-        <TextView
+        <com.android.imusic.music.view.BoldMediumTextView
             android:id="@+id/header_video_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,14 +44,14 @@
                 android:layout_marginLeft="10dp"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical">
-                <TextView
+                <com.android.imusic.music.view.BoldMediumTextView
                     android:id="@+id/header_user_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="--"
                     android:textSize="15dp"
                     android:textColor="#212121" />
-                <TextView
+                <com.android.imusic.music.view.BoldMediumTextView
                     android:id="@+id/header_user_desp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:fadingEdge="horizontal"
             android:layout_marginTop="6dp">
-            <TextView
+            <com.android.imusic.music.view.BoldMediumTextView
                 android:id="@+id/tv_desp_short"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                 android:textSize="13dp"
                 android:paddingTop="5dp"
                 android:textColor="#A1A1A1"/>
-            <TextView
+            <com.android.imusic.music.view.BoldMediumTextView
                 android:id="@+id/tv_desp_long"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:background="#F5F5F5"/>
-        <TextView
+        <com.android.imusic.music.view.BoldMediumTextView
             android:id="@+id/view_header_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

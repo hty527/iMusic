@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:padding="12dp"
         android:src="@drawable/video_controller_back_white_selector"/>
-    <TextView
+    <com.android.imusic.music.view.BoldMediumTextView
         android:id="@+id/btn_tiny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/music_bg_white_radius_8">
-        <TextView
+        <com.android.imusic.music.view.BoldMediumTextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
             android:textColor="#333333"
             android:textStyle="bold"
             android:layout_margin="20dp"/>
-        <TextView
+        <com.android.imusic.music.view.BoldMediumTextView
             android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

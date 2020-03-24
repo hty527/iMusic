@@ -30,7 +30,7 @@
             android:ellipsize="end"
             android:text=""/>
     </FrameLayout>
-    <TextView
+    <com.android.imusic.music.view.BoldMediumTextView
         android:id="@+id/view_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

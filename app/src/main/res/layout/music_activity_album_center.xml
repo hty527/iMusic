@@ -71,7 +71,7 @@
                                         android:layout_gravity="center_vertical"
                                         android:layout_margin="8dp"
                                         android:src="@drawable/ic_music_audio"/>
-                                    <TextView
+                                    <com.android.imusic.music.view.BoldMediumTextView
                                         android:id="@+id/music_preview_count"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                                 android:layout_centerVertical="true"
                                 android:orientation="vertical"
                                 android:gravity="center_vertical">
-                                <TextView
+                                <com.android.imusic.music.view.BoldMediumTextView
                                     android:id="@+id/music_song_title"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                                         android:layout_width="21dp"
                                         android:layout_height="21dp"
                                         android:layout_centerVertical="true"/>
-                                    <TextView
+                                    <com.android.imusic.music.view.BoldMediumTextView
                                         android:layout_toRightOf="@+id/music_song_user_cover"
                                         android:id="@+id/music_song_user_name"
                                         android:layout_width="match_parent"
@@ -154,7 +154,7 @@
                             android:layout_marginTop="12dp"
                             android:layout_marginBottom="12dp"
                             android:layout_centerVertical="true"/>
-                        <TextView
+                        <com.android.imusic.music.view.BoldMediumTextView
                             android:layout_toRightOf="@+id/music_ic_play_all"
                             android:id="@+id/music_tv_play"
                             android:layout_width="wrap_content"
@@ -163,7 +163,7 @@
                             android:layout_centerVertical="true"
                             android:textSize="15dp"
                             android:textColor="#313131"/>
-                        <TextView
+                        <com.android.imusic.music.view.BoldMediumTextView
                             android:layout_toRightOf="@+id/music_tv_play"
                             android:id="@+id/music_tv_sub_play"
                             android:layout_width="wrap_content"
@@ -182,7 +182,7 @@
                         android:paddingLeft="10dp"
                         android:paddingRight="15dp"
                         android:background="?attr/selectableItemBackground">
-                        <TextView
+                        <com.android.imusic.music.view.BoldMediumTextView
                             android:id="@+id/music_play_model_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

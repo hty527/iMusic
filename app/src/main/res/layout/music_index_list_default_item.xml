@@ -16,7 +16,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:layout_centerVertical="true"/>
-        <TextView
+        <com.android.imusic.music.view.BoldMediumTextView
             android:id="@+id/view_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

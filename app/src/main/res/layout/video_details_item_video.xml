@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"/>
-            <TextView
+            <com.android.imusic.music.view.BoldMediumTextView
                 android:id="@+id/view_item_durtion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                     android:layout_marginBottom="4dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_music_default_cover"/>
-                <TextView
+                <com.android.imusic.music.view.BoldMediumTextView
                     android:id="@+id/view_item_user_name"
                     android:layout_toRightOf="@+id/video_item_user_cover"
                     android:layout_width="match_parent"
@@ -67,7 +67,7 @@
                     android:layout_gravity="center_vertical"
                     android:text="--"/>
             </RelativeLayout>
-            <TextView
+            <com.android.imusic.music.view.BoldMediumTextView
                 android:id="@+id/view_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                 android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:text="--"/>
-            <TextView
+            <com.android.imusic.music.view.BoldMediumTextView
                 android:id="@+id/view_item_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
