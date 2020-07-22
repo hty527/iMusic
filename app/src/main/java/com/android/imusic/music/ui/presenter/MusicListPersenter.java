@@ -3,9 +3,8 @@ package com.android.imusic.music.ui.presenter;
 import android.content.Context;
 import com.android.imusic.base.BasePresenter;
 import com.android.imusic.music.bean.AlbumInfo;
-import com.android.imusic.music.bean.AudioInfo;
+import com.android.imusic.music.utils.DataFactory;
 import com.android.imusic.net.bean.ResultData;
-import com.android.imusic.net.bean.ResultList;
 import com.android.imusic.music.model.MusicListEngin;
 import com.android.imusic.music.ui.contract.MusicListContract;
 import com.android.imusic.net.OnResultCallBack;
@@ -32,29 +31,29 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
     @Override
     public void getIndexAudios() {
         if(null!=mViewRef&&null!=mViewRef.get()){
-            mViewRef.get().showLoading();
-
-            getNetEngin().get().getAudios(new OnResultCallBack<ResultData<ResultList<AudioInfo>>>() {
-
-                @Override
-                public void onResponse(ResultData<ResultList<AudioInfo>> data) {
-                    if(null!=mViewRef&&null!=mViewRef.get()){
-                        if(null!=data.getData()&&null!=data.getData().getList()
-                                &&data.getData().getList().size()>0){
-                            mViewRef.get().showAudios(data.getData().getList());
-                        }else{
-                            mViewRef.get().showError(data.getCode(),data.getErr());
-                        }
-                    }
-                }
-
-                @Override
-                public void onError(int code, String errorMsg) {
-                    if(null!=mViewRef&&null!=mViewRef.get()){
-                        mViewRef.get().showError(code,errorMsg);
-                    }
-                }
-            });
+            mViewRef.get().showAudios(DataFactory.getInstance().getIndexMusic());
+//            mViewRef.get().showLoading();
+//            getNetEngin().get().getAudios(new OnResultCallBack<ResultData<ResultList<AudioInfo>>>() {
+//
+//                @Override
+//                public void onResponse(ResultData<ResultList<AudioInfo>> data) {
+//                    if(null!=mViewRef&&null!=mViewRef.get()){
+//                        if(null!=data.getData()&&null!=data.getData().getList()
+//                                &&data.getData().getList().size()>0){
+//                            mViewRef.get().showAudios(data.getData().getList());
+//                        }else{
+//                            mViewRef.get().showError(data.getCode(),data.getErr());
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onError(int code, String errorMsg) {
+//                    if(null!=mViewRef&&null!=mViewRef.get()){
+//                        mViewRef.get().showError(code,errorMsg);
+//                    }
+//                }
+//            });
         }
     }
 
@@ -65,28 +64,28 @@ public class MusicListPersenter extends BasePresenter<MusicListContract.View,Mus
     @Override
     public void getAudiosByTag(String tagID) {
         if(null!=mViewRef&&null!=mViewRef.get()){
-            mViewRef.get().showLoading();
-
-            getNetEngin().get().getAudiosByTag(tagID,new OnResultCallBack<ResultData<AlbumInfo>>() {
-
-                @Override
-                public void onResponse(ResultData<AlbumInfo> data) {
-                    if(null!=mViewRef&&null!=mViewRef.get()){
-                        if(null!=data.getData()){
-                            mViewRef.get().showAudiosFromTag(data.getData());
-                        }else{
-                            mViewRef.get().showError(data.getCode(),data.getErr());
-                        }
-                    }
-                }
-
-                @Override
-                public void onError(int code, String errorMsg) {
-                    if(null!=mViewRef&&null!=mViewRef.get()){
-                        mViewRef.get().showError(code,errorMsg);
-                    }
-                }
-            });
+            mViewRef.get().showAudiosFromTag(DataFactory.getInstance().getMusicByAlbum(tagID));
+//            mViewRef.get().showLoading();
+//            getNetEngin().get().getAudiosByTag(tagID,new OnResultCallBack<ResultData<AlbumInfo>>() {
+//
+//                @Override
+//                public void onResponse(ResultData<AlbumInfo> data) {
+//                    if(null!=mViewRef&&null!=mViewRef.get()){
+//                        if(null!=data.getData()){
+//                            mViewRef.get().showAudiosFromTag(data.getData());
+//                        }else{
+//                            mViewRef.get().showError(data.getCode(),data.getErr());
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onError(int code, String errorMsg) {
+//                    if(null!=mViewRef&&null!=mViewRef.get()){
+//                        mViewRef.get().showError(code,errorMsg);
+//                    }
+//                }
+//            });
         }
     }
 

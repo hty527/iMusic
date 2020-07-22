@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.imusic.base.BaseActivity;
 import com.android.imusic.base.BasePresenter;
-import com.android.imusic.music.activity.MusicLockActivity;
 import com.android.imusic.music.activity.MusicPlayerActivity;
 import com.android.imusic.music.adapter.MusicFragmentPagerAdapter;
 import com.android.imusic.music.dialog.QuireDialog;
@@ -150,7 +149,7 @@ public class MainActivity extends BaseActivity {
                 //设置点击通知栏跳转的播放器界面,需开启常驻进程开关
                 .setPlayerActivityName(MusicPlayerActivity.class.getCanonicalName())
                 //设置锁屏界面，如果禁用，不需要设置或者设置为null
-                .setLockActivityName(MusicLockActivity.class.getCanonicalName())
+                .setLockActivityName(null)//MusicLockActivity.class.getCanonicalName()
                 //监听播放状态
                 .setPlayInfoListener(new MusicPlayerInfoListener() {
                     //此处自行存储播放记录
