@@ -12,5 +12,16 @@
         <attr name="shapeBackgroundColor" format="color"></attr>
         <!--背景按下的颜色-->
         <attr name="shapeBackgroundSelectorColor" format="color"></attr>
+        <!--字体粗细-->
+        <attr name="shapeStorkeWidth" format="float"></attr>
+        <!--是否自动轮播-->
+        <attr name="shapeMarquee" format="boolean"></attr>
+    </declare-styleable>
+    <!--中粗字体-->
+    <declare-styleable name="BoldMediumTextView">
+    <!--字体粗细-->
+        <attr name="boldStorkeWidth" format="float"></attr>
+    <!--是否自动轮播-->
+        <attr name="boldMarquee" format="boolean"></attr>
     </declare-styleable>
 </resources>

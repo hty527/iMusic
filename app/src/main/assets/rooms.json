@@ -1,0 +1,255 @@
+{
+  "code": 1,
+  "data": {
+    "list": [
+      {
+        "itemType":2,
+        "width":"1080",
+        "height":"404",
+        "banners":[
+		  {
+            "icon":"http://sta-op.douyucdn.cn/douyu-vrp-admin/2019/04/17/e63c5563968b8438b6f70e1c6a309cf5.jpg",
+            "jump_url":"https://github.com/Yuye584312311/iMusic"
+          },
+          {
+            "icon":"http://sta-op.douyucdn.cn/adxdsp/2019/06/11/04c6f32c57c55b8a2ced35d857836ce2.jpg",
+            "jump_url":"https://github.com/Yuye584312311/iMusic"
+          },
+          {
+            "icon":"https://sta-op.douyucdn.cn/adxdsp/2019/07/15/5252676b15701857cf6691f110cf4721.jpg",
+            "jump_url":"https://github.com/Yuye584312311/iLive"
+          },
+          {
+            "icon":"http://sta-op.douyucdn.cn/adxdsp/2019/05/21/5f6137a80f939cec0da616b36b99def4.jpg",
+            "jump_url":"https://github.com/Yuye584312311/iLive"
+          },
+          {
+            "icon":"http://sta-op.douyucdn.cn/adxdsp/2019/04/29/51d2b4c2a1c2421ee3dbd835c9cd4ef8.jpg",
+            "jump_url":"https://github.com/Yuye584312311/iMusic"
+          },
+          {
+            "icon":"https://gss3.bdstatic.com/7Po3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=7219dd494e166d222c7a1dc6274a6292/48540923dd54564eb5babebbbede9c82d0584f50.jpg",
+            "jump_url":"https://github.com/Yuye584312311/iMusic"
+          }
+        ]
+      },
+      {
+        "itemType":1,
+        "roomid": "88888888",
+        "room_front": "http://vi.nq6.com/Cover/1375992/033ae513278cbeab6c86df92b6cff424?x-oss-process=image/resize,m_lfit,h_400,w_400",
+        "stream_url": "http://vi.nq6.com/Video/405fa17ced3a8f13611b1e13c6390d2a.mp4",
+        "width": "480",
+        "height": "852",
+        "anchor":{
+          "userid":"66666666",
+          "nickName":"Decadent℡",
+          "avatar":"http://ht.tn990.com/uploads/appupload/vjnmwoo1bQz9v7fqzp_1552357093!300x300.jpg",
+          "userSex":1
+        },
+        "images":[
+          {
+            "icon":"http://img.ikstatic.cn/MTU0NjU2NDkzODUzOSM2OTIjanBn.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/vjnmwoo1bQz9v7fqzp_1552357093.jpg"
+          },
+          {
+            "icon":"http://img.ikstatic.cn/MTU0NjU2NDkzODUzOSM2OTIjanBn.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/khwvux6swvlg2tx6qn_1552357092.jpg"
+          }
+        ]
+      },
+      {
+        "itemType":1,
+        "roomid": "88888888",
+        "room_front": "http://vi.nq6.com/Cover/1146510/005c9338057e861b2ded3f0119b8ab18?x-oss-process=image/resize,m_lfit,h_400,w_400",
+        "stream_url": "http://vi.nq6.com/Video/805b2170d704f249900e4509cad5f745.mp4",
+        "width": "720",
+        "height": "960",
+        "anchor":{
+          "userid":"66666666",
+          "nickName":"情定无名指",
+          "avatar":"http://ht.tn990.com/uploads/appupload/adc9f8hbhzq16zqhyb_1552297315!300x300.jpg",
+          "userSex":1
+        },
+        "images":[
+          {
+            "icon":"http://img2.inke.cn/MTUzMzI3NDYwNzAxMyM4MjQjanBn.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/adc9f8hbhzq16zqhyb_1552297315.jpg"
+          },
+          {
+            "icon":"http://img2.inke.cn/MTUzMzI3NDYwNzAxMyM4MjQjanBn.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/2uphi5tu2rqc1hkotd_1552297313.jpg"
+          }
+        ]
+      },
+      {
+        "itemType":1,
+        "roomid": "88888888",
+        "room_front": "http://vi.nq6.com/Cover/1375992/35830b3fe3960dea5516e7e2e2850744?x-oss-process=image/resize,m_lfit,h_400,w_400",
+        "stream_url": "http://vi.nq6.com/Video/852097f5aabf9abb6be3b87e06a53044.mp4",
+        "width": "544",
+        "height": "960",
+        "anchor":{
+          "userid":"66666666",
+          "nickName":"微凉离别意",
+          "avatar":"http://ht.tn990.com/uploads/appupload/vr3ohol5ymu57kwn7g_1552356700!300x300.jpg",
+          "userSex":1
+        },
+        "images":[
+          {
+            "icon":"http://img.ikstatic.cn/MTU2NTg4NzM5NTUxNiM4MjYjanBn.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/blnwth1a51m9win3dl_1552356698.jpg"
+          },
+          {
+            "icon":"http://img.ikstatic.cn/MTU2NTg4NzM5NTUxNiM4MjYjanBn.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/svys7dreavekmde4Qv_1552356699.jpg"
+          }
+        ]
+      },
+      {
+        "itemType":1,
+        "roomid": "88888888",
+        "room_front": "http://vi.nq6.com/Cover/1476085/644a881a8197ba7faec1b76df6d4ef6c?x-oss-process=image/resize,m_lfit,h_400,w_400",
+        "stream_url": "http://vi.nq6.com/Video/53901d6b619d4cf50a905960900f8ad0.mp4",
+        "width": "512",
+        "height": "912",
+        "anchor":{
+          "userid":"66666666",
+          "nickName":"孤心",
+          "avatar":"http://ht.tn990.com/uploads/appupload/ofo6w3pbrbcxlr7jmf_1552357016!300x300.jpg",
+          "userSex":1
+        },
+        "images":[
+          {
+            "icon":"http://img.ikstatic.cn/MTU2Mjg0MzgxMDM3NCMyNDcjanBn.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/ofo6w3pbrbcxlr7jmf_1552357016.jpg"
+          },
+          {
+            "icon":"http://img.ikstatic.cn/MTU2Mjg0MzgxMDM3NCMyNDcjanBn.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/45ijs2imoc56i5sqy3_1552357017.jpg"
+          }
+        ]
+      },
+      {
+        "itemType":1,
+        "roomid": "88888888",
+        "room_front": "http://vi.nq6.com/Cover/1492318/5bd71639cb8637147b511e57b31f7b36?x-oss-process=image/resize,m_lfit,h_400,w_400",
+        "stream_url": "http://vi.nq6.com/Video/1d2ce008f0a17558941d74290f525d4d.mp4",
+        "width": "720",
+        "height": "1280",
+        "anchor":{
+          "userid":"66666666",
+          "nickName":"亦久亦旧",
+          "avatar":"http://ht.tn990.com/uploads/appupload/uey8svncjefabu7mff_1552297488!300x300.jpg",
+          "userSex":1
+        },
+        "images":[
+          {
+            "icon":"http://img.ikstatic.cn/MTU2Mjg0Mzg0MTE5OCM2NzAjanBn.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/uey8svncjefabu7mff_1552297488.jpg"
+          },
+          {
+            "icon":"http://img.ikstatic.cn/MTU2Mjg0Mzg0MTE5OCM2NzAjanBn.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/pfnrowjlu4q5Qdybjm_1552297487.jpg"
+          }
+        ]
+      },
+      {
+        "itemType":1,
+        "roomid": "88888888",
+        "room_front": "http://vi.nq6.com/Cover/1504768/cc764d577cb848156ab4a1e8dbb220a5?x-oss-process=image/resize,m_lfit,h_400,w_400",
+        "stream_url": "http://vi.nq6.com/Video/62c55313a264027856e9a904e704a53f.mp4",
+        "width": "720",
+        "height": "1280",
+        "anchor":{
+          "userid":"66666666",
+          "nickName":"迷糊",
+          "avatar":"http://ht.tn990.com/uploads/appupload/ply2otupi2ce9bzQ57_1552299472!300x300.jpg",
+          "userSex":1
+        },
+        "images":[
+          {
+            "icon":"http://s.tn990.com/zb/image/a56cbccdbbc3a45f2875eaaf2ea194a6.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/ply2otupi2ce9bzQ57_1552299472.jpg"
+          },
+          {
+            "icon":"http://s.tn990.com/zb/image/abaa9ebc648894eede222e050ce8ffeb.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/r6986kfw69wdlpdtuh_1552299473.jpg"
+          }
+        ]
+      },
+      {
+        "itemType":1,
+        "roomid": "88888888",
+        "room_front": "http://vi.nq6.com/Cover/1464309/c907c43801c73aa565bf20bb1f4d1ea2?x-oss-process=image/resize,m_lfit,h_400,w_400",
+        "stream_url": "http://vi.nq6.com/Video/fec927bf1ce0dddbb1fd4190d4ac5fc.mp4",
+        "width": "368",
+        "height": "640",
+        "anchor":{
+            "userid":"66666666",
+            "nickName":"纸短情长",
+            "avatar":"http://ht.tn990.com/uploads/appupload/qynq9a8idQej5laqlh_1552296620!300x300.jpg",
+            "userSex":1
+        },
+        "images":[
+          {
+            "icon":"http://s.tn990.com/zb/image/a573c90df6afb22d073df78e0dd9d642.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/qynq9a8idQej5laqlh_1552296620.jpg"
+          },
+          {
+            "icon":"http://s.tn990.com/zb/image/64dc19f253f07c048635b4479723099b.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/9ur4t8m2qdymkitwi8_1552296619.jpg"
+          }
+        ]
+      },
+      {
+        "itemType":1,
+        "roomid": "88888888",
+        "room_front": "http://vi.nq6.com/Cover/1325903/7df8d2e6ec8759d445000632eb99d8f6?x-oss-process=image/resize,m_lfit,h_400,w_400",
+        "stream_url": "http://vi.nq6.com/Video/61b99a12caa396ddd775ae3502f670ab.mp4",
+        "width": "720",
+        "height": "1280",
+        "anchor":{
+            "userid":"66666666",
+            "nickName":"可爱兔",
+            "avatar":"http://ht.tn990.com/uploads/appupload/24yelt4oq3Qny8k82p_1551337425!40x40.jpg",
+            "userSex":1
+        },
+        "images":[
+          {
+            "icon":"http://s.tn990.com/zb/image/10adfa767d425f62a3d702373ad34e70.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/isgl9exmaz4j1lwscy_1551337425.jpg"
+          },
+          {
+            "icon":"http://s.tn990.com/zb/image/91d6a963c82abe10b133975ddb36b8be.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/24yelt4oq3Qny8k82p_1551337425.jpg"
+          }
+        ]
+      },
+      {
+        "itemType":1,
+        "roomid": "88888888",
+        "room_front": "http://vi.nq6.com/Cover/1430436/163ca177d63bdd7d741740d9064bb3ca?x-oss-process=image/resize,m_lfit,h_400,w_400",
+        "stream_url": "http://vi.nq6.com/Video/a5524243c0b4b8ca44088d13d0467804.mp4",
+        "width": "512",
+        "height": "912",
+        "anchor":{
+          "userid":"66666666",
+          "nickName":"装腔作势去爱",
+          "avatar":"http://ht.tn990.com/uploads/appupload/v27awzn6gzm2936ci8_1552357143!300x300.jpg",
+          "userSex":1
+        },
+        "images":[
+          {
+            "icon":"http://s.tn990.com/zb/image/01cb66a09e34928cc3e8dd107fa39abe.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/j5fk7f15xr15fnp5ug_1552357144.jpg"
+          },
+          {
+            "icon":"http://s.tn990.com/zb/image/243544296f671971b249354ce6777468.jpg",
+            "icon_mini":"http://ht.tn990.com/uploads/appupload/i6f6mt5matrest1xhy_1552357143.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "成功"
+}

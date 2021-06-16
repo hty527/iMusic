@@ -4,19 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="5dp">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.music.player.lib.view.MusicRoundImageView
+        <ImageView
             android:id="@+id/view_item_cover"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            app:image_type="image_round"
-            app:image_borderRadius="5dp"
-            android:src="@drawable/ic_music_default_cover"/>
+            android:foreground="@drawable/lib_item_foreground"/>
         <TextView
             android:id="@+id/view_item_anchor"
             android:layout_width="match_parent"
@@ -30,7 +27,7 @@
             android:ellipsize="end"
             android:text=""/>
     </FrameLayout>
-    <TextView
+    <com.android.imusic.music.view.BoldMediumTextView
         android:id="@+id/view_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

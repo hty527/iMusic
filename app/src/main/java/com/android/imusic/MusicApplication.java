@@ -8,9 +8,6 @@ import com.android.imusic.music.manager.ForegroundManager;
 import com.android.imusic.net.OkHttpUtils;
 import com.music.player.lib.manager.MusicWindowManager;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.tinker.entry.ApplicationLike;
-import com.tinkerpatch.sdk.TinkerPatch;
-import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
 
 /**
  * TinyHung@Outlook.com
@@ -19,13 +16,11 @@ import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
 
 public class MusicApplication extends Application {
 
-    private ApplicationLike mTinkerApplicationLike;
     private static Context sContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        initTinker();
         sContext=getApplicationContext();
         ForegroundManager.getInstance().init(this);
         //APP前后台监测,悬浮窗的处理
@@ -48,31 +43,6 @@ public class MusicApplication extends Application {
             com.music.player.lib.util.Logger .IS_DEBUG=false;
             com.video.player.lib.utils.Logger.IS_DEBUG=false;
             OkHttpUtils.DEBUG=false;
-        }
-    }
-
-    /**
-     * 初始化热更新
-     */
-    private void initTinker() {
-        // 我们可以从这里获得Tinker加载过程的信息
-        if (null==mTinkerApplicationLike) {
-            mTinkerApplicationLike = TinkerPatchApplicationLike.getTinkerPatchApplicationLike();
-        }
-        try {
-            // 初始化TinkerPatch SDK, 更多配置可参照API章节中的,初始化SDK
-            TinkerPatch.init(mTinkerApplicationLike)
-                    .reflectPatchLibrary()
-                    .setPatchRollbackOnScreenOff(true)
-                    .setPatchRestartOnSrceenOff(true)
-                    .setFetchPatchIntervalByHours(1);
-            // 每隔3个小时(通过setFetchPatchIntervalByHours设置)去访问后台时候有更新,通过handler实现轮训的效果
-            TinkerPatch.with().fetchPatchUpdateAndPollWithInterval();
-            TinkerPatch.with().fetchPatchUpdate(true); // 为 true, 每次强制访问服务器更新
-        }catch (NoSuchMethodError e){
-            e.printStackTrace();
-        }catch (RuntimeException e){
-            e.printStackTrace();
         }
     }
 

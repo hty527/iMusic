@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="?attr/selectableItemBackground">
     <LinearLayout
@@ -19,7 +19,7 @@
             android:id="@+id/view_item_icon"
             android:layout_width="30dp"
             android:layout_height="30dp"/>
-        <com.music.player.lib.view.MusicMarqueeTextView
+        <com.android.imusic.music.view.BoldMediumTextView
             android:id="@+id/view_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,6 +28,7 @@
             android:textSize="14dp"
             android:layout_marginLeft="10dp"
             android:textColor="#333333"
+            app:boldMarquee="true"
             android:text=""/>
     </LinearLayout>
     <View

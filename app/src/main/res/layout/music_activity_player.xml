@@ -27,14 +27,15 @@
             android:layout_toLeftOf="@+id/music_top_collect"
             android:layout_centerVertical="true"
             android:orientation="vertical">
-            <com.music.player.lib.view.MusicMarqueeTextView
+            <com.android.imusic.music.view.BoldMediumTextView
                 android:id="@+id/music_title"
                 style="@style/MusicTitleStyle"
                 android:singleLine="true"
                 android:ellipsize="marquee"
                 android:layout_gravity="center_vertical"
+                app:boldMarquee="true"
                 tool:text="标题"/>
-            <TextView
+            <com.android.imusic.music.view.BoldMediumTextView
                 android:id="@+id/music_sub_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

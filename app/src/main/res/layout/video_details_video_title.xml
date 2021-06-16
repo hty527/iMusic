@@ -12,7 +12,7 @@
         android:layout_marginBottom="16dp"
         android:layout_gravity="center_vertical"
         android:background="@drawable/music_index_title_line"/>
-    <TextView
+    <com.android.imusic.music.view.BoldMediumTextView
         android:id="@+id/item_video_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -33,6 +33,7 @@ import com.android.imusic.music.dialog.QuireDialog;
 import com.android.imusic.music.ui.contract.MusicSearchContract;
 import com.android.imusic.music.ui.presenter.MusicSearchPersenter;
 import com.android.imusic.music.utils.MediaUtils;
+import com.android.imusic.music.view.BoldMediumTextView;
 import com.google.android.flexbox.FlexboxLayout;
 import com.music.player.lib.adapter.base.OnLoadMoreListener;
 import com.music.player.lib.bean.MusicStatus;
@@ -189,7 +190,7 @@ public class MusicSearchActivity extends BaseActivity<MusicSearchPersenter>
             flexboxLayout.removeAllViews();
             for (int i = 0; i < searchByCache.size(); i++) {
                 SearchHistroy searchHistroy = searchByCache.get(i);
-                TextView tagTextView = new TextView(this);
+                BoldMediumTextView tagTextView = new BoldMediumTextView(this);
                 tagTextView.setTextSize(13);
                 tagTextView.setTextColor(Color.parseColor("#313131"));
                 tagTextView.setText(searchHistroy.getKey());

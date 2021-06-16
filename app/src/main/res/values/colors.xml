@@ -3,4 +3,5 @@
     <color name="colorAccent">#8000FF</color>
     <color name="colorPrimary">#8000FF</color>
     <color name="colorPrimaryDark">#8000FF</color>
+    <color name="color_forefround">#26000000</color>
 </resources>

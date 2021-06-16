@@ -173,6 +173,7 @@ public class MusicIndexDataAdapter extends BaseAdapter<AudioInfo,RecyclerView.Vi
                 musicViewHolder.imageCover.getLayoutParams().height=mItemWidth;
                 musicViewHolder.textTitle.setText(itemData.getTitle());
                 musicViewHolder.textAnchor.setText(itemData.getDesp());
+
                 Glide.with(getContext())
                         .load(itemData.getImage())
                         .asBitmap()

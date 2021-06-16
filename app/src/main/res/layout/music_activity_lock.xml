@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.music.player.lib.view.MusicSildingLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -42,7 +43,7 @@
                 android:layout_centerHorizontal="true"
                 android:scaleType="centerCrop"
                 android:layout_marginTop="40dp"/>
-            <com.music.player.lib.view.MusicMarqueeTextView
+            <com.android.imusic.music.view.BoldMediumTextView
                 android:id="@+id/music_lock_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -55,6 +56,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_centerHorizontal="true"
                 android:textSize="15dp"
+                app:boldMarquee="true"
                 android:layout_below="@+id/music_lock_cover"
                 android:text="" />
             <TextView

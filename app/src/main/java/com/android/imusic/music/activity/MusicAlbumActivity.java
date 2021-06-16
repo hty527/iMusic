@@ -346,7 +346,7 @@ public class MusicAlbumActivity extends BaseActivity<MusicListPersenter> impleme
                 mTvSubPlay.setText(Html.fromHtml(String.format(getString(R.string.text_music_count),data.getList().size()+"")));
             }
         }
-        if(null!=data.getSinger()){
+        if(null!=data&&null!=data.getSinger()){
             updateHead(data.getSinger());
         }
     }

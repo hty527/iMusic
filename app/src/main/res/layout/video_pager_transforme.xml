@@ -32,7 +32,7 @@
             android:orientation="horizontal"
             android:paddingLeft="6dp"
             android:paddingRight="6dp">
-            <TextView
+            <com.android.imusic.music.view.BoldMediumTextView
                 android:id="@+id/music_tr_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                 android:ellipsize="end"
                 android:layout_margin="10dp"
                 android:text="--"/>
-            <TextView
+            <com.android.imusic.music.view.BoldMediumTextView
                 android:id="@+id/view_index_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
