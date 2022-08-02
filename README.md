@@ -1,8 +1,9 @@
 # **iMusic**
 
 * 此项目已不再更新维护，视频播放器请使用：</br>
-[iPlayer]: https://github.com/hty527/iPlayer "Android视频播放器封装"
 
+[iPlayer]: https://github.com/hty527/iPlayer "iPlayer"
+**[iPlayer]**
 
 ### 免责声明：
 此项目中应用到了自行收藏的歌单列表、酷狗API、开眼API，纯属Demo演示，无任何商业用途，禁止任何人将示例项目中的第三方API应用于商业用途，如果使用了，连带的法律责任与本作者无关!
