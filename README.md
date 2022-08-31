@@ -244,8 +244,8 @@ ___
 
 #### 下载地址:
 
-[前往fir下载]: https://fir.im/iMusic "fir下载"
-**fir托管下载：** **[前往fir下载]**
+* 本地[下载][1]
+
 <br/>
 **或者扫描二维码下载<br/>**
 <div align="center">
