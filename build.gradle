@@ -2,7 +2,7 @@
 //应用Config配置文件
 apply from: "config.gradle"
 //应用Bintray配置文件
-apply from: "bintray.gradle"
+//apply from: "bintray.gradle"
 
 buildscript {
     repositories {
@@ -10,9 +10,11 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         //添加bintray环境
-        classpath 'com.novoda:bintray-release:0.8.1'
+//        classpath 'com.novoda:bintray-release:0.8.1'
+        //添加jitpack.io环境
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
 
@@ -26,6 +28,7 @@ allprojects {
 //        maven { url 'http://localhost:8081/nexus/content/repositories/releases/' }
         //Bintray插件仓库支持
         maven { url 'https://dl.bintray.com/novoda-oss/snapshots/' }
+        maven { url 'https://jitpack.io' }
     }
     //编译时报注释GBK编码错误解决
     tasks.withType(Javadoc) {

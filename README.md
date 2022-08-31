@@ -1,9 +1,18 @@
 # **iMusic**
 
-* 此项目已不再更新维护，视频播放器请使用：</br>
+### 此项目已不再更新维护！！！如有视频播放需求请使用：[iPlayer][0]，此播放器功能支持包括但不限于：
+* 支持网络地址、直播流、本地Assets和Raw资源文件播放</br>
+* 支持播放倍速、缩放模式、静音、镜像等功能设置</br>
+* 支持自定义视频解码器、自定义控制器、自定义UI交互组件</br>
+* 支持多播放器同时播放</br>
+* SDK默认控制器(局部UI交互可自定义)支持手势控制、付费试看等交互</br>
+* 支持任意位置启动Activity级别悬浮窗口播放</br>
+* 支持任意位置启动全局悬浮窗口播放</br>
+* 支持任意位置直接启动全屏播放</br>
+* 支持连续播放视频列表</br>
 
-[iVideoPlayer]: https://github.com/hty527/iVideoPlayer "iVideoPlayer"
-**[iVideoPlayer]**
+[0]: https://github.com/hty527/iPlayer "iPlayer"
+
 
 ### 免责声明：
 此项目中应用到了自行收藏的歌单列表、酷狗API、开眼API，纯属Demo演示，无任何商业用途，禁止任何人将示例项目中的第三方API应用于商业用途，如果使用了，连带的法律责任与本作者无关!
@@ -17,8 +26,9 @@
 基于原生MediaPlayer解码器封装的音乐播放器和视频播放器功能库。极简接入、功能全面、体积甚小。欢迎Star！欢迎下载apk体验！<br/>
 iMusic示例工程主要界面遵循MVP思想开发，搜索音乐API取自《酷狗音乐》开放API，视频资源API取自《开眼视频》。禁止直接使用此项目中的API于商业行为中，一经使用，与本作者无关！<br/>
 
-[APK体验及下载]: https://github.com/Yuye584312311/iMusic/wiki/Download "Download"
-**[APK体验及下载]**
+* Demo apk[下载][1]
+ 
+[1]: https://amuse-1259486925.cos.ap-hongkong.myqcloud.com/apk/iMusic-1.1.9.apk "下载"
 ___
 ## 功能演示及概述:
 #### 功能演示:(更多功能快照在结尾处)
@@ -71,9 +81,18 @@ ___
 
 ## 一.音乐播放器集成:
 **1.依赖**
+* 项目根build.gradle中加入：
+```
+    allprojects {
+        repositories {
+            maven { url 'https://jitpack.io' }
+        }
+    }
+```
+* 模块build.gradle中加入：
 ```
     dependencies {
-        implementation 'com.imusic.player:music-player:1.1.6'
+        implementation 'com.github.hty527:iMusic:music-player:1.1.7'
     }
 ```
 **2.MainActivity播放器初始化**
@@ -127,7 +146,7 @@ ___
 **1.依赖**
 ```
     dependencies {
-        implementation 'com.imusic.player:video-player:1.0.9'
+        implementation 'com.github.hty527:iMusic:video-player:1.1.0'
     }
 ```
 **2.xml中引入播放器通道布局</br>**

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.music.player.lib.view.blur.widget.RuntimeBlurView
+        android:id="@+id/view_blur_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:realtimeBlurRadius="3dp"
+        app:realtimeOverlayColor="#993A1B59" />
+    <LinearLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="13dp"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/music_player_menu_selector"/>
+            <TextView
+                android:id="@+id/view_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:textSize="16dp"
+                android:textColor="#FFFFFF"
+                android:text="@string/music_text_music_num"/>
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:overScrollMode="never"
+            android:id="@+id/recycler_view">
+        </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:id="@+id/btn_close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:padding="13dp"
+            android:textSize="16dp"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:background="#0DFFFFFF"
+            android:text="@string/music_text_close"/>
+    </LinearLayout>
+</FrameLayout>

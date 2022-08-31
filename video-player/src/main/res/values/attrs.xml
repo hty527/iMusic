@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--自定义圆角ImageView-->
+    <declare-styleable name="VideoRoundImageView">
+        <attr name="video_type" />
+        <attr name="video_scale" />
+        <attr name="video_borderRadius" />
+        <attr name="video_top_left" />
+        <attr name="video_top_right" />
+        <attr name="video_bottom_left" />
+        <attr name="video_bottom_right" />
+    </declare-styleable>
+    <attr name="video_borderRadius" format="dimension" />
+    <attr name="video_type">
+        <enum name="video_circle" value="0" />
+        <enum name="video_round" value="1" />
+    </attr>
+    <attr name="video_scale">
+        <enum name="video_crop" value="0" />
+        <enum name="video_fit" value="1" />
+    </attr>
+    <attr name="video_top_left" format="boolean" />
+    <attr name="video_top_right" format="boolean" />
+    <attr name="video_bottom_left" format="boolean" />
+    <attr name="video_bottom_right" format="boolean" />
+    <!--VideoPlayer-->
+    <declare-styleable name="BaseVideoPlayer">
+        <!--是否自动设置默认控制器-->
+        <attr name="video_autoSetVideoController" format="boolean"/>
+        <!--是否自动设置封面控制器-->
+        <attr name="video_autoSetCoverController" format="boolean"/>
+    </declare-styleable>
+    <!--ShapeButton-->
+    <declare-styleable name="VideoShapeTextView">
+        <!--Button圆角-->
+        <attr name="shapeRadius" format="dimension"></attr>
+        <!--边框宽度-->
+        <attr name="shapeStrokeWidth" format="dimension"></attr>
+        <!--边框颜色-->
+        <attr name="shapeStrokeColor" format="color"></attr>
+        <!--背景颜色-->
+        <attr name="shapeBackgroundColor" format="color"></attr>
+        <!--背景按下的颜色-->
+        <attr name="shapeBackgroundSelectorColor" format="color"></attr>
+    </declare-styleable>
+</resources>
