@@ -88,25 +88,25 @@ configurations.all {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
     implementation 'com.google.android:flexbox:0.3.1'
-    implementation 'com.tencent.bugly:crashreport:latest.release'
+//    implementation 'com.tencent.bugly:crashreport:latest.release'
     implementation 'io.reactivex:rxjava:1.0.14'
     implementation 'io.reactivex:rxandroid:1.0.1'
     //libs
-    //implementation(name: 'music-player-1.0.0', ext: 'aar')
+//    implementation(name: 'music-player-1.0.0', ext: 'aar')
     //implementation(name: 'video-player-1.0.0', ext: 'aar')
     //音乐播放器
-    implementation 'com.imusic.player:music-player:1.1.6'
+//    implementation 'com.imusic.player:music-player:1.1.6'
     //视频播放器
-    implementation 'com.imusic.player:video-player:1.0.9'
-//    implementation project(':music-player-lib')
-//    implementation project(':video-player-lib')
+//    implementation 'com.imusic.player:video-player:1.0.9'
+    implementation project(':music-player')
+    implementation project(':video-player')
 }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.music.player.lib.view.MusicJukeBoxView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <!--唱片及指针、绞盘等-->
+    <RelativeLayout
+        android:id="@+id/music_disc_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/music_top_line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_music_disc_top_line"/>
+        <!--底盘-->
+        <ImageView
+            android:id="@+id/view_disc_backgound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
+        <com.music.player.lib.view.MusicViewPager
+            android:id="@+id/view_disc_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" />
+        <!--唱针-->
+        <ImageView
+            android:id="@+id/view_disc_hand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/music_top_line"
+            android:src="@drawable/ic_music_cover_hand"/>
+        <!--这个闹钟放在唱片机图层后面-->
+        <TextView
+            android:id="@+id/music_btn_alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_music_alarm_noimal"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:textColor="#FFFFFF"
+            android:drawablePadding="3dp"
+            android:textSize="15dp"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="定时关闭"/>
+    </RelativeLayout>
+    <!--歌词-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="35dp"
+        android:id="@+id/msuic_lrc_view"/>
+</com.music.player.lib.view.MusicJukeBoxView>

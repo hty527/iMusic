@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.android.imusic">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -10,14 +11,19 @@
     <uses-permission android:name="android.permission.GET_TOP_ACTIVITY_INFO" />
     <!--8.0及以上请求安装APK-->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
-
+    <!--背景服务-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"
+        tools:ignore="ProtectedPermissions" />
     <application
         android:name="com.android.imusic.MusicApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_music_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
         <!--
         //当用户每次离开APP 任务栈时，系统都将会将此APP栈中的所有Activity销毁,返回此任务栈时重新创建根栈
         android:finishOnTaskLaunch="true"

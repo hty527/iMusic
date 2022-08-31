@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="music_text_alarm_title">Turn off playback regularly</string>
+    <string name="music_text_alarm_current">After the current audio is played</string>
+    <string name="music_text_alarm_cancel">Cancel timing</string>
+    <string name="music_text_cancel">Cancel</string>
+    <string name="music_text_close">Close</string>
+    <string name="music_text_music_num">Playlist(%shead)</string>
+    <string name="music_text_minute">Minute</string>
+    <string name="music_text_lrc_empty">No lyrics were found</string>
+    <string name="music_text_lrc_loading">The lyrics being obtained....</string>
+    <string name="music_text_now_play">Playing.</string>
+    <string name="music_text_notice_name">iMusic Notification bar music playback</string>
+</resources>

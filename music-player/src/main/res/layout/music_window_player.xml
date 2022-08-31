@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.music.player.lib.view.MusicWindowTrash
+        android:id="@+id/music_window_trash"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="right|bottom"
+        android:visibility="gone"/>
+    <com.music.player.lib.view.MusicJukeBoxViewSmall
+        android:id="@+id/music_window_juke"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="right|bottom"
+        app:musicMiniJukeEnable="false"
+        android:layout_marginBottom="80dp"
+        android:layout_marginRight="15dp"/>
+</FrameLayout>

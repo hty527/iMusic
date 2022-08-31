@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/ic_video_loading_1" android:duration="@integer/anim_duration"></item>
+    <item android:drawable="@drawable/ic_video_loading_2" android:duration="@integer/anim_duration"></item>
+    <item android:drawable="@drawable/ic_video_loading_3" android:duration="@integer/anim_duration"></item>
+    <item android:drawable="@drawable/ic_video_loading_4" android:duration="@integer/anim_duration"></item>
+    <item android:drawable="@drawable/ic_video_loading_5" android:duration="@integer/anim_duration"></item>
+    <item android:drawable="@drawable/ic_video_loading_6" android:duration="@integer/anim_duration"></item>
+    <item android:drawable="@drawable/ic_video_loading_7" android:duration="@integer/anim_duration"></item>
+    <item android:drawable="@drawable/ic_video_loading_8" android:duration="@integer/anim_duration"></item>
+    <item android:drawable="@drawable/ic_video_loading_9" android:duration="@integer/anim_duration"></item>
+    <item android:drawable="@drawable/ic_video_loading_10" android:duration="@integer/anim_duration"></item>
+    <item android:drawable="@drawable/ic_video_loading_11" android:duration="@integer/anim_duration"></item>
+    <item android:drawable="@drawable/ic_video_loading_12" android:duration="@integer/anim_duration"></item>
+</animation-list>

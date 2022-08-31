@@ -7,7 +7,6 @@ import com.android.imusic.music.manager.AppBackgroundManager;
 import com.android.imusic.music.manager.ForegroundManager;
 import com.android.imusic.net.OkHttpUtils;
 import com.music.player.lib.manager.MusicWindowManager;
-import com.tencent.bugly.crashreport.CrashReport;
 
 /**
  * TinyHung@Outlook.com
@@ -38,7 +37,7 @@ public class MusicApplication extends Application {
 //                }
             }
         });
-        CrashReport.initCrashReport(getApplicationContext(), "da36e5e1da", false);
+//        CrashReport.initCrashReport(getApplicationContext(), "da36e5e1da", false);
         if(BuildConfig.FLAVOR.equals("imusicPublish")){
             com.music.player.lib.util.Logger .IS_DEBUG=false;
             com.video.player.lib.utils.Logger.IS_DEBUG=false;

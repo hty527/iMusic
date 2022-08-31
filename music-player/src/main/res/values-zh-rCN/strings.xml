@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="music_text_alarm_title">定时关闭播放</string>
+    <string name="music_text_alarm_current">当前音频播放完后</string>
+    <string name="music_text_alarm_cancel">取消定时</string>
+    <string name="music_text_cancel">取消</string>
+    <string name="music_text_close">关闭</string>
+    <string name="music_text_music_num">播放列表(%s首)</string>
+    <string name="music_text_minute">分钟</string>
+    <string name="music_text_lrc_empty">暂时没有找到歌词</string>
+    <string name="music_text_lrc_loading">歌词获取中...</string>
+    <string name="music_text_now_play">正在播放</string>
+    <string name="music_text_notice_name">iMusic通知栏音乐播放</string>
+</resources>
