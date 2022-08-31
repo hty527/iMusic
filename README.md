@@ -1,6 +1,7 @@
 # **iMusic**
 
-### 此项目已不再更新维护！！！如有视频播放需求请使用：[iPlayer][0]，此播放器功能支持包括但不限于：
+### 此项目已不再更新维护！！！
+### 视频播放需求请使用：[iPlayer][0]，功能特性支持包括但不限于：
 * 支持网络地址、直播流、本地Assets和Raw资源文件播放</br>
 * 支持播放倍速、缩放模式、静音、镜像等功能设置</br>
 * 支持自定义视频解码器、自定义控制器、自定义UI交互组件</br>
@@ -92,7 +93,7 @@ ___
 * 模块build.gradle中加入：
 ```
     dependencies {
-        implementation 'com.github.hty527:iMusic:music-player:1.1.7'
+        implementation 'com.github.hty527:iMusic:music-player:1.2.0'
     }
 ```
 **2.MainActivity播放器初始化**
@@ -146,7 +147,7 @@ ___
 **1.依赖**
 ```
     dependencies {
-        implementation 'com.github.hty527:iMusic:video-player:1.1.0'
+        implementation 'com.github.hty527:iMusic:video-player:1.2.0'
     }
 ```
 **2.xml中引入播放器通道布局</br>**
