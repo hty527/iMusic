@@ -100,13 +100,10 @@ dependencies {
 //    implementation 'com.tencent.bugly:crashreport:latest.release'
     implementation 'io.reactivex:rxjava:1.0.14'
     implementation 'io.reactivex:rxandroid:1.0.1'
-    //libs
-//    implementation(name: 'music-player-1.0.0', ext: 'aar')
-    //implementation(name: 'video-player-1.0.0', ext: 'aar')
     //音乐播放器
-//    implementation 'com.imusic.player:music-player:1.1.6'
+    implementation 'com.github.hty527.iMusic:music-player:1.2.0'
     //视频播放器
-//    implementation 'com.imusic.player:video-player:1.0.9'
-    implementation project(':music-player')
-    implementation project(':video-player')
+    implementation 'com.github.hty527.iMusic:video-player:1.2.0'
+//    implementation project(':music-player')
+//    implementation project(':video-player')
 }
