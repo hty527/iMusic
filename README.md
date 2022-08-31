@@ -93,7 +93,7 @@ ___
 * 模块build.gradle中加入：
 ```
     dependencies {
-        implementation 'com.github.hty527:iMusic:music-player:1.2.0'
+        implementation 'com.github.hty527.iMusic:music-player:1.2.0'
     }
 ```
 **2.MainActivity播放器初始化**
@@ -147,7 +147,7 @@ ___
 **1.依赖**
 ```
     dependencies {
-        implementation 'com.github.hty527:iMusic:video-player:1.2.0'
+        implementation 'com.github.hty527.iMusic:video-player:1.2.0'
     }
 ```
 **2.xml中引入播放器通道布局</br>**
